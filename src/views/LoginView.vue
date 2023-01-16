@@ -17,7 +17,7 @@ const route = useRoute()
             </div>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 md:w-3/5 flex-col mt-20">
-                <div class="flex flex-col w-full md:flex-row md:items-end md:justify-between">
+                <div class="flex flex-col w-full xl:flex-row xl:items-end xl:justify-between">
                     <div class="w-full">
                         <div class="flex items-center mb-2">
                             <label for="rsiHandle" class="text-small font-semibold font-Inter text-neutral-900">Star Citizen username</label>
@@ -25,12 +25,12 @@ const route = useRoute()
                         </div>
                         <input type="text" name="rsiHandle" id="rsiHandle" class="input-text w-full" placeholder="Your username...">
                     </div>
-                    <button class="button-primary font-Inter font-semibold text-small px-10 py-[11px] md:ml-8 mt-8 md:mt-0">Continue</button>
+                    <button class="button-primary font-Inter font-semibold text-small px-10 py-[11px] xl:ml-8 mt-8 xl:mt-0">Continue</button>
                 </div>
             </div>
             <div v-else class="flex flex-col mt-14">
                 <button class="button-primary button-48" @click="userStore.loginUser()">Login with Discord</button>
-                <button class="button-secondary button-48 mt-5">Register with Discord</button>
+                <button class="button-secondary button-48 mt-5" @click="userStore.registerUser()">Register with Discord</button>
             </div>
         </div>
     </div>

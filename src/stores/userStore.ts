@@ -10,15 +10,26 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
-        async loginUser():Promise<void> {
-            try {
-                console.log('Login in...')
-                const response = await axios.get('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth?location=http://127.0.0.1:5173/')
+        loginUser():void {
+            window.location.replace('https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth')
+        },
 
-                console.log('Response :')
-                console.log(response)
-            } catch (error) {
-                console.error(error)
+        registerUser():void {
+            window.location.replace('https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth/register')
+        },
+
+        async getUser(): Promise<void> {
+            try {
+                const response = await axios.get('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/', {withCredentials: true})
+
+                this.username = response.data.rsiHandle
+                this.isLoggedIn = true
+            }
+            catch (error:any) {
+                this.router.push('/login')
+                if (error.response.status === 401) {
+                    this.router.push('/login');
+                }
             }
         }
     }
