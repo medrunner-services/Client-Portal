@@ -13,7 +13,13 @@ body {
 .button-primary {
     @apply bg-primary-900 text-white;
 }
+.button-secondary {
+    @apply border-2 border-primary-900;
+}
 
 .button-24 {
     @apply font-Inter font-semibold text-tiny px-4 py-[6px];
+}
+.button-48 {
+    @apply font-Inter font-semibold text-small px-20 py-3;
 }
