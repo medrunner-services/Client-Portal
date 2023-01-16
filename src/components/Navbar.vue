@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import {useUserStore} from "@/stores/userStore";
 
+const userStore = useUserStore()
 const navMenuCollapsed = ref(false);
 
 function switchNavMenuSate(): void {
@@ -58,7 +60,7 @@ function getNavMenuClasses(): string {
                 <RouterLink to="/">EMERGENCY</RouterLink>
             </div>
             <div class="flex gap-4">
-                <p class="text-body font-semibold font-Inter">username</p>
+                <p class="text-body font-semibold font-Inter">{{ userStore.username }}</p>
                 <button class="button-primary button-24">Disconnect</button>
             </div>
         </nav>
