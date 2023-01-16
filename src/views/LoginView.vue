@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
+import {useUserStore} from "@/stores/userStore";
 
+const userStore = useUserStore()
 const route = useRoute()
 </script>
 
@@ -27,7 +29,7 @@ const route = useRoute()
                 </div>
             </div>
             <div v-else class="flex flex-col mt-14">
-                <button class="button-primary button-48">Login with Discord</button>
+                <button class="button-primary button-48" @click="userStore.loginUser()">Login with Discord</button>
                 <button class="button-secondary button-48 mt-5">Register with Discord</button>
             </div>
         </div>

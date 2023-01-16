@@ -1,8 +1,23 @@
 <script setup lang="ts">
-import { RouterView, useRoute } from "vue-router";
+import { watch, onMounted } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
+
+import {useUserStore} from "@/stores/userStore";
 import Navbar from "@/components/Navbar.vue";
 
+const userStore = useUserStore()
 const route = useRoute()
+const router = useRouter()
+
+onMounted(() => {
+
+})
+
+watch(route, () => {
+    if (userStore.isLoggedIn && route.path !== '/login') {
+        router.push({name: 'login'})
+    }
+})
 </script>
 
 <template>
