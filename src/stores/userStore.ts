@@ -4,8 +4,9 @@ import {defineStore} from "pinia";
 export const useUserStore = defineStore('user', {
     state: () => {
         return {
-            username: 'CharlieFox',
-            isLoggedIn: false
+            username: String,
+            isLoggedIn: false,
+            accessToken: String
         }
     },
 
@@ -20,15 +21,24 @@ export const useUserStore = defineStore('user', {
 
         async getUser(): Promise<void> {
             try {
-                const response = await axios.get('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/', {withCredentials: true})
+                const response = await axios.get('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/', {headers: {'Authorization': `Bearer ${this.accessToken}`}})
 
                 this.username = response.data.rsiHandle
                 this.isLoggedIn = true
             }
-            catch (error:any) {
-                this.router.push('/login')
-                if (error.response.status === 401) {
-                    this.router.push('/login');
+            catch (error) {
+                if (localStorage.getItem('refreshToken')) {
+                    try {
+                        const response = await axios.post('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/exchange', {refreshToken: localStorage.getItem('refreshToken')})
+
+                        this.accessToken = response.data.accessToken
+                        localStorage.setItem('refreshToken', response.data.refreshToken);
+                        this.router.push('/')
+                    } catch (e) {
+                        this.router.push('/login')
+                    }
+                } else {
+                    this.router.push('/login')
                 }
             }
         }

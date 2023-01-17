@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
+import { onMounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
 
 import {useUserStore} from "@/stores/userStore";
@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar.vue";
 const userStore = useUserStore()
 const route = useRoute()
 
-// onBeforeMount(() => {
+// onMounted(() => {
 //     userStore.getUser()
 // })
 </script>
