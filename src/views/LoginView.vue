@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import {useUserStore} from "@/stores/userStore";
+import {ref} from "vue";
 
 const userStore = useUserStore()
 const route = useRoute()
+
+let formUsername = ref('')
 </script>
 
 <template>
@@ -17,16 +20,16 @@ const route = useRoute()
             </div>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 md:w-3/5 flex-col mt-20">
-                <div class="flex flex-col w-full xl:flex-row xl:items-end xl:justify-between">
+                <form class="flex flex-col w-full xl:flex-row xl:items-end xl:justify-between" @submit.prevent="userStore.linkUser(formUsername)">
                     <div class="w-full">
                         <div class="flex items-center mb-2">
                             <label for="rsiHandle" class="text-small font-semibold font-Inter text-neutral-900">Star Citizen username</label>
                             <img src="/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4" />
                         </div>
-                        <input type="text" name="rsiHandle" id="rsiHandle" class="input-text w-full" placeholder="Your username...">
+                        <input type="text" v-model="formUsername" name="rsiHandle" id="rsiHandle" class="input-text w-full" placeholder="Your username...">
                     </div>
                     <button class="button-primary font-Inter font-semibold text-small px-10 py-[11px] xl:ml-8 mt-8 xl:mt-0">Continue</button>
-                </div>
+                </form>
             </div>
             <div v-else class="flex flex-col mt-14">
                 <button class="button-primary button-48" @click="userStore.loginUser()">Login with Discord</button>
