@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import {useUserStore} from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 import HomeView from "../views/HomeView.vue";
 
@@ -16,22 +16,22 @@ const router = createRouter({
             path: "/login",
             alias: "/login/link",
             name: "login",
-            component: ()=>import('@/views/LoginView.vue'),
+            component: () => import("@/views/LoginView.vue"),
         },
         {
             path: "/auth",
             alias: "/auth/register",
             name: "auth",
-            component: ()=>import('@/views/AuthView.vue'),
+            component: () => import("@/views/AuthView.vue"),
         },
     ],
 });
 
 router.beforeEach(async (to, from) => {
-    const userStore = useUserStore()
-    if (to.name !== 'auth' && to.name !== 'login') {
-        await userStore.getUser()
+    const userStore = useUserStore();
+    if (to.name !== "auth" && to.name !== "login") {
+        await userStore.getUser();
     }
-})
+});
 
 export default router;

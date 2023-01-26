@@ -3,7 +3,7 @@ import { RouterView, useRoute } from "vue-router";
 
 import Navbar from "@/components/Navbar.vue";
 
-const route = useRoute()
+const route = useRoute();
 </script>
 
 <template>
