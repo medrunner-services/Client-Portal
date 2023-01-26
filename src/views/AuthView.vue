@@ -24,7 +24,7 @@ onMounted(() => {
                 router.push('/login/link')
             })
             .catch((e) => {
-                router.push('/login')
+                router.push('/login?error=true')
             })
     } else {
         axios.get(`http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${urlParams.get('code')}&redirectUri=http://localhost:5173/auth`)
@@ -34,7 +34,7 @@ onMounted(() => {
                 router.push('/')
             })
             .catch((e) => {
-                router.push('/login')
+                router.push('/login?error=true')
             })
     }
 })

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {defineStore} from "pinia";
 
 export const useUserStore = defineStore('user', {
@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
-        async getToken(): Promise<string> {
+        async getToken(): Promise<string | void> {
 
             const jwtExp = () => {
                 const base64Url = this.accessToken.split('.')[1];
@@ -35,7 +35,6 @@ export const useUserStore = defineStore('user', {
                 return this.accessToken
             } else {
                 this.router.push('/login')
-                return ''
             }
         },
 
@@ -47,14 +46,26 @@ export const useUserStore = defineStore('user', {
             window.location.replace('https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth/register')
         },
 
-        async linkUser(username: string):Promise<void> {
+        disconnectUser():void {
+            this.accessToken = ''
+            this.username = ''
+            this.isLoggedIn = false
+            localStorage.removeItem('refreshToken')
+        },
+
+        async linkUser(username: string):Promise<string | void> {
             try {
                 await axios.post('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/link', {rsiHandle: username}, {headers: {'Authorization': `Bearer ${await this.getToken()}`}})
 
                 this.username = username
                 this.router.push('/')
             } catch (e) {
-                console.log('Error linking username')
+                if (e.response.status === 401) {
+                    this.router.push('/login?error=true')
+                } else {
+                    return 'error'
+                }
+
             }
         },
 
@@ -62,8 +73,12 @@ export const useUserStore = defineStore('user', {
             try {
                 const response = await axios.get('http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/', {headers: {'Authorization': `Bearer ${await this.getToken()}`}})
 
-                this.username = response.data.rsiHandle
-                this.isLoggedIn = true
+                if (response.data.rsiHandle) {
+                    this.username = response.data.rsiHandle
+                    this.isLoggedIn = true
+                } else {
+                    this.router.push('/login/link')
+                }
             }
             catch (error) {
                 this.router.push('/login')
