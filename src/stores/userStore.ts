@@ -6,7 +6,7 @@ interface User {
     created: string;
     deactivationReason: number;
     discordId: string;
-    emergencyHistory: [{ created: string; id: string }];
+    emergencyHistory: { created: string; id: string }[];
     id: string;
     personType: number;
     roles: number;
