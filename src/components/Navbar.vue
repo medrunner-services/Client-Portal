@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
@@ -21,7 +22,7 @@ function getNavMenuClasses(): string {
         <div class="py-2 px-4 flex items-center gap-2 md:px-16 md:py-3">
             <img
                 class="h-8 md:h-12"
-                src="/medrunner-logo.webp"
+                src="/images/medrunner-logo.webp"
                 alt="Medrunner Logo"
             />
 
@@ -37,17 +38,17 @@ function getNavMenuClasses(): string {
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
                 <RouterLink class="ml-4" to="/">
-                    <img src="/user-profile.svg" alt="User profile" />
+                    <img src="/icons/user-profile.svg" alt="User profile" />
                 </RouterLink>
             </nav>
 
             <button @click="switchNavMenuSate()" class="ml-auto md:hidden">
                 <img
                     v-if="!navMenuCollapsed"
-                    src="/burger-button.svg"
+                    src="/icons/burger-button.svg"
                     alt="Open menu"
                 />
-                <img v-else src="/close-button.svg" alt="Close menu" />
+                <img v-else src="/icons/close-button.svg" alt="Close menu" />
             </button>
         </div>
 
@@ -61,7 +62,7 @@ function getNavMenuClasses(): string {
             </div>
             <div class="flex gap-4">
                 <p class="text-body font-semibold font-Inter">
-                    {{ userStore.username }}
+                    {{ userStore.user.rsiHandle }}
                 </p>
                 <button class="button-primary button-24">Disconnect</button>
             </div>

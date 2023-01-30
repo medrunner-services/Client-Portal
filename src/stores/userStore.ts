@@ -1,11 +1,29 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
+interface EmergencyHistoryItem {
+    created: string;
+    id: string;
+}
+interface User {
+    active: boolean;
+    created: string;
+    deactivationReason: number;
+    discordId: string;
+    emergencyHistory: EmergencyHistoryItem;
+    id: string;
+    personType: number;
+    roles: number;
+    rsiHandle: string;
+    rsiId: string;
+    updated: string;
+}
+
 export const useUserStore = defineStore("user", {
     state: () => {
         return {
-            username: "",
-            isLoggedIn: false,
+            user: {} as User,
+            isAuthenticated: false,
             accessToken: "",
         };
     },
@@ -69,9 +87,7 @@ export const useUserStore = defineStore("user", {
         },
 
         disconnectUser(): void {
-            this.accessToken = "";
-            this.username = "";
-            this.isLoggedIn = false;
+            this.$reset();
             localStorage.removeItem("refreshToken");
         },
 
@@ -87,9 +103,8 @@ export const useUserStore = defineStore("user", {
                     },
                 );
 
-                this.username = username;
                 this.router.push("/");
-            } catch (e) {
+            } catch (e: any) {
                 if (e.response.status === 401) {
                     this.router.push("/login?error=true");
                 } else {
@@ -109,9 +124,12 @@ export const useUserStore = defineStore("user", {
                     },
                 );
 
+                if (!response.data.active) {
+                    this.router.push("/login");
+                }
                 if (response.data.rsiHandle) {
-                    this.username = response.data.rsiHandle;
-                    this.isLoggedIn = true;
+                    this.user = response.data;
+                    this.isAuthenticated = true;
                 } else {
                     this.router.push("/login/link");
                 }
