@@ -1,14 +1,25 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
-import { useUserStore } from "@/stores/userStore";
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const route = useRoute();
+const router = useRouter();
 
 let formUsername = ref("");
-const waitingForApi = ref(false);
-const errorAlert = ref(false);
+let waitingForApi = ref(false);
+let errorAlert = ref(false);
+let clipboardIcon = ref("/icons/copy-icon.svg");
+
+console.log(route.path);
+if (route.path === "/login" && userStore.isAuthenticated) {
+    console.log("Going home");
+    router.push("/");
+} else if (route.path === "/login/link" && userStore.user.rsiHandle) {
+    router.push("/");
+}
 
 if (route.query.error) errorAlert.value = true;
 
@@ -22,6 +33,12 @@ const submittingLinkForm = () => {
         }
     });
 };
+
+const copyIdToClipboard = (): void => {
+    navigator.clipboard.writeText(userStore.user.id).then(() => {
+        clipboardIcon.value = "/icons/check-icon.svg";
+    });
+};
 </script>
 
 <template>
@@ -33,8 +50,8 @@ const submittingLinkForm = () => {
             <p>Something went wrong, please try again</p>
         </div>
         <div
-            class="w-[55%] justify-center items-center bg-[url('/background-login.webp')] bg-center bg-cover hidden md:flex"
-        ></div>
+            class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex"
+        />
         <div
             class="flex flex-col justify-center items-center h-full md:w-[45%]"
         >
@@ -42,7 +59,7 @@ const submittingLinkForm = () => {
             <div class="flex items-center">
                 <img
                     class="h-12 mr-2"
-                    src="/medrunner-logo.webp"
+                    src="/images/medrunner-logo.webp"
                     alt="Medrunner Logo"
                 />
                 <h1 class="title">
@@ -52,10 +69,39 @@ const submittingLinkForm = () => {
 
             <div
                 v-if="route.path === '/login/link'"
-                class="flex w-4/5 md:w-3/5 flex-col mt-20"
+                class="flex w-4/5 xl:w-3/5 flex-col mt-20"
             >
+                <div class="w-full">
+                    <p
+                        class="text-neutral-900 font-Inter font-semibold text-small"
+                    >
+                        Please add this to your
+                        <a
+                            href="https://robertsspaceindustries.com/account/profile"
+                            target="_blank"
+                            class="underline underline-offset-2 cursor-pointer"
+                            >RSI bio</a
+                        >
+                        before submitting your username :
+                    </p>
+                    <div class="flex mt-2">
+                        <div
+                            class="bg-neutral-700 text-neutral-50 font-Inter text-xs w-full text-center"
+                        >
+                            <p class="py-3 mx-auto">
+                                {{ userStore.user.id }}
+                            </p>
+                        </div>
+                        <img
+                            :src="clipboardIcon"
+                            class="ml-3 xl:ml-6 cursor-pointer"
+                            alt="copy id"
+                            @click="copyIdToClipboard()"
+                        />
+                    </div>
+                </div>
                 <form
-                    class="flex flex-col w-full xl:flex-row xl:items-end xl:justify-between"
+                    class="flex flex-col w-full mt-10 xl:flex-row xl:items-end xl:justify-between"
                     @submit.prevent="submittingLinkForm()"
                 >
                     <div class="w-full">
@@ -66,22 +112,24 @@ const submittingLinkForm = () => {
                                 >Star Citizen username</label
                             >
                             <img
-                                src="/info-icon.svg"
+                                src="/icons/info-icon.svg"
                                 alt="Info label"
-                                class="ml-2 h-4 w-4"
+                                class="ml-2 h-4 w-4 cursor-help"
+                                title="The username of your RSI account"
                             />
                         </div>
                         <input
-                            type="text"
-                            v-model="formUsername"
-                            name="rsiHandle"
                             id="rsiHandle"
+                            v-model="formUsername"
+                            type="text"
+                            name="rsiHandle"
                             class="input-text w-full"
                             placeholder="Your username..."
                         />
                     </div>
                     <button
-                        class="button-primary font-Inter font-semibold text-small px-10 py-[11px] xl:ml-8 mt-8 xl:mt-0"
+                        :disabled="waitingForApi"
+                        class="button-primary font-Inter font-semibold text-small px-8 py-[11px] xl:ml-4 mt-4 xl:mt-0"
                     >
                         <svg
                             v-if="waitingForApi"
@@ -96,7 +144,7 @@ const submittingLinkForm = () => {
                                 d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
                             />
                         </svg>
-                        <p v-else>Continue</p>
+                        <span v-else>Continue</span>
                     </button>
                 </form>
             </div>
