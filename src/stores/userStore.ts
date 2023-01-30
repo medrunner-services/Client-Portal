@@ -1,16 +1,12 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
-interface EmergencyHistoryItem {
-    created: string;
-    id: string;
-}
 interface User {
     active: boolean;
     created: string;
     deactivationReason: number;
     discordId: string;
-    emergencyHistory: EmergencyHistoryItem;
+    emergencyHistory: [{ created: string; id: string }];
     id: string;
     personType: number;
     roles: number;
