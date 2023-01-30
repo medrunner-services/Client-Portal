@@ -85,7 +85,7 @@ const submittingLinkForm = () => {
                     >
                         <svg
                             v-if="waitingForApi"
-                            class="animate-spin text-white"
+                            class="animate-spin text-white w-full"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
