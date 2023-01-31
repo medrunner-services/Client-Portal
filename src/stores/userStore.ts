@@ -83,8 +83,9 @@ export const useUserStore = defineStore("user", {
         },
 
         disconnectUser(): void {
-            this.$reset();
             localStorage.removeItem("refreshToken");
+            this.$reset();
+            this.router.push("/login");
         },
 
         async linkUser(username: string): Promise<string | void> {
