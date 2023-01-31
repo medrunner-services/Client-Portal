@@ -4,20 +4,20 @@ import { ref } from "vue";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
-const navMenuCollapsed = ref(false);
+let navMenuCollapsed = ref(false);
+let userMenuCollapsed = ref(false);
 
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
 }
-
-function getNavMenuClasses(): string {
-    return navMenuCollapsed.value ? "h-screen" : "";
+function switchUserMenuState(): void {
+    userMenuCollapsed.value = !userMenuCollapsed.value;
 }
 </script>
 
 <template>
     <div
-        :class="`fixed z-10 bg-white w-full flex flex-col shadow-md ${getNavMenuClasses()} md:static`"
+        :class="`fixed z-10 bg-white w-full flex flex-col shadow-md md:static`"
     >
         <div class="py-2 px-4 flex items-center gap-2 md:px-16 md:py-3">
             <img
@@ -38,7 +38,49 @@ function getNavMenuClasses(): string {
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
                 <RouterLink class="ml-4" to="/">
-                    <img src="/icons/user-profile.svg" alt="User profile" />
+                    <img
+                        @click="switchUserMenuState()"
+                        src="/icons/user-profile.svg"
+                        alt="User profile"
+                    />
+                    <div
+                        v-if="userMenuCollapsed"
+                        class="top-16 right-4 absolute"
+                    >
+                        <svg
+                            width="53"
+                            height="21"
+                            class="ml-[173px]"
+                            viewBox="0 0 53 21"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <filter id="menuSvgFilter">
+                                <feDropShadow
+                                    dx="2"
+                                    dy="2"
+                                    stdDeviation="1"
+                                    flood-opacity="0.3"
+                                />
+                            </filter>
+                            <g filter="url(#menuSvgFilter)">
+                                <path
+                                    d="M26.5 0L37 21H16L26.5 0Z"
+                                    fill="white"
+                                />
+                            </g>
+                        </svg>
+                        <div class="shadow shadow-lg flex px-4 py-4">
+                            <p class="text-body font-semibold font-Inter">
+                                {{ userStore.user.rsiHandle }}
+                            </p>
+                            <button
+                                @click.prevent="userStore.disconnectUser()"
+                                class="button-primary button-24 ml-3"
+                            >
+                                Disconnect
+                            </button>
+                        </div>
+                    </div>
                 </RouterLink>
             </nav>
 
@@ -53,10 +95,10 @@ function getNavMenuClasses(): string {
         </div>
 
         <nav
-            class="flex flex-col flex-grow justify-end gap-16 p-4 font-Mohav font-semibold text-header-2"
+            class="flex flex-col mt-2 justify-end gap-16 p-4 font-semibold text-header-2"
             v-if="navMenuCollapsed"
         >
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 font-Mohave">
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
             </div>
@@ -64,7 +106,12 @@ function getNavMenuClasses(): string {
                 <p class="text-body font-semibold font-Inter">
                     {{ userStore.user.rsiHandle }}
                 </p>
-                <button class="button-primary button-24">Disconnect</button>
+                <button
+                    @click="userStore.disconnectUser()"
+                    class="button-primary button-24"
+                >
+                    Disconnect
+                </button>
             </div>
         </nav>
     </div>

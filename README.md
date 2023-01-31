@@ -1,6 +1,6 @@
 # Medrunner Client Portal
 
-This portal proposes a web experience for the client and staff of Medrunner.
+This portal brings the medrunner experience to the web !
 
 ## Project Setup
 

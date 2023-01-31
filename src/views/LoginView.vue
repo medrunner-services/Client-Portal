@@ -13,9 +13,7 @@ let waitingForApi = ref(false);
 let errorAlert = ref(false);
 let clipboardIcon = ref("/icons/copy-icon.svg");
 
-console.log(route.path);
 if (route.path === "/login" && userStore.isAuthenticated) {
-    console.log("Going home");
     router.push("/");
 } else if (route.path === "/login/link" && userStore.user.rsiHandle) {
     router.push("/");
@@ -23,7 +21,7 @@ if (route.path === "/login" && userStore.isAuthenticated) {
 
 if (route.query.error) errorAlert.value = true;
 
-const submittingLinkForm = () => {
+const submittingLinkForm = (): void => {
     waitingForApi.value = true;
     errorAlert.value = false;
     userStore.linkUser(formUsername.value).then(res => {
