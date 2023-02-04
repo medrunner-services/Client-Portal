@@ -45,7 +45,9 @@ function getThreatString(id: number): string {
     }
 }
 function getResponders(responders: any): string {
-    return responders.map((responder: { discordHandle: never; }) => responder.discordHandle).toString();
+    return responders
+        .map((responder: { discordHandle: never }) => responder.discordHandle)
+        .toString();
 }
 </script>
 

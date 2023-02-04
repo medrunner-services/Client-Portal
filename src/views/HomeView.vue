@@ -6,9 +6,13 @@ const userStore = useUserStore();
 </script>
 
 <template>
-    <div class="flex flex-col-reverse lg:flex-row lg:justify-between content-container">
+    <div
+        class="flex flex-col-reverse lg:flex-row lg:justify-between content-container"
+    >
         <div class="mt-10 lg:mt-0 lg:w-[35%] lg:max-w-xl">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
+            <h2
+                class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5"
+            >
                 History
             </h2>
             <div v-if="userStore.user.emergencyHistory.length > 0">
@@ -22,7 +26,9 @@ const userStore = useUserStore();
             </div>
         </div>
         <div class="lg:w-[60%]">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase">
+            <h2
+                class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase"
+            >
                 Emergency
             </h2>
         </div>
