@@ -1,7 +1,7 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
-interface User {
+export interface User {
     active: boolean;
     created: string;
     deactivationReason: number;
@@ -16,6 +16,51 @@ interface User {
     updated: string;
 }
 
+export interface Emergency {
+    id: string;
+    created: Date;
+    updated: Date;
+    system: string;
+    subsystem: string;
+    threatLevel: number;
+    remarks: string;
+    clientRsiHandle: string;
+    clientDiscordId: string;
+    clientId: string;
+    subscriptionTier: string;
+    status: number;
+    statusDescription: string;
+    alertMessage: { id: string; channelId: string };
+    clientMessage: { id: string; channelId: string };
+    coordinationThread: { id: string; channelId: string };
+    respondingTeam: {
+        maxMembers: number;
+        staff: {
+            discordId: string;
+            discordHandle: string;
+            id: string;
+            rsiHandle: string;
+        }[];
+    };
+    creationTimestamp: number;
+    acceptedTimestamp: number;
+    completionTimestamp: number;
+    rating: number;
+    test: boolean;
+    origin: number;
+    clientData: {
+        rsiHandle: string;
+        rsiProfileLink: string;
+        gotClientData: boolean;
+        redactedOrgOnProfile: boolean;
+        reported: boolean;
+        individualReport: string;
+        orgReport: string;
+    };
+    isComplete: boolean;
+    afterActionReport: { status: number; remarks: string };
+}
+
 export const useUserStore = defineStore("user", {
     state: () => {
         return {
@@ -23,6 +68,12 @@ export const useUserStore = defineStore("user", {
             isAuthenticated: false,
             accessToken: "",
         };
+    },
+
+    getters: {
+        getLastOrderedEmergencyHistory(): Array<object> {
+            return this.user.emergencyHistory.sort().reverse().slice(0, 5);
+        },
     },
 
     actions: {
@@ -111,7 +162,7 @@ export const useUserStore = defineStore("user", {
             }
         },
 
-        async getUser(): Promise<void> {
+        async fetchUser(): Promise<void> {
             try {
                 const response = await axios.get(
                     "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/",
@@ -133,6 +184,22 @@ export const useUserStore = defineStore("user", {
                 }
             } catch (error) {
                 this.router.push("/login");
+            }
+        },
+
+        async fetchEmergency(id: string): Promise<Emergency | "error"> {
+            try {
+                const response = await axios.get(
+                    `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/emergency/${id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${await this.getToken()}`,
+                        },
+                    },
+                );
+                return response.data;
+            } catch (error) {
+                return "error";
             }
         },
     },
