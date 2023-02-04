@@ -11,6 +11,7 @@ interface User {
     personType: number;
     roles: number;
     rsiHandle: string;
+    rsiHandleQuery: string;
     rsiId: string;
     updated: string;
 }

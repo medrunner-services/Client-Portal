@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { useUserStore } from "@/stores/userStore";
 
-const userStore = useUserStore();
 </script>
 
 <template>
-    <main>
-        <h1
-            @click="userStore.disconnectUser()"
-            class="text-3xl font-bold underline"
-        >
-            Welcome to the Medrunner Portal
-        </h1>
-    </main>
+    <div>
+        <div>
+            <h2 class="text-3xl font-Mohave font-semibold uppercase">History</h2>
+        </div>
+        <div>
+            <h2 class="text-3xl font-Mohave font-semibold uppercase">Emergency</h2>
+        </div>
+    </div>
 </template>

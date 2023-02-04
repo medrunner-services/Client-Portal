@@ -17,7 +17,7 @@ function switchUserMenuState(): void {
 
 <template>
     <div
-        :class="`fixed z-10 bg-white w-full flex flex-col shadow-md md:static`"
+        class="bg-white w-full flex flex-col shadow-md md:static"
     >
         <div class="py-2 px-4 flex items-center gap-2 md:px-16 md:py-3">
             <img
@@ -95,7 +95,7 @@ function switchUserMenuState(): void {
         </div>
 
         <nav
-            class="flex flex-col mt-2 justify-end gap-16 p-4 font-semibold text-header-2"
+            class="fixed w-full flex flex-col bg-white mt-2 justify-end gap-16 p-4 mt-14 font-semibold text-header-2 shadow shadow-lg z-10"
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
