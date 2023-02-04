@@ -10,6 +10,10 @@ body {
     width: 100vw;
 }
 
+.content-container {
+    @apply px-4 lg:px-36;
+}
+
 .button-primary {
     @apply bg-primary-900 text-white;
 }
