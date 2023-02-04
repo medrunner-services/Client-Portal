@@ -187,7 +187,7 @@ export const useUserStore = defineStore("user", {
             }
         },
 
-        async fetchEmergency(id: string): Promise<Emergency | "error"> {
+        async fetchEmergency(id: string): Promise<Emergency> {
             try {
                 const response = await axios.get(
                     `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/emergency/${id}`,
@@ -199,7 +199,7 @@ export const useUserStore = defineStore("user", {
                 );
                 return response.data;
             } catch (error) {
-                return "error";
+                throw Error;
             }
         },
     },

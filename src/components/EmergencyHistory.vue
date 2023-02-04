@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { ref } from "vue";
 
+import type { Emergency } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 
 const props = defineProps(["emergencyListIndex"]);
@@ -10,15 +11,24 @@ const emergency = userStore.user.emergencyHistory[props.emergencyListIndex];
 const emergencyDate = new Date(Date.parse(emergency.created)).toLocaleString();
 const developedInfo = ref(false);
 const loadingInfo = ref(false);
-let emergencyInfo;
+const errorLoadingInfo = ref(false);
+let emergencyInfo: Emergency;
 
 async function switchCollapsedSate(): Promise<void> {
     developedInfo.value = !developedInfo.value;
 
     if (developedInfo.value) {
         loadingInfo.value = true;
-        emergencyInfo = await userStore.fetchEmergency(emergency.id);
-        loadingInfo.value = false;
+        await userStore
+            .fetchEmergency(emergency.id)
+            .then(response => {
+                emergencyInfo = response;
+                loadingInfo.value = false;
+            })
+            .catch(() => {
+                loadingInfo.value = false;
+                errorLoadingInfo.value = true;
+            });
     }
 }
 
@@ -100,7 +110,7 @@ function getResponders(responders: any): string {
             </div>
 
             <div
-                v-else-if="!loadingInfo && emergencyInfo === 'error'"
+                v-else-if="errorLoadingInfo"
                 class="flex items-center justify-center my-16"
             >
                 <p class="text-lg font-Inter font-bold text-primary-900">
