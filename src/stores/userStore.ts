@@ -1,5 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { defineStore } from "pinia";
+
+import { getJwtFromAccessToken } from "@/utils/jwt";
 
 export interface User {
     active: boolean;
@@ -61,6 +63,11 @@ export interface Emergency {
     afterActionReport: { status: number; remarks: string };
 }
 
+interface Tokens {
+    accessToken: string;
+    refreshToken: string;
+}
+
 export const useUserStore = defineStore("user", {
     state: () => {
         return {
@@ -77,49 +84,43 @@ export const useUserStore = defineStore("user", {
     },
 
     actions: {
-        async getToken(): Promise<string | void> {
-            const jwtExp = () => {
-                const base64Url = this.accessToken.split(".")[1];
-                const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-                const jsonPayload = JSON.parse(
-                    decodeURIComponent(
-                        window
-                            .atob(base64)
-                            .split("")
-                            .map(function (c) {
-                                return (
-                                    "%" +
-                                    ("00" + c.charCodeAt(0).toString(16)).slice(
-                                        -2,
-                                    )
-                                );
-                            })
-                            .join(""),
-                    ),
+        async fetchToken(
+            refreshToken: string,
+            successCallback: (tokens: Tokens) => void,
+            errorCallback: (error: AxiosError) => void,
+        ) {
+            try {
+                const result = await axios.post(
+                    "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/exchange",
+                    { refreshToken },
                 );
+                successCallback(result.data);
+            } catch (error: AxiosError | any) {
+                errorCallback(error);
+            }
+        },
 
-                return jsonPayload.exp;
-            };
+        setTokens(tokens: Tokens): void {
+            this.accessToken = tokens.accessToken;
+            localStorage.setItem("refreshToken", tokens.refreshToken);
+        },
 
+        async getToken(): Promise<string> {
             if (this.accessToken) {
-                const exp = jwtExp();
+                const exp = getJwtFromAccessToken(this.accessToken).exp;
                 if (exp > Date.now() / 1000) return this.accessToken;
             }
 
-            if (localStorage.getItem("refreshToken")) {
-                const response = await axios.post(
-                    "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/exchange",
-                    { refreshToken: localStorage.getItem("refreshToken") },
-                );
-                this.accessToken = response.data.accessToken;
-                localStorage.setItem(
-                    "refreshToken",
-                    response.data.refreshToken,
-                );
-                return this.accessToken;
-            } else {
-                this.router.push("/login");
-            }
+            const localStorageRefreshToken =
+                localStorage.getItem("refreshToken") ?? "";
+
+            await this.fetchToken(
+                localStorageRefreshToken,
+                tokens => this.setTokens(tokens),
+                () => undefined,
+            );
+
+            return this.accessToken;
         },
 
         loginUser(): void {
@@ -162,28 +163,23 @@ export const useUserStore = defineStore("user", {
             }
         },
 
-        async fetchUser(): Promise<void> {
+        async fetchUser(
+            token: string,
+            successCallback: (user: User) => any,
+            errorCallback: (error: AxiosError) => any,
+        ): Promise<void> {
             try {
-                const response = await axios.get(
+                const result = await axios.get(
                     "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/",
                     {
                         headers: {
-                            Authorization: `Bearer ${await this.getToken()}`,
+                            Authorization: `Bearer ${token}`,
                         },
                     },
                 );
-
-                if (!response.data.active) {
-                    this.router.push("/login");
-                }
-                if (response.data.rsiHandle) {
-                    this.user = response.data;
-                    this.isAuthenticated = true;
-                } else {
-                    this.router.push("/login/link");
-                }
-            } catch (error) {
-                this.router.push("/login");
+                successCallback(result.data);
+            } catch (error: AxiosError | any) {
+                errorCallback(error);
             }
         },
 

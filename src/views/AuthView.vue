@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import { useUserStore } from "@/stores/userStore";
 import { onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+import { useUserStore } from "@/stores/userStore";
 
 const route = useRoute();
 const router = useRouter();

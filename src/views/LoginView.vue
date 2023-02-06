@@ -1,34 +1,30 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const route = useRoute();
-const router = useRouter();
 
-let formUsername = ref("");
-let waitingForApi = ref(false);
-let errorAlert = ref(false);
-let clipboardIcon = ref("/icons/copy-icon.svg");
+const formUsername = ref("");
+const waitingForApi = ref(false);
+const errorAlert = ref(false);
+const clipboardIcon = ref("/icons/copy-icon.svg");
 
-if (route.path === "/login" && userStore.isAuthenticated) {
-    router.push("/");
-} else if (route.path === "/login/link" && userStore.user.rsiHandle) {
-    router.push("/");
-}
-
-if (route.query.error) errorAlert.value = true;
+onMounted(() => {
+    if (route.query.error) errorAlert.value = true;
+});
 
 const submittingLinkForm = (): void => {
     waitingForApi.value = true;
     errorAlert.value = false;
+
     userStore.linkUser(formUsername.value).then(res => {
-        if (res === "error") {
-            waitingForApi.value = false;
-            errorAlert.value = true;
-        }
+        if (res !== "error") return;
+
+        waitingForApi.value = false;
+        errorAlert.value = true;
     });
 };
 
