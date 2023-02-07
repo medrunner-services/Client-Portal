@@ -81,14 +81,8 @@ function getResponders(responders: any): string {
                 />
             </div>
         </div>
-        <div
-            v-if="developedInfo"
-            class="border-t-2 border-t-primary-900 px-2 py-8"
-        >
-            <div
-                v-if="loadingInfo"
-                class="flex items-center justify-center my-20"
-            >
+        <div v-if="developedInfo" class="border-t-2 border-t-primary-900 px-2 py-8">
+            <div v-if="loadingInfo" class="flex items-center justify-center my-20">
                 <svg
                     class="animate-spin h-14 w-14 text-primary-900"
                     xmlns="http://www.w3.org/2000/svg"
@@ -111,64 +105,33 @@ function getResponders(responders: any): string {
                 </svg>
             </div>
 
-            <div
-                v-else-if="errorLoadingInfo"
-                class="flex items-center justify-center my-16"
-            >
-                <p class="text-lg font-Inter font-bold text-primary-900">
-                    A error occurred
-                </p>
+            <div v-else-if="errorLoadingInfo" class="flex items-center justify-center my-16">
+                <p class="text-lg font-Inter font-bold text-primary-900">A error occurred</p>
             </div>
 
             <div v-else>
-                <div
-                    class="font-Inter font-semibold text-xs flex justify-center items-center"
-                >
+                <div class="font-Inter font-semibold text-xs flex justify-center items-center">
                     <div class="flex flex-col justify-center items-center">
                         <p>Created</p>
-                        <img
-                            src="/icons/circle-icon.svg"
-                            alt="Created"
-                            class="my-2"
-                        />
+                        <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                         <p>
-                            {{
-                                timestampToHours(
-                                    emergencyInfo.creationTimestamp,
-                                )
-                            }}
+                            {{ timestampToHours(emergencyInfo.creationTimestamp) }}
                         </p>
                     </div>
                     <div class="border border-primary-900 h-0.5 w-16" />
                     <div class="flex flex-col justify-center items-center">
                         <p>Accepted</p>
-                        <img
-                            src="/icons/circle-icon.svg"
-                            alt="Created"
-                            class="my-2"
-                        />
+                        <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                         <p>
-                            {{
-                                timestampToHours(
-                                    emergencyInfo.acceptedTimestamp,
-                                )
-                            }}
+                            {{ timestampToHours(emergencyInfo.acceptedTimestamp) }}
                         </p>
                     </div>
                     <div class="border border-primary-900 h-0.5 w-16" />
                     <div class="flex flex-col justify-center items-center">
                         <p>Completed</p>
-                        <img
-                            src="/icons/circle-icon.svg"
-                            alt="Created"
-                            class="my-2"
-                        />
+                        <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                         <p>
-                            {{
-                                timestampToHours(
-                                    emergencyInfo.completionTimestamp,
-                                )
-                            }}
+                            {{ timestampToHours(emergencyInfo.completionTimestamp) }}
                         </p>
                     </div>
                 </div>

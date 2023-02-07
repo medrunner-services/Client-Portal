@@ -17,24 +17,14 @@ function switchUserMenuState(): void {
 
 <template>
     <div class="bg-white w-full flex flex-col shadow-md md:static">
-        <div
-            class="py-2 content-container flex items-center gap-2 md:px-16 md:py-3"
-        >
-            <img
-                class="h-8 md:h-12"
-                src="/images/medrunner-logo.webp"
-                alt="Medrunner Logo"
-            />
+        <div class="py-2 content-container flex items-center gap-2 md:px-16 md:py-3">
+            <img class="h-8 md:h-12" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
 
-            <h1
-                class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1"
-            >
+            <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">
                 MEDRUNNER
             </h1>
 
-            <nav
-                class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex"
-            >
+            <nav class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex">
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
                 <RouterLink class="ml-4" to="/">
@@ -43,10 +33,7 @@ function switchUserMenuState(): void {
                         src="/icons/user-profile.svg"
                         alt="User profile"
                     />
-                    <div
-                        v-if="userMenuCollapsed"
-                        class="top-16 right-4 absolute"
-                    >
+                    <div v-if="userMenuCollapsed" class="top-16 right-4 absolute">
                         <svg
                             width="53"
                             height="21"
@@ -55,18 +42,10 @@ function switchUserMenuState(): void {
                             xmlns="http://www.w3.org/2000/svg"
                         >
                             <filter id="menuSvgFilter">
-                                <feDropShadow
-                                    dx="2"
-                                    dy="2"
-                                    stdDeviation="1"
-                                    flood-opacity="0.3"
-                                />
+                                <feDropShadow dx="2" dy="2" stdDeviation="1" flood-opacity="0.3" />
                             </filter>
                             <g filter="url(#menuSvgFilter)">
-                                <path
-                                    d="M26.5 0L37 21H16L26.5 0Z"
-                                    fill="white"
-                                />
+                                <path d="M26.5 0L37 21H16L26.5 0Z" fill="white" />
                             </g>
                         </svg>
                         <div class="shadow shadow-lg flex py-4 px-4">
@@ -85,11 +64,7 @@ function switchUserMenuState(): void {
             </nav>
 
             <button @click="switchNavMenuSate()" class="ml-auto md:hidden">
-                <img
-                    v-if="!navMenuCollapsed"
-                    src="/icons/burger-button.svg"
-                    alt="Open menu"
-                />
+                <img v-if="!navMenuCollapsed" src="/icons/burger-button.svg" alt="Open menu" />
                 <img v-else src="/icons/close-button.svg" alt="Close menu" />
             </button>
         </div>
@@ -106,10 +81,7 @@ function switchUserMenuState(): void {
                 <p class="text-body font-semibold font-Inter">
                     {{ userStore.user.rsiHandle }}
                 </p>
-                <button
-                    @click="userStore.disconnectUser()"
-                    class="button-primary button-24"
-                >
+                <button @click="userStore.disconnectUser()" class="button-primary button-24">
                     Disconnect
                 </button>
             </div>

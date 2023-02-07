@@ -4,9 +4,7 @@ interface Jwt {
 
 export function getJwtFromAccessToken(accessToken: string): Jwt {
     const accessTokenUrl = accessToken.split(".")[1];
-    const b64accessTokenUrl = accessTokenUrl
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
+    const b64accessTokenUrl = accessTokenUrl.replace(/-/g, "+").replace(/_/g, "/");
 
     const decodedAccessTokenUrl = window
         .atob(b64accessTokenUrl)
@@ -16,9 +14,7 @@ export function getJwtFromAccessToken(accessToken: string): Jwt {
         })
         .join("");
 
-    const jsonPayload: Jwt = JSON.parse(
-        decodeURIComponent(decodedAccessTokenUrl),
-    );
+    const jsonPayload: Jwt = JSON.parse(decodeURIComponent(decodedAccessTokenUrl));
 
     return jsonPayload;
 }

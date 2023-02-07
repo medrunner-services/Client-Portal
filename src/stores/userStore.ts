@@ -111,8 +111,7 @@ export const useUserStore = defineStore("user", {
                 if (exp > Date.now() / 1000) return this.accessToken;
             }
 
-            const localStorageRefreshToken =
-                localStorage.getItem("refreshToken") ?? "";
+            const localStorageRefreshToken = localStorage.getItem("refreshToken") ?? "";
 
             await this.fetchToken(
                 localStorageRefreshToken,

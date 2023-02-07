@@ -46,29 +46,16 @@ const copyIdToClipboard = (): void => {
         <div
             class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex"
         />
-        <div
-            class="flex flex-col justify-center items-center h-full md:w-[45%]"
-        >
+        <div class="flex flex-col justify-center items-center h-full md:w-[45%]">
             <h1 class="title">Welcome to the</h1>
             <div class="flex items-center">
-                <img
-                    class="h-12 mr-2"
-                    src="/images/medrunner-logo.webp"
-                    alt="Medrunner Logo"
-                />
-                <h1 class="title">
-                    <span class="text-primary-900">Medrunner</span> Portal
-                </h1>
+                <img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
+                <h1 class="title"><span class="text-primary-900">Medrunner</span> Portal</h1>
             </div>
 
-            <div
-                v-if="route.path === '/login/link'"
-                class="flex w-4/5 xl:w-3/5 flex-col mt-20"
-            >
+            <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
-                    <p
-                        class="text-neutral-900 font-Inter font-semibold text-small"
-                    >
+                    <p class="text-neutral-900 font-Inter font-semibold text-small">
                         Please add this to your
                         <a
                             href="https://robertsspaceindustries.com/account/profile"
@@ -143,16 +130,10 @@ const copyIdToClipboard = (): void => {
                 </form>
             </div>
             <div v-else class="flex flex-col mt-14">
-                <button
-                    class="button-primary button-48"
-                    @click="userStore.loginUser()"
-                >
+                <button class="button-primary button-48" @click="userStore.loginUser()">
                     Login with Discord
                 </button>
-                <button
-                    class="button-secondary button-48 mt-5"
-                    @click="userStore.registerUser()"
-                >
+                <button class="button-secondary button-48 mt-5" @click="userStore.registerUser()">
                     Register with Discord
                 </button>
             </div>

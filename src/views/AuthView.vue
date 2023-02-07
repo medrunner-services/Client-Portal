@@ -26,10 +26,7 @@ onMounted(() => {
             )
             .then(response => {
                 userStore.accessToken = response.data.accessToken;
-                localStorage.setItem(
-                    "refreshToken",
-                    response.data.refreshToken,
-                );
+                localStorage.setItem("refreshToken", response.data.refreshToken);
                 router.push("/login/link");
             })
             .catch(e => {
@@ -44,10 +41,7 @@ onMounted(() => {
             )
             .then(response => {
                 userStore.accessToken = response.data.accessToken;
-                localStorage.setItem(
-                    "refreshToken",
-                    response.data.refreshToken,
-                );
+                localStorage.setItem("refreshToken", response.data.refreshToken);
                 router.push("/");
             })
             .catch(e => {
