@@ -151,7 +151,7 @@ export const useUserStore = defineStore("user", () => {
     }
 
     async function getToken(): Promise<string> {
-        if (accessToken) {
+        if (accessToken.value) {
             const exp = getJwtFromAccessToken(accessToken.value).exp;
             if (exp > Date.now() / 1000) return accessToken.value;
         }
