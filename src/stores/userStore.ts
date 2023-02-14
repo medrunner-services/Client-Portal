@@ -5,17 +5,33 @@ import { defineStore } from "pinia";
 import { getJwtFromAccessToken } from "@/utils/jwt";
 
 export interface User {
-    active: boolean;
-    created: string;
-    deactivationReason: number;
-    discordId: string;
     id: string;
-    personType: number;
-    roles: number;
+    created: Date;
+    updated: Date;
+    discordId: string;
     rsiHandle: string;
-    rsiHandleQuery: string;
-    rsiId: string;
-    updated: string;
+    roles: number;
+    active: boolean;
+    deactivationReason: number;
+    clientStats: {
+        missions: {
+            success: number;
+            failed: number;
+            noContact: number;
+            refused: number;
+            aborted: number;
+            serverError: number;
+            canceled: number;
+        };
+    };
+    activeEmergency: string;
+    plan: { nextBillOn: Date; planType: number; price: number; amountDue: number };
+    delinquent: boolean;
+    grace: boolean;
+    overdue: boolean;
+    personType: number;
+    accountCredit: number;
+    payments: { amount: number; time: Date; source: number; destination: number }[];
 }
 
 export interface PaginatedResponse<T> {
@@ -24,6 +40,8 @@ export interface PaginatedResponse<T> {
 }
 
 export interface History {
+    id: string;
+    created: Date;
     emergencyId: string;
     clientId: string;
     emergencyCreationTimestamp: Date;
@@ -46,6 +64,7 @@ export interface Emergency {
     alertMessage: { id: string; channelId: string };
     clientMessage: { id: string; channelId: string };
     coordinationThread: { id: string; channelId: string };
+    interactionMessageId: string;
     respondingTeam: {
         maxMembers: number;
         staff: {
