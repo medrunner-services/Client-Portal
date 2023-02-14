@@ -91,13 +91,13 @@ export const useUserStore = defineStore("user", {
     actions: {
         redirectToDiscordLogin(): void {
             window.location.replace(
-                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth",
+                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
         },
 
         redirectToDiscordRegister(): void {
             window.location.replace(
-                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth/register",
+                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
             );
         },
 
@@ -110,7 +110,7 @@ export const useUserStore = defineStore("user", {
         async fetchToken(refreshToken: string) {
             try {
                 const result = await axios.post(
-                    "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/exchange",
+                    `${import.meta.env.VITE_API_URL}/auth/exchange`,
                     { refreshToken },
                 );
 
@@ -142,7 +142,7 @@ export const useUserStore = defineStore("user", {
         async linkUser(username: string): Promise<string | void> {
             try {
                 await axios.post(
-                    "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/link",
+                    `${import.meta.env.VITE_API_URL}/client/link`,
                     { rsiHandle: username },
                     {
                         headers: {
@@ -160,7 +160,7 @@ export const useUserStore = defineStore("user", {
         async fetchUser(token: string): Promise<User> {
             try {
                 const result = await axios.get(
-                    "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/",
+                    `${import.meta.env.VITE_API_URL}/client/`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -180,7 +180,7 @@ export const useUserStore = defineStore("user", {
         ): Promise<PaginatedResponse<History>> {
             try {
                 const response = await axios.get(
-                    `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/history`,
+                    `${import.meta.env.VITE_API_URL}/client/history`,
                     {
                         headers: {
                             Authorization: `Bearer ${await this.getToken()}`,
@@ -200,7 +200,7 @@ export const useUserStore = defineStore("user", {
         async fetchEmergency(id: string): Promise<Emergency> {
             try {
                 const response = await axios.get(
-                    `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/emergency/${id}`,
+                    `${import.meta.env.VITE_API_URL}/emergency/${id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${await this.getToken()}`,

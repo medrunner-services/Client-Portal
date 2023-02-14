@@ -1,7 +1,7 @@
 FROM node:latest as build-stage
 WORKDIR /app
 COPY ./package*.json ./
-COPY ./.env ./
+COPY .env.development ./
 RUN npm ci
 COPY ./ .
 RUN npm run build

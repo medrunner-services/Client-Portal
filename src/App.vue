@@ -7,8 +7,8 @@ const route = useRoute();
 </script>
 
 <template>
-    <Navbar v-if="route.name !== 'login' && route.name !== 'loginLink'"></Navbar>
-    <RouterView />
+    <Navbar v-if="route.name !== 'login'"></Navbar>
+    <RouterView :class="{ 'my-14 lg:my-36': route.name !== 'login' }" />
 </template>
 
 <style scoped></style>
