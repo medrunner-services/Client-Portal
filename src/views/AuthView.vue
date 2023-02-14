@@ -17,7 +17,9 @@ onMounted(async () => {
     if (route.path === "/auth/register") {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${
+                    route.query.code
+                }&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
             );
 
             userStore.setTokens({
@@ -31,7 +33,9 @@ onMounted(async () => {
     } else {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth`,
             );
 
             userStore.setTokens({

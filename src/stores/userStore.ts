@@ -92,13 +92,17 @@ export const useUserStore = defineStore("user", {
     actions: {
         redirectToDiscordLogin(): void {
             window.location.replace(
-                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth`,
             );
         },
 
         redirectToDiscordRegister(): void {
             window.location.replace(
-                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
+                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth/register`,
             );
         },
 
@@ -110,10 +114,9 @@ export const useUserStore = defineStore("user", {
 
         async fetchToken(refreshToken: string) {
             try {
-                const result = await axios.post(
-                    `${import.meta.env.VITE_API_URL}/auth/exchange`,
-                    { refreshToken },
-                );
+                const result = await axios.post(`${import.meta.env.VITE_API_URL}/auth/exchange`, {
+                    refreshToken,
+                });
 
                 return result.data;
             } catch (error: AxiosError | any) {
@@ -160,14 +163,11 @@ export const useUserStore = defineStore("user", {
 
         async fetchUser(token: string): Promise<User> {
             try {
-                const result = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/client/`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
+                const result = await axios.get(`${import.meta.env.VITE_API_URL}/client/`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
                     },
-                );
+                });
 
                 return result.data;
             } catch (error: AxiosError | any) {
@@ -180,18 +180,15 @@ export const useUserStore = defineStore("user", {
             paginationToken?: string,
         ): Promise<PaginatedResponse<History>> {
             try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/client/history`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${await this.getToken()}`,
-                        },
-                        params: {
-                            limit: limit,
-                            paginationToken: paginationToken,
-                        },
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/client/history`, {
+                    headers: {
+                        Authorization: `Bearer ${await this.getToken()}`,
                     },
-                );
+                    params: {
+                        limit: limit,
+                        paginationToken: paginationToken,
+                    },
+                });
                 return response.data;
             } catch (error: AxiosError | any) {
                 throw Error(error.response.status);
