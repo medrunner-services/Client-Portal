@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
 import type { History, PaginatedResponse } from "@/stores/userStore";
@@ -9,8 +9,8 @@ const userStore = useUserStore();
 let history: PaginatedResponse<History>;
 const loaded = ref(false);
 
-userStore.fetchUserHistory(5).then(response => {
-    history = response;
+onMounted(async () => {
+    history = await userStore.fetchUserHistory(5);
     loaded.value = true;
 });
 </script>
