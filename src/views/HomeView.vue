@@ -7,7 +7,7 @@ import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 let history: PaginatedResponse<History>;
-let loaded = ref(false);
+const loaded = ref(false);
 
 userStore.fetchUserHistory(5).then(response => {
     history = response;
