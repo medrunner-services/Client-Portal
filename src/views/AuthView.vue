@@ -17,7 +17,7 @@ onMounted(async () => {
     if (route.path === "/auth/register") {
         try {
             const response = await axios.get(
-                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/register?code=${route.query.code}&redirectUri=http://localhost:5173/auth/register`,
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
             );
 
             userStore.setTokens({
@@ -31,7 +31,7 @@ onMounted(async () => {
     } else {
         try {
             const response = await axios.get(
-                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${route.query.code}&redirectUri=http://localhost:5173/auth`,
+                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
 
             userStore.setTokens({
