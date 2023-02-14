@@ -50,7 +50,7 @@ function switchUserMenuState(): void {
                         </svg>
                         <div class="shadow shadow-lg flex py-4 px-4">
                             <p class="text-body font-semibold font-Inter">
-                                {{ userStore.user.rsiHandle }}
+                                {{ userStore.user?.rsiHandle }}
                             </p>
                             <button
                                 @click.prevent="userStore.disconnectUser()"
@@ -79,7 +79,7 @@ function switchUserMenuState(): void {
             </div>
             <div class="flex gap-4">
                 <p class="text-body font-semibold font-Inter">
-                    {{ userStore.user.rsiHandle }}
+                    {{ userStore.user?.rsiHandle }}
                 </p>
                 <button @click="userStore.disconnectUser()" class="button-primary button-24">
                     Disconnect

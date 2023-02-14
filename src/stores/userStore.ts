@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosError } from "axios";
 import { defineStore } from "pinia";
+import { type Ref, ref } from "vue";
+import { useRouter } from "vue-router";
 
 import { getJwtFromAccessToken } from "@/utils/jwt";
 
@@ -97,138 +99,141 @@ interface Tokens {
     accessToken: string;
     refreshToken: string;
 }
-export const useUserStore = defineStore("user", {
-    state: () => {
-        return {
-            user: {} as User,
-            isAuthenticated: false,
-            accessToken: "",
-        };
-    },
 
-    getters: {},
+export const useUserStore = defineStore("user", () => {
+    const user: Ref<User | undefined> = ref(undefined)
+    const isAuthenticated = ref(false)
+    const accessToken = ref("")
 
-    actions: {
-        redirectToDiscordLogin(): void {
-            window.location.replace(
-                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
-                    import.meta.env.VITE_CALLBACK_URL
-                }/auth`,
-            );
-        },
+    const router = useRouter()
 
-        redirectToDiscordRegister(): void {
-            window.location.replace(
-                `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
-                    import.meta.env.VITE_CALLBACK_URL
-                }/auth/register`,
-            );
-        },
+    function setupStore() {
+        user.value = undefined
+        isAuthenticated.value = false
+        accessToken.value = ""
+    }
 
-        disconnectUser(): void {
-            localStorage.removeItem("refreshToken");
-            this.$reset();
-            this.router.push("/login");
-        },
+    function redirectToDiscordLogin(): void {
+        window.location.replace(
+            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL
+            }/auth`,
+        );
+    }
 
-        async fetchToken(refreshToken: string) {
-            try {
-                const result = await axios.post(`${import.meta.env.VITE_API_URL}/auth/exchange`, {
-                    refreshToken,
-                });
+    function redirectToDiscordRegister(): void {
+        window.location.replace(
+            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL
+            }/auth/register`,
+        );
+    }
 
-                return result.data;
-            } catch (error: AxiosError | any) {
-                throw Error(error.response.status);
-            }
-        },
+    function disconnectUser(): void {
+        localStorage.removeItem("refreshToken");
+        setupStore()
+        router.push("/login");
+    }
 
-        setTokens(tokens: Tokens): void {
-            this.accessToken = tokens.accessToken;
-            localStorage.setItem("refreshToken", tokens.refreshToken);
-        },
+    async function fetchToken(refreshToken: string) {
+        try {
+            const result = await axios.post(`${import.meta.env.VITE_API_URL}/auth/exchange`, {
+                refreshToken,
+            });
 
-        async getToken(): Promise<string> {
-            if (this.accessToken) {
-                const exp = getJwtFromAccessToken(this.accessToken).exp;
-                if (exp > Date.now() / 1000) return this.accessToken;
-            }
+            return result.data;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
 
-            const localStorageRefreshToken = localStorage.getItem("refreshToken") ?? "";
+    function setTokens(tokens: Tokens): void {
+        accessToken.value = tokens.accessToken;
+        localStorage.setItem("refreshToken", tokens.refreshToken);
+    }
 
-            const tokens = await this.fetchToken(localStorageRefreshToken);
-            this.setTokens(tokens);
+    async function getToken(): Promise<string> {
+        if (accessToken) {
+            const exp = getJwtFromAccessToken(accessToken.value).exp;
+            if (exp > Date.now() / 1000) return accessToken.value;
+        }
 
-            return this.accessToken;
-        },
+        const localStorageRefreshToken = localStorage.getItem("refreshToken") ?? "";
 
-        async linkUser(username: string): Promise<string | void> {
-            try {
-                await axios.post(
-                    `${import.meta.env.VITE_API_URL}/client/link`,
-                    { rsiHandle: username },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${await this.getToken()}`,
-                        },
-                    },
-                );
+        const tokens = await fetchToken(localStorageRefreshToken);
+        setTokens(tokens);
 
-                return "success";
-            } catch (error: AxiosError | any) {
-                throw Error(error.response.status);
-            }
-        },
+        return accessToken.value;
+    }
 
-        async fetchUser(token: string): Promise<User> {
-            try {
-                const result = await axios.get(`${import.meta.env.VITE_API_URL}/client/`, {
+    async function linkUser(username: string): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/client/link`,
+                { rsiHandle: username },
+                {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${await getToken()}`,
                     },
-                });
+                },
+            );
 
-                return result.data;
-            } catch (error: AxiosError | any) {
-                throw Error(error.response.status);
-            }
-        },
+            return "success";
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
 
-        async fetchUserHistory(
-            limit: number,
-            paginationToken?: string,
-        ): Promise<PaginatedResponse<History>> {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/client/history`, {
+    async function fetchUser(): Promise<User> {
+        try {
+            const result = await axios.get(`${import.meta.env.VITE_API_URL}/client/`, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                },
+            });
+
+            return result.data;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function fetchUserHistory(
+        limit: number,
+        paginationToken?: string,
+    ): Promise<PaginatedResponse<History>> {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/client/history`, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                },
+                params: {
+                    limit: limit,
+                    paginationToken: paginationToken,
+                },
+            });
+            return response.data;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function fetchEmergency(id: string): Promise<Emergency> {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}`,
+                {
                     headers: {
-                        Authorization: `Bearer ${await this.getToken()}`,
+                        Authorization: `Bearer ${await getToken()}`,
                     },
-                    params: {
-                        limit: limit,
-                        paginationToken: paginationToken,
-                    },
-                });
-                return response.data;
-            } catch (error: AxiosError | any) {
-                throw Error(error.response.status);
-            }
-        },
+                },
+            );
 
-        async fetchEmergency(id: string): Promise<Emergency> {
-            try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/emergency/${id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${await this.getToken()}`,
-                        },
-                    },
-                );
+            return response.data;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
 
-                return response.data;
-            } catch (error: AxiosError | any) {
-                throw Error(error.response.status);
-            }
-        },
-    },
-});
+    return {
+        redirectToDiscordLogin, redirectToDiscordRegister, disconnectUser, linkUser, fetchUser, fetchUserHistory, fetchEmergency, user, isAuthenticated, setTokens
+    }
+})

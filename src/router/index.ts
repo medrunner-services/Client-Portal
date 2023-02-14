@@ -11,14 +11,14 @@ function isUserAuthenticated(): string | boolean {
 
 function isUserNotLinked(): string | boolean {
     const userStore = useUserStore();
-    return userStore.isAuthenticated && !userStore.user.rsiHandle ? true : "/";
+    return userStore.isAuthenticated && !userStore.user?.rsiHandle ? true : "/";
 }
 
 async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
 
     try {
-        const user = await userStore.fetchUser(await userStore.getToken());
+        const user = await userStore.fetchUser();
 
         userStore.user = user;
         userStore.isAuthenticated = true;
