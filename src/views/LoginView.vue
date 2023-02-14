@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError } from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
