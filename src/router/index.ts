@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import { type User, useUserStore } from "@/stores/userStore";
+import { useUserStore } from "@/stores/userStore";
 
 import HomeView from "../views/HomeView.vue";
 
@@ -14,34 +14,20 @@ function isUserNotLinked(): string | boolean {
     return userStore.isAuthenticated && !userStore.user.rsiHandle ? true : "/";
 }
 
-function getSuccessRedirection(user: User): string | boolean {
+async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
-    userStore.user = user;
-    userStore.isAuthenticated = true;
 
-    if (!user.active) {
+    try {
+        const user = await userStore.fetchUser(await userStore.getToken());
+
+        userStore.user = user;
+        userStore.isAuthenticated = true;
+
+        if (!user.active) return "/login";
+        return user.rsiHandle ? true : "/login/link";
+    } catch (error) {
         return "/login";
     }
-
-    if (user.rsiHandle) {
-        return true;
-    } else {
-        return "/login/link";
-    }
-}
-
-async function getRedirection(): Promise<any> {
-    const userStore = useUserStore();
-
-    let redirection: string | boolean = true;
-
-    await userStore.fetchUser(
-        await userStore.getToken(),
-        user => (redirection = getSuccessRedirection(user)),
-        () => (redirection = "/login"),
-    );
-
-    return redirection;
 }
 
 const router = createRouter({
@@ -51,7 +37,7 @@ const router = createRouter({
             path: "/",
             name: "home",
             component: HomeView,
-            beforeEnter: getRedirection,
+            beforeEnter: isUserComplete,
         },
         {
             path: "/login",

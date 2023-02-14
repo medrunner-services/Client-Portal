@@ -29,7 +29,7 @@ onMounted(() => {
                 localStorage.setItem("refreshToken", response.data.refreshToken);
                 router.push("/login/link");
             })
-            .catch(e => {
+            .catch(() => {
                 router.push("/login?error=true");
             });
     } else {
@@ -44,7 +44,7 @@ onMounted(() => {
                 localStorage.setItem("refreshToken", response.data.refreshToken);
                 router.push("/");
             })
-            .catch(e => {
+            .catch(() => {
                 router.push("/login?error=true");
             });
     }
@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="w-full h-[90vh] flex justify-center items-center">
+    <div class="w-full h-[70vh] flex justify-center items-center">
         <svg
             class="animate-spin h-14 w-14 text-primary-900"
             xmlns="http://www.w3.org/2000/svg"

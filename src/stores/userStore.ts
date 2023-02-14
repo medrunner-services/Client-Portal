@@ -67,7 +67,6 @@ interface Tokens {
     accessToken: string;
     refreshToken: string;
 }
-
 export const useUserStore = defineStore("user", {
     state: () => {
         return {
@@ -84,19 +83,34 @@ export const useUserStore = defineStore("user", {
     },
 
     actions: {
-        async fetchToken(
-            refreshToken: string,
-            successCallback: (tokens: Tokens) => void,
-            errorCallback: (error: AxiosError) => void,
-        ) {
+        redirectToDiscordLogin(): void {
+            window.location.replace(
+                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth",
+            );
+        },
+
+        redirectToDiscordRegister(): void {
+            window.location.replace(
+                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth/register",
+            );
+        },
+
+        disconnectUser(): void {
+            localStorage.removeItem("refreshToken");
+            this.$reset();
+            this.router.push("/login");
+        },
+
+        async fetchToken(refreshToken: string) {
             try {
                 const result = await axios.post(
                     "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/exchange",
                     { refreshToken },
                 );
-                successCallback(result.data);
+
+                return result.data;
             } catch (error: AxiosError | any) {
-                errorCallback(error);
+                throw Error(error.response.status);
             }
         },
 
@@ -113,31 +127,10 @@ export const useUserStore = defineStore("user", {
 
             const localStorageRefreshToken = localStorage.getItem("refreshToken") ?? "";
 
-            await this.fetchToken(
-                localStorageRefreshToken,
-                tokens => this.setTokens(tokens),
-                () => undefined,
-            );
+            const tokens = await this.fetchToken(localStorageRefreshToken);
+            this.setTokens(tokens);
 
             return this.accessToken;
-        },
-
-        loginUser(): void {
-            window.location.replace(
-                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth",
-            );
-        },
-
-        registerUser(): void {
-            window.location.replace(
-                "https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=http://localhost:5173/auth/register",
-            );
-        },
-
-        disconnectUser(): void {
-            localStorage.removeItem("refreshToken");
-            this.$reset();
-            this.router.push("/login");
         },
 
         async linkUser(username: string): Promise<string | void> {
@@ -152,21 +145,13 @@ export const useUserStore = defineStore("user", {
                     },
                 );
 
-                this.router.push("/");
-            } catch (e: any) {
-                if (e.response.status === 401) {
-                    this.router.push("/login?error=true");
-                } else {
-                    return "error";
-                }
+                return "success";
+            } catch (error: AxiosError | any) {
+                throw Error(error.response.status);
             }
         },
 
-        async fetchUser(
-            token: string,
-            successCallback: (user: User) => any,
-            errorCallback: (error: AxiosError) => any,
-        ): Promise<void> {
+        async fetchUser(token: string): Promise<User> {
             try {
                 const result = await axios.get(
                     "http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/",
@@ -176,9 +161,10 @@ export const useUserStore = defineStore("user", {
                         },
                     },
                 );
-                successCallback(result.data);
+
+                return result.data;
             } catch (error: AxiosError | any) {
-                errorCallback(error);
+                throw Error(error.response.status);
             }
         },
 
@@ -192,9 +178,10 @@ export const useUserStore = defineStore("user", {
                         },
                     },
                 );
+
                 return response.data;
-            } catch (error) {
-                throw Error;
+            } catch (error: AxiosError | any) {
+                throw Error(error.response.status);
             }
         },
     },

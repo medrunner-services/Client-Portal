@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { AxiosError } from "axios";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 
+import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
@@ -9,23 +11,29 @@ const route = useRoute();
 
 const formUsername = ref("");
 const waitingForApi = ref(false);
-const errorAlert = ref(false);
+const loginErrorAlert = ref(false);
+const formErrorMessage = ref("An error occurred");
+const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
 
 onMounted(() => {
-    if (route.query.error) errorAlert.value = true;
+    if (route.query.error) loginErrorAlert.value = true;
 });
 
-const submittingLinkForm = (): void => {
+const submittingLinkForm = async (): Promise<void> => {
     waitingForApi.value = true;
-    errorAlert.value = false;
+    loginErrorAlert.value = false;
 
-    userStore.linkUser(formUsername.value).then(res => {
-        if (res !== "error") return;
+    try {
+        await userStore.linkUser(formUsername.value);
+        router.push("/");
+    } catch (error: AxiosError | any) {
+        if (error.message === 451) formErrorMessage.value = "This account is blocked";
+        if (error.message === 403) formErrorMessage.value = "Missing Medrunner ID in RSI Bio";
 
+        formErrorActive.value = true;
         waitingForApi.value = false;
-        errorAlert.value = true;
-    });
+    }
 };
 
 const copyIdToClipboard = (): void => {
@@ -38,7 +46,7 @@ const copyIdToClipboard = (): void => {
 <template>
     <div class="pt-0 h-screen flex justify-center">
         <div
-            v-if="errorAlert"
+            v-if="loginErrorAlert"
             class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900"
         >
             <p>Something went wrong, please try again</p>
@@ -104,7 +112,8 @@ const copyIdToClipboard = (): void => {
                             v-model="formUsername"
                             type="text"
                             name="rsiHandle"
-                            class="input-text w-full"
+                            class="w-full"
+                            :class="formErrorActive ? 'input-text-error' : 'input-text'"
                             placeholder="Your username..."
                         />
                     </div>
@@ -128,12 +137,21 @@ const copyIdToClipboard = (): void => {
                         <span v-else>Continue</span>
                     </button>
                 </form>
+                <p v-if="formErrorActive" class="mt-2 text-primary-400 font-Inter text-sm">
+                    {{ formErrorMessage }}
+                </p>
             </div>
             <div v-else class="flex flex-col mt-14">
-                <button class="button-primary button-48" @click="userStore.loginUser()">
+                <button
+                    class="button-primary button-48"
+                    @click="userStore.redirectToDiscordLogin()"
+                >
                     Login with Discord
                 </button>
-                <button class="button-secondary button-48 mt-5" @click="userStore.registerUser()">
+                <button
+                    class="button-secondary button-48 mt-5"
+                    @click="userStore.redirectToDiscordRegister()"
+                >
                     Register with Discord
                 </button>
             </div>
