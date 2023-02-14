@@ -1,0 +1,26 @@
+name: Push RC to ECR
+
+on:
+  push:
+    tags:
+      - 'v[0-9][0-9]?[0-9]?.[0-9][0-9]?[0-9]?.[0-9][0-9]?[0-9]?-rc.[0-9][0-9]?[0-9]?'
+
+env:
+  CONTAINER_NAME: medrunner-portal:${{ github.ref_name }}
+  REGION: us-east-1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker build --tag ${{ env.CONTAINER_NAME }} .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.REGION }}
+          image: ${{ env.CONTAINER_NAME }}
