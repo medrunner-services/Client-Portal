@@ -16,18 +16,28 @@ onMounted(async () => {
 
     if (route.path === "/auth/register") {
         try {
-            const response = await axios.get(`http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/register?code=${route.query.code}&redirectUri=http://localhost:5173/auth/register`)
+            const response = await axios.get(
+                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/register?code=${route.query.code}&redirectUri=http://localhost:5173/auth/register`,
+            );
 
-            userStore.setTokens({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken})
+            userStore.setTokens({
+                accessToken: response.data.accessToken,
+                refreshToken: response.data.refreshToken,
+            });
             router.push("/login/link");
         } catch (e) {
             router.push("/login?error=true");
         }
     } else {
         try {
-            const response = await axios.get(`http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${route.query.code}&redirectUri=http://localhost:5173/auth`)
+            const response = await axios.get(
+                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${route.query.code}&redirectUri=http://localhost:5173/auth`,
+            );
 
-            userStore.setTokens({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken})
+            userStore.setTokens({
+                accessToken: response.data.accessToken,
+                refreshToken: response.data.refreshToken,
+            });
             router.push("/");
         } catch (e) {
             router.push("/login?error=true");
