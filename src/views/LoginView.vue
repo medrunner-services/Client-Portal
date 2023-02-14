@@ -38,6 +38,7 @@ const submittingLinkForm = async (): Promise<void> => {
 };
 
 const copyIdToClipboard = (): void => {
+    if (!userStore.user) return;
     navigator.clipboard.writeText(userStore.user.id).then(() => {
         clipboardIcon.value = "/icons/check-icon.svg";
     });
@@ -79,7 +80,7 @@ const copyIdToClipboard = (): void => {
                             class="bg-neutral-700 text-neutral-50 font-Inter text-xs w-full text-center"
                         >
                             <p class="py-3 mx-auto">
-                                {{ userStore.user.id }}
+                                {{ userStore.user?.id }}
                             </p>
                         </div>
                         <img
