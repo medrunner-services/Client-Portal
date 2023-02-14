@@ -8,6 +8,14 @@ This portal brings the medrunner experience to the web !
 npm install
 ```
 
+### .env
+
+```dotenv
+VITE_API_URL
+VITE_CALLBACK_URL
+```
+You can use `.env.development` and `.env.production` for the different Vite modes.
+
 ### Compile and Hot-Reload for Development
 
 ```sh
