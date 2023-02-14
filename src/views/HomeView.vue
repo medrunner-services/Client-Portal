@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
+import type { History, PaginatedResponse } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+let history: PaginatedResponse<History>;
+const loaded = ref(false);
+
+onMounted(async () => {
+    history = await userStore.fetchUserHistory(5);
+    loaded.value = true;
+});
 </script>
 
 <template>
@@ -11,11 +21,12 @@ const userStore = useUserStore();
     >
         <div class="mt-10 lg:mt-0 lg:w-[35%] lg:max-w-xl">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">History</h2>
-            <div v-if="userStore.user.emergencyHistory.length > 0">
+            <div v-if="loaded && history?.data.length > 0">
                 <EmergencyHistory
-                    v-for="(emergency, index) in userStore.getLastOrderedEmergencyHistory"
+                    v-for="emergency in history.data"
                     class="mt-4 first:mt-0"
-                    :emergencyListIndex="index"
+                    :emergencyId="emergency.emergencyId"
+                    :createdDate="emergency.emergencyCreationTimestamp"
                 />
             </div>
         </div>

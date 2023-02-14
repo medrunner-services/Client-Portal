@@ -8,7 +8,6 @@ export interface User {
     created: string;
     deactivationReason: number;
     discordId: string;
-    emergencyHistory: { created: string; id: string }[];
     id: string;
     personType: number;
     roles: number;
@@ -16,6 +15,17 @@ export interface User {
     rsiHandleQuery: string;
     rsiId: string;
     updated: string;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    paginationToken: string;
+}
+
+export interface History {
+    emergencyId: string;
+    clientId: string;
+    emergencyCreationTimestamp: Date;
 }
 
 export interface Emergency {
@@ -76,11 +86,7 @@ export const useUserStore = defineStore("user", {
         };
     },
 
-    getters: {
-        getLastOrderedEmergencyHistory(): Array<object> {
-            return this.user.emergencyHistory.sort().reverse().slice(0, 5);
-        },
-    },
+    getters: {},
 
     actions: {
         redirectToDiscordLogin(): void {
@@ -163,6 +169,29 @@ export const useUserStore = defineStore("user", {
                 );
 
                 return result.data;
+            } catch (error: AxiosError | any) {
+                throw Error(error.response.status);
+            }
+        },
+
+        async fetchUserHistory(
+            limit: number,
+            paginationToken?: string,
+        ): Promise<PaginatedResponse<History>> {
+            try {
+                const response = await axios.get(
+                    `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/client/history`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${await this.getToken()}`,
+                        },
+                        params: {
+                            limit: limit,
+                            paginationToken: paginationToken,
+                        },
+                    },
+                );
+                return response.data;
             } catch (error: AxiosError | any) {
                 throw Error(error.response.status);
             }

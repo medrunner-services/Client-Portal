@@ -4,11 +4,9 @@ import { ref } from "vue";
 import type { Emergency } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 
-const props = defineProps(["emergencyListIndex"]);
+const props = defineProps(["emergencyId", "createdDate"]);
 const userStore = useUserStore();
 
-const emergency = userStore.user.emergencyHistory[props.emergencyListIndex];
-const emergencyDate = new Date(Date.parse(emergency.created)).toLocaleString();
 const developedInfo = ref(false);
 const loadingInfo = ref(false);
 const errorLoadingInfo = ref(false);
@@ -20,7 +18,7 @@ async function switchCollapsedSate(): Promise<void> {
     if (developedInfo.value) {
         loadingInfo.value = true;
         await userStore
-            .fetchEmergency(emergency.id)
+            .fetchEmergency(props.emergencyId)
             .then(response => {
                 emergencyInfo = response;
                 loadingInfo.value = false;
@@ -67,7 +65,7 @@ function getResponders(responders: any): string {
     <div class="flex flex-col border-2 border-primary-900 text-neutral-900">
         <div class="flex items-center">
             <p class="flex-grow py-1 px-2 font-Inter font-semibold">
-                {{ emergencyDate }}
+                {{ props.createdDate }}
             </p>
             <div
                 @click="switchCollapsedSate()"
