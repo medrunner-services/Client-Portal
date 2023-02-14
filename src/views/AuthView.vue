@@ -9,44 +9,29 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-
-onMounted(() => {
-    if (!urlParams.has("code")) {
+onMounted(async () => {
+    if (!route.query.code) {
         router.push("/login");
     }
 
     if (route.path === "/auth/register") {
-        axios
-            .get(
-                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/register?code=${urlParams.get(
-                    "code",
-                )}&redirectUri=http://localhost:5173/auth/register`,
-            )
-            .then(response => {
-                userStore.accessToken = response.data.accessToken;
-                localStorage.setItem("refreshToken", response.data.refreshToken);
-                router.push("/login/link");
-            })
-            .catch(() => {
-                router.push("/login?error=true");
-            });
+        try {
+            const response = await axios.get(`http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/register?code=${route.query.code}&redirectUri=http://localhost:5173/auth/register`)
+
+            userStore.setTokens({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken})
+            router.push("/login/link");
+        } catch (e) {
+            router.push("/login?error=true");
+        }
     } else {
-        axios
-            .get(
-                `http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${urlParams.get(
-                    "code",
-                )}&redirectUri=http://localhost:5173/auth`,
-            )
-            .then(response => {
-                userStore.accessToken = response.data.accessToken;
-                localStorage.setItem("refreshToken", response.data.refreshToken);
-                router.push("/");
-            })
-            .catch(() => {
-                router.push("/login?error=true");
-            });
+        try {
+            const response = await axios.get(`http://ec2co-ecsel-7i88sw5ak5o0-1780126779.us-west-2.elb.amazonaws.com/auth/signin?code=${route.query.code}&redirectUri=http://localhost:5173/auth`)
+
+            userStore.setTokens({accessToken: response.data.accessToken, refreshToken: response.data.refreshToken})
+            router.push("/");
+        } catch (e) {
+            router.push("/login?error=true");
+        }
     }
 });
 </script>
@@ -75,5 +60,3 @@ onMounted(() => {
         </svg>
     </div>
 </template>
-
-<style scoped></style>
