@@ -218,8 +218,22 @@ export const useUserStore = defineStore("user", () => {
 
     async function fetchEmergency(id: string): Promise<Emergency> {
         try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/emergency/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                },
+            });
+
+            return response.data;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function fetchEmergencies(...id: string[]): Promise<Emergency[]> {
+        try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/emergency/${id}`,
+                `${import.meta.env.VITE_API_URL}/emergency/bulk?id=${id.join("&id=")}`,
                 {
                     headers: {
                         Authorization: `Bearer ${await getToken()}`,
@@ -234,6 +248,16 @@ export const useUserStore = defineStore("user", () => {
     }
 
     return {
-        redirectToDiscordLogin, redirectToDiscordRegister, disconnectUser, linkUser, fetchUser, fetchUserHistory, fetchEmergency, user, isAuthenticated, setTokens
-    }
-})
+        redirectToDiscordLogin,
+        redirectToDiscordRegister,
+        disconnectUser,
+        linkUser,
+        fetchUser,
+        fetchUserHistory,
+        fetchEmergency,
+        fetchEmergencies,
+        user,
+        isAuthenticated,
+        setTokens,
+    };
+});
