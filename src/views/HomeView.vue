@@ -40,7 +40,7 @@ async function loadHistory(skipFirst = false) {
 
     const emergencies = await bulkLoadEmergencies(historyResponse.data);
     const sortedEmergencies = emergencies
-        .slice(skipFirst ? 1 : undefined)
+        .filter(e => e.isComplete)
         .sort((a, b) => b.creationTimestamp - a.creationTimestamp); // /bulk doesn't guarantee ordering
 
     loadedHistory.push(...sortedEmergencies);
