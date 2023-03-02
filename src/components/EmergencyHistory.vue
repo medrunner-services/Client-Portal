@@ -15,6 +15,14 @@ function timestampToHours(timestamp: number): string {
     });
 }
 
+function timestampToDate(timestamp: number): string {
+    return new Date(timestamp).toLocaleDateString([], {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    });
+}
+
 function getThreatString(id: number): string {
     switch (id) {
         case 0:
@@ -30,6 +38,35 @@ function getThreatString(id: number): string {
             return "Unknown";
     }
 }
+
+function getStatusString(id: number): string {
+    switch (id) {
+        case 0:
+            return "Created";
+        case 1:
+            return "Received";
+        case 2:
+        case 10: // "Pending completion" special case
+            return "In Progress";
+        case 3:
+            return "Completed";
+        case 4:
+            return "Failed";
+        case 5:
+            return "No Contact";
+        case 6:
+            return "Canceled";
+        case 7:
+            return "Refused";
+        case 8:
+            return "Aborted";
+        case 9:
+            return "Server Error";
+        default:
+            return "Unknown";
+    }
+}
+
 function getResponders(responders: any): string {
     let responderArray = [];
     for (const responder of responders) {
@@ -43,7 +80,8 @@ function getResponders(responders: any): string {
     <div class="flex flex-col border-2 border-primary-900 text-neutral-900">
         <div class="flex items-center">
             <p class="flex-grow py-1 px-2 font-Inter font-semibold">
-                {{ emergencyInfo.created }}
+                {{ timestampToDate(emergencyInfo.creationTimestamp) }} -
+                {{ getStatusString(emergencyInfo.status) }}
             </p>
             <div
                 @click="showCard = !showCard"
@@ -66,8 +104,14 @@ function getResponders(responders: any): string {
                         {{ timestampToHours(emergencyInfo.creationTimestamp) }}
                     </p>
                 </div>
-                <div class="border border-primary-900 h-0.5 w-16" />
-                <div class="flex flex-col justify-center items-center">
+                <div
+                    v-if="emergencyInfo.acceptedTimestamp !== undefined"
+                    class="border border-primary-900 h-0.5 w-16"
+                />
+                <div
+                    v-if="emergencyInfo.acceptedTimestamp !== undefined"
+                    class="flex flex-col justify-center items-center"
+                >
                     <p>Accepted</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>
@@ -76,7 +120,7 @@ function getResponders(responders: any): string {
                 </div>
                 <div class="border border-primary-900 h-0.5 w-16" />
                 <div class="flex flex-col justify-center items-center">
-                    <p>Completed</p>
+                    <p>{{ getStatusString(emergencyInfo.status) }}</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>
                         {{ timestampToHours(emergencyInfo.completionTimestamp) }}
