@@ -118,7 +118,11 @@ async function nextPage(): Promise<void> {
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
                     :class="{ disabled: page <= 0 }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 rotate-90" alt="Dropdown arrow" />
+                    <img
+                        src="/icons/arrow-icon.svg"
+                        class="w-6 h-6 rotate-90"
+                        alt="Dropdown arrow"
+                    />
                 </div>
                 <div class="w-1/2 xl: w-2/3 flex justify-center items-center font-Inter font-bold">
                     {{ page + 1 }}
@@ -128,10 +132,13 @@ async function nextPage(): Promise<void> {
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
                     :class="{ disabled: paginationToken === undefined }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 -rotate-90" alt="Dropdown arrow" />
+                    <img
+                        src="/icons/arrow-icon.svg"
+                        class="w-6 h-6 -rotate-90"
+                        alt="Dropdown arrow"
+                    />
                 </div>
             </div>
-
         </div>
         <div class="lg:w-[60%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase">Emergency</h2>
