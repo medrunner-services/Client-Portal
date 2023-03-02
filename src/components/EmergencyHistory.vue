@@ -89,7 +89,7 @@ function getResponders(responders: any): string {
             >
                 <img
                     src="/icons/arrow-icon.svg"
-                    class="w-6 h-6"
+                    class="w-6 h-6 select-none"
                     :class="{ 'rotate-180': showCard }"
                     alt="Dropdown arrow"
                 />

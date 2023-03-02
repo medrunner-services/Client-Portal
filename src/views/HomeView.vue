@@ -56,7 +56,6 @@ async function loadDataForPage(direction: number): Promise<void> {
     }
 
     if (paginationToken.value === undefined) {
-        // no new data to fetch - if it's not in the cache, we're SOL
         page.value -= direction;
         return;
     }
@@ -91,23 +90,48 @@ async function nextPage(): Promise<void> {
                     :emergency="emergency"
                 />
             </div>
-            <div
-                @click="previousPage()"
-                class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center"
-                :class="{ disabled: page <= 0 }"
-            >
-                <img src="/icons/arrow-icon.svg" class="w-6 h-6 rotate-90" alt="Dropdown arrow" />
+            <div v-else-if="!loaded" class="w-full flex justify-center items-center h-80">
+                <svg
+                    class="animate-spin h-14 w-14 text-primary-900"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></circle>
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                </svg>
             </div>
-            <div>
-                {{ page + 1 }}
+            <div class="mt-5 xl:mt-10 flex justify-between">
+                <div
+                    @click="previousPage()"
+                    class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
+                    :class="{ disabled: page <= 0 }"
+                >
+                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 rotate-90" alt="Dropdown arrow" />
+                </div>
+                <div class="w-1/2 xl: w-2/3 flex justify-center items-center font-Inter font-bold">
+                    {{ page + 1 }}
+                </div>
+                <div
+                    @click="nextPage()"
+                    class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
+                    :class="{ disabled: paginationToken === undefined }"
+                >
+                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 -rotate-90" alt="Dropdown arrow" />
+                </div>
             </div>
-            <div
-                @click="nextPage()"
-                class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center"
-                :class="{ disabled: paginationToken === undefined }"
-            >
-                <img src="/icons/arrow-icon.svg" class="w-6 h-6 -rotate-90" alt="Dropdown arrow" />
-            </div>
+
         </div>
         <div class="lg:w-[60%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase">Emergency</h2>
