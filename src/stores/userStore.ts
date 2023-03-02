@@ -101,35 +101,37 @@ interface Tokens {
 }
 
 export const useUserStore = defineStore("user", () => {
-    const user: Ref<User | undefined> = ref(undefined)
-    const isAuthenticated = ref(false)
-    const accessToken = ref("")
+    const user: Ref<User | undefined> = ref(undefined);
+    const isAuthenticated = ref(false);
+    const accessToken = ref("");
 
-    const router = useRouter()
+    const router = useRouter();
 
     function setupStore() {
-        user.value = undefined
-        isAuthenticated.value = false
-        accessToken.value = ""
+        user.value = undefined;
+        isAuthenticated.value = false;
+        accessToken.value = "";
     }
 
     function redirectToDiscordLogin(): void {
         window.location.replace(
-            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL
+            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
+                import.meta.env.VITE_CALLBACK_URL
             }/auth`,
         );
     }
 
     function redirectToDiscordRegister(): void {
         window.location.replace(
-            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${import.meta.env.VITE_CALLBACK_URL
+            `https://discord.com/oauth2/authorize?client_id=1050206397972873227&scope=identify&response_type=code&redirect_uri=${
+                import.meta.env.VITE_CALLBACK_URL
             }/auth/register`,
         );
     }
 
     function disconnectUser(): void {
         localStorage.removeItem("refreshToken");
-        setupStore()
+        setupStore();
         router.push("/login");
     }
 
