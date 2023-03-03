@@ -2,6 +2,7 @@
 import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
 
+import EmergencyForm from "@/components/EmergencyForm.vue";
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
 import type { Emergency, History } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
@@ -141,7 +142,8 @@ async function nextPage(): Promise<void> {
             </div>
         </div>
         <div class="lg:w-[60%]">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase">Emergency</h2>
+            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
+            <EmergencyForm />
         </div>
     </div>
 </template>
