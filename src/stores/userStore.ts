@@ -101,14 +101,14 @@ interface Tokens {
 }
 
 export const useUserStore = defineStore("user", () => {
-    const user: Ref<User | undefined> = ref(undefined);
+    const user: Ref<User> = ref({} as User);
     const isAuthenticated = ref(false);
     const accessToken = ref("");
 
     const router = useRouter();
 
     function setupStore() {
-        user.value = undefined;
+        user.value = {} as User;
         isAuthenticated.value = false;
         accessToken.value = "";
     }
@@ -178,6 +178,7 @@ export const useUserStore = defineStore("user", () => {
                 },
             );
 
+            user.value.rsiHandle = username;
             return "success";
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);

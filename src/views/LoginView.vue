@@ -29,8 +29,10 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         router.push("/");
     } catch (error: AxiosError | any) {
-        if (error.message === 451) formErrorMessage.value = "This account is blocked";
-        if (error.message === 403) formErrorMessage.value = "Missing Medrunner ID in RSI Bio";
+        if (error.message === "451") formErrorMessage.value = "This account is blocked";
+        if (error.message === "403") formErrorMessage.value = "Missing Medrunner ID in RSI Bio";
+        if (error.message === "404")
+            formErrorMessage.value = "Cannot find a RSI account with this username";
 
         formErrorActive.value = true;
         waitingForApi.value = false;

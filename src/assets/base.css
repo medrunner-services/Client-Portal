@@ -6,7 +6,9 @@
 body {
     box-sizing: border-box;
     margin: 0;
+    padding: 0;
     min-height: 100vh;
+    max-width: 100%;
     width: 100vw;
     font-family: Inter, sans-serif;
 }
@@ -37,7 +39,7 @@ select:disabled {
 }
 
 .input-text {
-    @apply border border-neutral-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-neutral-600 focus:border-secondary-600;
+    @apply border border-neutral-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-neutral-600 focus:border-secondary-600 disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400;
 }
 .input-text-error {
     @apply border border-primary-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-primary-600 focus:border-secondary-600;

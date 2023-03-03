@@ -141,7 +141,7 @@ async function nextPage(): Promise<void> {
                 </div>
             </div>
         </div>
-        <div class="lg:w-[60%]">
+        <div class="lg:w-[50%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
             <EmergencyForm />
         </div>
