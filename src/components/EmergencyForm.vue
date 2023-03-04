@@ -49,10 +49,11 @@ async function updateRsiHandle(): Promise<void> {
                 <input
                     type="text"
                     v-model="newRsiHandle"
-                    :class="rsiHandleErrorMessage ? 'input-text-error' : 'input-text'"
+                    :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
                     :disabled="!isUpdatingRsiHandle"
                 />
                 <button
+                    v-if="userStore.user.personType === 0"
                     :disabled="rsiHandleApiUpdating"
                     @click.prevent="updateRsiHandle()"
                     class="border-2 border-primary-900 font-Inter flex justify-center items-center font-bold flex-grow lg:px-3 ml-3 min-w-[6rem]"
