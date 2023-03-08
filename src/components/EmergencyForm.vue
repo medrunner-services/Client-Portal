@@ -30,10 +30,11 @@ async function updateRsiHandle(): Promise<void> {
         isUpdatingRsiHandle.value = false;
     } catch (error: AxiosError | any) {
         if (error.message === "451") rsiHandleErrorMessage.value = "This account is blocked";
-        if (error.message === "403")
+        else if (error.message === "403")
             rsiHandleErrorMessage.value = "Missing Medrunner ID in RSI Bio";
-        if (error.message === "404")
+        else if (error.message === "404")
             rsiHandleErrorMessage.value = "Cannot find a RSI account with this username";
+        else rsiHandleErrorMessage.value = "An error occurred please try again later";
 
         rsiHandleApiUpdating.value = false;
     }
@@ -56,7 +57,8 @@ async function sendNewEmergency(): Promise<void> {
         formRemarks.value = "";
     } catch (error: AxiosError | any) {
         formSubmittingEmergency.value = false;
-        formErrorMessage.value = "An error occurred please try again later";
+        if (error.message === "403") formErrorMessage.value = "This account is blocked";
+        else formErrorMessage.value = "An error occurred please try again later";
     }
 }
 </script>
