@@ -95,6 +95,13 @@ export interface Emergency {
     afterActionReport: { status: number; remarks: string };
 }
 
+export interface NewEmergency {
+    system: string,
+    subsystem: string,
+    threatLevel: number,
+    remarks: string
+}
+
 interface Tokens {
     accessToken: string;
     refreshToken: string;
@@ -250,6 +257,26 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function createEmergency(emergency: NewEmergency): Promise<string | void> {
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/emergency/`, {
+                "system": emergency.system,
+                "subsystem": emergency.subsystem,
+                "threatLevel": emergency.threatLevel,
+                "clientRsiHandle": user.value.rsiHandle,
+                "clientDiscordId": user.value.discordId,
+                "remarks": emergency.remarks,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                }
+            });
+
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
     return {
         redirectToDiscordLogin,
         redirectToDiscordRegister,
@@ -259,6 +286,7 @@ export const useUserStore = defineStore("user", () => {
         fetchUserHistory,
         fetchEmergency,
         fetchEmergencies,
+        createEmergency,
         user,
         isAuthenticated,
         setTokens,

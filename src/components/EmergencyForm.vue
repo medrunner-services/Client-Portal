@@ -10,6 +10,13 @@ const isUpdatingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
 const rsiHandleApiUpdating = ref(false);
+const formSubmitingEmergency = ref(false);
+const formErrorMessage = ref("An error occurred please try again later");
+
+const formSystem = ref("stanton");
+const formSubSystem = ref("");
+const formSubThreatLevel = ref("");
+const formRemarks = ref("");
 
 async function updateRsiHandle(): Promise<void> {
     if (!isUpdatingRsiHandle.value) {
@@ -31,10 +38,32 @@ async function updateRsiHandle(): Promise<void> {
         rsiHandleApiUpdating.value = false;
     }
 }
+
+async function sendNewEmergency(): Promise<void> {
+    try {
+        formSubmitingEmergency.value = true
+        await userStore.createEmergency({
+            system: formSystem.value,
+            subsystem: formSubSystem.value,
+            threatLevel: parseInt(formSubThreatLevel.value),
+            remarks: formRemarks.value
+        });
+
+        formSubmitingEmergency.value = false
+        formSystem.value = "";
+        formSubSystem.value = "";
+        formSubThreatLevel.value = "";
+        formRemarks.value = "";
+
+    } catch (error: AxiosError | any) {
+        formSubmitingEmergency.value = false
+        formErrorMessage.value = "An error occurred please try again later"
+    }
+}
 </script>
 
 <template>
-    <form class="xl:w-5/6">
+    <form class="xl:w-5/6" @submit.prevent="sendNewEmergency()">
         <div class="lg:w-[48%]">
             <div class="flex items-center">
                 <label class="text-sm font-semibold">Star Citizen Username</label>
@@ -102,8 +131,10 @@ async function updateRsiHandle(): Promise<void> {
                     <select
                         class="w-full disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400"
                         disabled
+                        v-model="formSystem"
+                        required
                     >
-                        <option>Stanton</option>
+                        <option value="stanton">Stanton</option>
                     </select>
                 </div>
             </div>
@@ -119,12 +150,12 @@ async function updateRsiHandle(): Promise<void> {
                     />
                 </div>
                 <div class="mt-2">
-                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500">
-                        <option selected disabled hidden value>Select a planet</option>
-                        <option>microTech</option>
-                        <option>Hurston</option>
-                        <option>Crusader</option>
-                        <option>ArcCorp</option>
+                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500" :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'" v-model="formSubSystem" required>
+                        <option  disabled hidden value>Select a planet</option>
+                        <option value="microtech">microTech</option>
+                        <option value="hurston">Hurston</option>
+                        <option value="crusader">Crusader</option>
+                        <option value="arccorp">ArcCorp</option>
                     </select>
                 </div>
             </div>
@@ -142,12 +173,12 @@ async function updateRsiHandle(): Promise<void> {
                     />
                 </div>
                 <div class="mt-2">
-                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500">
+                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500" :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'" v-model="formSubThreatLevel" required>
                         <option selected disabled hidden value>Assess the threat</option>
-                        <option>❓ Unknown threat</option>
-                        <option>🟢 Low Threat</option>
-                        <option>🟡 Medium threat</option>
-                        <option>🔴 High threat</option>
+                        <option value="0">❓ Unknown threat</option>
+                        <option value="1">🟢 Low Threat</option>
+                        <option value="2">🟡 Medium threat</option>
+                        <option value="3">🔴 High threat</option>
                     </select>
                 </div>
             </div>
@@ -165,17 +196,45 @@ async function updateRsiHandle(): Promise<void> {
                 <div class="mt-2">
                     <textarea
                         class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         rows="1"
+                        v-model="formRemarks"
                     />
                 </div>
             </div>
         </div>
 
-        <input
+        <button
             type="submit"
-            value="Report Emergency"
-            class="w-full cursor-pointer lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium"
-        />
+            class="w-full cursor-pointer lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            :disabled="formSubmitingEmergency"
+        >
+            <svg
+                v-if="formSubmitingEmergency"
+                class="animate-spin h-5 w-5 text-white mx-14 my-0.5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+            >
+                <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                ></circle>
+                <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+            </svg>
+            <span v-else>Report Emergency</span>
+        </button>
+        <p v-if="formErrorMessage" class="mt-2 text-primary-400 text-sm w-full">
+            {{ formErrorMessage }}
+        </p>
     </form>
 </template>
 
