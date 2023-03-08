@@ -41,23 +41,22 @@ async function updateRsiHandle(): Promise<void> {
 
 async function sendNewEmergency(): Promise<void> {
     try {
-        formSubmitingEmergency.value = true
+        formSubmitingEmergency.value = true;
         await userStore.createEmergency({
             system: formSystem.value,
             subsystem: formSubSystem.value,
             threatLevel: parseInt(formSubThreatLevel.value),
-            remarks: formRemarks.value
+            remarks: formRemarks.value,
         });
 
-        formSubmitingEmergency.value = false
+        formSubmitingEmergency.value = false;
         formSystem.value = "";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
-
     } catch (error: AxiosError | any) {
-        formSubmitingEmergency.value = false
-        formErrorMessage.value = "An error occurred please try again later"
+        formSubmitingEmergency.value = false;
+        formErrorMessage.value = "An error occurred please try again later";
     }
 }
 </script>
@@ -78,7 +77,10 @@ async function sendNewEmergency(): Promise<void> {
                 <input
                     type="text"
                     v-model="newRsiHandle"
-                    :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
+                    :class="[
+                        rsiHandleErrorMessage ? 'input-text-error' : 'input-text',
+                        userStore.user.personType !== 0 ? 'w-full' : '',
+                    ]"
                     :disabled="!isUpdatingRsiHandle"
                 />
                 <button
@@ -150,8 +152,13 @@ async function sendNewEmergency(): Promise<void> {
                     />
                 </div>
                 <div class="mt-2">
-                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500" :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'" v-model="formSubSystem" required>
-                        <option  disabled hidden value>Select a planet</option>
+                    <select
+                        class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        v-model="formSubSystem"
+                        required
+                    >
+                        <option disabled hidden value>Select a planet</option>
                         <option value="microtech">microTech</option>
                         <option value="hurston">Hurston</option>
                         <option value="crusader">Crusader</option>
@@ -173,7 +180,12 @@ async function sendNewEmergency(): Promise<void> {
                     />
                 </div>
                 <div class="mt-2">
-                    <select class="w-full focus:ring-secondary-500 focus:border-secondary-500" :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'" v-model="formSubThreatLevel" required>
+                    <select
+                        class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        v-model="formSubThreatLevel"
+                        required
+                    >
                         <option selected disabled hidden value>Assess the threat</option>
                         <option value="0">❓ Unknown threat</option>
                         <option value="1">🟢 Low Threat</option>
