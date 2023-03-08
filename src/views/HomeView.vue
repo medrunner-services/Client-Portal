@@ -113,7 +113,7 @@ async function nextPage(): Promise<void> {
                     ></path>
                 </svg>
             </div>
-            <div class="mt-5 xl:mt-10 flex justify-between">
+            <div class="mt-10 flex justify-between">
                 <div
                     @click="previousPage()"
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
