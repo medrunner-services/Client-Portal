@@ -10,8 +10,8 @@ const isUpdatingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
 const rsiHandleApiUpdating = ref(false);
-const formSubmitingEmergency = ref(false);
-const formErrorMessage = ref("An error occurred please try again later");
+const formSubmittingEmergency = ref(false);
+const formErrorMessage = ref("");
 
 const formSystem = ref("stanton");
 const formSubSystem = ref("");
@@ -41,7 +41,7 @@ async function updateRsiHandle(): Promise<void> {
 
 async function sendNewEmergency(): Promise<void> {
     try {
-        formSubmitingEmergency.value = true;
+        formSubmittingEmergency.value = true;
         await userStore.createEmergency({
             system: formSystem.value,
             subsystem: formSubSystem.value,
@@ -49,13 +49,13 @@ async function sendNewEmergency(): Promise<void> {
             remarks: formRemarks.value,
         });
 
-        formSubmitingEmergency.value = false;
+        formSubmittingEmergency.value = false;
         formSystem.value = "";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
     } catch (error: AxiosError | any) {
-        formSubmitingEmergency.value = false;
+        formSubmittingEmergency.value = false;
         formErrorMessage.value = "An error occurred please try again later";
     }
 }
@@ -219,10 +219,10 @@ async function sendNewEmergency(): Promise<void> {
         <button
             type="submit"
             class="w-full cursor-pointer lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
-            :disabled="formSubmitingEmergency"
+            :disabled="formSubmittingEmergency"
         >
             <svg
-                v-if="formSubmitingEmergency"
+                v-if="formSubmittingEmergency"
                 class="animate-spin h-5 w-5 text-white mx-14 my-0.5"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
