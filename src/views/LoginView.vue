@@ -92,6 +92,7 @@ const copyIdToClipboard = (): void => {
                             @click="copyIdToClipboard()"
                         />
                     </div>
+                    <p class="mt-5 text-xs italic lg:text-sm">You may have to set your country and region in your RSI profile to save your short bio due tu a RSI bug.</p>
                 </div>
                 <form
                     class="flex flex-col w-full mt-10 xl:flex-row xl:items-end xl:justify-between"
