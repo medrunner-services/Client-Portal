@@ -51,7 +51,7 @@ async function sendNewEmergency(): Promise<void> {
         });
 
         formSubmittingEmergency.value = false;
-        formSystem.value = "";
+        formSystem.value = "stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
@@ -132,12 +132,7 @@ async function sendNewEmergency(): Promise<void> {
                     />
                 </div>
                 <div class="mt-2">
-                    <select
-                        class="w-full disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400"
-                        disabled
-                        v-model="formSystem"
-                        required
-                    >
+                    <select class="w-full" disabled v-model="formSystem" required>
                         <option value="stanton">Stanton</option>
                     </select>
                 </div>
@@ -159,6 +154,7 @@ async function sendNewEmergency(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubSystem"
                         required
+                        :disabled="formSubmittingEmergency"
                     >
                         <option disabled hidden value>Select a planet</option>
                         <option value="microtech">microTech</option>
@@ -187,6 +183,7 @@ async function sendNewEmergency(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubThreatLevel"
                         required
+                        :disabled="formSubmittingEmergency"
                     >
                         <option selected disabled hidden value>Assess the threat</option>
                         <option value="0">❓ Unknown threat</option>
@@ -213,6 +210,7 @@ async function sendNewEmergency(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         rows="1"
                         v-model="formRemarks"
+                        :disabled="formSubmittingEmergency"
                     />
                 </div>
             </div>
