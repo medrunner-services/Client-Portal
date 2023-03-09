@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import EmergencyForm from "@/components/EmergencyForm.vue";
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
@@ -75,6 +75,10 @@ async function previousPage(): Promise<void> {
 async function nextPage(): Promise<void> {
     await loadDataForPage(1);
 }
+
+const isLastPageHistory = computed(() => {
+    return paginationToken.value === undefined && page.value + 1 >= loadedHistory.length / pageSize;
+});
 </script>
 
 <template>
@@ -117,7 +121,7 @@ async function nextPage(): Promise<void> {
                 <div
                     @click="previousPage()"
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
-                    :class="{ disabled: page <= 0 }"
+                    :class="{ 'opacity-50': page <= 0 }"
                 >
                     <img
                         src="/icons/arrow-icon.svg"
@@ -131,7 +135,7 @@ async function nextPage(): Promise<void> {
                 <div
                     @click="nextPage()"
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
-                    :class="{ disabled: paginationToken === undefined }"
+                    :class="{ 'opacity-50': isLastPageHistory }"
                 >
                     <img
                         src="/icons/arrow-icon.svg"
