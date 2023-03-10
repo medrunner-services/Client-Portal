@@ -51,7 +51,6 @@ function setActivePageFromCache(startIndex: number) {
 }
 
 function completeEmergency(emergency: Emergency): void {
-    console.log("Cleared trackedEmergency");
     userStore.trackedEmergency = {} as Emergency;
     userStore.user.activeEmergency = "";
     loadedHistory.unshift(emergency);
