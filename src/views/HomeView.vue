@@ -4,6 +4,7 @@ import { computed, onMounted, ref } from "vue";
 
 import EmergencyForm from "@/components/EmergencyForm.vue";
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
+import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import type { Emergency, History } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 
@@ -14,6 +15,7 @@ const page = ref(0);
 let loadedHistory: Array<Emergency> = [];
 let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
+const ongoingEmergency = ref(false)
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -147,7 +149,9 @@ const isLastPageHistory = computed(() => {
         </div>
         <div class="lg:w-[50%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
-            <EmergencyForm />
+            <EmergencyTracking v-if="ongoingEmergency" />
+            <EmergencyForm v-else />
+
         </div>
     </div>
 </template>
