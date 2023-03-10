@@ -13,7 +13,7 @@ const rsiHandleApiUpdating = ref(false);
 const formSubmittingEmergency = ref(false);
 const formErrorMessage = ref("");
 
-const formSystem = ref("stanton");
+const formSystem = ref("Stanton");
 const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
 const formRemarks = ref("");
@@ -28,6 +28,7 @@ async function updateRsiHandle(): Promise<void> {
     try {
         await userStore.linkUser(newRsiHandle.value);
         isUpdatingRsiHandle.value = false;
+        rsiHandleApiUpdating.value = false;
     } catch (error: AxiosError | any) {
         if (error.message === "451") rsiHandleErrorMessage.value = "This account is blocked";
         else if (error.message === "403")
@@ -43,7 +44,7 @@ async function updateRsiHandle(): Promise<void> {
 async function sendNewEmergency(): Promise<void> {
     try {
         formSubmittingEmergency.value = true;
-        await userStore.createEmergency({
+        userStore.user.activeEmergency = await userStore.createEmergency({
             system: formSystem.value,
             subsystem: formSubSystem.value,
             threatLevel: parseInt(formSubThreatLevel.value),
@@ -51,7 +52,7 @@ async function sendNewEmergency(): Promise<void> {
         });
 
         formSubmittingEmergency.value = false;
-        formSystem.value = "stanton";
+        formSystem.value = "Stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
@@ -133,7 +134,7 @@ async function sendNewEmergency(): Promise<void> {
                 </div>
                 <div class="mt-2">
                     <select class="w-full" disabled v-model="formSystem" required>
-                        <option value="stanton">Stanton</option>
+                        <option value="Stanton">Stanton</option>
                     </select>
                 </div>
             </div>
@@ -157,10 +158,10 @@ async function sendNewEmergency(): Promise<void> {
                         :disabled="formSubmittingEmergency"
                     >
                         <option disabled hidden value>Select a planet</option>
-                        <option value="microtech">microTech</option>
-                        <option value="hurston">Hurston</option>
-                        <option value="crusader">Crusader</option>
-                        <option value="arccorp">ArcCorp</option>
+                        <option value="microTech">microTech</option>
+                        <option value="Hurston">Hurston</option>
+                        <option value="Crusader">Crusader</option>
+                        <option value="ArcCorp">ArcCorp</option>
                     </select>
                 </div>
             </div>
@@ -218,7 +219,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <button
             type="submit"
-            class="w-full cursor-pointer lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="w-full lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             :disabled="formSubmittingEmergency"
         >
             <svg

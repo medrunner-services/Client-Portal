@@ -39,6 +39,36 @@ function getThreatString(id: number): string {
     }
 }
 
+function getRatingString(rating: number): string {
+    switch (rating) {
+        case 1:
+            return "Good";
+        case 2:
+            return "Bad";
+
+        default:
+            return "No rating";
+    }
+}
+
+function getCancelReasonString(reason: string): string {
+    switch (reason) {
+        case "rescued":
+            return "Rescued";
+        case "succumbed":
+            return "Bled Out";
+        case "server":
+            return "Server Issue";
+        case "respawned":
+            return "Respawned";
+        case "other":
+            return "Other";
+
+        default:
+            return "Unknown";
+    }
+}
+
 function getStatusString(id: number): string {
     switch (id) {
         case 0:
@@ -147,6 +177,14 @@ function getResponders(responders: any): string {
                 <p v-if="emergencyInfo.remarks">
                     🗒️ <span class="font-bold">Remarks:</span>
                     {{ emergencyInfo.remarks }}
+                </p>
+                <p class="mt-4" v-if="emergencyInfo.statusDescription">
+                    🚫 <span class="font-bold">Cancellation Reason:</span>
+                    {{ getCancelReasonString(emergencyInfo.statusDescription) }}
+                </p>
+                <p class="mt-4" v-if="emergencyInfo.status === 3 || emergencyInfo.status === 4">
+                    ⭐ <span class="font-bold">Rating:</span>
+                    {{ getRatingString(emergencyInfo.rating) }}
                 </p>
             </div>
         </div>

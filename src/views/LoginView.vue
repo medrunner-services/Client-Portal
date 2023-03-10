@@ -32,7 +32,8 @@ const submittingLinkForm = async (): Promise<void> => {
         if (error.message === "451") formErrorMessage.value = "This account is blocked";
         if (error.message === "403") formErrorMessage.value = "Missing Medrunner ID in RSI Bio";
         if (error.message === "404")
-            formErrorMessage.value = "Cannot find a RSI account with this username";
+            formErrorMessage.value =
+                "Cannot find a RSI account with this username. If you just created your RSI account, it may take a few minutes to find it";
 
         formErrorActive.value = true;
         waitingForApi.value = false;

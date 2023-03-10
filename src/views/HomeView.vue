@@ -1,11 +1,15 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { AxiosError } from "axios";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 
 import EmergencyForm from "@/components/EmergencyForm.vue";
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
+import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import type { Emergency, History } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
+import { establishConnection } from "@/utils/signalRConnection";
 
 const userStore = useUserStore();
 const pageSize = 5;
@@ -17,11 +21,24 @@ const loaded = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
-
     await loadHistory(shouldFetchExtra);
     activePage.value = [...loadedHistory];
-
     loaded.value = true;
+
+    const signalrConnection = establishConnection(await userStore.getToken());
+
+    signalrConnection.on("EmergencyCreate", (newEmergency: Emergency) => {
+        userStore.user.activeEmergency = newEmergency.id;
+    });
+
+    signalrConnection.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
+        if (updatedEmergency.rating || updatedEmergency.statusDescription) {
+            completeEmergency(updatedEmergency);
+        } else {
+            userStore.trackedEmergency = updatedEmergency;
+        }
+    });
+    await signalrConnection.start();
 });
 
 async function bulkLoadEmergencies(history: History[]): Promise<Array<Emergency>> {
@@ -33,16 +50,33 @@ function setActivePageFromCache(startIndex: number) {
     loaded.value = true;
 }
 
+function completeEmergency(emergency: Emergency): void {
+    console.log("Cleared trackedEmergency");
+    userStore.trackedEmergency = {} as Emergency;
+    userStore.user.activeEmergency = "";
+    loadedHistory.unshift(emergency);
+    setActivePageFromCache(0);
+}
+
 async function loadHistory(skipFirst = false) {
     const fetchAmount = skipFirst ? pageSize + 1 : pageSize;
 
-    const historyResponse = await userStore.fetchUserHistory(fetchAmount, paginationToken.value);
-    paginationToken.value = historyResponse.paginationToken;
+    try {
+        const historyResponse = await userStore.fetchUserHistory(
+            fetchAmount,
+            paginationToken.value,
+        );
 
-    const emergencies = await bulkLoadEmergencies(historyResponse.data);
-    const sortedEmergencies = emergencies.filter(e => e.isComplete);
+        paginationToken.value = historyResponse.paginationToken;
 
-    loadedHistory.push(...sortedEmergencies);
+        const emergencies = await bulkLoadEmergencies(historyResponse.data);
+        const sortedEmergencies = emergencies.filter(e => e.isComplete);
+
+        loadedHistory.push(...sortedEmergencies);
+        setActivePageFromCache(0);
+    } catch (error: AxiosError | any) {
+        loaded.value = true;
+    }
 }
 
 async function loadDataForPage(direction: number): Promise<void> {
@@ -117,7 +151,10 @@ const isLastPageHistory = computed(() => {
                     ></path>
                 </svg>
             </div>
-            <div class="mt-10 flex justify-between">
+            <div v-else>
+                <p>No past emergencies</p>
+            </div>
+            <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
                 <div
                     @click="previousPage()"
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
@@ -147,7 +184,11 @@ const isLastPageHistory = computed(() => {
         </div>
         <div class="lg:w-[50%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
-            <EmergencyForm />
+            <EmergencyTracking
+                v-if="userStore.user.activeEmergency"
+                @completed-tracked-emergency="completeEmergency"
+            />
+            <EmergencyForm v-else />
         </div>
     </div>
 </template>

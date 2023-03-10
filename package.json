@@ -14,6 +14,7 @@
     "prettier:fix": "npm run prettier -- --write"
   },
   "dependencies": {
+    "@microsoft/signalr": "^7.0.3",
     "axios": "^1.2.2",
     "pinia": "^2.0.28",
     "vue": "^3.2.45",

@@ -111,6 +111,7 @@ export const useUserStore = defineStore("user", () => {
     const user: Ref<User> = ref({} as User);
     const isAuthenticated = ref(false);
     const accessToken = ref("");
+    const trackedEmergency = ref({} as Emergency);
 
     const router = useRouter();
 
@@ -186,7 +187,6 @@ export const useUserStore = defineStore("user", () => {
             );
 
             user.value.rsiHandle = username;
-            return "success";
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);
         }
@@ -257,18 +257,65 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function createEmergency(emergency: NewEmergency): Promise<string | void> {
+    async function createEmergency(emergency: NewEmergency): Promise<string> {
+        try {
+            const data = {
+                system: emergency.system,
+                subsystem: emergency.subsystem,
+                threatLevel: emergency.threatLevel,
+                clientRsiHandle: user.value.rsiHandle,
+                clientDiscordId: user.value.discordId,
+                ...(emergency.remarks ? { remarks: emergency.remarks } : {}),
+            };
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/emergency/`, data, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
+                },
+            });
+
+            return response.data.id;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function cancelEmergency(id: string): Promise<string | void> {
         try {
             await axios.post(
-                `${import.meta.env.VITE_API_URL}/emergency/`,
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/cancel`,
+                {},
                 {
-                    system: emergency.system,
-                    subsystem: emergency.subsystem,
-                    threatLevel: emergency.threatLevel,
-                    clientRsiHandle: user.value.rsiHandle,
-                    clientDiscordId: user.value.discordId,
-                    remarks: emergency.remarks,
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
                 },
+            );
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function rateCompletedEmergency(id: string, rating: number): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/rate/${rating}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
+                },
+            );
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function justifyCanceledEmergency(id: string, reason: string): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/statusDescription/${reason}`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${await getToken()}`,
@@ -284,14 +331,19 @@ export const useUserStore = defineStore("user", () => {
         redirectToDiscordLogin,
         redirectToDiscordRegister,
         disconnectUser,
+        getToken,
         linkUser,
         fetchUser,
         fetchUserHistory,
         fetchEmergency,
         fetchEmergencies,
         createEmergency,
+        cancelEmergency,
+        rateCompletedEmergency,
+        justifyCanceledEmergency,
         user,
         isAuthenticated,
         setTokens,
+        trackedEmergency,
     };
 });
