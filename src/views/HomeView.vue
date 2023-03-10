@@ -186,7 +186,7 @@ const isLastPageHistory = computed(() => {
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
             <EmergencyTracking
                 v-if="userStore.user.activeEmergency"
-                @completed-tracked-emergency="completeEmergency()"
+                @completed-tracked-emergency="completeEmergency"
             />
             <EmergencyForm v-else />
         </div>
