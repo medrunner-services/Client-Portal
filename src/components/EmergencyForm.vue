@@ -44,7 +44,7 @@ async function updateRsiHandle(): Promise<void> {
 async function sendNewEmergency(): Promise<void> {
     try {
         formSubmittingEmergency.value = true;
-        await userStore.createEmergency({
+        userStore.user.activeEmergency = await userStore.createEmergency({
             system: formSystem.value,
             subsystem: formSubSystem.value,
             threatLevel: parseInt(formSubThreatLevel.value),
@@ -219,7 +219,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <button
             type="submit"
-            class="w-full cursor-pointer lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="w-full lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             :disabled="formSubmittingEmergency"
         >
             <svg

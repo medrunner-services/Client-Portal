@@ -186,7 +186,6 @@ export const useUserStore = defineStore("user", () => {
             );
 
             user.value.rsiHandle = username;
-            return "success";
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);
         }
@@ -257,7 +256,7 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function createEmergency(emergency: NewEmergency): Promise<string | void> {
+    async function createEmergency(emergency: NewEmergency): Promise<string> {
         try {
             const data = {
                 system: emergency.system,
@@ -267,11 +266,29 @@ export const useUserStore = defineStore("user", () => {
                 clientDiscordId: user.value.discordId,
                 ...(emergency.remarks ? { remarks: emergency.remarks } : {}),
             };
-            await axios.post(`${import.meta.env.VITE_API_URL}/emergency/`, data, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/emergency/`, data, {
                 headers: {
                     Authorization: `Bearer ${await getToken()}`,
                 },
             });
+
+            return response.data.id;
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function cancelEmergency(id: string): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/cancel`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
+                },
+            );
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);
         }
@@ -287,6 +304,7 @@ export const useUserStore = defineStore("user", () => {
         fetchEmergency,
         fetchEmergencies,
         createEmergency,
+        cancelEmergency,
         user,
         isAuthenticated,
         setTokens,

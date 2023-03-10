@@ -17,7 +17,6 @@ const page = ref(0);
 let loadedHistory: Array<Emergency> = [];
 let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
-const ongoingEmergency = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -162,7 +161,7 @@ const isLastPageHistory = computed(() => {
         </div>
         <div class="lg:w-[50%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
-            <EmergencyTracking v-if="ongoingEmergency" />
+            <EmergencyTracking v-if="userStore.user?.activeEmergency" />
             <EmergencyForm v-else />
         </div>
     </div>
