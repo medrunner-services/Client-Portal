@@ -259,22 +259,19 @@ export const useUserStore = defineStore("user", () => {
 
     async function createEmergency(emergency: NewEmergency): Promise<string | void> {
         try {
-            await axios.post(
-                `${import.meta.env.VITE_API_URL}/emergency/`,
-                {
-                    system: emergency.system,
-                    subsystem: emergency.subsystem,
-                    threatLevel: emergency.threatLevel,
-                    clientRsiHandle: user.value.rsiHandle,
-                    clientDiscordId: user.value.discordId,
-                    remarks: emergency.remarks,
+            const data = {
+                system: emergency.system,
+                subsystem: emergency.subsystem,
+                threatLevel: emergency.threatLevel,
+                clientRsiHandle: user.value.rsiHandle,
+                clientDiscordId: user.value.discordId,
+                ...(emergency.remarks ? { remarks: emergency.remarks } : {}),
+            };
+            await axios.post(`${import.meta.env.VITE_API_URL}/emergency/`, data, {
+                headers: {
+                    Authorization: `Bearer ${await getToken()}`,
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${await getToken()}`,
-                    },
-                },
-            );
+            });
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);
         }
