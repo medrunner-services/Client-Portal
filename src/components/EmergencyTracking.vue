@@ -3,11 +3,11 @@
 import type { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
 
-import type { Emergency } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 
+const emit = defineEmits(["completedTrackedEmergency"]);
+
 const userStore = useUserStore();
-const trackedEmergency = ref({} as Emergency);
 const loadingEmergency = ref(false);
 const loadingCancelEmergency = ref(false);
 const errorLoadingEmergency = ref("");
@@ -15,24 +15,30 @@ const loadingCancelEmergencyError = ref("");
 const cancelReason = ref("");
 
 onMounted(async () => {
-    try {
-        loadingEmergency.value = true;
-        trackedEmergency.value = await userStore.fetchEmergency(userStore.user.activeEmergency);
-        loadingEmergency.value = false;
-    } catch (error: AxiosError | any) {
-        loadingEmergency.value = false;
-        errorLoadingEmergency.value = "An error occurred loading your ongoing emergency";
+    if (Object.keys(userStore.trackedEmergency).length === 0) {
+        try {
+            loadingEmergency.value = true;
+            userStore.trackedEmergency = await userStore.fetchEmergency(
+                userStore.user.activeEmergency,
+            );
+            loadingEmergency.value = false;
+        } catch (error: AxiosError | any) {
+            loadingEmergency.value = false;
+            errorLoadingEmergency.value = "An error occurred loading your ongoing emergency";
+        }
     }
 });
 
 const emergencyTitle = computed(() => {
-    switch (trackedEmergency.value.status) {
+    switch (userStore.trackedEmergency.status) {
         case 1:
             return "📡 Message received";
         case 2:
             return "🚑 Help is on the way";
         case 3:
             return "✅ Operation successful";
+        case 10:
+            return "🔃 Operation over";
         case 4:
             return "❌ Operation failed";
         case 6:
@@ -45,13 +51,15 @@ const emergencyTitle = computed(() => {
 });
 
 const emergencySubTitle = computed(() => {
-    switch (trackedEmergency.value.status) {
+    switch (userStore.trackedEmergency.status) {
         case 1:
             return "awaiting for dispatch confirmation";
         case 2:
             return "Medrunners are on their way to rescue you";
         case 3:
             return "Thanks for choosing Medrunner";
+        case 10:
+            return "You have been extracted ! Waiting for confirmation...";
         case 4:
             return "The operation has failed";
         case 6:
@@ -82,8 +90,7 @@ function getThreatString(id: number): string {
 async function cancelTrackedEmergency(): Promise<void> {
     try {
         loadingCancelEmergency.value = true;
-        await userStore.cancelEmergency(trackedEmergency.value.id);
-        trackedEmergency.value.status = 6;
+        await userStore.cancelEmergency(userStore.trackedEmergency.id);
         loadingCancelEmergency.value = false;
     } catch (error: AxiosError | any) {
         loadingCancelEmergency.value = false;
@@ -94,17 +101,17 @@ async function cancelTrackedEmergency(): Promise<void> {
 
 async function rateEmergency(rating: number): Promise<void> {
     try {
-        await userStore.rateCompletedEmergency(trackedEmergency.value.id, rating);
+        await userStore.rateCompletedEmergency(userStore.trackedEmergency.id, rating);
     } finally {
-        userStore.user.activeEmergency = "";
+        emit("completedTrackedEmergency", userStore.trackedEmergency);
     }
 }
 
 async function submitCancelReason(): Promise<void> {
     try {
-        await userStore.justifyCanceledEmergency(trackedEmergency.value.id, cancelReason.value);
+        await userStore.justifyCanceledEmergency(userStore.trackedEmergency.id, cancelReason.value);
     } finally {
-        userStore.user.activeEmergency = "";
+        emit("completedTrackedEmergency", userStore.trackedEmergency);
     }
 }
 </script>
@@ -139,38 +146,60 @@ async function submitCancelReason(): Promise<void> {
         <p class="text-3xl text-primary-900 font-Mohave font-semibold">{{ emergencyTitle }}</p>
         <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
 
-        <div class="mt-10" v-if="trackedEmergency.status === 1 || trackedEmergency.status === 2">
+        <div
+            class="mt-10"
+            v-if="
+                userStore.trackedEmergency.status === 1 ||
+                userStore.trackedEmergency.status === 2 ||
+                userStore.trackedEmergency.status === 10
+            "
+        >
             <div class="lg:flex lg:justify-between">
                 <div class="p-4 shadow-md bg-gray-50 lg:w-[30%]">
                     <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌌 System</p>
-                    <p class="mt-2">{{ trackedEmergency.system }}</p>
+                    <p class="mt-2">{{ userStore.trackedEmergency.system }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%]">
                     <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌍 Sub System</p>
-                    <p class="mt-2">{{ trackedEmergency.subsystem }}</p>
+                    <p class="mt-2">{{ userStore.trackedEmergency.subsystem }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%] h-fit">
                     <p class="font-Mohave font-semibold text-2xl lg:text-xl">⚔️ Threat Level</p>
-                    <p class="mt-2">{{ getThreatString(trackedEmergency.threatLevel) }}</p>
+                    <p class="mt-2">
+                        {{ getThreatString(userStore.trackedEmergency.threatLevel) }}
+                    </p>
                 </div>
             </div>
-            <div v-if="trackedEmergency.remarks" class="lg:flex lg:justify-between lg:mt-5">
+            <div
+                v-if="userStore.trackedEmergency.remarks"
+                class="lg:flex lg:justify-between lg:mt-5"
+            >
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 w-full">
                     <p class="font-Mohave font-semibold text-2xl lg:text-xl">🗒️ Remarks</p>
-                    <p class="mt-2">{{ trackedEmergency.remarks }}</p>
+                    <p class="mt-2">{{ userStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
         </div>
 
-        <div v-if="trackedEmergency.status === 2" class="mt-10">
+        <div
+            v-if="
+                userStore.trackedEmergency.status === 2 || userStore.trackedEmergency.status === 10
+            "
+            class="mt-10"
+        >
             <p class="font-Mohave text-primary-900 text-2xl font-semibold mb-3">Responders</p>
-            <p v-for="responder in trackedEmergency.respondingTeam.staff" class="font-medium">
+            <p
+                v-for="responder in userStore.trackedEmergency.respondingTeam.staff"
+                class="font-medium"
+            >
                 {{ responder.rsiHandle }}
             </p>
         </div>
 
         <button
-            v-if="trackedEmergency.status === 1 || trackedEmergency.status === 2"
+            v-if="
+                userStore.trackedEmergency.status === 1 || userStore.trackedEmergency.status === 2
+            "
             class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             @click="cancelTrackedEmergency()"
             :disabled="loadingCancelEmergency"
@@ -202,7 +231,12 @@ async function submitCancelReason(): Promise<void> {
             {{ loadingCancelEmergencyError }}
         </p>
 
-        <div v-if="trackedEmergency.status === 3 || trackedEmergency.status === 4" class="mt-10">
+        <div
+            v-if="
+                userStore.trackedEmergency.status === 3 || userStore.trackedEmergency.status === 4
+            "
+            class="mt-10"
+        >
             <p class="font-Mohave font-semibold text-xl">How was your experience with Medrunner?</p>
             <div class="flex w-full justify-between mt-5">
                 <button
@@ -220,7 +254,7 @@ async function submitCancelReason(): Promise<void> {
             </div>
         </div>
 
-        <form v-if="trackedEmergency.status === 6" class="mt-7">
+        <form v-if="userStore.trackedEmergency.status === 6" class="mt-7">
             <label class="text-sm font-semibold">Reason for cancellation</label>
             <select
                 class="w-full focus:ring-secondary-500 focus:border-secondary-500 border-gray-400"

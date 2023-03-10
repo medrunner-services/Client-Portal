@@ -9,6 +9,7 @@ import EmergencyHistory from "@/components/EmergencyHistory.vue";
 import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import type { Emergency, History } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
+import { establishConnection } from "@/utils/signalRConnection";
 
 const userStore = useUserStore();
 const pageSize = 5;
@@ -20,11 +21,24 @@ const loaded = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
-
     await loadHistory(shouldFetchExtra);
     activePage.value = [...loadedHistory];
-
     loaded.value = true;
+
+    const signalrConnection = establishConnection(await userStore.getToken());
+
+    signalrConnection.on("EmergencyCreate", (newEmergency: Emergency) => {
+        userStore.user.activeEmergency = newEmergency.id;
+    });
+
+    signalrConnection.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
+        if (updatedEmergency.rating || updatedEmergency.statusDescription) {
+            completeEmergency(updatedEmergency);
+        } else {
+            userStore.trackedEmergency = updatedEmergency;
+        }
+    });
+    await signalrConnection.start();
 });
 
 async function bulkLoadEmergencies(history: History[]): Promise<Array<Emergency>> {
@@ -34,6 +48,14 @@ async function bulkLoadEmergencies(history: History[]): Promise<Array<Emergency>
 function setActivePageFromCache(startIndex: number) {
     activePage.value = loadedHistory.slice(startIndex, startIndex + pageSize);
     loaded.value = true;
+}
+
+function completeEmergency(emergency: Emergency): void {
+    console.log("Cleared trackedEmergency");
+    userStore.trackedEmergency = {} as Emergency;
+    userStore.user.activeEmergency = "";
+    loadedHistory.unshift(emergency);
+    setActivePageFromCache(0);
 }
 
 async function loadHistory(skipFirst = false) {
@@ -51,6 +73,7 @@ async function loadHistory(skipFirst = false) {
         const sortedEmergencies = emergencies.filter(e => e.isComplete);
 
         loadedHistory.push(...sortedEmergencies);
+        setActivePageFromCache(0);
     } catch (error: AxiosError | any) {
         loaded.value = true;
     }
@@ -161,7 +184,10 @@ const isLastPageHistory = computed(() => {
         </div>
         <div class="lg:w-[50%]">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
-            <EmergencyTracking v-if="userStore.user?.activeEmergency" />
+            <EmergencyTracking
+                v-if="userStore.user.activeEmergency"
+                @completed-tracked-emergency="completeEmergency()"
+            />
             <EmergencyForm v-else />
         </div>
     </div>

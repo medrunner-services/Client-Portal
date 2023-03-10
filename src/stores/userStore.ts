@@ -111,6 +111,7 @@ export const useUserStore = defineStore("user", () => {
     const user: Ref<User> = ref({} as User);
     const isAuthenticated = ref(false);
     const accessToken = ref("");
+    const trackedEmergency = ref({} as Emergency);
 
     const router = useRouter();
 
@@ -330,6 +331,7 @@ export const useUserStore = defineStore("user", () => {
         redirectToDiscordLogin,
         redirectToDiscordRegister,
         disconnectUser,
+        getToken,
         linkUser,
         fetchUser,
         fetchUserHistory,
@@ -342,5 +344,6 @@ export const useUserStore = defineStore("user", () => {
         user,
         isAuthenticated,
         setTokens,
+        trackedEmergency,
     };
 });
