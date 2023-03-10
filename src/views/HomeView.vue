@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { AxiosError } from "axios";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 
@@ -38,13 +40,21 @@ function setActivePageFromCache(startIndex: number) {
 async function loadHistory(skipFirst = false) {
     const fetchAmount = skipFirst ? pageSize + 1 : pageSize;
 
-    const historyResponse = await userStore.fetchUserHistory(fetchAmount, paginationToken.value);
-    paginationToken.value = historyResponse.paginationToken;
+    try {
+        const historyResponse = await userStore.fetchUserHistory(
+            fetchAmount,
+            paginationToken.value,
+        );
 
-    const emergencies = await bulkLoadEmergencies(historyResponse.data);
-    const sortedEmergencies = emergencies.filter(e => e.isComplete);
+        paginationToken.value = historyResponse.paginationToken;
 
-    loadedHistory.push(...sortedEmergencies);
+        const emergencies = await bulkLoadEmergencies(historyResponse.data);
+        const sortedEmergencies = emergencies.filter(e => e.isComplete);
+
+        loadedHistory.push(...sortedEmergencies);
+    } catch (error: AxiosError | any) {
+        loaded.value = true;
+    }
 }
 
 async function loadDataForPage(direction: number): Promise<void> {
@@ -119,7 +129,10 @@ const isLastPageHistory = computed(() => {
                     ></path>
                 </svg>
             </div>
-            <div class="mt-10 flex justify-between">
+            <div v-else>
+                <p>No past emergencies</p>
+            </div>
+            <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
                 <div
                     @click="previousPage()"
                     class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"

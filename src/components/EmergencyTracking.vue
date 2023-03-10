@@ -10,11 +10,11 @@ const emergencyTitle = computed(() => {
         case "ongoing":
             return "🚑 Help is on the way";
         case "canceled":
-            return "❌ Emergency canceled";
+            return "🚫 Emergency canceled";
         case "failed":
-            return "💥 Extraction failed";
+            return "❌ Operation failed";
         case "success":
-            return "🎉 Operation successful";
+            return "✅ Operation successful";
     }
 });
 
