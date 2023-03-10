@@ -57,9 +57,9 @@ const emergencySubTitle = computed(() => {
         case 6:
             return "The medrunner team is retreating";
         case 8:
-            return "The operation was aborted";
+            return "Our team had to abort the mission";
         case 9:
-            return "The operation was aborted due too a server error";
+            return "The operation was aborted due to a server error";
     }
 });
 
@@ -190,7 +190,7 @@ async function submitCancelReason(): Promise<void> {
             {{ loadingCancelEmergencyError }}
         </p>
 
-        <div v-if="trackedEmergency.status === 3" class="mt-10">
+        <div v-if="trackedEmergency.status === 3 || trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave font-semibold text-xl">How was your experience with Medrunner?</p>
             <div class="flex w-full justify-between mt-5">
                 <button
