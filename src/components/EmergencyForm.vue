@@ -28,6 +28,7 @@ async function updateRsiHandle(): Promise<void> {
     try {
         await userStore.linkUser(newRsiHandle.value);
         isUpdatingRsiHandle.value = false;
+        rsiHandleApiUpdating.value = false;
     } catch (error: AxiosError | any) {
         if (error.message === "451") rsiHandleErrorMessage.value = "This account is blocked";
         else if (error.message === "403")
