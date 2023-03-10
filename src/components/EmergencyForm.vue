@@ -51,7 +51,7 @@ async function sendNewEmergency(): Promise<void> {
         });
 
         formSubmittingEmergency.value = false;
-        formSystem.value = "stanton";
+        formSystem.value = "Stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
