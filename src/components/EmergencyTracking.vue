@@ -92,8 +92,20 @@ async function cancelTrackedEmergency(): Promise<void> {
     }
 }
 
+async function rateEmergency(rating: number): Promise<void> {
+    try {
+        await userStore.rateCompletedEmergency(trackedEmergency.value.id, rating);
+    } finally {
+        userStore.user.activeEmergency = "";
+    }
+}
+
 async function submitCancelReason(): Promise<void> {
-    console.log(cancelReason.value);
+    try {
+        await userStore.justifyCanceledEmergency(trackedEmergency.value.id, cancelReason.value);
+    } finally {
+        userStore.user.activeEmergency = "";
+    }
 }
 </script>
 
@@ -195,11 +207,13 @@ async function submitCancelReason(): Promise<void> {
             <div class="flex w-full justify-between mt-5">
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
+                    @click="rateEmergency(1)"
                 >
                     Good
                 </button>
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
+                    @click="rateEmergency(2)"
                 >
                     Bad
                 </button>
@@ -214,11 +228,11 @@ async function submitCancelReason(): Promise<void> {
                 @change="submitCancelReason"
             >
                 <option selected disabled hidden value>Why did you cancel ?</option>
-                <option value="0">🤝 Rescued</option>
-                <option value="1">🩸 Bled Out</option>
-                <option value="2">🖥️ Server Issue</option>
-                <option value="3">🏥 Respawned</option>
-                <option value="4">📝 Other</option>
+                <option value="rescued">🤝 Rescued</option>
+                <option value="succumbed">🩸 Bled Out</option>
+                <option value="server">🖥️ Server Issue</option>
+                <option value="respawned">🏥 Respawned</option>
+                <option value="other">📝 Other</option>
             </select>
         </form>
     </div>

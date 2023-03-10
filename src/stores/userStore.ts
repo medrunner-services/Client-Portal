@@ -294,6 +294,38 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function rateCompletedEmergency(id: string, rating: number): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/rate/${rating}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
+                },
+            );
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
+    async function justifyCanceledEmergency(id: string, reason: string): Promise<string | void> {
+        try {
+            await axios.post(
+                `${import.meta.env.VITE_API_URL}/emergency/${id}/statusDescription/${reason}`,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
+                },
+            );
+        } catch (error: AxiosError | any) {
+            throw Error(error.response.status);
+        }
+    }
+
     return {
         redirectToDiscordLogin,
         redirectToDiscordRegister,
@@ -305,6 +337,8 @@ export const useUserStore = defineStore("user", () => {
         fetchEmergencies,
         createEmergency,
         cancelEmergency,
+        rateCompletedEmergency,
+        justifyCanceledEmergency,
         user,
         isAuthenticated,
         setTokens,
