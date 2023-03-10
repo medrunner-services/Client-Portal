@@ -13,7 +13,7 @@ const rsiHandleApiUpdating = ref(false);
 const formSubmittingEmergency = ref(false);
 const formErrorMessage = ref("");
 
-const formSystem = ref("stanton");
+const formSystem = ref("Stanton");
 const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
 const formRemarks = ref("");
@@ -133,7 +133,7 @@ async function sendNewEmergency(): Promise<void> {
                 </div>
                 <div class="mt-2">
                     <select class="w-full" disabled v-model="formSystem" required>
-                        <option value="stanton">Stanton</option>
+                        <option value="Stanton">Stanton</option>
                     </select>
                 </div>
             </div>
@@ -157,10 +157,10 @@ async function sendNewEmergency(): Promise<void> {
                         :disabled="formSubmittingEmergency"
                     >
                         <option disabled hidden value>Select a planet</option>
-                        <option value="microtech">microTech</option>
-                        <option value="hurston">Hurston</option>
-                        <option value="crusader">Crusader</option>
-                        <option value="arccorp">ArcCorp</option>
+                        <option value="microTech">microTech</option>
+                        <option value="Hurston">Hurston</option>
+                        <option value="Crusader">Crusader</option>
+                        <option value="ArcCorp">ArcCorp</option>
                     </select>
                 </div>
             </div>

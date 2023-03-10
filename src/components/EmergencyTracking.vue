@@ -57,7 +57,7 @@ const emergencySubTitle = computed(() => {
             <div class="lg:flex lg:justify-between lg:mt-5">
 
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl"><span>📝</span>Remarks</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl"><span>🗒️</span>Remarks</p>
                     <p class="mt-2">Pirates everywhere ! Please be careful their are ambushed inside the bunker and have armed ships in the air.</p>
                 </div>
             </div>
