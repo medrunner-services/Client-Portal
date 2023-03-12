@@ -2,6 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError } from "axios";
 import { onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
 import router from "@/router";
@@ -9,11 +10,12 @@ import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const route = useRoute();
+const { t } = useI18n();
 
 const formUsername = ref("");
 const waitingForApi = ref(false);
 const loginErrorAlert = ref(false);
-const formErrorMessage = ref("An error occurred");
+const formErrorMessage = ref(t("anErrorOccurred"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
 
@@ -29,11 +31,12 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         router.push("/");
     } catch (error: AxiosError | any) {
-        if (error.message === "451") formErrorMessage.value = "This account is blocked";
-        if (error.message === "403") formErrorMessage.value = "Missing Medrunner ID in RSI Bio";
+        if (error.message === "451") formErrorMessage.value = t("thisAccountIsBlocked");
+        if (error.message === "403") formErrorMessage.value = t("missingMedrunnerIdInRsiBio");
         if (error.message === "404")
-            formErrorMessage.value =
-                "Cannot find a RSI account with this username. If you just created your RSI account, it may take a few minutes to find it";
+            formErrorMessage.value = t(
+                "cannotFindARsiAccountWithThisUsernameIfYouJustCreatedYourRsiAccountItMayTakeAFewMinutesToFindIt",
+            );
 
         formErrorActive.value = true;
         waitingForApi.value = false;
@@ -46,6 +49,17 @@ const copyIdToClipboard = (): void => {
         clipboardIcon.value = "/icons/check-icon.svg";
     });
 };
+
+function getColoredTitle(): string {
+    const title = t("welcomeToTheMedrunnerPortal");
+
+    return `${title.substring(
+        0,
+        title.indexOf("Medrunner"),
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />Medrunner </span> ${title
+        .substring(title.indexOf("Medrunner"))
+        .substring(9)}`;
+}
 </script>
 
 <template>
@@ -54,29 +68,28 @@ const copyIdToClipboard = (): void => {
             v-if="loginErrorAlert"
             class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900"
         >
-            <p>Something went wrong, please try again</p>
+            <p>{{ t("somethingWentWrongPleaseTryAgain") }}</p>
         </div>
         <div
             class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex"
         />
         <div class="flex flex-col justify-center items-center h-full md:w-[45%]">
-            <h1 class="title">Welcome to the</h1>
-            <div class="flex items-center">
-                <img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
-                <h1 class="title"><span class="text-primary-900">Medrunner</span> Portal</h1>
-            </div>
+            <h1
+                class="text-center uppercase text-neutral-900 text-title font-Mohave font-bold"
+                v-html="getColoredTitle()"
+            ></h1>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
                     <p class="text-neutral-900 font-Inter font-semibold text-small">
-                        Please add this to your
+                        {{ t("pleaseAddThisToYour") }}
                         <a
                             href="https://robertsspaceindustries.com/account/profile"
                             target="_blank"
                             class="underline underline-offset-2 cursor-pointer"
-                            >RSI bio</a
+                            >{{ t("rsiBio") }}</a
                         >
-                        before submitting your username :
+                        {{ t("beforeSubmittingYourUsername") }} :
                     </p>
                     <div class="flex mt-2">
                         <div
@@ -94,8 +107,11 @@ const copyIdToClipboard = (): void => {
                         />
                     </div>
                     <p class="mt-5 text-xs italic lg:text-sm">
-                        You may have to set your country and region in your RSI profile to save your
-                        short bio due tu a RSI bug.
+                        {{
+                            t(
+                                "youMayHaveToSetYourCountryAndRegionInYourRsiProfileToSaveYour shortBioDueToAnRsiBug",
+                            )
+                        }}
                     </p>
                 </div>
                 <form
@@ -107,13 +123,13 @@ const copyIdToClipboard = (): void => {
                             <label
                                 for="rsiHandle"
                                 class="text-small font-semibold font-Inter text-neutral-900"
-                                >Star Citizen username</label
+                                >{{ t("starCitizenUsername") }}</label
                             >
                             <img
                                 src="/icons/info-icon.svg"
                                 alt="Info label"
                                 class="ml-2 h-4 w-4 cursor-help"
-                                title="The username of your RSI account"
+                                :title="t('theUsernameOfYourRsiAccount')"
                             />
                         </div>
                         <input
@@ -123,7 +139,7 @@ const copyIdToClipboard = (): void => {
                             name="rsiHandle"
                             class="w-full"
                             :class="formErrorActive ? 'input-text-error' : 'input-text'"
-                            placeholder="Your username..."
+                            :placeholder="t('yourUsername') + '...'"
                         />
                     </div>
                     <button
@@ -143,7 +159,7 @@ const copyIdToClipboard = (): void => {
                                 d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
                             />
                         </svg>
-                        <span v-else>Continue</span>
+                        <span v-else>{{ t("continue") }}</span>
                     </button>
                 </form>
                 <p v-if="formErrorActive" class="mt-2 text-primary-400 font-Inter text-sm">
@@ -155,21 +171,15 @@ const copyIdToClipboard = (): void => {
                     class="button-primary button-48"
                     @click="userStore.redirectToDiscordLogin()"
                 >
-                    Log in with Discord
+                    {{ t("logInWithDiscord") }}
                 </button>
                 <button
                     class="button-secondary button-48 mt-5"
                     @click="userStore.redirectToDiscordRegister()"
                 >
-                    Register with Discord
+                    {{ t("registerWithDiscord") }}
                 </button>
             </div>
         </div>
     </div>
 </template>
-
-<style scoped>
-.title {
-    @apply uppercase text-neutral-900 text-title font-Mohave font-bold;
-}
-</style>

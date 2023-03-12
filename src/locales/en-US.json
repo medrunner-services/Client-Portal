@@ -1,5 +1,18 @@
 {
-    "logIn": "Log in with Discord",
-    "history": "History",
-    "emergency": "Emergency"
+    "logInWithDiscord": "Log in with discord",
+    "registerWithDiscord": "Register with Discord",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong,  please try again",
+    "welcomeToTheMedrunnerPortal": "Welcome to the Medrunner Portal",
+    "pleaseAddThisToYour": "Please add this to your",
+    "rsiBio": "RSI bio",
+    "beforeSubmittingYourUsername": "before submitting your username",
+    "youMayHaveToSetYourCountryAndRegionInYourRsiProfileToSaveYour shortBioDueToAnRsiBug": "You may have to set your country and region in your RSI profile to save your short bio due to an RSI bug.",
+    "starCitizenUsername": "Star Citizen username",
+    "theUsernameOfYourRsiAccount": "The username of your RSI account",
+    "yourUsername": "Your username",
+    "continue": "Continue",
+    "anErrorOccurred": "An error occurred",
+    "thisAccountIsBlocked": "This account is blocked",
+    "missingMedrunnerIdInRsiBio": "Missing Medrunner ID in RSI Bio",
+    "cannotFindARsiAccountWithThisUsernameIfYouJustCreatedYourRsiAccountItMayTakeAFewMinutesToFindIt": "Cannot find a RSI account with this username. If you just created your RSI account, it may take a few minutes to find it"
 }
