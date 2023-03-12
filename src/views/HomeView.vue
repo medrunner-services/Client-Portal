@@ -119,9 +119,7 @@ const isLastPageHistory = computed(() => {
         class="flex flex-col-reverse lg:flex-row lg:justify-between content-container my-14 lg:my-36"
     >
         <div class="mt-10 lg:mt-0 lg:w-[35%] lg:max-w-xl">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
-                History
-            </h2>
+            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">History</h2>
             <div v-if="loaded && activePage.length > 0">
                 <EmergencyHistory
                     v-for="emergency in activePage"
@@ -184,9 +182,7 @@ const isLastPageHistory = computed(() => {
             </div>
         </div>
         <div class="lg:w-[50%]">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
-                Emergency
-            </h2>
+            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
             <EmergencyTracking
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
