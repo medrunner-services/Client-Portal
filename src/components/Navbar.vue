@@ -1,17 +1,31 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
-let navMenuCollapsed = ref(false);
-let userMenuCollapsed = ref(false);
+const { locale } = useI18n({ useScope: "global" });
+const navMenuCollapsed = ref(false);
+const userMenuCollapsed = ref(false);
+const newLocaleLanguage = ref("");
+
+onMounted(() => {
+    newLocaleLanguage.value = localStorage.getItem("selectedLanguage") ?? navigator.language;
+    locale.value = localStorage.getItem("selectedLanguage") ?? newLocaleLanguage.value;
+});
 
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
 }
 function switchUserMenuState(): void {
     userMenuCollapsed.value = !userMenuCollapsed.value;
+}
+
+function changeLanguage(): void {
+    locale.value = newLocaleLanguage.value;
+    localStorage.setItem("selectedLanguage", newLocaleLanguage.value);
+    navMenuCollapsed.value = false;
 }
 </script>
 
@@ -24,10 +38,18 @@ function switchUserMenuState(): void {
                 MEDRUNNER
             </h1>
 
-            <nav class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex">
+            <nav
+                class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center"
+            >
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
-                <RouterLink class="ml-4" to="/">
+                <div>
+                    <select @change="changeLanguage" v-model="newLocaleLanguage">
+                        <option value="en-US">English</option>
+                        <option value="fr-FR">Français</option>
+                    </select>
+                </div>
+                <div class="cursor-pointer">
                     <img
                         @click="switchUserMenuState()"
                         src="/icons/user-profile.svg"
@@ -60,7 +82,7 @@ function switchUserMenuState(): void {
                             </button>
                         </div>
                     </div>
-                </RouterLink>
+                </div>
             </nav>
 
             <button @click="switchNavMenuSate()" class="ml-auto md:hidden">
@@ -70,14 +92,20 @@ function switchUserMenuState(): void {
         </div>
 
         <nav
-            class="fixed w-full flex flex-col bg-white justify-end gap-16 py-4 content-container mt-14 font-semibold text-header-2 shadow shadow-lg z-10"
+            class="fixed w-full flex flex-col bg-white justify-end py-4 content-container mt-14 font-semibold text-header-2 shadow shadow-lg z-10"
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
                 <RouterLink to="/">HOME</RouterLink>
                 <RouterLink to="/">EMERGENCY</RouterLink>
             </div>
-            <div class="flex gap-4">
+            <div class="mt-16">
+                <select @change="changeLanguage" v-model="newLocaleLanguage">
+                    <option value="en-US">English</option>
+                    <option value="fr-FR">Français</option>
+                </select>
+            </div>
+            <div class="flex gap-4 mt-5">
                 <p class="text-body font-semibold font-Inter">
                     {{ userStore.user?.rsiHandle }}
                 </p>

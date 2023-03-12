@@ -3,6 +3,7 @@
 import type { AxiosError } from "axios";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import EmergencyForm from "@/components/EmergencyForm.vue";
 import EmergencyHistory from "@/components/EmergencyHistory.vue";
@@ -11,6 +12,7 @@ import type { Emergency, History } from "@/stores/userStore";
 import { useUserStore } from "@/stores/userStore";
 import { establishConnection } from "@/utils/signalRConnection";
 
+const { t } = useI18n();
 const userStore = useUserStore();
 const pageSize = 5;
 const paginationToken: Ref<string | undefined> = ref();
@@ -119,7 +121,9 @@ const isLastPageHistory = computed(() => {
         class="flex flex-col-reverse lg:flex-row lg:justify-between content-container my-14 lg:my-36"
     >
         <div class="mt-10 lg:mt-0 lg:w-[35%] lg:max-w-xl">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">History</h2>
+            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
+                {{ t("history") }}
+            </h2>
             <div v-if="loaded && activePage.length > 0">
                 <EmergencyHistory
                     v-for="emergency in activePage"
@@ -182,7 +186,9 @@ const isLastPageHistory = computed(() => {
             </div>
         </div>
         <div class="lg:w-[50%]">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">Emergency</h2>
+            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
+                {{ t("emergency") }}
+            </h2>
             <EmergencyTracking
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"

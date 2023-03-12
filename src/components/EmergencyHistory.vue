@@ -76,7 +76,7 @@ function getStatusString(id: number): string {
         case 1:
             return "Received";
         case 2:
-        case 10: // "Pending completion" special case
+        case 10:
             return "In Progress";
         case 3:
             return "Completed";

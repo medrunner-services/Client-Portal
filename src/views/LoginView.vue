@@ -155,7 +155,7 @@ const copyIdToClipboard = (): void => {
                     class="button-primary button-48"
                     @click="userStore.redirectToDiscordLogin()"
                 >
-                    Login with Discord
+                    Log in with Discord
                 </button>
                 <button
                     class="button-secondary button-48 mt-5"
