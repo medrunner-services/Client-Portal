@@ -92,7 +92,7 @@ function changeLanguage(): void {
         </div>
 
         <nav
-            class="fixed w-full flex flex-col bg-white justify-end py-4 content-container mt-14 font-semibold text-header-2 shadow shadow-lg z-10"
+            class="w-full flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow shadow-lg z-10"
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
