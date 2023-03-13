@@ -250,5 +250,3 @@ async function sendNewEmergency(): Promise<void> {
         </p>
     </form>
 </template>
-
-<style scoped></style>

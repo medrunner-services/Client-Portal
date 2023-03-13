@@ -271,5 +271,3 @@ async function submitCancelReason(): Promise<void> {
         </form>
     </div>
 </template>
-
-<style scoped></style>

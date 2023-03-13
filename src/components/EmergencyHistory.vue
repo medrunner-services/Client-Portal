@@ -143,7 +143,7 @@ function getResponders(responders: any): string {
                     class="flex flex-col justify-center items-center"
                 >
                     <p>Accepted</p>
-                    <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
+                    <img src="/icons/circle-icon.svg" alt="Received" class="my-2" />
                     <p>
                         {{ timestampToHours(emergencyInfo.acceptedTimestamp) }}
                     </p>
