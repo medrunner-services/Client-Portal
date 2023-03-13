@@ -5,7 +5,7 @@ import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
-const { locale } = useI18n({ useScope: "global" });
+const { t, locale } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const userMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
@@ -41,8 +41,8 @@ function changeLanguage(): void {
             <nav
                 class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center"
             >
-                <RouterLink to="/">HOME</RouterLink>
-                <RouterLink to="/">EMERGENCY</RouterLink>
+                <RouterLink to="/">{{ t("navbar_home") }}</RouterLink>
+                <RouterLink to="/">{{ t("navbar_emergency") }}</RouterLink>
                 <div>
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
@@ -78,7 +78,7 @@ function changeLanguage(): void {
                                 @click.prevent="userStore.disconnectUser()"
                                 class="button-primary button-24 ml-3"
                             >
-                                Disconnect
+                                {{ t("navbar_disconnect") }}
                             </button>
                         </div>
                     </div>
@@ -96,8 +96,8 @@ function changeLanguage(): void {
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
-                <RouterLink to="/">HOME</RouterLink>
-                <RouterLink to="/">EMERGENCY</RouterLink>
+                <RouterLink to="/">{{ t("navbar_home") }}</RouterLink>
+                <RouterLink to="/">{{ t("navbar_emergency") }}</RouterLink>
             </div>
             <div class="mt-16">
                 <select @change="changeLanguage" v-model="newLocaleLanguage">
@@ -110,7 +110,7 @@ function changeLanguage(): void {
                     {{ userStore.user?.rsiHandle }}
                 </p>
                 <button @click="userStore.disconnectUser()" class="button-primary button-24">
-                    Disconnect
+                    {{ t("navbar_disconnect") }}
                 </button>
             </div>
         </nav>

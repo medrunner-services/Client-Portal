@@ -2,12 +2,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
 
 const emit = defineEmits(["completedTrackedEmergency"]);
 
 const userStore = useUserStore();
+const { t } = useI18n();
 const loadingEmergency = ref(false);
 const loadingCancelEmergency = ref(false);
 const errorLoadingEmergency = ref("");
@@ -24,7 +26,7 @@ onMounted(async () => {
             loadingEmergency.value = false;
         } catch (error: AxiosError | any) {
             loadingEmergency.value = false;
-            errorLoadingEmergency.value = "An error occurred loading your ongoing emergency";
+            errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
         }
     }
 });
@@ -32,58 +34,58 @@ onMounted(async () => {
 const emergencyTitle = computed(() => {
     switch (userStore.trackedEmergency.status) {
         case 1:
-            return "📡 Message received";
+            return "📡 " + t("tracking_messageReceived");
         case 2:
-            return "🚑 Help is on the way";
+            return "🚑 " + t("tracking_helpOnTheWay");
         case 3:
-            return "✅ Operation successful";
+            return "✅ " + t("tracking_operationSuccessful");
         case 10:
-            return "🔃 Operation over";
+            return "🔃 " + t("tracking_operationOver");
         case 4:
-            return "❌ Operation failed";
+            return "❌ " + t("tracking_operationFailed");
         case 6:
-            return "🚫 Operation canceled";
+            return "🚫 " + t("tracking_operationCanceled");
         case 8:
-            return "↩️ Operation aborted";
+            return "↩️ " + t("tracking_operationAborted");
         case 9:
-            return "🖥️ Server error";
+            return "🖥️ " + t("tracking_serverError");
     }
 });
 
 const emergencySubTitle = computed(() => {
     switch (userStore.trackedEmergency.status) {
         case 1:
-            return "awaiting for dispatch confirmation";
+            return t("tracking_statusTextReceived");
         case 2:
-            return "Medrunners are on their way to rescue you";
+            return t("tracking_statusTextOnTheirWay");
         case 3:
-            return "Thanks for choosing Medrunner";
+            return t("tracking_statusTextSuccess");
         case 10:
-            return "You have been extracted ! Waiting for confirmation...";
+            return t("tracking_statusTextOver");
         case 4:
-            return "The operation has failed";
+            return t("tracking_statusTextFailed");
         case 6:
-            return "The medrunner team is retreating";
+            return t("tracking_statusTextCanceled");
         case 8:
-            return "Our team had to abort the mission";
+            return t("tracking_statusTextAborted");
         case 9:
-            return "The operation was aborted due to a server error";
+            return t("tracking_statusTextServerError");
     }
 });
 
 function getThreatString(id: number): string {
     switch (id) {
         case 0:
-            return "Unknown";
+            return t("tracking_unknown");
         case 1:
-            return "Low";
+            return t("tracking_low");
         case 2:
-            return "Medium";
+            return t("tracking_medium");
         case 3:
-            return "High";
+            return t("tracking_high");
 
         default:
-            return "Unknown";
+            return t("tracking_unknown");
     }
 }
 
@@ -94,8 +96,7 @@ async function cancelTrackedEmergency(): Promise<void> {
         loadingCancelEmergency.value = false;
     } catch (error: AxiosError | any) {
         loadingCancelEmergency.value = false;
-        loadingCancelEmergencyError.value =
-            "An error occurred while canceling your ongoing emergency";
+        loadingCancelEmergencyError.value = t("tracking_errorCancel");
     }
 }
 
@@ -156,15 +157,21 @@ async function submitCancelReason(): Promise<void> {
         >
             <div class="lg:flex lg:justify-between">
                 <div class="p-4 shadow-md bg-gray-50 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌌 System</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
+                        🌌 {{ t("tracking_system") }}
+                    </p>
                     <p class="mt-2">{{ userStore.trackedEmergency.system }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌍 Sub System</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
+                        🌍 {{ t("tracking_subSystem") }}
+                    </p>
                     <p class="mt-2">{{ userStore.trackedEmergency.subsystem }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%] h-fit">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">⚔️ Threat Level</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
+                        ⚔️ {{ t("tracking_threatLevel") }}
+                    </p>
                     <p class="mt-2">
                         {{ getThreatString(userStore.trackedEmergency.threatLevel) }}
                     </p>
@@ -175,7 +182,9 @@ async function submitCancelReason(): Promise<void> {
                 class="lg:flex lg:justify-between lg:mt-5"
             >
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 w-full">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🗒️ Remarks</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
+                        🗒️ {{ t("tracking_remarks") }}
+                    </p>
                     <p class="mt-2">{{ userStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
@@ -187,7 +196,9 @@ async function submitCancelReason(): Promise<void> {
             "
             class="mt-10"
         >
-            <p class="font-Mohave text-primary-900 text-2xl font-semibold mb-3">Responders</p>
+            <p class="font-Mohave text-primary-900 text-2xl font-semibold mb-3">
+                {{ t("tracking_responders") }}
+            </p>
             <p
                 v-for="responder in userStore.trackedEmergency.respondingTeam.staff"
                 class="font-medium"
@@ -225,7 +236,7 @@ async function submitCancelReason(): Promise<void> {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <span v-else>Cancel Emergency</span>
+            <span v-else>{{ t("tracking_cancelButton") }}</span>
         </button>
         <p v-if="loadingCancelEmergencyError" class="mt-2 text-primary-400 text-sm w-full">
             {{ loadingCancelEmergencyError }}
@@ -237,36 +248,38 @@ async function submitCancelReason(): Promise<void> {
             "
             class="mt-10"
         >
-            <p class="font-Mohave font-semibold text-xl">How was your experience with Medrunner?</p>
+            <p class="font-Mohave font-semibold text-xl">{{ t("tracking_ratingTitle") }}</p>
             <div class="flex w-full justify-between mt-5">
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
                     @click="rateEmergency(1)"
                 >
-                    Good
+                    {{ t("tracking_good") }}
                 </button>
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
                     @click="rateEmergency(2)"
                 >
-                    Bad
+                    {{ t("tracking_bad") }}
                 </button>
             </div>
         </div>
 
         <form v-if="userStore.trackedEmergency.status === 6" class="mt-7">
-            <label class="text-sm font-semibold">Reason for cancellation</label>
+            <label class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
             <select
                 class="w-full focus:ring-secondary-500 focus:border-secondary-500 border-gray-400"
                 v-model="cancelReason"
                 @change="submitCancelReason"
             >
-                <option selected disabled hidden value>Why did you cancel ?</option>
-                <option value="rescued">🤝 Rescued</option>
-                <option value="succumbed">🩸 Bled Out</option>
-                <option value="server">🖥️ Server Issue</option>
-                <option value="respawned">🏥 Respawned</option>
-                <option value="other">📝 Other</option>
+                <option selected disabled hidden value>
+                    {{ t("tracking_cancelQuestionValue") }}
+                </option>
+                <option value="rescued">🤝 {{ t("tracking_rescued") }}</option>
+                <option value="succumbed">🩸 {{ t("tracking_bledOut") }}</option>
+                <option value="server">🖥️ {{ t("tracking_serverIssue") }}</option>
+                <option value="respawned">🏥 {{ t("tracking_respawned") }}</option>
+                <option value="other">📝 {{ t("tracking_other") }}</option>
             </select>
         </form>
     </div>

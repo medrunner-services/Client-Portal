@@ -2,10 +2,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError } from "axios";
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const { t } = useI18n();
 const isUpdatingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
@@ -30,12 +32,12 @@ async function updateRsiHandle(): Promise<void> {
         isUpdatingRsiHandle.value = false;
         rsiHandleApiUpdating.value = false;
     } catch (error: AxiosError | any) {
-        if (error.message === "451") rsiHandleErrorMessage.value = "This account is blocked";
+        if (error.message === "451") rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
         else if (error.message === "403")
-            rsiHandleErrorMessage.value = "Missing Medrunner ID in RSI Bio";
+            rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
         else if (error.message === "404")
-            rsiHandleErrorMessage.value = "Cannot find a RSI account with this username";
-        else rsiHandleErrorMessage.value = "An error occurred please try again later";
+            rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
+        else rsiHandleErrorMessage.value = t("form_errorGeneric");
 
         rsiHandleApiUpdating.value = false;
     }
@@ -58,8 +60,8 @@ async function sendNewEmergency(): Promise<void> {
         formRemarks.value = "";
     } catch (error: AxiosError | any) {
         formSubmittingEmergency.value = false;
-        if (error.message === "403") formErrorMessage.value = "This account is blocked";
-        else formErrorMessage.value = "An error occurred please try again later";
+        if (error.message === "403") formErrorMessage.value = t("form_errorBlockedAccount");
+        else formErrorMessage.value = t("form_errorGeneric");
     }
 }
 </script>
@@ -68,12 +70,12 @@ async function sendNewEmergency(): Promise<void> {
     <form class="xl:w-5/6" @submit.prevent="sendNewEmergency()">
         <div class="lg:w-[48%]">
             <div class="flex items-center">
-                <label class="text-sm font-semibold">Star Citizen Username</label>
+                <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
                 <img
                     src="/icons/info-icon.svg"
                     alt="Info label"
                     class="ml-2 h-4 w-4 cursor-help"
-                    title="The username of your RSI account"
+                    :title="t('form_helpSCUsername')"
                 />
             </div>
             <div class="w-full flex mt-2">
@@ -113,7 +115,9 @@ async function sendNewEmergency(): Promise<void> {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                     </svg>
-                    <span v-else>{{ isUpdatingRsiHandle ? "Confirm" : "Edit" }}</span>
+                    <span v-else>{{
+                        isUpdatingRsiHandle ? t("form_confirm") : t("form_edit")
+                    }}</span>
                 </button>
             </div>
             <p v-if="rsiHandleErrorMessage" class="mt-2 text-primary-400 text-xs w-full">
@@ -124,12 +128,12 @@ async function sendNewEmergency(): Promise<void> {
         <div class="mt-10 lg:flex lg:justify-between lg:w-full">
             <div class="lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">System</label>
+                    <label class="text-sm font-semibold">{{ t("form_system") }}</label>
                     <img
                         src="/icons/info-icon.svg"
                         alt="Info label"
                         class="ml-2 h-4 w-4 cursor-help"
-                        title="The system where you are stranded"
+                        :title="t('form_helpSystem')"
                     />
                 </div>
                 <div class="mt-2">
@@ -141,12 +145,12 @@ async function sendNewEmergency(): Promise<void> {
 
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">Nearest Planet</label>
+                    <label class="text-sm font-semibold">{{ t("form_subSystem") }}</label>
                     <img
                         src="/icons/info-icon.svg"
                         alt="Info label"
                         class="ml-2 h-4 w-4 cursor-help"
-                        title="The nearest planet where you are stranded"
+                        :title="t('form_helpSubSystem')"
                     />
                 </div>
                 <div class="mt-2">
@@ -157,7 +161,7 @@ async function sendNewEmergency(): Promise<void> {
                         required
                         :disabled="formSubmittingEmergency"
                     >
-                        <option disabled hidden value>Select a planet</option>
+                        <option disabled hidden value>{{ t("form_selectAPlanet") }}</option>
                         <option value="microTech">microTech</option>
                         <option value="Hurston">Hurston</option>
                         <option value="Crusader">Crusader</option>
@@ -170,12 +174,12 @@ async function sendNewEmergency(): Promise<void> {
         <div class="mt-5 lg:flex lg:justify-between lg:w-full">
             <div class="lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">Threat Level</label>
+                    <label class="text-sm font-semibold">{{ t("form_threatLevel") }}</label>
                     <img
                         src="/icons/info-icon.svg"
                         alt="Info label"
                         class="ml-2 h-4 w-4 cursor-help"
-                        title="The level of danger that the rescue team might encounter"
+                        :title="t('form_helpThreatLevel')"
                     />
                 </div>
                 <div class="mt-2">
@@ -186,23 +190,25 @@ async function sendNewEmergency(): Promise<void> {
                         required
                         :disabled="formSubmittingEmergency"
                     >
-                        <option selected disabled hidden value>Assess the threat</option>
-                        <option value="0">❓ Unknown threat</option>
-                        <option value="1">🟢 Low Threat</option>
-                        <option value="2">🟡 Medium threat</option>
-                        <option value="3">🔴 High threat</option>
+                        <option selected disabled hidden value>
+                            {{ t("form_assessTheThreat") }}
+                        </option>
+                        <option value="0">❓ {{ t("form_unknownThreat") }}</option>
+                        <option value="1">🟢 {{ t("form_lowThreat") }}</option>
+                        <option value="2">🟡 {{ t("form_mediumThreat") }}</option>
+                        <option value="3">🔴 {{ t("form_highThreat") }}</option>
                     </select>
                 </div>
             </div>
 
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">Remarks</label>
+                    <label class="text-sm font-semibold">{{ t("form_remarks") }}</label>
                     <img
                         src="/icons/info-icon.svg"
                         alt="Info label"
                         class="ml-2 h-4 w-4 cursor-help"
-                        title="Any information that the rescue team should be aware of"
+                        :title="t('form_helpRemarks')"
                     />
                 </div>
                 <div class="mt-2">
@@ -243,7 +249,7 @@ async function sendNewEmergency(): Promise<void> {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <span v-else>Report Emergency</span>
+            <span v-else>{{ t("form_reportEmergency") }}</span>
         </button>
         <p v-if="formErrorMessage" class="mt-2 text-primary-400 text-sm w-full">
             {{ formErrorMessage }}

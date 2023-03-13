@@ -15,7 +15,7 @@ const { t } = useI18n();
 const formUsername = ref("");
 const waitingForApi = ref(false);
 const loginErrorAlert = ref(false);
-const formErrorMessage = ref(t("anErrorOccurred"));
+const formErrorMessage = ref(t("login_genericError"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
 
@@ -31,12 +31,9 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         router.push("/");
     } catch (error: AxiosError | any) {
-        if (error.message === "451") formErrorMessage.value = t("thisAccountIsBlocked");
-        if (error.message === "403") formErrorMessage.value = t("missingMedrunnerIdInRsiBio");
-        if (error.message === "404")
-            formErrorMessage.value = t(
-                "cannotFindARsiAccountWithThisUsernameIfYouJustCreatedYourRsiAccountItMayTakeAFewMinutesToFindIt",
-            );
+        if (error.message === "451") formErrorMessage.value = t("login_errorAccountBlocked");
+        if (error.message === "403") formErrorMessage.value = t("login_errorMissingMedrunnerId");
+        if (error.message === "404") formErrorMessage.value = t("login_errorUnknownRSIAccount");
 
         formErrorActive.value = true;
         waitingForApi.value = false;
@@ -51,7 +48,7 @@ const copyIdToClipboard = (): void => {
 };
 
 function getColoredTitle(): string {
-    const title = t("welcomeToTheMedrunnerPortal");
+    const title = t("login_welcomeMessage");
 
     return `${title.substring(
         0,
@@ -68,7 +65,7 @@ function getColoredTitle(): string {
             v-if="loginErrorAlert"
             class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900"
         >
-            <p>{{ t("somethingWentWrongPleaseTryAgain") }}</p>
+            <p>{{ t("login_modalErrorMessage") }}</p>
         </div>
         <div
             class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex"
@@ -82,14 +79,14 @@ function getColoredTitle(): string {
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
                     <p class="text-neutral-900 font-Inter font-semibold text-small">
-                        {{ t("pleaseAddThisToYour") }}
+                        {{ t("login_addToBio1") }}
                         <a
                             href="https://robertsspaceindustries.com/account/profile"
                             target="_blank"
                             class="underline underline-offset-2 cursor-pointer"
-                            >{{ t("rsiBio") }}</a
+                            >{{ t("login_addToBio2") }}</a
                         >
-                        {{ t("beforeSubmittingYourUsername") }} :
+                        {{ t("login_addToBio3") }} :
                     </p>
                     <div class="flex mt-2">
                         <div
@@ -107,11 +104,7 @@ function getColoredTitle(): string {
                         />
                     </div>
                     <p class="mt-5 text-xs italic lg:text-sm">
-                        {{
-                            t(
-                                "youMayHaveToSetYourCountryAndRegionInYourRsiProfileToSaveYour shortBioDueToAnRsiBug",
-                            )
-                        }}
+                        {{ t("login_warningRSIProfileBug") }}
                     </p>
                 </div>
                 <form
@@ -123,13 +116,13 @@ function getColoredTitle(): string {
                             <label
                                 for="rsiHandle"
                                 class="text-small font-semibold font-Inter text-neutral-900"
-                                >{{ t("starCitizenUsername") }}</label
+                                >{{ t("login_starCitizenUsername") }}</label
                             >
                             <img
                                 src="/icons/info-icon.svg"
                                 alt="Info label"
                                 class="ml-2 h-4 w-4 cursor-help"
-                                :title="t('theUsernameOfYourRsiAccount')"
+                                :title="t('login_RSIUsername')"
                             />
                         </div>
                         <input
@@ -139,7 +132,7 @@ function getColoredTitle(): string {
                             name="rsiHandle"
                             class="w-full"
                             :class="formErrorActive ? 'input-text-error' : 'input-text'"
-                            :placeholder="t('yourUsername') + '...'"
+                            :placeholder="t('login_username') + '...'"
                         />
                     </div>
                     <button
@@ -159,7 +152,7 @@ function getColoredTitle(): string {
                                 d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
                             />
                         </svg>
-                        <span v-else>{{ t("continue") }}</span>
+                        <span v-else>{{ t("login_continue") }}</span>
                     </button>
                 </form>
                 <p v-if="formErrorActive" class="mt-2 text-primary-400 font-Inter text-sm">
@@ -171,13 +164,13 @@ function getColoredTitle(): string {
                     class="button-primary button-48"
                     @click="userStore.redirectToDiscordLogin()"
                 >
-                    {{ t("logInWithDiscord") }}
+                    {{ t("login_logInButton") }}
                 </button>
                 <button
                     class="button-secondary button-48 mt-5"
                     @click="userStore.redirectToDiscordRegister()"
                 >
-                    {{ t("registerWithDiscord") }}
+                    {{ t("login_registerButton") }}
                 </button>
             </div>
         </div>
