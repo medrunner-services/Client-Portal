@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import {useRoute} from "vue-router";
+import { useRoute } from "vue-router";
 
 import { useUserStore } from "@/stores/userStore";
 
@@ -11,7 +11,7 @@ const { t, locale } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const userMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
-const currentPage = ref('')
+const currentPage = ref("");
 
 onMounted(() => {
     newLocaleLanguage.value = localStorage.getItem("selectedLanguage") ?? navigator.language;
@@ -19,8 +19,8 @@ onMounted(() => {
 });
 
 watch(route, async (oldRoute, newRoute) => {
-	currentPage.value = newRoute.path
-})
+    currentPage.value = newRoute.path;
+});
 
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
@@ -48,8 +48,16 @@ function changeLanguage(): void {
             <nav
                 class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center"
             >
-                <RouterLink to="/" :class="currentPage === '/' ? 'underline underline-offset-4' : ''">{{ t("navbar_emergency") }}</RouterLink>
-                <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''">{{ t("navbar_blocklist") }}</RouterLink>
+                <RouterLink
+                    to="/"
+                    :class="currentPage === '/' ? 'underline underline-offset-4' : ''"
+                    >{{ t("navbar_emergency") }}</RouterLink
+                >
+                <RouterLink
+                    to="/blocklist"
+                    :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''"
+                    >{{ t("navbar_blocklist") }}</RouterLink
+                >
                 <div>
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
@@ -103,8 +111,16 @@ function changeLanguage(): void {
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
-                <RouterLink to="/" :class="currentPage === '/' ? 'underline underline-offset-4' : ''">{{ t("navbar_emergency") }}</RouterLink>
-				<RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''">{{ t("navbar_blocklist") }}</RouterLink>
+                <RouterLink
+                    to="/"
+                    :class="currentPage === '/' ? 'underline underline-offset-4' : ''"
+                    >{{ t("navbar_emergency") }}</RouterLink
+                >
+                <RouterLink
+                    to="/blocklist"
+                    :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''"
+                    >{{ t("navbar_blocklist") }}</RouterLink
+                >
             </div>
             <div class="mt-16">
                 <select @change="changeLanguage" v-model="newLocaleLanguage">

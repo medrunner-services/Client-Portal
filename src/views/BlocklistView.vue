@@ -1,12 +1,7 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-	<h1>The Blocklist</h1>
-
+    <h1>The Blocklist</h1>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

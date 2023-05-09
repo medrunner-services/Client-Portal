@@ -60,8 +60,8 @@ const router = createRouter({
         {
             path: "/blocklist",
             name: "blocklist",
-            component: () => import("@/views/BlocklistView.vue")
-        }
+            component: () => import("@/views/BlocklistView.vue"),
+        },
     ],
 });
 
