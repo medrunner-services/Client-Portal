@@ -15,7 +15,7 @@
     "login_errorAccountBlocked": "This account is blocked",
     "login_errorMissingMedrunnerId": "Missing Medrunner ID in RSI Bio",
     "login_errorUnknownRSIAccount": "Cannot find an RSI account with this username. If you just created your RSI account, it may take a few minutes to find it",
-    "navbar_home": "Home",
+    "navbar_blocklist": "Blocklist",
     "navbar_emergency": "Emergency",
     "navbar_disconnect": "Disconnect",
     "home_history": "History",
