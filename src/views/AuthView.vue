@@ -6,12 +6,12 @@ import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/userStore";
 
 const route = useRoute();
-const router = useRouter();
+    const router = useRouter();
 const userStore = useUserStore();
 
 onMounted(async () => {
     if (!route.query.code) {
-        router.push("/login");
+        await router.push("/login");
     }
 
     if (route.path === "/auth/register") {

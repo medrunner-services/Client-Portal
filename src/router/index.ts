@@ -57,6 +57,11 @@ const router = createRouter({
             name: "auth",
             component: () => import("@/views/AuthView.vue"),
         },
+        {
+            path: "/blocklist",
+            name: "blocklist",
+            component: () => import("@/views/BlocklistView.vue")
+        }
     ],
 });
 
