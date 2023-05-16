@@ -30,7 +30,7 @@ async function isUserComplete(): Promise<string | boolean> {
     }
 }
 
-async function authenticateUser(): Promise<string | boolean> {
+async function authenticateUser(): Promise<boolean> {
     const userStore = useUserStore();
 
     try {
@@ -38,9 +38,11 @@ async function authenticateUser(): Promise<string | boolean> {
 
         userStore.user = user;
         userStore.isAuthenticated = true;
-    } finally {
-        return true
+    } catch (error) {
+        userStore.isAuthenticated = false;
     }
+
+    return true;
 }
 
 const router = createRouter({

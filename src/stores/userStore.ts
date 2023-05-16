@@ -173,7 +173,6 @@ export const useUserStore = defineStore("user", () => {
 
         return accessToken.value;
     }
-    
 
     async function linkUser(username: string): Promise<string | void> {
         try {
@@ -330,14 +329,16 @@ export const useUserStore = defineStore("user", () => {
 
     async function fetchBlocklist(): Promise<any> {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/block?discordId=195699035632435200`, {
-                headers: {
-                    Authorization: `Bearer ${await getToken()}`,
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/block?discordId=195699035632435200`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getToken()}`,
+                    },
                 },
-            });
+            );
 
             return response.data;
-            
         } catch (error: AxiosError | any) {
             throw Error(error.response.status);
         }
