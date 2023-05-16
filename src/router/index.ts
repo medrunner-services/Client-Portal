@@ -30,6 +30,19 @@ async function isUserComplete(): Promise<string | boolean> {
     }
 }
 
+async function authenticateUser(): Promise<string | boolean> {
+    const userStore = useUserStore();
+
+    try {
+        const user = await userStore.fetchUser();
+
+        userStore.user = user;
+        userStore.isAuthenticated = true;
+    } finally {
+        return true
+    }
+}
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -61,6 +74,7 @@ const router = createRouter({
             path: "/blocklist",
             name: "blocklist",
             component: () => import("@/views/BlocklistView.vue"),
+            beforeEnter: authenticateUser,
         },
     ],
 });

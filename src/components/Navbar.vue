@@ -39,6 +39,7 @@ function changeLanguage(): void {
 <template>
     <div class="bg-white w-full flex flex-col shadow-md md:static">
         <div class="py-2 content-container flex items-center gap-2 md:px-16 md:py-3">
+            
             <img class="h-8 md:h-12" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
 
             <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">
@@ -50,12 +51,12 @@ function changeLanguage(): void {
             >
                 <RouterLink
                     to="/"
-                    :class="currentPage === '/' ? 'underline underline-offset-4' : ''"
+                    :class="currentPage === '/' ? 'current-link' : ''"
                     >{{ t("navbar_emergency") }}</RouterLink
                 >
                 <RouterLink
                     to="/blocklist"
-                    :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''"
+                    :class="currentPage === '/blocklist' ? 'current-link' : ''"
                     >{{ t("navbar_blocklist") }}</RouterLink
                 >
                 <div>
@@ -64,7 +65,7 @@ function changeLanguage(): void {
                         <option value="fr-FR">Français</option>
                     </select>
                 </div>
-                <div class="cursor-pointer">
+                <div class="cursor-pointer" v-if="userStore.isAuthenticated">
                     <img
                         @click="switchUserMenuState()"
                         src="/icons/user-profile.svg"
@@ -113,12 +114,12 @@ function changeLanguage(): void {
             <div class="flex flex-col gap-4 font-Mohave">
                 <RouterLink
                     to="/"
-                    :class="currentPage === '/' ? 'underline underline-offset-4' : ''"
+                    :class="currentPage === '/' ? 'current-link' : ''"
                     >{{ t("navbar_emergency") }}</RouterLink
                 >
                 <RouterLink
                     to="/blocklist"
-                    :class="currentPage === '/blocklist' ? 'underline underline-offset-4' : ''"
+                    :class="currentPage === '/blocklist' ? 'current-link' : ''"
                     >{{ t("navbar_blocklist") }}</RouterLink
                 >
             </div>
@@ -128,7 +129,7 @@ function changeLanguage(): void {
                     <option value="fr-FR">Français</option>
                 </select>
             </div>
-            <div class="flex gap-4 mt-5">
+            <div class="flex gap-4 mt-5" v-if="userStore.isAuthenticated">
                 <p class="text-body font-semibold font-Inter">
                     {{ userStore.user?.rsiHandle }}
                 </p>
@@ -139,3 +140,9 @@ function changeLanguage(): void {
         </nav>
     </div>
 </template>
+
+<style scoped>
+    .current-link {
+        @apply underline underline-offset-4 decoration-[3px]
+    }
+</style>
