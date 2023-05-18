@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^0.9.1",
+    "@medrunner-services/api-client": "^0.8.0",
     "@microsoft/signalr": "^7.0.3",
     "axios": "^1.2.2",
     "pinia": "^2.0.28",

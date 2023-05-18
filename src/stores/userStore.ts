@@ -1,8 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import axios, { AxiosError } from "axios";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
-import { useRouter } from "vue-router";
 
 import { getJwtFromAccessToken } from "@/utils/jwt";
 
@@ -113,8 +111,6 @@ export const useUserStore = defineStore("user", () => {
     const accessToken = ref("");
     const trackedEmergency = ref({} as Emergency);
 
-    const router = useRouter();
-
     function setupStore() {
         user.value = {} as User;
         isAuthenticated.value = false;
@@ -140,7 +136,6 @@ export const useUserStore = defineStore("user", () => {
     function disconnectUser(): void {
         localStorage.removeItem("refreshToken");
         setupStore();
-        router.push("/login");
     }
 
     async function fetchToken(refreshToken: string) {
@@ -363,5 +358,7 @@ export const useUserStore = defineStore("user", () => {
         isAuthenticated,
         setTokens,
         trackedEmergency,
+        accessToken,
+        fetchToken,
     };
 });

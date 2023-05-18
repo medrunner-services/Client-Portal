@@ -6,7 +6,7 @@ import BlocklistCard from "@/components/BlocklistCard.vue";
 <template>
     <div class="content-container flex flex-col items-center">
         <h1 class="text-center text-3xl lg:text-4xl font-Mohave font-semibold uppercase">
-            Medrunner Blacklist
+            Medrunner Blocklist
         </h1>
 
         <BlocklistForm />

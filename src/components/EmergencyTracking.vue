@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";

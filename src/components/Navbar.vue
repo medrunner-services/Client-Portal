@@ -2,11 +2,13 @@
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
 
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const route = useRoute();
+const router = useRouter();
 const { t, locale } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const userMenuCollapsed = ref(false);
@@ -33,6 +35,11 @@ function changeLanguage(): void {
     locale.value = newLocaleLanguage.value;
     localStorage.setItem("selectedLanguage", newLocaleLanguage.value);
     navMenuCollapsed.value = false;
+}
+
+function disconnect(): void {
+    userStore.disconnectUser();
+    router.push("/login");
 }
 </script>
 
@@ -88,7 +95,7 @@ function changeLanguage(): void {
                                 {{ userStore.user?.rsiHandle }}
                             </p>
                             <button
-                                @click.prevent="userStore.disconnectUser()"
+                                @click.prevent="disconnect()"
                                 class="button-primary button-24 ml-3"
                             >
                                 {{ t("navbar_disconnect") }}
