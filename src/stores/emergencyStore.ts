@@ -26,8 +26,8 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function fetchEmergencies(...id: string[]): Promise<Emergency[]> {
-        const response = await api.emergency.getEmergencies(id);
+    async function fetchEmergencies(ids: string[]): Promise<Emergency[]> {
+        const response = await api.emergency.getEmergencies(ids);
 
         if (response.success && response.data) {
             return response.data;

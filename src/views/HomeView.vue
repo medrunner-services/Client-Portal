@@ -10,6 +10,7 @@ import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { establishConnection } from "@/utils/signalRConnection";
+import {api} from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -46,7 +47,8 @@ onMounted(async () => {
 });
 
 async function bulkLoadEmergencies(history: ClientHistory[]): Promise<Emergency[]> {
-    return await emergencyStore.fetchEmergencies(...history.map(h => h.emergencyId));
+    const historyArray = history.map(h => h.emergencyId);
+    return await emergencyStore.fetchEmergencies(historyArray);
 }
 
 function setActivePageFromCache(startIndex: number) {
