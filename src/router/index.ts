@@ -17,29 +17,32 @@ function isUserNotLinked(): string | boolean {
 async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
 
-    try {
-        const user = await userStore.fetchUser();
-
-        userStore.user = user;
-        userStore.isAuthenticated = true;
-
-        if (!user.active) return "/login";
-        return user.rsiHandle ? true : "/login/link";
-    } catch (error) {
+    if (!userStore.isAuthenticated) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error) {
+            return "/login";
+        }
+    } else if (!userStore.user.active) {
         return "/login";
+    } else if (!userStore.user.rsiHandle) {
+        return "/login/link";
     }
+
+    return true;
 }
 
 async function authenticateUser(): Promise<boolean> {
     const userStore = useUserStore();
 
-    try {
-        const user = await userStore.fetchUser();
-
-        userStore.user = user;
-        userStore.isAuthenticated = true;
-    } catch (error) {
-        userStore.isAuthenticated = false;
+    if (!userStore.isAuthenticated) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error) {
+            userStore.isAuthenticated = false;
+        }
     }
 
     return true;

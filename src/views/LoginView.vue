@@ -6,6 +6,7 @@ import { useRoute } from "vue-router";
 
 import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
+import { redirectToDiscordLogin, redirectToDiscordRegister } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -28,7 +29,7 @@ const submittingLinkForm = async (): Promise<void> => {
 
     try {
         await userStore.linkUser(formUsername.value);
-        router.push("/");
+        await router.push("/");
     } catch (error: AxiosError | any) {
         if (error.message === "451") formErrorMessage.value = t("login_errorAccountBlocked");
         if (error.message === "403") formErrorMessage.value = t("login_errorMissingMedrunnerId");
@@ -159,15 +160,12 @@ function getColoredTitle(): string {
                 </p>
             </div>
             <div v-else class="flex flex-col mt-14">
-                <button
-                    class="button-primary button-48"
-                    @click="userStore.redirectToDiscordLogin()"
-                >
+                <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
                 <button
                     class="button-secondary button-48 mt-5"
-                    @click="userStore.redirectToDiscordRegister()"
+                    @click="redirectToDiscordRegister()"
                 >
                     {{ t("login_registerButton") }}
                 </button>

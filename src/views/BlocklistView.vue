@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import BlocklistForm from "@/components/BlocklistForm.vue";
 import BlocklistCard from "@/components/BlocklistCard.vue";
+import BlocklistForm from "@/components/BlocklistForm.vue";
 </script>
 
 <template>

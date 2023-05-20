@@ -99,7 +99,7 @@ async function cancelTrackedEmergency(): Promise<void> {
     }
 }
 
-async function rateEmergency(rating: number): Promise<void> {
+async function rateEmergency(rating: string): Promise<void> {
     try {
         await userStore.rateCompletedEmergency(userStore.trackedEmergency.id, rating);
     } finally {
@@ -251,13 +251,13 @@ async function submitCancelReason(): Promise<void> {
             <div class="flex w-full justify-between mt-5">
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
-                    @click="rateEmergency(1)"
+                    @click="rateEmergency('good')"
                 >
                     {{ t("tracking_good") }}
                 </button>
                 <button
                     class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
-                    @click="rateEmergency(2)"
+                    @click="rateEmergency('bad')"
                 >
                     {{ t("tracking_bad") }}
                 </button>

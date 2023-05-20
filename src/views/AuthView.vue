@@ -4,6 +4,7 @@ import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import { useUserStore } from "@/stores/userStore";
+import { initializeApi } from "@/utils/medrunnerClient";
 
 const route = useRoute();
 const router = useRouter();
@@ -22,13 +23,12 @@ onMounted(async () => {
                 }&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
             );
 
-            userStore.setTokens({
-                accessToken: response.data.accessToken,
-                refreshToken: response.data.refreshToken,
-            });
-            router.push("/login/link");
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            initializeApi(response.data.refreshToken);
+
+            await router.push("/login/link");
         } catch (e) {
-            router.push("/login?error=true");
+            await router.push("/login?error=true");
         }
     } else {
         try {
@@ -38,13 +38,12 @@ onMounted(async () => {
                 }/auth`,
             );
 
-            userStore.setTokens({
-                accessToken: response.data.accessToken,
-                refreshToken: response.data.refreshToken,
-            });
-            router.push("/");
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            initializeApi(response.data.refreshToken);
+
+            await router.push("/");
         } catch (e) {
-            router.push("/login?error=true");
+            await router.push("/login?error=true");
         }
     }
 });
