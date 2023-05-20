@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import type { AxiosError } from "axios";
+import type { ThreatLevel } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
+import { useEmergencyStore } from "@/stores/emergencyStore";
 
 const userStore = useUserStore();
+const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
+
 const isUpdatingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
@@ -27,15 +31,16 @@ async function updateRsiHandle(): Promise<void> {
 
     rsiHandleApiUpdating.value = true;
     try {
-        await userStore.linkUser(newRsiHandle.value);
+        if (newRsiHandle.value) {
+            await userStore.linkUser(newRsiHandle.value);
+        }
+
         isUpdatingRsiHandle.value = false;
         rsiHandleApiUpdating.value = false;
-    } catch (error: AxiosError | any) {
-        if (error.message === "451") rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
-        else if (error.message === "403")
-            rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
-        else if (error.message === "404")
-            rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
+    } catch (error: any) {
+        if (error === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
+        else if (error === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
+        else if (error === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
         else rsiHandleErrorMessage.value = t("form_errorGeneric");
 
         rsiHandleApiUpdating.value = false;
@@ -45,21 +50,24 @@ async function updateRsiHandle(): Promise<void> {
 async function sendNewEmergency(): Promise<void> {
     try {
         formSubmittingEmergency.value = true;
-        userStore.user.activeEmergency = await userStore.createEmergency({
+
+        const response = await emergencyStore.createEmergency({
             system: formSystem.value,
             subsystem: formSubSystem.value,
             threatLevel: parseInt(formSubThreatLevel.value),
             remarks: formRemarks.value,
         });
 
+        userStore.user.activeEmergency = response.id;
+
         formSubmittingEmergency.value = false;
         formSystem.value = "Stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
         formRemarks.value = "";
-    } catch (error: AxiosError | any) {
+    } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error.message === "403") formErrorMessage.value = t("form_errorBlockedAccount");
+        if (error === 403) formErrorMessage.value = t("form_errorBlockedAccount");
         else formErrorMessage.value = t("form_errorGeneric");
     }
 }
@@ -70,21 +78,13 @@ async function sendNewEmergency(): Promise<void> {
         <div class="lg:w-[48%]">
             <div class="flex items-center">
                 <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
-                <img
-                    src="/icons/info-icon.svg"
-                    alt="Info label"
-                    class="ml-2 h-4 w-4 cursor-help"
-                    :title="t('form_helpSCUsername')"
-                />
+                <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
             </div>
             <div class="w-full flex mt-2">
                 <input
                     type="text"
                     v-model="newRsiHandle"
-                    :class="[
-                        rsiHandleErrorMessage ? 'input-text-error' : 'input-text',
-                        userStore.user.personType !== 0 ? 'w-full' : '',
-                    ]"
+                    :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
                     :disabled="!isUpdatingRsiHandle"
                 />
                 <button
@@ -100,23 +100,14 @@ async function sendNewEmergency(): Promise<void> {
                         fill="none"
                         viewBox="0 0 24 24"
                     >
-                        <circle
-                            class="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="4"
-                        ></circle>
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path
                             class="opacity-75"
                             fill="currentColor"
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                     </svg>
-                    <span v-else>{{
-                        isUpdatingRsiHandle ? t("form_confirm") : t("form_edit")
-                    }}</span>
+                    <span v-else>{{ isUpdatingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
                 </button>
             </div>
             <p v-if="rsiHandleErrorMessage" class="mt-2 text-primary-400 text-xs w-full">
@@ -128,12 +119,7 @@ async function sendNewEmergency(): Promise<void> {
             <div class="lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_system") }}</label>
-                    <img
-                        src="/icons/info-icon.svg"
-                        alt="Info label"
-                        class="ml-2 h-4 w-4 cursor-help"
-                        :title="t('form_helpSystem')"
-                    />
+                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSystem')" />
                 </div>
                 <div class="mt-2">
                     <select class="w-full" disabled v-model="formSystem" required>
@@ -145,12 +131,7 @@ async function sendNewEmergency(): Promise<void> {
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_subSystem") }}</label>
-                    <img
-                        src="/icons/info-icon.svg"
-                        alt="Info label"
-                        class="ml-2 h-4 w-4 cursor-help"
-                        :title="t('form_helpSubSystem')"
-                    />
+                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSubSystem')" />
                 </div>
                 <div class="mt-2">
                     <select
@@ -174,12 +155,7 @@ async function sendNewEmergency(): Promise<void> {
             <div class="lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_threatLevel") }}</label>
-                    <img
-                        src="/icons/info-icon.svg"
-                        alt="Info label"
-                        class="ml-2 h-4 w-4 cursor-help"
-                        :title="t('form_helpThreatLevel')"
-                    />
+                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpThreatLevel')" />
                 </div>
                 <div class="mt-2">
                     <select
@@ -203,12 +179,7 @@ async function sendNewEmergency(): Promise<void> {
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_remarks") }}</label>
-                    <img
-                        src="/icons/info-icon.svg"
-                        alt="Info label"
-                        class="ml-2 h-4 w-4 cursor-help"
-                        :title="t('form_helpRemarks')"
-                    />
+                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpRemarks')" />
                 </div>
                 <div class="mt-2">
                     <textarea
@@ -234,14 +205,7 @@ async function sendNewEmergency(): Promise<void> {
                 fill="none"
                 viewBox="0 0 24 24"
             >
-                <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                ></circle>
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path
                     class="opacity-75"
                     fill="currentColor"

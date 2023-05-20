@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import type { AxiosError } from "axios";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 
 const emit = defineEmits(["completedTrackedEmergency"]);
 
 const userStore = useUserStore();
+const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
+
 const loadingEmergency = ref(false);
 const loadingCancelEmergency = ref(false);
 const errorLoadingEmergency = ref("");
@@ -16,14 +18,17 @@ const loadingCancelEmergencyError = ref("");
 const cancelReason = ref("");
 
 onMounted(async () => {
-    if (Object.keys(userStore.trackedEmergency).length === 0) {
-        try {
-            loadingEmergency.value = true;
-            userStore.trackedEmergency = await userStore.fetchEmergency(
-                userStore.user.activeEmergency,
-            );
+    if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
+        loadingEmergency.value = true;
+        if (userStore.user.activeEmergency) {
+            try {
+                emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+            } catch (e) {
+                errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
+            }
+
             loadingEmergency.value = false;
-        } catch (error: AxiosError | any) {
+        } else {
             loadingEmergency.value = false;
             errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
         }
@@ -31,7 +36,7 @@ onMounted(async () => {
 });
 
 const emergencyTitle = computed(() => {
-    switch (userStore.trackedEmergency.status) {
+    switch (emergencyStore.trackedEmergency.status) {
         case 1:
             return "📡 " + t("tracking_messageReceived");
         case 2:
@@ -52,7 +57,7 @@ const emergencyTitle = computed(() => {
 });
 
 const emergencySubTitle = computed(() => {
-    switch (userStore.trackedEmergency.status) {
+    switch (emergencyStore.trackedEmergency.status) {
         case 1:
             return t("tracking_statusTextReceived");
         case 2:
@@ -91,9 +96,9 @@ function getThreatString(id: number): string {
 async function cancelTrackedEmergency(): Promise<void> {
     try {
         loadingCancelEmergency.value = true;
-        await userStore.cancelEmergency(userStore.trackedEmergency.id);
+        await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id);
         loadingCancelEmergency.value = false;
-    } catch (error: AxiosError | any) {
+    } catch (error: any) {
         loadingCancelEmergency.value = false;
         loadingCancelEmergencyError.value = t("tracking_errorCancel");
     }
@@ -101,37 +106,25 @@ async function cancelTrackedEmergency(): Promise<void> {
 
 async function rateEmergency(rating: string): Promise<void> {
     try {
-        await userStore.rateCompletedEmergency(userStore.trackedEmergency.id, rating);
+        await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating);
     } finally {
-        emit("completedTrackedEmergency", userStore.trackedEmergency);
+        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
     }
 }
 
 async function submitCancelReason(): Promise<void> {
     try {
-        await userStore.justifyCanceledEmergency(userStore.trackedEmergency.id, cancelReason.value);
+        await emergencyStore.justifyCanceledEmergency(emergencyStore.trackedEmergency.id, cancelReason.value);
     } finally {
-        emit("completedTrackedEmergency", userStore.trackedEmergency);
+        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
     }
 }
 </script>
 
 <template>
     <div v-if="loadingEmergency" class="w-full flex justify-center items-center h-80">
-        <svg
-            class="animate-spin h-14 w-14 text-primary-900"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-        >
-            <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="2"
-            ></circle>
+        <svg class="animate-spin h-14 w-14 text-primary-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"></circle>
             <path
                 class="opacity-75"
                 fill="currentColor"
@@ -149,67 +142,46 @@ async function submitCancelReason(): Promise<void> {
         <div
             class="mt-10"
             v-if="
-                userStore.trackedEmergency.status === 1 ||
-                userStore.trackedEmergency.status === 2 ||
-                userStore.trackedEmergency.status === 10
+                emergencyStore.trackedEmergency.status === 1 ||
+                emergencyStore.trackedEmergency.status === 2 ||
+                emergencyStore.trackedEmergency.status === 10
             "
         >
             <div class="lg:flex lg:justify-between">
                 <div class="p-4 shadow-md bg-gray-50 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
-                        🌌 {{ t("tracking_system") }}
-                    </p>
-                    <p class="mt-2">{{ userStore.trackedEmergency.system }}</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌌 {{ t("tracking_system") }}</p>
+                    <p class="mt-2">{{ emergencyStore.trackedEmergency.system }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
-                        🌍 {{ t("tracking_subSystem") }}
-                    </p>
-                    <p class="mt-2">{{ userStore.trackedEmergency.subsystem }}</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
+                    <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%] h-fit">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
-                        ⚔️ {{ t("tracking_threatLevel") }}
-                    </p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
-                        {{ getThreatString(userStore.trackedEmergency.threatLevel) }}
+                        {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
                     </p>
                 </div>
             </div>
-            <div
-                v-if="userStore.trackedEmergency.remarks"
-                class="lg:flex lg:justify-between lg:mt-5"
-            >
+            <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:flex lg:justify-between lg:mt-5">
                 <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 w-full">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">
-                        🗒️ {{ t("tracking_remarks") }}
-                    </p>
-                    <p class="mt-2">{{ userStore.trackedEmergency.remarks }}</p>
+                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
+                    <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
         </div>
 
-        <div
-            v-if="
-                userStore.trackedEmergency.status === 2 || userStore.trackedEmergency.status === 10
-            "
-            class="mt-10"
-        >
+        <div v-if="emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10" class="mt-10">
             <p class="font-Mohave text-primary-900 text-2xl font-semibold mb-3">
                 {{ t("tracking_responders") }}
             </p>
-            <p
-                v-for="responder in userStore.trackedEmergency.respondingTeam.staff"
-                class="font-medium"
-            >
+            <p v-for="responder in emergencyStore.trackedEmergency.respondingTeam.staff" class="font-medium">
                 {{ responder.rsiHandle }}
             </p>
         </div>
 
         <button
-            v-if="
-                userStore.trackedEmergency.status === 1 || userStore.trackedEmergency.status === 2
-            "
+            v-if="emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2"
             class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             @click="cancelTrackedEmergency()"
             :disabled="loadingCancelEmergency"
@@ -221,14 +193,7 @@ async function submitCancelReason(): Promise<void> {
                 fill="none"
                 viewBox="0 0 24 24"
             >
-                <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                ></circle>
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path
                     class="opacity-75"
                     fill="currentColor"
@@ -241,30 +206,19 @@ async function submitCancelReason(): Promise<void> {
             {{ loadingCancelEmergencyError }}
         </p>
 
-        <div
-            v-if="
-                userStore.trackedEmergency.status === 3 || userStore.trackedEmergency.status === 4
-            "
-            class="mt-10"
-        >
+        <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave font-semibold text-xl">{{ t("tracking_ratingTitle") }}</p>
             <div class="flex w-full justify-between mt-5">
-                <button
-                    class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
-                    @click="rateEmergency('good')"
-                >
+                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency('good')">
                     {{ t("tracking_good") }}
                 </button>
-                <button
-                    class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]"
-                    @click="rateEmergency('bad')"
-                >
+                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency('bad')">
                     {{ t("tracking_bad") }}
                 </button>
             </div>
         </div>
 
-        <form v-if="userStore.trackedEmergency.status === 6" class="mt-7">
+        <form v-if="emergencyStore.trackedEmergency.status === 6" class="mt-7">
             <label class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
             <select
                 class="w-full focus:ring-secondary-500 focus:border-secondary-500 border-gray-400"

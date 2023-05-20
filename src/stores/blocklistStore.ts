@@ -3,16 +3,11 @@ import { defineStore } from "pinia";
 
 import { api } from "@/utils/medrunnerClient";
 
-enum LookupType {
-    "user",
-    "org",
-}
-
 export const useBlocklistStore = defineStore("blocklist", () => {
-    async function fetchBlocklist(type: LookupType, handle: string): Promise<BlockReport[]> {
+    async function fetchBlocklist(type: string, handle: string): Promise<BlockReport[]> {
         let response: ApiResponse<BlockReport[]>;
 
-        if (type === 0) {
+        if (type === "user") {
             response = await api.block.lookUpUser({ rsiHandle: handle });
         } else {
             response = await api.block.lookUpOrg({ orgSid: handle });

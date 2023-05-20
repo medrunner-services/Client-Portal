@@ -5,9 +5,7 @@ import BlocklistForm from "@/components/BlocklistForm.vue";
 
 <template>
     <div class="content-container flex flex-col items-center">
-        <h1 class="text-center text-3xl lg:text-4xl font-Mohave font-semibold uppercase">
-            Medrunner Blocklist
-        </h1>
+        <h1 class="text-center text-3xl lg:text-4xl font-Mohave font-semibold uppercase">Medrunner Blocklist</h1>
 
         <BlocklistForm />
         <BlocklistCard />

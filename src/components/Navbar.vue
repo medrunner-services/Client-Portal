@@ -37,9 +37,9 @@ function changeLanguage(): void {
     navMenuCollapsed.value = false;
 }
 
-function disconnect(): void {
+async function disconnect(): Promise<void> {
     userStore.disconnectUser();
-    router.push("/login");
+    await router.push("/login");
 }
 </script>
 
@@ -48,21 +48,11 @@ function disconnect(): void {
         <div class="py-2 content-container flex items-center gap-2 md:px-16 md:py-3">
             <img class="h-8 md:h-12" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
 
-            <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">
-                MEDRUNNER
-            </h1>
+            <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">MEDRUNNER</h1>
 
-            <nav
-                class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center"
-            >
-                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
-                    t("navbar_emergency")
-                }}</RouterLink>
-                <RouterLink
-                    to="/blocklist"
-                    :class="currentPage === '/blocklist' ? 'current-link' : ''"
-                    >{{ t("navbar_blocklist") }}</RouterLink
-                >
+            <nav class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center">
+                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
+                <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }} </RouterLink>
                 <div>
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
@@ -70,19 +60,9 @@ function disconnect(): void {
                     </select>
                 </div>
                 <div class="cursor-pointer" v-if="userStore.isAuthenticated">
-                    <img
-                        @click="switchUserMenuState()"
-                        src="/icons/user-profile.svg"
-                        alt="User profile"
-                    />
+                    <img @click="switchUserMenuState()" src="/icons/user-profile.svg" alt="User profile" />
                     <div v-if="userMenuCollapsed" class="top-16 right-4 absolute">
-                        <svg
-                            width="53"
-                            height="21"
-                            class="ml-[173px]"
-                            viewBox="0 0 53 21"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
+                        <svg width="53" height="21" class="ml-[173px]" viewBox="0 0 53 21" xmlns="http://www.w3.org/2000/svg">
                             <filter id="menuSvgFilter">
                                 <feDropShadow dx="2" dy="2" stdDeviation="1" flood-opacity="0.3" />
                             </filter>
@@ -90,14 +70,11 @@ function disconnect(): void {
                                 <path d="M26.5 0L37 21H16L26.5 0Z" fill="white" />
                             </g>
                         </svg>
-                        <div class="shadow shadow-lg flex py-4 px-4">
+                        <div class="shadow-lg flex py-4 px-4">
                             <p class="text-body font-semibold font-Inter">
                                 {{ userStore.user?.rsiHandle }}
                             </p>
-                            <button
-                                @click.prevent="disconnect()"
-                                class="button-primary button-24 ml-3"
-                            >
+                            <button @click.prevent="disconnect()" class="button-primary button-24 ml-3">
                                 {{ t("navbar_disconnect") }}
                             </button>
                         </div>
@@ -112,18 +89,12 @@ function disconnect(): void {
         </div>
 
         <nav
-            class="w-full flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow shadow-lg z-10"
+            class="w-full flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10"
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
-                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
-                    t("navbar_emergency")
-                }}</RouterLink>
-                <RouterLink
-                    to="/blocklist"
-                    :class="currentPage === '/blocklist' ? 'current-link' : ''"
-                    >{{ t("navbar_blocklist") }}</RouterLink
-                >
+                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
+                <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }}</RouterLink>
             </div>
             <div class="mt-16">
                 <select @change="changeLanguage" v-model="newLocaleLanguage">

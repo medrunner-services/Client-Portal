@@ -1,9 +1,4 @@
-import type {
-    ClientHistory,
-    Emergency,
-    PaginatedResponse,
-    Person,
-} from "@medrunner-services/api-client";
+import type { ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
@@ -39,10 +34,7 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function fetchUserHistory(
-        limit: number,
-        paginationToken?: string,
-    ): Promise<PaginatedResponse<ClientHistory>> {
+    async function fetchUserHistory(limit: number, paginationToken?: string): Promise<PaginatedResponse<ClientHistory>> {
         const response = await api.client.getHistory(limit, paginationToken);
 
         if (response.success && response.data) {

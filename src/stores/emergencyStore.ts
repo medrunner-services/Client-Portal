@@ -1,13 +1,22 @@
-import type { CreateEmergencyRequest, Emergency } from "@medrunner-services/api-client";
+import type { Emergency } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
+import { useUserStore } from "@/stores/userStore";
 import { api } from "@/utils/medrunnerClient";
 
+interface CreatEmergencyForm {
+    remarks?: string;
+    system: string;
+    subsystem: string;
+    threatLevel: number;
+}
+
 export const useEmergencyStore = defineStore("emergency", () => {
+    const userStore = useUserStore();
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
 
-    async function fetchEmergency(id: string): Promise<Emergency | void> {
+    async function fetchEmergency(id: string): Promise<Emergency> {
         const response = await api.emergency.getEmergency(id);
 
         if (response.success && response.data) {
@@ -17,7 +26,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function fetchEmergencies(...id: string[]): Promise<Emergency[] | void> {
+    async function fetchEmergencies(...id: string[]): Promise<Emergency[]> {
         const response = await api.emergency.getEmergencies(id);
 
         if (response.success && response.data) {
@@ -27,10 +36,17 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function createEmergency(emergency: CreateEmergencyRequest): Promise<void> {
-        const response = await api.emergency.createEmergency(emergency);
+    async function createEmergency(emergency: CreatEmergencyForm): Promise<Emergency> {
+        if (!userStore.user.rsiHandle) throw Error;
+        const response = await api.emergency.createEmergency({
+            ...emergency,
+            clientRsiHandle: userStore.user.rsiHandle,
+            clientDiscordId: userStore.user.discordId,
+        });
 
-        if (!response.success) {
+        if (response.success && response.data) {
+            return response.data;
+        } else {
             throw response.statusCode;
         }
     }
@@ -51,7 +67,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function justifyCanceledEmergency(id: string, reason: string): Promise<string | void> {
+    async function justifyCanceledEmergency(id: string, reason: string): Promise<void> {
         const response = await api.emergency.setStatusDescriptionForEmergency(id, reason);
 
         if (!response.success) {

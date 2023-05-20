@@ -3,12 +3,10 @@ import axios from "axios";
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import { useUserStore } from "@/stores/userStore";
 import { initializeApi } from "@/utils/medrunnerClient";
 
 const route = useRoute();
 const router = useRouter();
-const userStore = useUserStore();
 
 onMounted(async () => {
     if (!route.query.code) {
@@ -18,9 +16,9 @@ onMounted(async () => {
     if (route.path === "/auth/register") {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth/register?code=${
-                    route.query.code
-                }&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth/register`,
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth/register`,
             );
 
             localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -33,9 +31,7 @@ onMounted(async () => {
     } else {
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${
-                    import.meta.env.VITE_CALLBACK_URL
-                }/auth`,
+                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
 
             localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -51,20 +47,8 @@ onMounted(async () => {
 
 <template>
     <div class="w-full h-[70vh] flex justify-center items-center">
-        <svg
-            class="animate-spin h-14 w-14 text-primary-900"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-        >
-            <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="2"
-            ></circle>
+        <svg class="animate-spin h-14 w-14 text-primary-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"></circle>
             <path
                 class="opacity-75"
                 fill="currentColor"

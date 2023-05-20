@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useUserStore } from "@/stores/userStore";
 import { useI18n } from "vue-i18n";
 
-const userStore = useUserStore();
+import { useBlocklistStore } from "@/stores/blocklistStore";
+
+const blocklistStore = useBlocklistStore();
 const { t } = useI18n();
 
-const searchType = ref("user");
+const searchType = ref("org");
 const formName = ref("");
 const formErrorMessage = ref("");
 const formSubmittingSearch = ref(false);
@@ -16,7 +17,7 @@ async function searchBlocklist() {
     formErrorMessage.value = "";
 
     try {
-        const queryResponse = await userStore.fetchBlocklist();
+        const queryResponse = await blocklistStore.fetchBlocklist(searchType.value, formName.value);
         console.log(queryResponse);
     } catch (error) {
         console.error(error);
@@ -27,17 +28,9 @@ async function searchBlocklist() {
 </script>
 
 <template>
-    <form
-        @submit.prevent="searchBlocklist()"
-        class="lg:flex w-full max-w-3xl lg:max-w-5xl lg:justify-between mt-14"
-    >
+    <form @submit.prevent="searchBlocklist()" class="lg:flex w-full max-w-3xl lg:max-w-5xl lg:justify-between mt-14">
         <div class="flex lg:flex-grow lg:mr-8">
-            <select
-                class="focus:ring-secondary-500 focus:border-secondary-500"
-                v-model="searchType"
-                required
-                :disabled="formSubmittingSearch"
-            >
+            <select class="focus:ring-secondary-500 focus:border-secondary-500" v-model="searchType" required :disabled="formSubmittingSearch">
                 <option value="user">User</option>
                 <option value="org">Org</option>
             </select>
@@ -65,14 +58,7 @@ async function searchBlocklist() {
                 fill="none"
                 viewBox="0 0 24 24"
             >
-                <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                ></circle>
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path
                     class="opacity-75"
                     fill="currentColor"
