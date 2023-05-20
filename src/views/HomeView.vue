@@ -10,7 +10,6 @@ import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { establishConnection } from "@/utils/signalRConnection";
-import {api} from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
