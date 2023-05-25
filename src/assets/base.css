@@ -14,7 +14,7 @@ body {
 }
 
 select {
-    @apply border-neutral-400 text-neutral-900 font-Inter text-body hover:border-neutral-600 focus:border-secondary-600 disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400;
+    @apply border-neutral-400 text-neutral-900 font-Inter text-body hover:border-neutral-600 focus:border-secondary-600;
 }
 select {
     background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M11.47 4.71995C11.6106 4.5795 11.8012 4.50061 12 4.50061C12.1987 4.50061 12.3893 4.5795 12.53 4.71995L16.28 8.46995C16.4124 8.61213 16.4846 8.80017 16.4811 8.99447C16.4777 9.18877 16.399 9.37416 16.2616 9.51157C16.1242 9.64898 15.9388 9.7277 15.7445 9.73113C15.5502 9.73455 15.3621 9.66243 15.22 9.52995L12 6.30995L8.77995 9.52995C8.63778 9.66243 8.44973 9.73455 8.25543 9.73113C8.06113 9.7277 7.87574 9.64898 7.73833 9.51157C7.60092 9.37416 7.5222 9.18877 7.51878 8.99447C7.51535 8.80017 7.58747 8.61213 7.71995 8.46995L11.47 4.71995ZM7.71995 14.47C7.86058 14.3295 8.0512 14.2506 8.24995 14.2506C8.4487 14.2506 8.63932 14.3295 8.77995 14.47L12 17.69L15.22 14.47C15.2886 14.3963 15.3714 14.3372 15.4634 14.2962C15.5554 14.2552 15.6547 14.2331 15.7554 14.2314C15.8561 14.2296 15.9562 14.2481 16.0495 14.2858C16.1429 14.3235 16.2278 14.3797 16.299 14.4509C16.3702 14.5221 16.4264 14.607 16.4641 14.7004C16.5018 14.7937 16.5203 14.8938 16.5185 14.9945C16.5168 15.0952 16.4947 15.1945 16.4537 15.2865C16.4127 15.3785 16.3536 15.4613 16.28 15.53L12.53 19.28C12.3893 19.4204 12.1987 19.4993 12 19.4993C11.8012 19.4993 11.6106 19.4204 11.47 19.28L7.71995 15.53C7.5795 15.3893 7.50061 15.1987 7.50061 15C7.50061 14.8012 7.5795 14.6106 7.71995 14.47Z' fill='black'/%3E%3C/svg%3E%0A");
@@ -24,8 +24,9 @@ select:disabled {
 }
 
 select,
-textarea {
-    @apply disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400;
+textarea,
+input {
+    @apply disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400 disabled:pointer-events-none;
 }
 
 .content-container {
@@ -47,7 +48,7 @@ textarea {
 }
 
 .input-text {
-    @apply border border-neutral-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-neutral-600 focus:border-secondary-600 disabled:border-gray-400 disabled:bg-gray-100 disabled:text-gray-400;
+    @apply border border-neutral-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-neutral-600 focus:border-secondary-600;
 }
 .input-text-error {
     @apply border border-primary-400 text-neutral-900 font-Inter text-body placeholder:text-neutral-600 placeholder:font-Inter placeholder:text-body hover:border-primary-600 focus:border-secondary-600;

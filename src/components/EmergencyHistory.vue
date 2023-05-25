@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import type { Emergency } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-
-import type { Emergency } from "@/stores/userStore";
 
 const props = defineProps(["emergency"]);
 const { t } = useI18n();
@@ -115,16 +114,8 @@ function getResponders(responders: any): string {
                 {{ timestampToDate(emergencyInfo.creationTimestamp) }} -
                 {{ getStatusString(emergencyInfo.status) }}
             </p>
-            <div
-                @click="showCard = !showCard"
-                class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center"
-            >
-                <img
-                    src="/icons/arrow-icon.svg"
-                    class="w-6 h-6 select-none"
-                    :class="{ 'rotate-180': showCard }"
-                    alt="Dropdown arrow"
-                />
+            <div @click="showCard = !showCard" class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center">
+                <img src="/icons/arrow-icon.svg" class="w-6 h-6 select-none" :class="{ 'rotate-180': showCard }" alt="Dropdown arrow" />
             </div>
         </div>
         <div v-if="showCard" class="border-t-2 border-t-primary-900 px-2 py-8">
@@ -136,14 +127,8 @@ function getResponders(responders: any): string {
                         {{ timestampToHours(emergencyInfo.creationTimestamp) }}
                     </p>
                 </div>
-                <div
-                    v-if="emergencyInfo.acceptedTimestamp !== undefined"
-                    class="border border-primary-900 h-0.5 w-16"
-                />
-                <div
-                    v-if="emergencyInfo.acceptedTimestamp !== undefined"
-                    class="flex flex-col justify-center items-center"
-                >
+                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="border border-primary-900 h-0.5 w-16" />
+                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="flex flex-col justify-center items-center">
                     <p>{{ t("history_accepted") }}</p>
                     <img src="/icons/circle-icon.svg" alt="Received" class="my-2" />
                     <p>
