@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import type { AxiosError } from "axios";
-import type { ThreatLevel } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { useUserStore } from "@/stores/userStore";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -141,7 +139,7 @@ async function sendNewEmergency(): Promise<void> {
                         required
                         :disabled="formSubmittingEmergency"
                     >
-                        <option disabled hidden value>{{ t("form_selectAPlanet") }}</option>
+                        <option hidden value>{{ t("form_selectAPlanet") }}</option>
                         <option value="microTech">microTech</option>
                         <option value="Hurston">Hurston</option>
                         <option value="Crusader">Crusader</option>
@@ -165,7 +163,7 @@ async function sendNewEmergency(): Promise<void> {
                         required
                         :disabled="formSubmittingEmergency"
                     >
-                        <option selected disabled hidden value>
+                        <option selected hidden value>
                             {{ t("form_assessTheThreat") }}
                         </option>
                         <option value="0">❓ {{ t("form_unknownThreat") }}</option>

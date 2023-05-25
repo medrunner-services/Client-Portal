@@ -9,7 +9,7 @@ import EmergencyHistory from "@/components/EmergencyHistory.vue";
 import EmergencyTracking from "@/components/EmergencyTracking.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
-import { establishConnection } from "@/utils/signalRConnection";
+import { api } from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -28,21 +28,20 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
-    // TODO: Re-enable SignalR with api-client
-    // const signalrConnection = establishConnection(await userStore.getToken());
-    //
-    // signalrConnection.on("EmergencyCreate", (newEmergency: Emergency) => {
-    //     userStore.user.activeEmergency = newEmergency.id;
-    // });
-    //
-    // signalrConnection.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-    //     if (updatedEmergency.rating || updatedEmergency.statusDescription) {
-    //         completeEmergency(updatedEmergency);
-    //     } else {
-    //         userStore.trackedEmergency = updatedEmergency;
-    //     }
-    // });
-    // await signalrConnection.start();
+    const apiWebsocket = await api.websocket.initialize()
+    await apiWebsocket.start();
+
+    apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
+        userStore.user.activeEmergency = newEmergency.id;
+    });
+
+    apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
+        if (updatedEmergency.rating || updatedEmergency.statusDescription) {
+            completeEmergency(updatedEmergency);
+        } else {
+            emergencyStore.trackedEmergency = updatedEmergency;
+        }
+    });
 });
 
 async function bulkLoadEmergencies(history: ClientHistory[]): Promise<Emergency[]> {
