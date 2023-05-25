@@ -11,7 +11,6 @@ const route = useRoute();
 const router = useRouter();
 const { t, locale } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
-const userMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
 const currentPage = ref("");
 
@@ -26,9 +25,6 @@ watch(route, async (oldRoute, newRoute) => {
 
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
-}
-function switchUserMenuState(): void {
-    userMenuCollapsed.value = !userMenuCollapsed.value;
 }
 
 function changeLanguage(): void {
@@ -59,25 +55,14 @@ async function disconnect(): Promise<void> {
                         <option value="fr-FR">Français</option>
                     </select>
                 </div>
-                <div class="cursor-pointer" v-if="userStore.isAuthenticated">
-                    <img @click="switchUserMenuState()" src="/icons/user-profile.svg" alt="User profile" />
-                    <div v-if="userMenuCollapsed" class="top-16 right-4 absolute">
-                        <svg width="53" height="21" class="ml-[173px]" viewBox="0 0 53 21" xmlns="http://www.w3.org/2000/svg">
-                            <filter id="menuSvgFilter">
-                                <feDropShadow dx="2" dy="2" stdDeviation="1" flood-opacity="0.3" />
-                            </filter>
-                            <g filter="url(#menuSvgFilter)">
-                                <path d="M26.5 0L37 21H16L26.5 0Z" fill="white" />
-                            </g>
-                        </svg>
-                        <div class="shadow-lg flex py-4 px-4">
-                            <p class="text-body font-semibold font-Inter">
-                                {{ userStore.user?.rsiHandle }}
-                            </p>
-                            <button @click.prevent="disconnect()" class="button-primary button-24 ml-3">
-                                {{ t("navbar_disconnect") }}
-                            </button>
-                        </div>
+                <div v-if="userStore.isAuthenticated">
+                    <div class="border-l-2 border-primary-900 pl-6">
+                        <p class="text-small font-semibold font-Inter">
+                            {{ userStore.user?.rsiHandle }}
+                        </p>
+                        <button @click.prevent="disconnect()" class="button-primary font-Inter text-xs px-4 py-[6px]">
+                            {{ t("navbar_disconnect") }}
+                        </button>
                     </div>
                 </div>
             </nav>
@@ -89,12 +74,16 @@ async function disconnect(): Promise<void> {
         </div>
 
         <nav
-            class="w-full flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10"
+            class="w-full absolute top-14 flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10"
             v-if="navMenuCollapsed"
         >
             <div class="flex flex-col gap-4 font-Mohave">
-                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
-                <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }}</RouterLink>
+                <RouterLink @click="switchNavMenuSate()" to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
+                    t("navbar_emergency")
+                }}</RouterLink>
+                <RouterLink @click="switchNavMenuSate()" to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{
+                    t("navbar_blocklist")
+                }}</RouterLink>
             </div>
             <div class="mt-16">
                 <select @change="changeLanguage" v-model="newLocaleLanguage">
@@ -116,6 +105,6 @@ async function disconnect(): Promise<void> {
 
 <style scoped>
 .current-link {
-    @apply underline underline-offset-4 decoration-[3px];
+    @apply underline underline-offset-8 decoration-[3px];
 }
 </style>

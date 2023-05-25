@@ -7,7 +7,7 @@ import { useBlocklistStore } from "@/stores/blocklistStore";
 const blocklistStore = useBlocklistStore();
 const { t } = useI18n();
 
-const searchType = ref("org");
+const searchType = ref("user");
 const formName = ref("");
 const formErrorMessage = ref("");
 const formSubmittingSearch = ref(false);
