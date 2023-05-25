@@ -28,7 +28,7 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
-    const apiWebsocket = await api.websocket.initialize()
+    const apiWebsocket = await api.websocket.initialize();
     await apiWebsocket.start();
 
     apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
