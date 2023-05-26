@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {ResponseRating} from "@medrunner-services/api-client";
-import {computed, onMounted, ref} from "vue";
-import {useI18n} from "vue-i18n";
+import { ResponseRating } from "@medrunner-services/api-client";
+import { computed, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-import {useEmergencyStore} from "@/stores/emergencyStore";
-import {useUserStore} from "@/stores/userStore";
+import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useUserStore } from "@/stores/userStore";
 
 const emit = defineEmits(["completedTrackedEmergency"]);
 
