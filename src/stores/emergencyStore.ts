@@ -1,4 +1,4 @@
-import type { Emergency } from "@medrunner-services/api-client";
+import type { Emergency, ResponseRating } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
@@ -59,7 +59,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function rateCompletedEmergency(id: string, rating: string): Promise<void> {
+    async function rateCompletedEmergency(id: string, rating: ResponseRating): Promise<void> {
         const response = await api.emergency.rateServices(id, rating);
 
         if (!response.success) {

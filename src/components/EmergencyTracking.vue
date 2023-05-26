@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import {ResponseRating} from "@medrunner-services/api-client";
+import {computed, onMounted, ref} from "vue";
+import {useI18n} from "vue-i18n";
 
-import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useUserStore } from "@/stores/userStore";
+import {useEmergencyStore} from "@/stores/emergencyStore";
+import {useUserStore} from "@/stores/userStore";
 
 const emit = defineEmits(["completedTrackedEmergency"]);
 
@@ -104,7 +105,7 @@ async function cancelTrackedEmergency(): Promise<void> {
     }
 }
 
-async function rateEmergency(rating: string): Promise<void> {
+async function rateEmergency(rating: ResponseRating): Promise<void> {
     try {
         await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating);
     } finally {
@@ -209,10 +210,10 @@ async function submitCancelReason(): Promise<void> {
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave font-semibold text-xl">{{ t("tracking_ratingTitle") }}</p>
             <div class="flex w-full justify-between mt-5">
-                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency('good')">
+                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency(ResponseRating.GOOD)">
                     {{ t("tracking_good") }}
                 </button>
-                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency('bad')">
+                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency(ResponseRating.BAD)">
                     {{ t("tracking_bad") }}
                 </button>
             </div>
