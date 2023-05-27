@@ -38,6 +38,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
 
     async function createEmergency(emergency: CreatEmergencyForm): Promise<Emergency> {
         if (!userStore.user.rsiHandle) throw Error;
+        if (!emergency.remarks) delete emergency.remarks;
         const response = await api.emergency.createEmergency({
             ...emergency,
             clientRsiHandle: userStore.user.rsiHandle,
