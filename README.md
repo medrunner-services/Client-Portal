@@ -33,7 +33,7 @@ npm run build
 ### Build the image
 
 ```sh
-docker build . -t client-portal:0.0.0
+docker build . -t client-portal:1.0.0
 ```
 
 ### Run the container
