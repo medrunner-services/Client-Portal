@@ -1,6 +1,6 @@
 import "./assets/base.css";
 
-import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
+import { autoAnimatePlugin } from "@formkit/auto-animate/vue";
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import { createPinia } from "pinia";
 import { createApp } from "vue";

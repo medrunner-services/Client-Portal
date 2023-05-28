@@ -123,7 +123,13 @@ const isLastPageHistory = computed(() => {
                 {{ t("home_history") }}
             </h2>
             <div v-auto-animate v-if="loaded && activePage.length > 0">
-                <EmergencyHistory v-auto-animate="{ duration: 100 }" v-for="emergency in activePage" :key="emergency.creationTimestamp" class="mt-4 first:mt-0" :emergency="emergency" />
+                <EmergencyHistory
+                    v-auto-animate="{ duration: 100 }"
+                    v-for="emergency in activePage"
+                    :key="emergency.creationTimestamp"
+                    class="mt-4 first:mt-0"
+                    :emergency="emergency"
+                />
             </div>
             <Loader v-else-if="!loaded" class="w-full flex justify-center items-center h-80" />
             <div v-else>
