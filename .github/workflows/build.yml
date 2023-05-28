@@ -13,6 +13,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      - run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: npm ci # install dependencies
       - run: npm run build # compile typescript
       - run: npm run lint # run eslint
