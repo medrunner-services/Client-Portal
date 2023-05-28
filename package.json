@@ -2,6 +2,7 @@
   "name": "client-portal",
   "version": "0.5.0",
   "private": true,
+  "web-types": "./web-types.json",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",

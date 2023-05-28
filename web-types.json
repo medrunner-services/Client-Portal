@@ -1,0 +1,16 @@
+{
+	"$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/v2-preview/web-types.json",
+	"name": "@formkit/auto-animate",
+	"framework": "vue",
+	"version": "^1.0.0-beta.6",
+	"contributions": {
+		"html": {
+			"vue-directives": [
+				{
+					"name": "auto-animate",
+					"description": "Adds animation to elements when they are inserted or removed from the DOM."
+				}
+			]
+		}
+	}
+}
