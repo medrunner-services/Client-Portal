@@ -128,7 +128,7 @@ async function submitCancelReason(): Promise<void> {
     <div v-else-if="errorLoadingEmergency">
         <p class="text-primary-900 font-semibold text-lg">{{ errorLoadingEmergency }}</p>
     </div>
-    <div v-else>
+    <div v-else v-auto-animate>
         <p class="text-3xl text-primary-900 font-Mohave font-semibold">{{ emergencyTitle }}</p>
         <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
 
