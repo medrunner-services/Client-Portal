@@ -3,6 +3,6 @@ module.exports = {
     singleQuote: false,
     arrowParens: "avoid",
     tabWidth: 4,
-    printWidth: 80,
+    printWidth: 150,
     trailingComma: "all",
 };

@@ -1,16 +1,22 @@
 {
     "root": true,
-    "parser": "@typescript-eslint/parser",
+    "parser": "vue-eslint-parser",
+    "parserOptions": {
+        "parser": "@typescript-eslint/parser"
+    },
     "plugins": [
         "@typescript-eslint",
         "simple-import-sort"
     ],
     "extends": [
+        "plugin:vue/base",
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended"
     ],
     "rules": {
-        "simple-import-sort/imports": "error"
+        "simple-import-sort/imports": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off"
     }
 }
