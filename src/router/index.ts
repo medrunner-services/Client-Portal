@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 import HomeView from "../views/HomeView.vue";
@@ -16,25 +17,33 @@ function isUserNotLinked(): string | boolean {
 
 async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
+    const logicStore = useLogicStore();
+    logicStore.isRouterLoading = true;
 
     if (!userStore.isAuthenticated) {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
         } catch (error) {
+            logicStore.isRouterLoading = false;
             return "/login";
         }
     } else if (!userStore.user.active) {
+        logicStore.isRouterLoading = false;
         return "/login";
     } else if (!userStore.user.rsiHandle) {
+        logicStore.isRouterLoading = false;
         return "/login/link";
     }
 
+    logicStore.isRouterLoading = false;
     return true;
 }
 
 async function authenticateUser(): Promise<boolean> {
     const userStore = useUserStore();
+    const logicStore = useLogicStore();
+    logicStore.isRouterLoading = true;
 
     if (!userStore.isAuthenticated) {
         try {
@@ -45,6 +54,7 @@ async function authenticateUser(): Promise<boolean> {
         }
     }
 
+    logicStore.isRouterLoading = false;
     return true;
 }
 

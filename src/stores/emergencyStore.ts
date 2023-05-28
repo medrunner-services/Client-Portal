@@ -1,4 +1,4 @@
-import type { Emergency,ResponseRating } from "@medrunner-services/api-client";
+import type { Emergency, ResponseRating } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 

@@ -9,7 +9,8 @@ const { t } = useI18n();
 const showCard = ref(false);
 let emergencyInfo: Emergency = props.emergency;
 
-function timestampToHours(timestamp: number): string {
+function timestampToHours(timestamp: number | undefined): string {
+    if (!timestamp) return "";
     return new Date(timestamp).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
