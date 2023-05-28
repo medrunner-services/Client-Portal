@@ -2,6 +2,9 @@
 
 This portal brings the medrunner experience to the web !
 
+## Issues
+All issues are tracked in [Youtrack](https://medrunner.youtrack.cloud/)
+
 ## Project Setup
 
 ```sh
