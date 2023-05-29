@@ -7,7 +7,7 @@ import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 
-const emit = defineEmits(["completedTrackedEmergency"]);
+const emit = defineEmits(["completedTrackedEmergency", "completeEmergency"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -228,5 +228,14 @@ async function submitCancelReason(): Promise<void> {
                 <option value="other">📝 {{ t("tracking_other") }}</option>
             </select>
         </form>
+
+        <button
+            v-if="emergencyStore.trackedEmergency.status === 8 || emergencyStore.trackedEmergency.status === 9"
+            class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            @click="$emit('completeEmergency')"
+        >
+            <!--      TODO: Add translation      -->
+            <span>Finish emergency</span>
+        </button>
     </div>
 </template>

@@ -2,6 +2,7 @@
 
 <template>
     <div class="mt-10">
+        <!--      TODO: Add translation      -->
         <p class="text-3xl font-Mohave font-bold uppercase">❌ Blocked / ✅ Not blocked</p>
     </div>
 </template>

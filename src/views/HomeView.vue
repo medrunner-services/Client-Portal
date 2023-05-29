@@ -37,10 +37,12 @@ onMounted(async () => {
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-        if (!loadedHistory.find(emergency => emergency.id === updatedEmergency.id) && updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
-            completeEmergency(updatedEmergency);
-        } else {
-            emergencyStore.trackedEmergency = updatedEmergency;
+        if (!loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
+            if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
+                completeEmergency(updatedEmergency);
+            } else {
+                emergencyStore.trackedEmergency = updatedEmergency;
+            }
         }
     });
 });
@@ -159,7 +161,7 @@ const isLastPageHistory = computed(() => {
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
                 {{ t("home_emergency") }}
             </h2>
-            <EmergencyTracking v-if="userStore.user.activeEmergency" @completed-tracked-emergency="completeEmergency" />
+            <EmergencyTracking v-if="userStore.user.activeEmergency" @completed-tracked-emergency="completeEmergency" @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)" />
             <EmergencyForm v-else />
         </div>
     </div>
