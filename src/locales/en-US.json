@@ -111,5 +111,6 @@
     "tracking_bledOut": "Bled Out",
     "tracking_serverIssue": "Server Issue",
     "tracking_respawned": "Respawned",
-    "tracking_other": "Other"
+    "tracking_other": "Other",
+    "tracking_finishButton": "Finish emergency"
 }

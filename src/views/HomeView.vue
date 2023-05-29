@@ -161,7 +161,11 @@ const isLastPageHistory = computed(() => {
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
                 {{ t("home_emergency") }}
             </h2>
-            <EmergencyTracking v-if="userStore.user.activeEmergency" @completed-tracked-emergency="completeEmergency" @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)" />
+            <EmergencyTracking
+                v-if="userStore.user.activeEmergency"
+                @completed-tracked-emergency="completeEmergency"
+                @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
+            />
             <EmergencyForm v-else />
         </div>
     </div>

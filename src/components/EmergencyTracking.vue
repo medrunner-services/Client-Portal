@@ -234,8 +234,7 @@ async function submitCancelReason(): Promise<void> {
             class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             @click="$emit('completeEmergency')"
         >
-            <!--      TODO: Add translation      -->
-            <span>Finish emergency</span>
+            <span>{{ t("tracking_finishButton") }}</span>
         </button>
     </div>
 </template>
