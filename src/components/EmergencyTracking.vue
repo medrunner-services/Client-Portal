@@ -18,6 +18,7 @@ const loadingCancelEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const loadingCancelEmergencyError = ref("");
 const cancelReason = ref("");
+const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -173,28 +174,40 @@ async function submitCancelReason(): Promise<void> {
             </p>
         </div>
 
-        <button
-            v-if="emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2"
-            class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
-            @click="cancelTrackedEmergency()"
-            :disabled="loadingCancelEmergency"
-        >
-            <svg
-                v-if="loadingCancelEmergency"
-                class="animate-spin h-5 w-5 text-white mx-14 my-0.5"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
+        <div class="flex flex-col lg:flex-row mt-10">
+            <button
+                v-if="emergencyStore.trackedEmergency.status === 1"
+                class="w-full lg:w-fit bg-primary-900 text-gray-50 px-6 py-3 lg:mr-5 font-medium flex items-center justify-center"
+                @click="cancelTrackedEmergency()"
+                :disabled="loadingCancelEmergency"
             >
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-            </svg>
-            <span v-else>{{ t("tracking_cancelButton") }}</span>
-        </button>
+                <svg
+                    v-if="loadingCancelEmergency"
+                    class="animate-spin h-5 w-5 text-white mx-14 my-0.5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                >
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                </svg>
+                <span v-else>{{ t("tracking_cancelButton") }}</span>
+            </button>
+
+            <a
+                v-if="emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2"
+                :href="`https://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                target="_blank"
+                class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
+            >
+                Chat with rescue team
+            </a>
+        </div>
+
         <p v-if="loadingCancelEmergencyError" class="mt-2 text-primary-400 text-sm w-full">
             {{ loadingCancelEmergencyError }}
         </p>

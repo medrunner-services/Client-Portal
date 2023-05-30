@@ -38,7 +38,7 @@ onMounted(async () => {
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
         if (!loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
-            if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
+            if (updatedEmergency.isComplete && (updatedEmergency.rating !== 0 || updatedEmergency.statusDescription)) {
                 completeEmergency(updatedEmergency);
             } else {
                 emergencyStore.trackedEmergency = updatedEmergency;
