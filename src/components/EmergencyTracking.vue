@@ -200,7 +200,7 @@ async function submitCancelReason(): Promise<void> {
 
             <a
                 v-if="emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2"
-                :href="`https://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                :href="`discord://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
             >
