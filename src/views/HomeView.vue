@@ -37,10 +37,12 @@ onMounted(async () => {
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-        if (updatedEmergency.rating || updatedEmergency.statusDescription) {
-            completeEmergency(updatedEmergency);
-        } else {
-            emergencyStore.trackedEmergency = updatedEmergency;
+        if (!loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
+            if (updatedEmergency.isComplete && (updatedEmergency.rating !== 0 || updatedEmergency.statusDescription)) {
+                completeEmergency(updatedEmergency);
+            } else {
+                emergencyStore.trackedEmergency = updatedEmergency;
+            }
         }
     });
 });
@@ -122,8 +124,14 @@ const isLastPageHistory = computed(() => {
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
                 {{ t("home_history") }}
             </h2>
-            <div v-if="loaded && activePage.length > 0">
-                <EmergencyHistory v-for="emergency in activePage" :key="emergency.creationTimestamp" class="mt-4 first:mt-0" :emergency="emergency" />
+            <div v-auto-animate v-if="loaded && activePage.length > 0">
+                <EmergencyHistory
+                    v-auto-animate="{ duration: 100 }"
+                    v-for="emergency in activePage"
+                    :key="emergency.creationTimestamp"
+                    class="mt-4 first:mt-0"
+                    :emergency="emergency"
+                />
             </div>
             <Loader v-else-if="!loaded" class="w-full flex justify-center items-center h-80" />
             <div v-else>
@@ -153,7 +161,11 @@ const isLastPageHistory = computed(() => {
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
                 {{ t("home_emergency") }}
             </h2>
-            <EmergencyTracking v-if="userStore.user.activeEmergency" @completed-tracked-emergency="completeEmergency" />
+            <EmergencyTracking
+                v-if="userStore.user.activeEmergency"
+                @completed-tracked-emergency="completeEmergency"
+                @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
+            />
             <EmergencyForm v-else />
         </div>
     </div>

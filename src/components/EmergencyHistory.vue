@@ -115,7 +115,7 @@ function getResponders(responders: any): string {
                 {{ timestampToDate(emergencyInfo.creationTimestamp) }} -
                 {{ getStatusString(emergencyInfo.status) }}
             </p>
-            <div @click="showCard = !showCard" class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center">
+            <div @click="showCard = !showCard" class="bg-primary-900 cursor-pointer p-3 self-stretch flex items-center">
                 <img src="/icons/arrow-icon.svg" class="w-6 h-6 select-none" :class="{ 'rotate-180': showCard }" alt="Dropdown arrow" />
             </div>
         </div>

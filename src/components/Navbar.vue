@@ -95,7 +95,7 @@ async function disconnect(): Promise<void> {
                 <p class="text-body font-semibold font-Inter">
                     {{ userStore.user?.rsiHandle }}
                 </p>
-                <button @click="userStore.disconnectUser()" class="button-primary button-24">
+                <button @click="disconnect()" class="button-primary button-24">
                     {{ t("navbar_disconnect") }}
                 </button>
             </div>

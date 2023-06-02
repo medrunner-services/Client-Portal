@@ -111,5 +111,6 @@
     "tracking_bledOut": "Mort de saignement",
     "tracking_serverIssue": "Problème serveur",
     "tracking_respawned": "Réparation",
-    "tracking_other": "Autre"
+    "tracking_other": "Autre",
+    "tracking_finishButton": "Terminer l'urgence"
 }
