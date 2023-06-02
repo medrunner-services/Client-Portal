@@ -2,7 +2,6 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["vite.config.*", "vitest.config.*", "cypress.config.*", "playwright.config.*"],
   "compilerOptions": {
-    "noImplicitAny": false,
     "composite": true,
     "types": ["node"]
   }
