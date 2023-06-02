@@ -16,6 +16,7 @@ npm install
 ```dotenv
 VITE_API_URL
 VITE_CALLBACK_URL
+VITE_DISCORD_SERVER_ID
 ```
 You can use `.env.development` and `.env.production` for the different Vite modes.
 
