@@ -9,14 +9,24 @@ import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
-const { t, locale } = useI18n({ useScope: "global" });
+const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
 const currentPage = ref("");
 
 onMounted(() => {
-    newLocaleLanguage.value = localStorage.getItem("selectedLanguage") ?? navigator.language;
-    locale.value = localStorage.getItem("selectedLanguage") ?? newLocaleLanguage.value;
+    const userLanguage = localStorage.getItem("selectedLanguage");
+
+    if (userLanguage) {
+        newLocaleLanguage.value = userLanguage;
+        locale.value = userLanguage;
+    } else if (availableLocales.includes(navigator.language)) {
+        newLocaleLanguage.value = navigator.language;
+        locale.value = navigator.language;
+    } else {
+        newLocaleLanguage.value = "en-US";
+        locale.value = "en-US";
+    }
 });
 
 watch(route, async (oldRoute, newRoute) => {
