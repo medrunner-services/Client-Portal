@@ -40,24 +40,6 @@ async function isUserComplete(): Promise<string | boolean> {
     return true;
 }
 
-async function authenticateUser(): Promise<boolean> {
-    const userStore = useUserStore();
-    const logicStore = useLogicStore();
-    logicStore.isRouterLoading = true;
-
-    if (!userStore.isAuthenticated) {
-        try {
-            userStore.user = await userStore.fetchUser();
-            userStore.isAuthenticated = true;
-        } catch (error) {
-            userStore.isAuthenticated = false;
-        }
-    }
-
-    logicStore.isRouterLoading = false;
-    return true;
-}
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -89,7 +71,7 @@ const router = createRouter({
             path: "/blocklist",
             name: "blocklist",
             component: () => import("@/views/BlocklistView.vue"),
-            beforeEnter: authenticateUser,
+            beforeEnter: isUserComplete,
         },
     ],
 });
