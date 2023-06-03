@@ -112,5 +112,15 @@
     "tracking_serverIssue": "Problème serveur",
     "tracking_respawned": "Réparation",
     "tracking_other": "Autre",
-    "tracking_finishButton": "Terminer l'urgence"
+    "tracking_finishButton": "Terminer l'urgence",
+    "blocklist_Title": "Blocklist Medrunner",
+    "blocklist_User": "Utilisateur",
+    "blocklist_Org": "Org",
+    "blocklist_InputDescription": "Nom d'utilisateur Star Citizen ou nom d'organisation",
+    "blocklist_Search": "Rechercher",
+    "blocklist_NotBlocked": "Pas bloqué",
+    "blocklist_Blocked": "Bloqué",
+    "blocklist_UserResult1": "L'utilisateur",
+    "blocklist_Result2": "a été bloqué",
+    "blocklist_OrgResult1": "L'organisation"
 }

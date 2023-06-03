@@ -16,24 +16,44 @@ async function searchBlocklist() {
     formSubmittingSearch.value = true;
     formErrorMessage.value = "";
 
+    blocklistStore.isQueryEmpty = false;
+    blocklistStore.curentQuery = [];
+
     try {
         const queryResponse = await blocklistStore.fetchBlocklist(searchType.value, formName.value);
-        console.log(queryResponse);
+        if (queryResponse.length === 0) {
+            blocklistStore.isQueryEmpty = true;
+        } else {
+            blocklistStore.curentQuery = queryResponse;
+        }
+        formSubmittingSearch.value = false;
     } catch (error) {
-        console.error(error);
         formErrorMessage.value = t("form_errorGeneric");
         formSubmittingSearch.value = false;
     }
+}
+
+function clearForm() {
+    formErrorMessage.value = "";
+    formName.value = "";
+
+    blocklistStore.curentQuery = [];
+    blocklistStore.isQueryEmpty = false;
 }
 </script>
 
 <template>
     <form @submit.prevent="searchBlocklist()" class="lg:flex w-full max-w-3xl lg:max-w-5xl lg:justify-between mt-14">
         <div class="flex lg:flex-grow lg:mr-8">
-            <select class="focus:ring-secondary-500 focus:border-secondary-500" v-model="searchType" required :disabled="formSubmittingSearch">
-                <!--      TODO: Add translation      -->
-                <option value="user">User</option>
-                <option value="org">Org</option>
+            <select
+                @change="clearForm()"
+                class="focus:ring-secondary-500 focus:border-secondary-500"
+                v-model="searchType"
+                required
+                :disabled="formSubmittingSearch"
+            >
+                <option value="user">{{ t("blocklist_User") }}</option>
+                <option value="org">{{ t("blocklist_Org") }}</option>
             </select>
 
             <input
@@ -42,7 +62,7 @@ async function searchBlocklist() {
                 class="w-full focus:ring-secondary-500 focus:border-secondary-500"
                 :class="formErrorMessage ? 'input-text-error' : 'input-text'"
                 :disabled="formSubmittingSearch"
-                placeholder="Star Citizen username or Organization name"
+                :placeholder="t('blocklist_InputDescription')"
                 required
             />
         </div>
@@ -66,8 +86,7 @@ async function searchBlocklist() {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <!--      TODO: Add translation      -->
-            <span v-else>Search</span>
+            <span v-else>{{ t("blocklist_Search") }}</span>
         </button>
     </form>
     <p v-if="formErrorMessage" class="mt-2 text-primary-400 text-sm w-full max-w-3xl lg:max-w-5xl">
