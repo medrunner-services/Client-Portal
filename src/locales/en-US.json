@@ -112,5 +112,15 @@
     "tracking_serverIssue": "Server Issue",
     "tracking_respawned": "Respawned",
     "tracking_other": "Other",
-    "tracking_finishButton": "Finish emergency"
+    "tracking_finishButton": "Finish emergency",
+    "blocklist_Title": "Medrunner Blocklist",
+    "blocklist_User": "User",
+    "blocklist_Org": "Org",
+    "blocklist_InputDescription": "Star Citizen username or Organization name",
+    "blocklist_Search": "Search",
+    "blocklist_NotBlocked": "Not blocked",
+    "blocklist_Blocked": "Blocked",
+    "blocklist_UserResult1": "The user",
+    "blocklist_Result2": "has been blocked",
+    "blocklist_OrgResult1": "The organisation"
 }
