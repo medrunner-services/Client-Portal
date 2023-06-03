@@ -15,10 +15,15 @@ const { t } = useI18n();
 
         <div v-if="blocklistStore.curentQuery.length >= 1">
             <p class="text-3xl lg:text-4xl font-Mohave font-bold uppercase mb-10">❌ {{ t("blocklist_Blocked") }}</p>
-            <p v-if="blocklistStore.curentQuery[0].rsiHandle" class="font-Inter text-xl">{{ t("blocklist_UserResult1") }} <span class="font-semibold text-primary-900">{{ blocklistStore.curentQuery[0].rsiHandle }}</span> {{ t("blocklist_Result2") }}</p>
-            <p v-if="blocklistStore.curentQuery[0].orgSid" class="font-Inter text-xl">{{ t("blocklist_OrgResult1") }} <span class="font-semibold text-primary-900">{{ blocklistStore.curentQuery[0].orgSid }}</span> {{ t("blocklist_Result2") }}</p>
+            <p v-if="blocklistStore.curentQuery[0].rsiHandle" class="font-Inter text-xl">
+                {{ t("blocklist_UserResult1") }} <span class="font-semibold text-primary-900">{{ blocklistStore.curentQuery[0].rsiHandle }}</span>
+                {{ t("blocklist_Result2") }}
+            </p>
+            <p v-if="blocklistStore.curentQuery[0].orgSid" class="font-Inter text-xl">
+                {{ t("blocklist_OrgResult1") }} <span class="font-semibold text-primary-900">{{ blocklistStore.curentQuery[0].orgSid }}</span>
+                {{ t("blocklist_Result2") }}
+            </p>
         </div>
-
     </div>
 </template>
 

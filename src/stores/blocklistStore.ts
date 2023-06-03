@@ -5,7 +5,6 @@ import { ref } from "vue";
 import { api } from "@/utils/medrunnerClient";
 
 export const useBlocklistStore = defineStore("blocklist", () => {
-
     const curentQuery = ref([] as BlockReport[]);
     const isQueryEmpty = ref(false);
     async function fetchBlocklist(type: string, handle: string): Promise<BlockReport[]> {

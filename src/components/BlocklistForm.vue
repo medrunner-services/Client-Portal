@@ -45,7 +45,13 @@ function clearForm() {
 <template>
     <form @submit.prevent="searchBlocklist()" class="lg:flex w-full max-w-3xl lg:max-w-5xl lg:justify-between mt-14">
         <div class="flex lg:flex-grow lg:mr-8">
-            <select @change="clearForm()" class="focus:ring-secondary-500 focus:border-secondary-500" v-model="searchType" required :disabled="formSubmittingSearch">
+            <select
+                @change="clearForm()"
+                class="focus:ring-secondary-500 focus:border-secondary-500"
+                v-model="searchType"
+                required
+                :disabled="formSubmittingSearch"
+            >
                 <option value="user">{{ t("blocklist_User") }}</option>
                 <option value="org">{{ t("blocklist_Org") }}</option>
             </select>
