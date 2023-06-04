@@ -220,7 +220,7 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
                 v-model="cancelReason"
                 @change="submitCancelEmergency"
             >
-                <option :value="CancellationReason.NONE" disabled hidden value>
+                <option :value="CancellationReason.NONE" disabled hidden>
                     {{ t("tracking_cancelQuestionValue") }}
                 </option>
                 <option :value="CancellationReason.SUCCUMBED_TO_WOUNDS">🩸 {{ t("tracking_bledOut") }}</option>
