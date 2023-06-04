@@ -5,6 +5,7 @@
   "web-types": "./web-types.json",
   "scripts": {
     "dev": "vite",
+    "dev-network": "vite --host --mode development-network",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
