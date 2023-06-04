@@ -223,6 +223,7 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
                 <option :value="CancellationReason.NONE" disabled hidden>
                     {{ t("tracking_cancelQuestionValue") }}
                 </option>
+                <option :value="CancellationReason.RESCUED">🤝 {{ t("tracking_rescued") }}</option>
                 <option :value="CancellationReason.SUCCUMBED_TO_WOUNDS">🩸 {{ t("tracking_bledOut") }}</option>
                 <option :value="CancellationReason.SERVER_ERROR">🖥️ {{ t("tracking_serverIssue") }}</option>
                 <option :value="CancellationReason.RESPAWNED">🏥 {{ t("tracking_respawned") }}</option>
