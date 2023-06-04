@@ -1,4 +1,4 @@
-import type { Emergency, ResponseRating } from "@medrunner-services/api-client";
+import type { CancellationReason, Emergency, ResponseRating } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
@@ -52,8 +52,8 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function cancelEmergency(id: string): Promise<void> {
-        const response = await api.emergency.cancelEmergency(id);
+    async function cancelEmergency(id: string, reason: CancellationReason): Promise<void> {
+        const response = await api.emergency.cancelEmergencyWithReason(id, reason);
 
         if (!response.success) {
             throw response.statusCode;
@@ -68,14 +68,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function justifyCanceledEmergency(id: string, reason: string): Promise<void> {
-        const response = await api.emergency.setStatusDescriptionForEmergency(id, reason);
-
-        if (!response.success) {
-            throw response.statusCode;
-        }
-    }
-
     return {
         trackedEmergency,
         fetchEmergency,
@@ -83,6 +75,5 @@ export const useEmergencyStore = defineStore("emergency", () => {
         createEmergency,
         cancelEmergency,
         rateCompletedEmergency,
-        justifyCanceledEmergency,
     };
 });
