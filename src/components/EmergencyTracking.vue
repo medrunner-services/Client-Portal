@@ -213,7 +213,7 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
             </div>
         </div>
 
-        <form v-if="emergencyStore.trackedEmergency.status === 6 || isEmergencyCanceled" class="mt-7">
+        <form v-if="isEmergencyCanceled" class="mt-7">
             <label class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
             <select
                 class="w-full focus:ring-secondary-500 focus:border-secondary-500 border-gray-400"
@@ -231,7 +231,7 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
         </form>
 
         <button
-            v-if="emergencyStore.trackedEmergency.status === 8 || emergencyStore.trackedEmergency.status === 9"
+            v-if="emergencyStore.trackedEmergency.status === 8 || emergencyStore.trackedEmergency.status === 9 || emergencyStore.trackedEmergency.status === 6"
             class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
             @click="$emit('completeEmergency')"
         >

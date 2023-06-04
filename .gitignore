@@ -31,3 +31,4 @@ coverage
 .env
 .env.development
 .env.production
+.env.development-network
