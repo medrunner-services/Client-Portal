@@ -43,11 +43,10 @@ const emergencyTitle = computed(() => {
         case 1:
             return "📡 " + t("tracking_messageReceived");
         case 2:
+        case 10:
             return "🚑 " + t("tracking_helpOnTheWay");
         case 3:
             return "✅ " + t("tracking_operationSuccessful");
-        case 10:
-            return "🔃 " + t("tracking_operationOver");
         case 4:
             return "❌ " + t("tracking_operationFailed");
         case 6:
@@ -64,11 +63,10 @@ const emergencySubTitle = computed(() => {
         case 1:
             return t("tracking_statusTextReceived");
         case 2:
+        case 10:
             return t("tracking_statusTextOnTheirWay");
         case 3:
             return t("tracking_statusTextSuccess");
-        case 10:
-            return t("tracking_statusTextOver");
         case 4:
             return t("tracking_statusTextFailed");
         case 6:
@@ -199,7 +197,11 @@ async function submitCancelReason(): Promise<void> {
             </button>
 
             <a
-                v-if="emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2"
+                v-if="
+                    emergencyStore.trackedEmergency.status === 1 ||
+                    emergencyStore.trackedEmergency.status === 2 ||
+                    emergencyStore.trackedEmergency.status === 10
+                "
                 :href="`discord://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
