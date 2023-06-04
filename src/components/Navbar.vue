@@ -13,6 +13,7 @@ const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
 const currentPage = ref("");
+const scrollEnabled = ref(true);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
@@ -35,6 +36,7 @@ watch(route, async (oldRoute, newRoute) => {
 
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
+    scrollEnabled.value ? disableScrolling() : enableScrolling();
 }
 
 function changeLanguage(): void {
@@ -47,11 +49,25 @@ async function disconnect(): Promise<void> {
     userStore.disconnectUser();
     await router.push("/login");
 }
+
+function disableScrolling(): void {
+    document.body.style.height = "100%";
+    document.body.style.overflow = "hidden";
+
+    scrollEnabled.value = false;
+}
+
+function enableScrolling(): void {
+    document.body.style.height = "auto";
+    document.body.style.overflow = "auto";
+
+    scrollEnabled.value = true;
+}
 </script>
 
 <template>
     <div class="bg-white w-full flex flex-col shadow-md md:static">
-        <div class="py-2 content-container flex items-center gap-2 md:px-16 md:py-3">
+        <div class="py-2 content-container bg-white flex items-center gap-2 z-10 md:px-16 md:py-3">
             <img class="h-8 md:h-12" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
 
             <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">MEDRUNNER</h1>
@@ -83,33 +99,32 @@ async function disconnect(): Promise<void> {
             </button>
         </div>
 
-        <nav
-            class="w-full absolute top-14 flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10"
-            v-if="navMenuCollapsed"
-        >
-            <div class="flex flex-col gap-4 font-Mohave">
-                <RouterLink @click="switchNavMenuSate()" to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
-                    t("navbar_emergency")
-                }}</RouterLink>
-                <RouterLink @click="switchNavMenuSate()" to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{
-                    t("navbar_blocklist")
-                }}</RouterLink>
-            </div>
-            <div class="mt-16">
-                <select @change="changeLanguage" v-model="newLocaleLanguage">
-                    <option value="en-US">English</option>
-                    <option value="fr-FR">Français</option>
-                </select>
-            </div>
-            <div class="flex gap-4 mt-5" v-if="userStore.isAuthenticated">
-                <p class="text-body font-semibold font-Inter">
-                    {{ userStore.user?.rsiHandle }}
-                </p>
-                <button @click="disconnect()" class="button-primary button-24">
-                    {{ t("navbar_disconnect") }}
-                </button>
-            </div>
-        </nav>
+        <div @click.self="switchNavMenuSate()" v-if="navMenuCollapsed" class="absolute top-0 left-0 h-screen w-screen bg-gray-400/50 z-[5]">
+            <nav class="w-full absolute top-14 flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10">
+                <div class="flex flex-col gap-4 font-Mohave">
+                    <RouterLink @click="switchNavMenuSate()" to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
+                        t("navbar_emergency")
+                    }}</RouterLink>
+                    <RouterLink @click="switchNavMenuSate()" to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{
+                        t("navbar_blocklist")
+                    }}</RouterLink>
+                </div>
+                <div class="mt-16">
+                    <select @change="changeLanguage" v-model="newLocaleLanguage">
+                        <option value="en-US">English</option>
+                        <option value="fr-FR">Français</option>
+                    </select>
+                </div>
+                <div class="flex gap-4 mt-5" v-if="userStore.isAuthenticated">
+                    <p class="text-body font-semibold font-Inter">
+                        {{ userStore.user?.rsiHandle }}
+                    </p>
+                    <button @click="disconnect()" class="button-primary button-24">
+                        {{ t("navbar_disconnect") }}
+                    </button>
+                </div>
+            </nav>
+        </div>
     </div>
 </template>
 
