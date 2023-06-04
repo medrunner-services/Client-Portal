@@ -206,7 +206,7 @@ async function submitCancelReason(): Promise<void> {
                 target="_blank"
                 class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
             >
-                Chat with rescue team
+                {{ t("tracking_chatButton") }}
             </a>
         </div>
 
