@@ -6,6 +6,7 @@
     "src/**/*.vue"
   ],
   "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
     "module": "esnext",
     "baseUrl": ".",
     "ignoreDeprecations": "5.0",

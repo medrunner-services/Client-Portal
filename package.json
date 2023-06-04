@@ -1,10 +1,11 @@
 {
   "name": "client-portal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "web-types": "./web-types.json",
   "scripts": {
     "dev": "vite",
+    "dev-network": "vite --host --mode development-network",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -17,7 +18,7 @@
   "dependencies": {
     "@formkit/auto-animate": "^1.0.0-beta.6",
     "@intlify/unplugin-vue-i18n": "^0.11.0",
-    "@medrunner-services/api-client": "^0.12.1",
+    "@medrunner-services/api-client": "^0.12.3",
     "axios": "^1.2.2",
     "pinia": "^2.0.28",
     "vue": "^3.2.45",

@@ -60,6 +60,7 @@ function setActivePageFromCache(startIndex: number) {
 function completeEmergency(emergency: Emergency): void {
     emergencyStore.trackedEmergency = {} as Emergency;
     userStore.user.activeEmergency = "";
+    userStore.newlySubmittedEmergencies++;
     loadedHistory.unshift(emergency);
     setActivePageFromCache(0);
 }
@@ -146,7 +147,7 @@ const isLastPageHistory = computed(() => {
                     <img src="/icons/arrow-icon.svg" class="w-6 h-6 rotate-90" alt="Dropdown arrow" />
                 </div>
                 <div class="w-1/2 xl:w-2/3 flex justify-center items-center font-Inter font-bold">
-                    {{ page + 1 }}
+                    {{ page + 1 }} / {{ Math.ceil(userStore.totalNumberOfEmergencies / pageSize) }}
                 </div>
                 <div
                     @click="nextPage()"

@@ -1,12 +1,17 @@
 import type { ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
-import { type Ref, ref } from "vue";
+import { computed, type Ref, ref } from "vue";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
     const user: Ref<Person> = ref({} as Person);
     const isAuthenticated = ref(false);
+    const newlySubmittedEmergencies = ref(0);
+
+    const totalNumberOfEmergencies = computed(() => {
+        return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
+    });
 
     function disconnectUser(): void {
         localStorage.removeItem("refreshToken");
@@ -47,6 +52,8 @@ export const useUserStore = defineStore("user", () => {
     return {
         user,
         isAuthenticated,
+        newlySubmittedEmergencies,
+        totalNumberOfEmergencies,
         disconnectUser,
         linkUser,
         fetchUser,
