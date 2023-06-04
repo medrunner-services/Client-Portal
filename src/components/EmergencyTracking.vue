@@ -19,6 +19,7 @@ const errorLoadingEmergency = ref("");
 const loadingCancelEmergencyError = ref("");
 const cancelReason = ref("");
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
+const discordBaseUrl = ref("discord://");
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -36,6 +37,8 @@ onMounted(async () => {
             errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
         }
     }
+
+    if (navigator.userAgent.includes("Android")) discordBaseUrl.value = "https://";
 });
 
 const emergencyTitle = computed(() => {
@@ -202,7 +205,7 @@ async function submitCancelReason(): Promise<void> {
                     emergencyStore.trackedEmergency.status === 2 ||
                     emergencyStore.trackedEmergency.status === 10
                 "
-                :href="`discord://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                :href="`${discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
             >
