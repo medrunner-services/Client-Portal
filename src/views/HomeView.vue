@@ -50,8 +50,6 @@ onMounted(async () => {
     apiWebsocket.onreconnected(async () => {
         try {
             emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency ?? "");
-            if (emergencyStore.trackedEmergency.isComplete && emergencyStore.trackedEmergency.rating !== 0)
-                completeEmergency(emergencyStore.trackedEmergency);
         } catch (e) {
             errorLoadingTrackedEmergency.value = true;
         }
@@ -179,9 +177,6 @@ const isLastPageHistory = computed(() => {
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
             />
             <EmergencyForm v-else />
-            <div v-if="errorLoadingTrackedEmergency">
-                <p class="text-primary-900">{{ t("form_errorGeneric") }}</p>
-            </div>
         </div>
     </div>
 </template>
