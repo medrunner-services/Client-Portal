@@ -129,8 +129,8 @@ const isLastPageHistory = computed(() => {
 </script>
 
 <template>
-    <div class="flex flex-col-reverse lg:flex-row lg:justify-between content-container my-14 lg:my-36">
-        <div class="mt-10 lg:mt-0 lg:w-[35%] lg:max-w-xl">
+    <div class="flex flex-col-reverse lg:flex-row lg:justify-between content-container">
+        <div class="mt-10 lg:mt-0 lg:w-[40%] xl:w-[35%] lg:max-w-xl">
             <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
                 {{ t("home_history") }}
             </h2>
