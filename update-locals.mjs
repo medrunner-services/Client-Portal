@@ -2,6 +2,9 @@ import fs from 'fs';
 import yauzl from 'yauzl';
 import { pipeline } from 'stream';
 import path from "path";
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.development' });
 
 
 const downloadLocals = async () => {
@@ -9,7 +12,7 @@ const downloadLocals = async () => {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
-			"Authorization": "Bearer 6f68907200e7d7974c67b3b5936533576e8da5bc143817472f1a77287fec6f51ee487e4659ca32ba",
+			"Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
 		}
 	});
 
@@ -21,7 +24,7 @@ const downloadLocals = async () => {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
-			"Authorization": "Bearer 6f68907200e7d7974c67b3b5936533576e8da5bc143817472f1a77287fec6f51ee487e4659ca32ba",
+			"Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
 		}
 	});
 
