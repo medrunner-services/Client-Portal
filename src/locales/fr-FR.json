@@ -2,10 +2,9 @@
     "login_logInButton": "Connexion avec Discord",
     "login_registerButton": "S'inscrire avec Discord",
     "login_modalErrorMessage": "Une erreur est survenue, veuillez réessayer",
-    "login_welcomeMessage": "Bienvenu sur le portail Medrunner",
-    "login_addToBio1": "Veuillez ajouter ceci à votre",
-    "login_addToBio2": "bio RSI",
-    "login_addToBio3": "avant de soumettre votre nom d'utilisateur",
+    "login_welcomeMessage": "Bienvenu sur le Portail d'urgence Medrunner",
+    "login_addToBioText": "Veuillez ajouter ceci à votre {linkToBio} avant de soumettre votre nom d'utilisateur",
+    "login_addToBioLink": "bio RSI",
     "login_warningRSIProfileBug": "Il se peut que vous deviez définir votre pays et votre région dans votre profil RSI pour sauvegarder votre bio en raison d'un bug RSI.",
     "login_starCitizenUsername": "Nom d'utilisateur Star Citizen",
     "login_RSIUsername": "Le nom d'utilisateur de votre compte RSI",
@@ -110,7 +109,7 @@
     "tracking_serverIssue": "Problème serveur",
     "tracking_respawned": "Réapparition",
     "tracking_other": "Autre",
-    "tracking_finishButton": "Terminer l'urgence",
+    "tracking_finishButton": "Fermer",
     "tracking_chatButton": "Discuter avec l'équipe de sauvetage",
     "blocklist_Title": "Blocklist Medrunner",
     "blocklist_User": "Utilisateur",
@@ -119,7 +118,6 @@
     "blocklist_Search": "Rechercher",
     "blocklist_NotBlocked": "Pas bloqué",
     "blocklist_Blocked": "Bloqué",
-    "blocklist_UserResult1": "L'utilisateur",
-    "blocklist_Result2": "a été bloqué",
-    "blocklist_OrgResult1": "L'organisation"
+    "blocklist_UserResult": "L'utilisateur {username} a été bloqué",
+    "blocklist_OrgResult": "L'organisation {organisationName} a été bloquée"
 }

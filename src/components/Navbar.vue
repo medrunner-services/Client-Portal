@@ -12,7 +12,7 @@ const router = useRouter();
 const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
-const currentPage = ref("");
+const currentPage = ref(route.path);
 const scrollEnabled = ref(true);
 
 onMounted(() => {
