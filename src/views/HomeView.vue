@@ -50,6 +50,8 @@ onMounted(async () => {
     apiWebsocket.onreconnected(async () => {
         try {
             emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency ?? "");
+            if (emergencyStore.trackedEmergency.isComplete && emergencyStore.trackedEmergency.rating !== 0)
+                completeEmergency(emergencyStore.trackedEmergency);
         } catch (e) {
             errorLoadingTrackedEmergency.value = true;
         }
