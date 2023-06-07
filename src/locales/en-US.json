@@ -3,9 +3,8 @@
     "login_registerButton": "Register with Discord",
     "login_modalErrorMessage": "Something went wrong,  please try again",
     "login_welcomeMessage": "Welcome to the Medrunner Portal",
-    "login_addToBio1": "Please add this to your",
-    "login_addToBio2": "RSI bio",
-    "login_addToBio3": "before submitting your username",
+    "login_addToBioText": "Please add this to your {linkToBio} before submitting your username",
+    "login_addToBioLink": "RSI bio",
     "login_warningRSIProfileBug": "You may have to set your country and region in your RSI profile to save your short bio due to an RSI bug.",
     "login_starCitizenUsername": "Star Citizen username",
     "login_RSIUsername": "The username of your RSI account",
@@ -119,7 +118,6 @@
     "blocklist_Search": "Search",
     "blocklist_NotBlocked": "Not blocked",
     "blocklist_Blocked": "Blocked",
-    "blocklist_UserResult1": "The user",
-    "blocklist_Result2": "has been blocked",
-    "blocklist_OrgResult1": "The organisation"
+    "blocklist_UserResult": "The user {username} has been blocked",
+    "blocklist_OrgResult": "The organization {organisationName} has been blocked"
 }

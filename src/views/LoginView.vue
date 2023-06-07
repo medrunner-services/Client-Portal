@@ -56,6 +56,14 @@ function getColoredTitle(): string {
         .substring(title.indexOf("Medrunner"))
         .substring(9)}`;
 }
+
+function getAddToBioText(): string {
+    return t("login_addToBioText", {
+        linkToBio: `<a href="https://robertsspaceindustries.com/account/profile" target="_blank" class="underline underline-offset-2 cursor-pointer">${t(
+            "login_addToBioLink",
+        )}</a>`,
+    });
+}
 </script>
 
 <template>
@@ -69,16 +77,7 @@ function getColoredTitle(): string {
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
-                    <p class="text-neutral-900 font-Inter font-semibold text-small">
-                        {{ t("login_addToBio1") }}
-                        <a
-                            href="https://robertsspaceindustries.com/account/profile"
-                            target="_blank"
-                            class="underline underline-offset-2 cursor-pointer"
-                            >{{ t("login_addToBio2") }}</a
-                        >
-                        {{ t("login_addToBio3") }} :
-                    </p>
+                    <p class="text-neutral-900 font-Inter font-semibold text-small" v-html="getAddToBioText()"></p>
                     <div class="flex mt-2">
                         <div class="bg-neutral-700 text-neutral-50 font-Inter text-xs w-full text-center">
                             <p class="py-3 mx-auto">
