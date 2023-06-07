@@ -22,6 +22,7 @@ const page = ref(0);
 let loadedHistory: Array<Emergency> = [];
 let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
+const errorLoadingTrackedEmergency = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -37,12 +38,20 @@ onMounted(async () => {
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-        if (!loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
+        if (updatedEmergency.id === userStore.user.activeEmergency && !loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
             if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
                 completeEmergency(updatedEmergency);
             } else {
                 emergencyStore.trackedEmergency = updatedEmergency;
             }
+        }
+    });
+
+    apiWebsocket.onreconnected(async () => {
+        try {
+            emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency ?? "");
+        } catch (e) {
+            errorLoadingTrackedEmergency.value = true;
         }
     });
 });
@@ -168,6 +177,9 @@ const isLastPageHistory = computed(() => {
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
             />
             <EmergencyForm v-else />
+            <div v-if="errorLoadingTrackedEmergency">
+                <p class="text-primary-900">{{ t("form_errorGeneric") }}</p>
+            </div>
         </div>
     </div>
 </template>
