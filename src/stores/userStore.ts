@@ -13,10 +13,14 @@ export const useUserStore = defineStore("user", () => {
         return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
     });
 
-    function disconnectUser(): void {
-        localStorage.removeItem("refreshToken");
-        user.value = {} as Person;
-        isAuthenticated.value = false;
+    async function disconnectUser(): Promise<void> {
+        try {
+            await api.auth.signOut({ refreshToken: localStorage.getItem("refreshToken") ?? "" });
+        } finally {
+            localStorage.removeItem("refreshToken");
+            user.value = {} as Person;
+            isAuthenticated.value = false;
+        }
     }
 
     async function linkUser(username: string): Promise<void> {
@@ -25,7 +29,7 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             user.value.rsiHandle = response.data?.rsiHandle;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -35,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -45,7 +49,7 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 

@@ -22,7 +22,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -32,7 +32,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -48,7 +48,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -56,7 +56,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         const response = await api.emergency.cancelEmergencyWithReason(id, reason);
 
         if (!response.success) {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -64,7 +64,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         const response = await api.emergency.rateServices(id, rating);
 
         if (!response.success) {
-            throw response.statusCode;
+            throw response;
         }
     }
 
