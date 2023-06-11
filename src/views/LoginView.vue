@@ -30,9 +30,9 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         await router.push("/");
     } catch (error: any) {
-        if (error === 451) formErrorMessage.value = t("login_errorAccountBlocked");
-        if (error === 403) formErrorMessage.value = t("login_errorMissingMedrunnerId");
-        if (error === 404) formErrorMessage.value = t("login_errorUnknownRSIAccount");
+        if (error.statusCode === 451) formErrorMessage.value = t("login_errorAccountBlocked");
+        if (error.statusCode === 403) formErrorMessage.value = t("login_errorMissingMedrunnerId");
+        if (error.statusCode === 404) formErrorMessage.value = t("login_errorUnknownRSIAccount");
 
         formErrorActive.value = true;
         waitingForApi.value = false;

@@ -74,6 +74,7 @@
     "form_remarks": "Remarques",
     "form_helpRemarks": "Les informations que l'équipe de secours devrait connaître",
     "form_reportEmergency": "Signaler l'urgence",
+    "form_errorRateLimit": "Vous envoyez trop de demandes, veuillez attendre quelques minutes et réessayer",
     "tracking_errorLoadingEmergency": "Une erreur s'est produite lors du chargement de l'urgence en cours",
     "tracking_messageReceived": "Message reçu",
     "tracking_helpOnTheWay": "L'aide est en chemin",

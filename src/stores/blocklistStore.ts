@@ -19,7 +19,7 @@ export const useBlocklistStore = defineStore("blocklist", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
