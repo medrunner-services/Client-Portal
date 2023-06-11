@@ -133,9 +133,9 @@ function getAddToBioText(): string {
                 <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <button class="button-secondary button-48 mt-5" @click="redirectToDiscordRegister()">
-                    {{ t("login_registerButton") }}
-                </button>
+<!--                <button class="button-secondary button-48 mt-5" @click="redirectToDiscordRegister()">-->
+<!--                    {{ t("login_registerButton") }}-->
+<!--                </button>-->
             </div>
         </div>
     </div>
