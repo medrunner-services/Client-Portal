@@ -7,7 +7,6 @@ const { t } = useI18n();
 const userStore = useUserStore();
 
 const emit = defineEmits(["disconnectUser", "closeModal"]);
-
 </script>
 
 <template>
