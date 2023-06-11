@@ -5,7 +5,7 @@ import { useRoute } from "vue-router";
 
 import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
-import { redirectToDiscordLogin, redirectToDiscordRegister } from "@/utils/discordRedirects";
+import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -133,9 +133,13 @@ function getAddToBioText(): string {
                 <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-<!--                <button class="button-secondary button-48 mt-5" @click="redirectToDiscordRegister()">-->
-<!--                    {{ t("login_registerButton") }}-->
-<!--                </button>-->
+                <button
+                    disabled
+                    class="border-2 border-primary-900/50 text-black/50 button-48 mt-5 cursor-not-allowed"
+                    title="Unavailable during Beta"
+                >
+                    {{ t("login_registerButton") }}
+                </button>
             </div>
         </div>
     </div>
