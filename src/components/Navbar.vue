@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
+import UserModal from "@/components/UserModal.vue";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
@@ -14,6 +15,7 @@ const navMenuCollapsed = ref(false);
 const newLocaleLanguage = ref("");
 const currentPage = ref(route.path);
 const scrollEnabled = ref(true);
+const displayUserModal = ref(false);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
@@ -39,6 +41,10 @@ function switchNavMenuSate(): void {
     scrollEnabled.value ? disableScrolling() : enableScrolling();
 }
 
+function switchUserModalSate(): void {
+    displayUserModal.value = !displayUserModal.value;
+}
+
 function changeLanguage(): void {
     locale.value = newLocaleLanguage.value;
     localStorage.setItem("selectedLanguage", newLocaleLanguage.value);
@@ -46,7 +52,7 @@ function changeLanguage(): void {
 }
 
 async function disconnect(): Promise<void> {
-    userStore.disconnectUser();
+    await userStore.disconnectUser();
     await router.push("/login");
 }
 
@@ -82,13 +88,8 @@ function enableScrolling(): void {
                     </select>
                 </div>
                 <div v-if="userStore.isAuthenticated">
-                    <div class="border-l-2 border-primary-900 pl-6">
-                        <p class="text-small font-semibold font-Inter">
-                            {{ userStore.user?.rsiHandle }}
-                        </p>
-                        <button @click.prevent="disconnect()" class="button-primary font-Inter text-xs px-4 py-[6px]">
-                            {{ t("navbar_disconnect") }}
-                        </button>
+                    <div @click="switchUserModalSate()" class="cursor-pointer">
+                        <img src="/icons/user-profile.svg" alt="User profile" />
                     </div>
                 </div>
             </nav>
@@ -109,23 +110,20 @@ function enableScrolling(): void {
                         t("navbar_blocklist")
                     }}</RouterLink>
                 </div>
-                <div class="mt-16">
+                <div class="mt-16 flex justify-between w-full">
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
                         <option value="fr-FR">Français</option>
                     </select>
-                </div>
-                <div class="flex gap-4 mt-5" v-if="userStore.isAuthenticated">
-                    <p class="text-body font-semibold font-Inter">
-                        {{ userStore.user?.rsiHandle }}
-                    </p>
-                    <button @click="disconnect()" class="button-primary button-24">
-                        {{ t("navbar_disconnect") }}
-                    </button>
+                    <div @click="switchUserModalSate()" class="cursor-pointer">
+                        <img src="/icons/user-profile.svg" alt="User profile" />
+                    </div>
                 </div>
             </nav>
         </div>
     </div>
+
+    <UserModal @click.self="switchUserModalSate()" v-if="displayUserModal" @disconnect-user="disconnect()" @close-modal="switchUserModalSate()" />
 </template>
 
 <style scoped>

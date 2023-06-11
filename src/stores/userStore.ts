@@ -13,7 +13,7 @@ export const useUserStore = defineStore("user", () => {
         return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
     });
 
-    function disconnectUser(): void {
+    async function disconnectUser(): Promise<void> {
         localStorage.removeItem("refreshToken");
         user.value = {} as Person;
         isAuthenticated.value = false;
