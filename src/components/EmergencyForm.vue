@@ -3,10 +3,12 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const isUpdatingRsiHandle = ref(false);
@@ -20,6 +22,7 @@ const formSystem = ref("Stanton");
 const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
 const formRemarks = ref("");
+const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
 
 async function updateRsiHandle(): Promise<void> {
     if (!isUpdatingRsiHandle.value) {
@@ -46,6 +49,10 @@ async function updateRsiHandle(): Promise<void> {
 }
 
 async function sendNewEmergency(): Promise<void> {
+    if (!formSystem.value || !formSubSystem.value || !formSubThreatLevel.value) {
+        formErrorMessage.value = t("form_errorMissingFields");
+        return;
+    }
     try {
         formSubmittingEmergency.value = true;
 
@@ -117,11 +124,11 @@ async function sendNewEmergency(): Promise<void> {
         <div class="mt-10 lg:flex lg:justify-between lg:w-full">
             <div class="lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_system") }}</label>
+                    <label class="text-sm font-semibold">{{ t("form_system") }}*</label>
                     <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSystem')" />
                 </div>
                 <div class="mt-2">
-                    <select class="w-full" disabled v-model="formSystem" required>
+                    <select class="w-full" disabled v-model="formSystem" :required="!isFirefoxAndroid">
                         <option value="Stanton">Stanton</option>
                     </select>
                 </div>
@@ -129,7 +136,7 @@ async function sendNewEmergency(): Promise<void> {
 
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_subSystem") }}</label>
+                    <label class="text-sm font-semibold">{{ t("form_subSystem") }}*</label>
                     <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSubSystem')" />
                 </div>
                 <div class="mt-2">
@@ -137,7 +144,7 @@ async function sendNewEmergency(): Promise<void> {
                         class="w-full focus:ring-secondary-500 focus:border-secondary-500"
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubSystem"
-                        required
+                        :required="!isFirefoxAndroid"
                         :disabled="formSubmittingEmergency"
                     >
                         <option hidden value>{{ t("form_selectAPlanet") }}</option>
@@ -153,7 +160,7 @@ async function sendNewEmergency(): Promise<void> {
         <div class="mt-5 lg:flex lg:justify-between lg:w-full">
             <div class="lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_threatLevel") }}</label>
+                    <label class="text-sm font-semibold">{{ t("form_threatLevel") }}*</label>
                     <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpThreatLevel')" />
                 </div>
                 <div class="mt-2">
@@ -161,7 +168,7 @@ async function sendNewEmergency(): Promise<void> {
                         class="w-full focus:ring-secondary-500 focus:border-secondary-500"
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubThreatLevel"
-                        required
+                        :required="!isFirefoxAndroid"
                         :disabled="formSubmittingEmergency"
                     >
                         <option selected hidden value>
@@ -183,7 +190,7 @@ async function sendNewEmergency(): Promise<void> {
                 <div class="mt-2">
                     <textarea
                         class="w-full focus:ring-secondary-500 focus:border-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage && !isFirefoxAndroid ? 'border-primary-400' : 'border-gray-400'"
                         rows="1"
                         v-model="formRemarks"
                         :disabled="formSubmittingEmergency"
