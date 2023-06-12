@@ -117,12 +117,22 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
         emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
     }
 }
+
+async function reloadPage(): Promise<void> {
+    location.reload();
+}
 </script>
 
 <template>
     <Loader v-if="loadingEmergency" class="w-full flex justify-center items-center h-80" />
     <div v-else-if="errorLoadingEmergency || errorLoadingTrackedEmergency">
         <p class="text-primary-900 font-semibold text-lg">{{ t("tracking_errorLoadingEmergency") }}</p>
+        <button
+            class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            @click="reloadPage()"
+        >
+            <span>{{ t("tracking_refreshButton") }}</span>
+        </button>
     </div>
     <div v-else v-auto-animate>
         <div v-if="isEmergencyCanceled">

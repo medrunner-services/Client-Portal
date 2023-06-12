@@ -114,6 +114,7 @@
     "tracking_other": "Other",
     "tracking_finishButton": "Dismiss",
     "tracking_chatButton": "Chat with rescue team",
+    "tracking_refreshButton": "Refresh",
     "blocklist_Title": "Medrunner Blocklist",
     "blocklist_User": "User",
     "blocklist_Org": "Org",
