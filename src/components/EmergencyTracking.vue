@@ -13,9 +13,13 @@ const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
+defineProps<{
+    errorLoadingTrackedEmergency: boolean;
+}>();
+
 const loadingEmergency = ref(false);
-const errorLoadingEmergency = ref("");
-const loadingCancelEmergencyError = ref("");
+const errorLoadingEmergency = ref(false);
+const loadingCancelEmergencyError = ref(false);
 const cancelReason: Ref<CancellationReason> = ref(CancellationReason.NONE);
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const discordBaseUrl = ref("discord://");
@@ -28,13 +32,13 @@ onMounted(async () => {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
             } catch (e) {
-                errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
+                errorLoadingEmergency.value = true;
             }
 
             loadingEmergency.value = false;
         } else {
             loadingEmergency.value = false;
-            errorLoadingEmergency.value = t("tracking_errorLoadingEmergency");
+            errorLoadingEmergency.value = true;
         }
     }
 
@@ -102,7 +106,7 @@ async function submitCancelEmergency(): Promise<void> {
         await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id, cancelReason.value);
         emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
     } catch (error: any) {
-        loadingCancelEmergencyError.value = t("tracking_errorCancel");
+        loadingCancelEmergencyError.value = true;
     }
 }
 
@@ -117,8 +121,8 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
 
 <template>
     <Loader v-if="loadingEmergency" class="w-full flex justify-center items-center h-80" />
-    <div v-else-if="errorLoadingEmergency">
-        <p class="text-primary-900 font-semibold text-lg">{{ errorLoadingEmergency }}</p>
+    <div v-else-if="errorLoadingEmergency || errorLoadingTrackedEmergency">
+        <p class="text-primary-900 font-semibold text-lg">{{ t("tracking_errorLoadingEmergency") }}</p>
     </div>
     <div v-else v-auto-animate>
         <div v-if="isEmergencyCanceled">
@@ -198,7 +202,7 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
         </div>
 
         <p v-if="loadingCancelEmergencyError" class="mt-2 text-primary-400 text-sm w-full">
-            {{ loadingCancelEmergencyError }}
+            {{ t("tracking_errorCancel") }}
         </p>
 
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">

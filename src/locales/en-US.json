@@ -21,6 +21,7 @@
     "home_emergency": "Emergency",
     "home_noEmergencies": "No past emergencies",
     "home_GetHelp": "Get help",
+    "home_errorLoadingHistory": "An error occurred loading your history",
     "history_unknown": "Unknown",
     "history_low": "No threat",
     "history_medium": "PvE",
