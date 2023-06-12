@@ -23,6 +23,7 @@ let loadedHistory: Array<Emergency> = [];
 let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
 const errorLoadingTrackedEmergency = ref(false);
+const errorLoadingHistory = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -76,6 +77,7 @@ function completeEmergency(emergency: Emergency): void {
 
 async function loadHistory(skipFirst = false) {
     const fetchAmount = skipFirst ? pageSize + 1 : pageSize;
+    errorLoadingHistory.value = false;
 
     try {
         const historyResponse = await userStore.fetchUserHistory(fetchAmount, paginationToken.value);
@@ -88,6 +90,7 @@ async function loadHistory(skipFirst = false) {
         loadedHistory.push(...sortedEmergencies);
         setActivePageFromCache(0);
     } catch (error: any) {
+        errorLoadingHistory.value = true;
         loaded.value = true;
     }
 }
@@ -144,7 +147,10 @@ const isLastPageHistory = computed(() => {
                 />
             </div>
             <Loader v-else-if="!loaded" class="w-full flex justify-center items-center h-80" />
-            <div v-else>
+            <div v-else-if="loaded && errorLoadingHistory">
+                <p>{{ t("home_errorLoadingHistory") }}</p>
+            </div>
+            <div v-else-if="loaded && activePage.length === 0">
                 <p>{{ t("home_noEmergencies") }}</p>
             </div>
             <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
@@ -175,6 +181,7 @@ const isLastPageHistory = computed(() => {
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
+                :errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"
             />
 
             <EmergencyForm v-else />

@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
 import { redirectToDiscordLogin } from "@/utils/discordRedirects";
@@ -52,7 +53,7 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />Medrunner </span> ${title
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
         .substring(title.indexOf("Medrunner"))
         .substring(9)}`;
 }
@@ -67,12 +68,12 @@ function getAddToBioText(): string {
 </script>
 
 <template>
-    <div class="pt-0 h-screen flex justify-center">
+    <div class="pt-0 h-screen flex justify-center bg-white" id="animation-bg">
         <div v-if="loginErrorAlert" class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900">
             <p>{{ t("login_modalErrorMessage") }}</p>
         </div>
-        <div class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex" />
-        <div class="flex flex-col justify-center items-center h-full md:w-[45%]">
+        <LoginAnimation class="md:w-[55%] hidden md:flex" />
+        <div class="flex flex-col justify-center items-center h-full w-full md:w-[45%] z-10 bg-white">
             <h1 class="text-center uppercase text-neutral-900 text-title font-Mohave font-bold" v-html="getColoredTitle()"></h1>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
@@ -136,7 +137,7 @@ function getAddToBioText(): string {
                 <button
                     disabled
                     class="border-2 border-primary-900/50 text-black/50 button-48 mt-5 cursor-not-allowed"
-                    title="Unavailable during Beta"
+                    title="Unavailable during the Beta"
                 >
                     {{ t("login_registerButton") }}
                 </button>
@@ -144,3 +145,11 @@ function getAddToBioText(): string {
         </div>
     </div>
 </template>
+
+<style scoped>
+#animation-bg {
+    background-color: #000000;
+    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+        radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
+}
+</style>

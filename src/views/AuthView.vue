@@ -52,5 +52,5 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Loader class="w-full h-[70vh] flex justify-center items-center" />
+    <Loader class="w-screen h-screen flex justify-center items-center" />
 </template>
