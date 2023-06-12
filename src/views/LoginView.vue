@@ -53,7 +53,7 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />Medrunner </span> ${title
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
         .substring(title.indexOf("Medrunner"))
         .substring(9)}`;
 }
@@ -137,7 +137,7 @@ function getAddToBioText(): string {
                 <button
                     disabled
                     class="border-2 border-primary-900/50 text-black/50 button-48 mt-5 cursor-not-allowed"
-                    title="Unavailable during Beta"
+                    title="Unavailable during the Beta"
                 >
                     {{ t("login_registerButton") }}
                 </button>

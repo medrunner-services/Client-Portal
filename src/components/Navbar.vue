@@ -74,9 +74,7 @@ function enableScrolling(): void {
 <template>
     <div class="bg-white w-full flex flex-col shadow-md md:static">
         <div class="py-2 content-container bg-white flex items-center gap-2 z-10 md:px-16 md:py-3">
-            <img class="h-8 md:h-12" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />
-
-            <h1 class="text-primary-900 font-Mohave text-header-3 font-bold md:text-header-1">MEDRUNNER</h1>
+            <img class="h-8 md:h-12" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" />
 
             <nav class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>

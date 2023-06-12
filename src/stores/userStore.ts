@@ -10,7 +10,11 @@ export const useUserStore = defineStore("user", () => {
     const newlySubmittedEmergencies = ref(0);
 
     const totalNumberOfEmergencies = computed(() => {
-        return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
+        if (isAuthenticated.value === true) {
+            return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
+        } else {
+            return 0;
+        }
     });
 
     async function disconnectUser(): Promise<void> {
