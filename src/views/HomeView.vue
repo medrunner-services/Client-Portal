@@ -181,7 +181,7 @@ const isLastPageHistory = computed(() => {
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
-                errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"
+                :errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"
             />
 
             <EmergencyForm v-else />
