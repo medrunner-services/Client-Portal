@@ -125,5 +125,7 @@
     "blocklist_NotBlocked": "Not blocked",
     "blocklist_Blocked": "Blocked",
     "blocklist_UserResult": "The user {username} has been blocked",
-    "blocklist_OrgResult": "The organization {organisationName} has been blocked"
+    "blocklist_OrgResult": "The organization {organisationName} has been blocked",
+    "error_UnavailableFeatureBeta": "Unavailable during the Beta",
+    "error_UnavailableFeatureLaunch": "Unavailable until launch"
 }

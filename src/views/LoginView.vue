@@ -122,16 +122,14 @@ function getAddToBioText(): string {
                 </p>
             </div>
             <div v-else class="mt-14 flex flex-col lg:mt-28">
-                <button class="button-primary button-48" @click="redirectToDiscordLogin()">
+                <button disabled class="button-48 cursor-not-allowed bg-primary-900/50 text-white" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <button
-                    disabled
-                    class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50"
-                    title="Unavailable during the Beta"
-                >
+                <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureLaunch") }}</p>
+                <button disabled class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50">
                     {{ t("login_registerButton") }}
                 </button>
+                <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureBeta") }}</p>
             </div>
         </div>
     </div>
