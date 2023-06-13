@@ -62,30 +62,30 @@ function getAddToBioText(): string {
 </script>
 
 <template>
-    <div class="h-screen flex justify-center items-center bg-white" id="animation-bg">
+    <div class="flex h-screen items-center justify-center bg-white" id="animation-bg">
         <LoginAnimation />
-        <div class="flex flex-col justify-center items-center px-5 py-10 md:py-24 md:px-20 lg:mr-[50%] z-10 bg-white h-full w-full md:h-fit md:w-fit">
-            <h1 class="text-center uppercase text-neutral-900 text-3xl lg:text-4xl font-Mohave font-bold" v-html="getColoredTitle()"></h1>
+        <div class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-10 md:h-fit md:w-fit md:px-20 md:py-24 lg:mr-[50%]">
+            <h1 class="text-center font-Mohave text-3xl font-bold uppercase text-neutral-900 lg:text-4xl" v-html="getColoredTitle()"></h1>
 
-            <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
+            <div v-if="route.path === '/login/link'" class="mt-20 flex w-4/5 flex-col xl:w-3/5">
                 <div class="w-full">
-                    <p class="text-neutral-900 font-Inter font-semibold text-small" v-html="getAddToBioText()"></p>
-                    <div class="flex mt-2">
-                        <div class="bg-neutral-700 text-neutral-50 font-Inter text-xs w-full text-center">
-                            <p class="py-3 mx-auto">
+                    <p class="font-Inter text-small font-semibold text-neutral-900" v-html="getAddToBioText()"></p>
+                    <div class="mt-2 flex">
+                        <div class="w-full bg-neutral-700 text-center font-Inter text-xs text-neutral-50">
+                            <p class="mx-auto py-3">
                                 {{ userStore.user?.id }}
                             </p>
                         </div>
-                        <img :src="clipboardIcon" class="ml-3 xl:ml-6 cursor-pointer" alt="copy id" @click="copyIdToClipboard()" />
+                        <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyIdToClipboard()" />
                     </div>
                     <p class="mt-5 text-xs italic lg:text-sm">
                         {{ t("login_warningRSIProfileBug") }}
                     </p>
                 </div>
-                <form class="flex flex-col w-full mt-10 xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
+                <form class="mt-10 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
                     <div class="w-full">
-                        <div class="flex items-center mb-2">
-                            <label for="rsiHandle" class="text-small font-semibold font-Inter text-neutral-900">{{
+                        <div class="mb-2 flex items-center">
+                            <label for="rsiHandle" class="font-Inter text-small font-semibold text-neutral-900">{{
                                 t("login_starCitizenUsername")
                             }}</label>
                             <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('login_RSIUsername')" />
@@ -100,10 +100,10 @@ function getAddToBioText(): string {
                             :placeholder="t('login_username') + '...'"
                         />
                     </div>
-                    <button :disabled="waitingForApi" class="button-primary font-Inter font-semibold text-small px-8 py-[11px] xl:ml-4 mt-4 xl:mt-0">
+                    <button :disabled="waitingForApi" class="button-primary mt-4 px-8 py-[11px] font-Inter text-small font-semibold xl:ml-4 xl:mt-0">
                         <svg
                             v-if="waitingForApi"
-                            class="animate-spin text-white w-full"
+                            class="w-full animate-spin text-white"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -117,17 +117,17 @@ function getAddToBioText(): string {
                         <span v-else>{{ t("login_continue") }}</span>
                     </button>
                 </form>
-                <p v-if="formErrorActive" class="mt-2 text-primary-400 font-Inter text-sm">
+                <p v-if="formErrorActive" class="mt-2 font-Inter text-sm text-primary-400">
                     {{ formErrorMessage }}
                 </p>
             </div>
-            <div v-else class="flex flex-col mt-14 lg:mt-28">
+            <div v-else class="mt-14 flex flex-col lg:mt-28">
                 <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
                 <button
                     disabled
-                    class="border-2 border-primary-900/50 text-black/50 button-48 mt-5 cursor-not-allowed"
+                    class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50"
                     title="Unavailable during the Beta"
                 >
                     {{ t("login_registerButton") }}

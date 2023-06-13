@@ -86,7 +86,7 @@ async function sendNewEmergency(): Promise<void> {
                 <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
                 <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
             </div>
-            <div class="w-full flex mt-2">
+            <div class="mt-2 flex w-full">
                 <input
                     type="text"
                     v-model="newRsiHandle"
@@ -97,11 +97,11 @@ async function sendNewEmergency(): Promise<void> {
                     v-if="userStore.user.personType === 0"
                     :disabled="rsiHandleApiUpdating"
                     @click.prevent="updateRsiHandle()"
-                    class="border-2 border-primary-900 font-Inter flex justify-center items-center font-bold flex-grow lg:px-3 ml-3 min-w-[6rem]"
+                    class="ml-3 flex min-w-[6rem] flex-grow items-center justify-center border-2 border-primary-900 font-Inter font-bold lg:px-3"
                 >
                     <svg
                         v-if="rsiHandleApiUpdating"
-                        class="animate-spin h-5 w-5 text-primary-900"
+                        class="h-5 w-5 animate-spin text-primary-900"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
@@ -116,12 +116,12 @@ async function sendNewEmergency(): Promise<void> {
                     <span v-else>{{ isUpdatingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
                 </button>
             </div>
-            <p v-if="rsiHandleErrorMessage" class="mt-2 text-primary-400 text-xs w-full">
+            <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
                 {{ rsiHandleErrorMessage }}
             </p>
         </div>
 
-        <div class="mt-10 lg:flex lg:justify-between lg:w-full">
+        <div class="mt-10 lg:flex lg:w-full lg:justify-between">
             <div class="lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_system") }}*</label>
@@ -141,7 +141,7 @@ async function sendNewEmergency(): Promise<void> {
                 </div>
                 <div class="mt-2">
                     <select
-                        class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubSystem"
                         :required="!isFirefoxAndroid"
@@ -157,7 +157,7 @@ async function sendNewEmergency(): Promise<void> {
             </div>
         </div>
 
-        <div class="mt-5 lg:flex lg:justify-between lg:w-full">
+        <div class="mt-5 lg:flex lg:w-full lg:justify-between">
             <div class="lg:mt-0 lg:w-[48%]">
                 <div class="flex items-center">
                     <label class="text-sm font-semibold">{{ t("form_threatLevel") }}*</label>
@@ -165,7 +165,7 @@ async function sendNewEmergency(): Promise<void> {
                 </div>
                 <div class="mt-2">
                     <select
-                        class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         v-model="formSubThreatLevel"
                         :required="!isFirefoxAndroid"
@@ -189,7 +189,7 @@ async function sendNewEmergency(): Promise<void> {
                 </div>
                 <div class="mt-2">
                     <textarea
-                        class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                         :class="formErrorMessage && !isFirefoxAndroid ? 'border-primary-400' : 'border-gray-400'"
                         rows="1"
                         v-model="formRemarks"
@@ -201,12 +201,12 @@ async function sendNewEmergency(): Promise<void> {
 
         <button
             type="submit"
-            class="w-full lg:w-fit my-10 lg:mt-[5.5rem] lg:mb-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="my-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mb-0 lg:mt-[5.5rem] lg:w-fit"
             :disabled="formSubmittingEmergency"
         >
             <svg
                 v-if="formSubmittingEmergency"
-                class="animate-spin h-5 w-5 text-white mx-14 my-0.5"
+                class="mx-14 my-0.5 h-5 w-5 animate-spin text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -220,7 +220,7 @@ async function sendNewEmergency(): Promise<void> {
             </svg>
             <span v-else>{{ t("form_reportEmergency") }}</span>
         </button>
-        <p v-if="formErrorMessage" class="mt-2 text-primary-400 text-sm w-full">
+        <p v-if="formErrorMessage" class="mt-2 w-full text-sm text-primary-400">
             {{ formErrorMessage }}
         </p>
     </form>

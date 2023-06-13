@@ -10,16 +10,16 @@ const emit = defineEmits(["disconnectUser", "closeModal"]);
 </script>
 
 <template>
-    <div class="fixed flex items-center justify-center top-0 left-0 right-0 z-50 w-screen h-screen bg-gray-400/50 px-8 py-16">
-        <div class="relative bg-white shadow w-full px-4 py-4 overflow-y-auto max-h-full lg:w-1/3">
+    <div class="fixed left-0 right-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-gray-400/50 px-8 py-16">
+        <div class="relative max-h-full w-full overflow-y-auto bg-white px-4 py-4 shadow lg:w-1/3">
             <div class="w-full">
-                <img @click="emit('closeModal')" src="/icons/close-button.svg" alt="Close" class="w-6 h-6 ml-auto cursor-pointer" />
+                <img @click="emit('closeModal')" src="/icons/close-button.svg" alt="Close" class="ml-auto h-6 w-6 cursor-pointer" />
             </div>
             <div class="mt-2">
-                <p class="text-primary-900 font-Mohave font-bold text-2xl lg:ml-3 lg:text-3xl">{{ userStore.user.rsiHandle }}</p>
+                <p class="font-Mohave text-2xl font-bold text-primary-900 lg:ml-3 lg:text-3xl">{{ userStore.user.rsiHandle }}</p>
             </div>
 
-            <button @click="emit('disconnectUser')" class="button-primary font-Inter font-semibold text-small px-5 py-[6px] mt-10">
+            <button @click="emit('disconnectUser')" class="button-primary mt-10 px-5 py-[6px] font-Inter text-small font-semibold">
                 {{ t("navbar_disconnect") }}
             </button>
         </div>

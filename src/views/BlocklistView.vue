@@ -9,7 +9,7 @@ const { t } = useI18n();
 
 <template>
     <div class="content-container flex flex-col items-center">
-        <h1 class="text-center text-3xl lg:text-4xl font-Mohave font-semibold uppercase">{{ t("blocklist_Title") }}</h1>
+        <h1 class="text-center font-Mohave text-3xl font-semibold uppercase lg:text-4xl">{{ t("blocklist_Title") }}</h1>
 
         <BlocklistForm />
         <BlocklistCard />

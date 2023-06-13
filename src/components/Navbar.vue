@@ -72,11 +72,11 @@ function enableScrolling(): void {
 </script>
 
 <template>
-    <div class="bg-white w-full flex flex-col shadow-md md:static">
-        <div class="py-2 content-container bg-white flex items-center gap-2 z-10 md:px-16 md:py-3">
+    <div class="flex w-full flex-col bg-white shadow-md md:static">
+        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:px-16 md:py-3">
             <img class="h-8 md:h-12" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" />
 
-            <nav class="hidden gap-8 ml-auto font-Mohave font-semibold text-header-2 md:flex items-center">
+            <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
                 <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }} </RouterLink>
                 <div>
@@ -98,8 +98,8 @@ function enableScrolling(): void {
             </button>
         </div>
 
-        <div @click.self="switchNavMenuSate()" v-if="navMenuCollapsed" class="absolute top-0 left-0 h-screen w-screen bg-gray-400/50 z-[5]">
-            <nav class="w-full absolute top-14 flex flex-col bg-white justify-end py-4 content-container font-semibold text-header-2 shadow-lg z-10">
+        <div @click.self="switchNavMenuSate()" v-if="navMenuCollapsed" class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-400/50">
+            <nav class="content-container absolute top-14 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg">
                 <div class="flex flex-col gap-4 font-Mohave">
                     <RouterLink @click="switchNavMenuSate()" to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
                         t("navbar_emergency")
@@ -108,7 +108,7 @@ function enableScrolling(): void {
                         t("navbar_blocklist")
                     }}</RouterLink>
                 </div>
-                <div class="mt-16 flex justify-between w-full">
+                <div class="mt-16 flex w-full justify-between">
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
                         <option value="fr-FR">Français</option>
@@ -126,6 +126,6 @@ function enableScrolling(): void {
 
 <style scoped>
 .current-link {
-    @apply underline underline-offset-8 decoration-[3px];
+    @apply underline decoration-[3px] underline-offset-8;
 }
 </style>
