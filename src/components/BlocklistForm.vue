@@ -43,11 +43,11 @@ function clearForm() {
 </script>
 
 <template>
-    <form @submit.prevent="searchBlocklist()" class="lg:flex w-full max-w-3xl lg:max-w-5xl lg:justify-between mt-14">
-        <div class="flex lg:flex-grow lg:mr-8">
+    <form @submit.prevent="searchBlocklist()" class="mt-14 w-full max-w-3xl lg:flex lg:max-w-5xl lg:justify-between">
+        <div class="flex lg:mr-8 lg:flex-grow">
             <select
                 @change="clearForm()"
-                class="focus:ring-secondary-500 focus:border-secondary-500"
+                class="focus:border-secondary-500 focus:ring-secondary-500"
                 v-model="searchType"
                 required
                 :disabled="formSubmittingSearch"
@@ -59,7 +59,7 @@ function clearForm() {
             <input
                 type="text"
                 v-model="formName"
-                class="w-full focus:ring-secondary-500 focus:border-secondary-500"
+                class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                 :class="formErrorMessage ? 'input-text-error' : 'input-text'"
                 :disabled="formSubmittingSearch"
                 :placeholder="t('blocklist_InputDescription')"
@@ -69,12 +69,12 @@ function clearForm() {
 
         <button
             type="submit"
-            class="w-full lg:w-fit my-4 lg:my-0 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="my-4 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:my-0 lg:w-fit"
             :disabled="formSubmittingSearch"
         >
             <svg
                 v-if="formSubmittingSearch"
-                class="animate-spin h-5 w-5 text-white mx-4 my-0.5"
+                class="mx-4 my-0.5 h-5 w-5 animate-spin text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -89,7 +89,7 @@ function clearForm() {
             <span v-else>{{ t("blocklist_Search") }}</span>
         </button>
     </form>
-    <p v-if="formErrorMessage" class="mt-2 text-primary-400 text-sm w-full max-w-3xl lg:max-w-5xl">
+    <p v-if="formErrorMessage" class="mt-2 w-full max-w-3xl text-sm text-primary-400 lg:max-w-5xl">
         {{ formErrorMessage }}
     </p>
 </template>

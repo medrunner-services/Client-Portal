@@ -112,33 +112,33 @@ function getResponders(responders: any): string {
 <template>
     <div class="flex flex-col border-2 border-primary-900 text-neutral-900">
         <div class="flex items-center">
-            <p class="flex-grow py-1 px-2 font-Inter font-semibold">
+            <p class="flex-grow px-2 py-1 font-Inter font-semibold">
                 {{ timestampToDate(emergencyInfo.creationTimestamp) }} -
                 {{ getStatusString(emergencyInfo.status) }}
             </p>
-            <div @click="showCard = !showCard" class="bg-primary-900 cursor-pointer p-3 self-stretch flex items-center">
-                <img src="/icons/arrow-icon.svg" class="w-6 h-6 select-none" :class="{ 'rotate-180': showCard }" alt="Dropdown arrow" />
+            <div @click="showCard = !showCard" class="flex cursor-pointer items-center self-stretch bg-primary-900 p-3">
+                <img src="/icons/arrow-icon.svg" class="h-6 w-6 select-none" :class="{ 'rotate-180': showCard }" alt="Dropdown arrow" />
             </div>
         </div>
         <div v-if="showCard" class="border-t-2 border-t-primary-900 px-2 py-8">
-            <div class="font-Inter font-semibold text-xs flex justify-center items-center">
-                <div class="flex flex-col justify-center items-center">
+            <div class="flex items-center justify-center font-Inter text-xs font-semibold">
+                <div class="flex flex-col items-center justify-center">
                     <p>{{ t("history_created") }}</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>
                         {{ timestampToHours(emergencyInfo.creationTimestamp) }}
                     </p>
                 </div>
-                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="border border-primary-900 h-0.5 w-16" />
-                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="flex flex-col justify-center items-center">
+                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="h-0.5 w-16 border border-primary-900" />
+                <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="flex flex-col items-center justify-center">
                     <p>{{ t("history_accepted") }}</p>
                     <img src="/icons/circle-icon.svg" alt="Received" class="my-2" />
                     <p>
                         {{ timestampToHours(emergencyInfo.acceptedTimestamp) }}
                     </p>
                 </div>
-                <div class="border border-primary-900 h-0.5 w-16" />
-                <div class="flex flex-col justify-center items-center">
+                <div class="h-0.5 w-16 border border-primary-900" />
+                <div class="flex flex-col items-center justify-center">
                     <p>{{ getStatusString(emergencyInfo.status) }}</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>

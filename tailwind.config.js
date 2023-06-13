@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx,vue}",
-    ],
+    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,vue}"],
     theme: {
         extend: {
             colors: {
@@ -36,25 +33,26 @@ module.exports = {
                 "neutral-300": "#d6d3d1",
                 "neutral-200": "#e7e5e4",
                 "neutral-100": "#f5f5f4",
-                "neutral-50": "#fafaf9"
+                "neutral-50": "#fafaf9",
             },
             fontFamily: {
-                "Mohave": ["Mohave", "sans-serif"],
-                "Inter": ["Inter", "sans-serif"],
+                Mohave: ["Mohave", "sans-serif"],
+                Inter: ["Inter", "sans-serif"],
             },
             fontSize: {
-                "title": "40px",
+                title: "40px",
                 "header-1": "32px",
                 "header-2": "24px",
                 "header-3": "18px",
-                "body": "16px",
-                "small": "14px",
-                "verysmall": "12px",
-                "tiny": "10px"
-            }
+                body: "16px",
+                small: "14px",
+                verysmall: "12px",
+                tiny: "10px",
+            },
+            screens: {
+                "3xl": "2560px",
+            },
         },
     },
-    plugins: [
-        require('@tailwindcss/forms')
-    ],
-}
+    plugins: [require("@tailwindcss/forms")],
+};

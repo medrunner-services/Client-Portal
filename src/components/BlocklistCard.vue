@@ -8,13 +8,13 @@ const { t } = useI18n();
 </script>
 
 <template>
-    <div class="mt-20 lg:mt-32 text-center">
+    <div class="mt-20 text-center lg:mt-32">
         <div v-if="blocklistStore.isQueryEmpty">
-            <p class="text-3xl lg:text-4xl font-Mohave font-bold uppercase">✅ {{ t("blocklist_NotBlocked") }}</p>
+            <p class="font-Mohave text-3xl font-bold uppercase lg:text-4xl">✅ {{ t("blocklist_NotBlocked") }}</p>
         </div>
 
         <div v-if="blocklistStore.curentQuery.length >= 1">
-            <p class="text-3xl lg:text-4xl font-Mohave font-bold uppercase mb-10">❌ {{ t("blocklist_Blocked") }}</p>
+            <p class="mb-10 font-Mohave text-3xl font-bold uppercase lg:text-4xl">❌ {{ t("blocklist_Blocked") }}</p>
             <p
                 v-if="blocklistStore.curentQuery[0].rsiHandle"
                 class="font-Inter text-xl"

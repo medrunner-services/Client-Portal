@@ -124,11 +124,11 @@ async function reloadPage(): Promise<void> {
 </script>
 
 <template>
-    <Loader v-if="loadingEmergency" class="w-full flex justify-center items-center h-80" />
+    <Loader v-if="loadingEmergency" class="flex h-80 w-full items-center justify-center" />
     <div v-else-if="errorLoadingEmergency || errorLoadingTrackedEmergency">
-        <p class="text-primary-900 font-semibold text-lg">{{ t("tracking_errorLoadingEmergency") }}</p>
+        <p class="text-lg font-semibold text-primary-900">{{ t("tracking_errorLoadingEmergency") }}</p>
         <button
-            class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="reloadPage()"
         >
             <span>{{ t("tracking_refreshButton") }}</span>
@@ -136,11 +136,11 @@ async function reloadPage(): Promise<void> {
     </div>
     <div v-else v-auto-animate>
         <div v-if="isEmergencyCanceled">
-            <p class="text-3xl text-primary-900 font-Mohave font-semibold">{{ `🚫 ${t("tracking_operationCanceled")}` }}</p>
+            <p class="font-Mohave text-3xl font-semibold text-primary-900">{{ `🚫 ${t("tracking_operationCanceled")}` }}</p>
             <p class="text-sm font-medium">{{ t("tracking_statusTextCanceled") }}</p>
         </div>
         <div v-else>
-            <p class="text-3xl text-primary-900 font-Mohave font-semibold">{{ emergencyTitle }}</p>
+            <p class="font-Mohave text-3xl font-semibold text-primary-900">{{ emergencyTitle }}</p>
             <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
         </div>
 
@@ -153,24 +153,24 @@ async function reloadPage(): Promise<void> {
             "
         >
             <div class="lg:flex lg:justify-between">
-                <div class="p-4 shadow-md bg-gray-50 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌌 {{ t("tracking_system") }}</p>
+                <div class="bg-gray-50 p-4 shadow-md lg:w-[30%]">
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌌 {{ t("tracking_system") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.system }}</p>
                 </div>
-                <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%]">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
+                <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
-                <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 lg:w-[30%] h-fit">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
+                <div class="mt-5 h-fit bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
                         {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
                     </p>
                 </div>
             </div>
-            <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:flex lg:justify-between lg:mt-5">
-                <div class="p-4 shadow-md bg-gray-50 mt-5 lg:mt-0 w-full">
-                    <p class="font-Mohave font-semibold text-2xl lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
+            <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:mt-5 lg:flex lg:justify-between">
+                <div class="mt-5 w-full bg-gray-50 p-4 shadow-md lg:mt-0">
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
@@ -180,7 +180,7 @@ async function reloadPage(): Promise<void> {
             v-if="(!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 2) || emergencyStore.trackedEmergency.status === 10"
             class="mt-10"
         >
-            <p class="font-Mohave text-primary-900 text-2xl font-semibold mb-3">
+            <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
                 {{ t("tracking_responders") }}
             </p>
             <p v-for="responder in emergencyStore.trackedEmergency.respondingTeam.staff" class="font-medium">
@@ -188,10 +188,10 @@ async function reloadPage(): Promise<void> {
             </p>
         </div>
 
-        <div class="flex flex-col lg:flex-row mt-10">
+        <div class="mt-10 flex flex-col lg:flex-row">
             <button
                 v-if="emergencyStore.trackedEmergency.status === 1 && !isEmergencyCanceled"
-                class="w-full lg:w-fit bg-primary-900 text-gray-50 px-6 py-3 lg:mr-5 font-medium flex items-center justify-center"
+                class="flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mr-5 lg:w-fit"
                 @click="isEmergencyCanceled = true"
             >
                 {{ t("tracking_cancelButton") }}
@@ -205,23 +205,23 @@ async function reloadPage(): Promise<void> {
                 "
                 :href="`${discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
-                class="w-full lg:w-fit text-primary-900 border-2 border-primary-900 px-6 py-3 font-medium mt-5 lg:mt-0 text-center cursor-pointer"
+                class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 lg:mt-0 lg:w-fit"
             >
                 {{ t("tracking_chatButton") }}
             </a>
         </div>
 
-        <p v-if="loadingCancelEmergencyError" class="mt-2 text-primary-400 text-sm w-full">
+        <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
             {{ t("tracking_errorCancel") }}
         </p>
 
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
-            <p class="font-Mohave font-semibold text-xl">{{ t("tracking_ratingTitle") }}</p>
-            <div class="flex w-full justify-between mt-5">
-                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency(ResponseRating.GOOD)">
+            <p class="font-Mohave text-xl font-semibold">{{ t("tracking_ratingTitle") }}</p>
+            <div class="mt-5 flex w-full justify-between">
+                <button class="w-[45%] cursor-pointer border-2 border-primary-900 p-3 font-semibold" @click="rateEmergency(ResponseRating.GOOD)">
                     {{ t("tracking_good") }}
                 </button>
-                <button class="p-3 cursor-pointer font-semibold border-2 border-primary-900 w-[45%]" @click="rateEmergency(ResponseRating.BAD)">
+                <button class="w-[45%] cursor-pointer border-2 border-primary-900 p-3 font-semibold" @click="rateEmergency(ResponseRating.BAD)">
                     {{ t("tracking_bad") }}
                 </button>
             </div>
@@ -230,7 +230,7 @@ async function reloadPage(): Promise<void> {
         <form v-if="isEmergencyCanceled" class="mt-7">
             <label class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
             <select
-                class="w-full focus:ring-secondary-500 focus:border-secondary-500 border-gray-400"
+                class="w-full border-gray-400 focus:border-secondary-500 focus:ring-secondary-500"
                 v-model="cancelReason"
                 @change="submitCancelEmergency"
             >
@@ -251,7 +251,7 @@ async function reloadPage(): Promise<void> {
                 emergencyStore.trackedEmergency.status === 9 ||
                 emergencyStore.trackedEmergency.status === 6
             "
-            class="w-full lg:w-fit mt-10 bg-primary-900 text-gray-50 px-6 py-3 font-medium flex items-center justify-center"
+            class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="$emit('completeEmergency')"
         >
             <span>{{ t("tracking_finishButton") }}</span>

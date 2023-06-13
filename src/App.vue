@@ -10,9 +10,9 @@ const logicStore = useLogicStore();
 </script>
 
 <template>
-    <Navbar v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth'"></Navbar>
+    <Navbar v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth'" />
 
-    <Loader v-if="logicStore.isRouterLoading" class="w-full h-[90vh] flex justify-center items-center" />
+    <Loader v-if="logicStore.isRouterLoading" class="flex h-[90vh] w-full items-center justify-center" />
     <RouterView v-else :class="{ 'my-14 lg:my-20': route.name !== 'login' && route.name !== 'loginLink' }" />
 </template>
 
