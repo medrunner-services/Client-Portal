@@ -35,7 +35,7 @@ onMounted(async () => {
     await apiWebsocket.start();
 
     apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
-        userStore.user.activeEmergency = newEmergency.id;
+        if (newEmergency.clientId === userStore.user.id) userStore.user.activeEmergency = newEmergency.id;
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
