@@ -81,45 +81,22 @@ async function sendNewEmergency(): Promise<void> {
 
 <template>
     <form @submit.prevent="sendNewEmergency()">
-        <div class="lg:w-1/2 2xl:w-1/3">
-            <div class="flex items-center">
-                <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
-                <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
+        <div class="lg:w-full">
+            <div class="lg:w-[48%]">
+                <div class="flex w-full items-center">
+                    <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
+                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
+                </div>
+                <div class="mt-2 flex w-full">
+                    <input
+                        type="text"
+                        v-model="newRsiHandle"
+                        class="w-fit flex-grow"
+                        :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
+                        :disabled="!isUpdatingRsiHandle"
+                    />
+                </div>
             </div>
-            <div class="mt-2 flex w-full">
-                <input
-                    type="text"
-                    v-model="newRsiHandle"
-                    class="w-fit flex-grow"
-                    :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
-                    :disabled="!isUpdatingRsiHandle"
-                />
-                <button
-                    v-if="userStore.user.personType === 0"
-                    :disabled="rsiHandleApiUpdating"
-                    @click.prevent="updateRsiHandle()"
-                    class="ml-3 flex items-center justify-center border-2 border-primary-900 px-4 font-Inter font-bold lg:px-10"
-                >
-                    <svg
-                        v-if="rsiHandleApiUpdating"
-                        class="h-5 w-5 animate-spin text-primary-900"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                    >
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path
-                            class="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                    </svg>
-                    <span v-else>{{ isUpdatingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
-                </button>
-            </div>
-            <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
-                {{ rsiHandleErrorMessage }}
-            </p>
         </div>
 
         <div class="mt-10 lg:flex lg:w-full lg:justify-between">
