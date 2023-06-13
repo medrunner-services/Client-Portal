@@ -1,4 +1,4 @@
-import type { Emergency, ResponseRating } from "@medrunner-services/api-client";
+import type { CancellationReason, Emergency, ResponseRating } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
@@ -22,7 +22,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -32,7 +32,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -48,15 +48,15 @@ export const useEmergencyStore = defineStore("emergency", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
-    async function cancelEmergency(id: string): Promise<void> {
-        const response = await api.emergency.cancelEmergency(id);
+    async function cancelEmergency(id: string, reason: CancellationReason): Promise<void> {
+        const response = await api.emergency.cancelEmergencyWithReason(id, reason);
 
         if (!response.success) {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -64,15 +64,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         const response = await api.emergency.rateServices(id, rating);
 
         if (!response.success) {
-            throw response.statusCode;
-        }
-    }
-
-    async function justifyCanceledEmergency(id: string, reason: string): Promise<void> {
-        const response = await api.emergency.setStatusDescriptionForEmergency(id, reason);
-
-        if (!response.success) {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -83,6 +75,5 @@ export const useEmergencyStore = defineStore("emergency", () => {
         createEmergency,
         cancelEmergency,
         rateCompletedEmergency,
-        justifyCanceledEmergency,
     };
 });

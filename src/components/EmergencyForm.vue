@@ -36,9 +36,9 @@ async function updateRsiHandle(): Promise<void> {
         isUpdatingRsiHandle.value = false;
         rsiHandleApiUpdating.value = false;
     } catch (error: any) {
-        if (error === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
-        else if (error === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
-        else if (error === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
+        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
+        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
+        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
         else rsiHandleErrorMessage.value = t("form_errorGeneric");
 
         rsiHandleApiUpdating.value = false;
@@ -65,7 +65,8 @@ async function sendNewEmergency(): Promise<void> {
         formRemarks.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error === 403) formErrorMessage.value = t("form_errorBlockedAccount");
+        if (error.statusCode === 403) formErrorMessage.value = t("form_errorBlockedAccount");
+        if (error.statusCode === 429) formErrorMessage.value = t("form_errorRateLimit");
         else formErrorMessage.value = t("form_errorGeneric");
     }
 }

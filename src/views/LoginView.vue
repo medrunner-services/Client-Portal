@@ -3,9 +3,10 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
-import { redirectToDiscordLogin, redirectToDiscordRegister } from "@/utils/discordRedirects";
+import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -30,9 +31,9 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         await router.push("/");
     } catch (error: any) {
-        if (error === 451) formErrorMessage.value = t("login_errorAccountBlocked");
-        if (error === 403) formErrorMessage.value = t("login_errorMissingMedrunnerId");
-        if (error === 404) formErrorMessage.value = t("login_errorUnknownRSIAccount");
+        if (error.statusCode === 451) formErrorMessage.value = t("login_errorAccountBlocked");
+        if (error.statusCode === 403) formErrorMessage.value = t("login_errorMissingMedrunnerId");
+        if (error.statusCode === 404) formErrorMessage.value = t("login_errorUnknownRSIAccount");
 
         formErrorActive.value = true;
         waitingForApi.value = false;
@@ -52,33 +53,32 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo.webp" alt="Medrunner Logo" />Medrunner </span> ${title
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
         .substring(title.indexOf("Medrunner"))
         .substring(9)}`;
+}
+
+function getAddToBioText(): string {
+    return t("login_addToBioText", {
+        linkToBio: `<a href="https://robertsspaceindustries.com/account/profile" target="_blank" class="underline underline-offset-2 cursor-pointer">${t(
+            "login_addToBioLink",
+        )}</a>`,
+    });
 }
 </script>
 
 <template>
-    <div class="pt-0 h-screen flex justify-center">
+    <div class="pt-0 h-screen flex justify-center bg-white" id="animation-bg">
         <div v-if="loginErrorAlert" class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900">
             <p>{{ t("login_modalErrorMessage") }}</p>
         </div>
-        <div class="w-[55%] justify-center items-center bg-[url('/images/background-login.webp')] bg-center bg-cover hidden md:flex" />
-        <div class="flex flex-col justify-center items-center h-full md:w-[45%]">
+        <LoginAnimation class="md:w-[55%] hidden md:flex" />
+        <div class="flex flex-col justify-center items-center h-full w-full md:w-[45%] z-10 bg-white">
             <h1 class="text-center uppercase text-neutral-900 text-title font-Mohave font-bold" v-html="getColoredTitle()"></h1>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
-                    <p class="text-neutral-900 font-Inter font-semibold text-small">
-                        {{ t("login_addToBio1") }}
-                        <a
-                            href="https://robertsspaceindustries.com/account/profile"
-                            target="_blank"
-                            class="underline underline-offset-2 cursor-pointer"
-                            >{{ t("login_addToBio2") }}</a
-                        >
-                        {{ t("login_addToBio3") }} :
-                    </p>
+                    <p class="text-neutral-900 font-Inter font-semibold text-small" v-html="getAddToBioText()"></p>
                     <div class="flex mt-2">
                         <div class="bg-neutral-700 text-neutral-50 font-Inter text-xs w-full text-center">
                             <p class="py-3 mx-auto">
@@ -134,10 +134,22 @@ function getColoredTitle(): string {
                 <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <button class="button-secondary button-48 mt-5" @click="redirectToDiscordRegister()">
+                <button
+                    disabled
+                    class="border-2 border-primary-900/50 text-black/50 button-48 mt-5 cursor-not-allowed"
+                    title="Unavailable during the Beta"
+                >
                     {{ t("login_registerButton") }}
                 </button>
             </div>
         </div>
     </div>
 </template>
+
+<style scoped>
+#animation-bg {
+    background-color: #000000;
+    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+        radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
+}
+</style>

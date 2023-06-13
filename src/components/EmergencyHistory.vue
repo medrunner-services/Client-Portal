@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Emergency } from "@medrunner-services/api-client";
+import { CancellationReason } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -53,17 +54,17 @@ function getRatingString(rating: number): string {
     }
 }
 
-function getCancelReasonString(reason: string): string {
+function getCancelReasonString(reason: CancellationReason): string {
     switch (reason) {
-        case "rescued":
+        case CancellationReason.RESCUED:
             return t("history_rescued");
-        case "succumbed":
+        case CancellationReason.SUCCUMBED_TO_WOUNDS:
             return t("history_bledOut");
-        case "server":
+        case CancellationReason.SERVER_ERROR:
             return t("history_serverIssue");
-        case "respawned":
+        case CancellationReason.RESPAWNED:
             return t("history_respawned");
-        case "other":
+        case CancellationReason.OTHER:
             return t("history_other");
 
         default:
@@ -166,9 +167,9 @@ function getResponders(responders: any): string {
                     🗒️ <span class="font-bold">{{ t("history_remarks") }}:</span>
                     {{ emergencyInfo.remarks }}
                 </p>
-                <p class="mt-4" v-if="emergencyInfo.statusDescription">
+                <p class="mt-4" v-if="emergencyInfo.cancellationReason">
                     🚫 <span class="font-bold">{{ t("history_cancelReason") }}:</span>
-                    {{ getCancelReasonString(emergencyInfo.statusDescription) }}
+                    {{ getCancelReasonString(emergencyInfo.cancellationReason) }}
                 </p>
                 <p class="mt-4" v-if="emergencyInfo.status === 3 || emergencyInfo.status === 4">
                     ⭐ <span class="font-bold">{{ t("history_rating") }}:</span>

@@ -1,17 +1,30 @@
 import type { ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
-import { type Ref, ref } from "vue";
+import { computed, type Ref, ref } from "vue";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
     const user: Ref<Person> = ref({} as Person);
     const isAuthenticated = ref(false);
+    const newlySubmittedEmergencies = ref(0);
 
-    function disconnectUser(): void {
-        localStorage.removeItem("refreshToken");
-        user.value = {} as Person;
-        isAuthenticated.value = false;
+    const totalNumberOfEmergencies = computed(() => {
+        if (isAuthenticated.value === true) {
+            return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
+        } else {
+            return 0;
+        }
+    });
+
+    async function disconnectUser(): Promise<void> {
+        try {
+            await api.auth.signOut({ refreshToken: localStorage.getItem("refreshToken") ?? "" });
+        } finally {
+            localStorage.removeItem("refreshToken");
+            user.value = {} as Person;
+            isAuthenticated.value = false;
+        }
     }
 
     async function linkUser(username: string): Promise<void> {
@@ -20,7 +33,7 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             user.value.rsiHandle = response.data?.rsiHandle;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -30,7 +43,7 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
@@ -40,13 +53,15 @@ export const useUserStore = defineStore("user", () => {
         if (response.success && response.data) {
             return response.data;
         } else {
-            throw response.statusCode;
+            throw response;
         }
     }
 
     return {
         user,
         isAuthenticated,
+        newlySubmittedEmergencies,
+        totalNumberOfEmergencies,
         disconnectUser,
         linkUser,
         fetchUser,
