@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import Loader from "@/components/Loader.vue";
 import { useUserStore } from "@/stores/userStore";
 const { t } = useI18n();
 
