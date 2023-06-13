@@ -73,7 +73,7 @@ function enableScrolling(): void {
 
 <template>
     <div class="flex w-full flex-col bg-white shadow-md md:static">
-        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:px-16 md:py-3">
+        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:py-3">
             <img class="h-8 md:h-12" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" />
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
