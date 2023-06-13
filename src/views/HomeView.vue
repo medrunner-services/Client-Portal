@@ -174,9 +174,15 @@ const isLastPageHistory = computed(() => {
             </div>
         </div>
         <div class="lg:w-[50%]">
-            <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
-                {{ t("home_emergency") }}
-            </h2>
+            <div class="mb-5 flex items-center">
+                <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
+                    {{ t("home_emergency") }}
+                </h2>
+                <span v-if="emergencyStore.trackedEmergency.id" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-900 opacity-75"></span>
+                    <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-900"></span>
+                </span>
+            </div>
             <EmergencyTracking
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
