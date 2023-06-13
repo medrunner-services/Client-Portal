@@ -76,6 +76,8 @@
     "form_helpRemarks": "Les informations que l'équipe de secours devrait connaître",
     "form_reportEmergency": "Signaler l'urgence",
     "form_errorRateLimit": "Vous envoyez trop de demandes, veuillez attendre quelques minutes et réessayer",
+    "form_errorMissingFields": "Veuillez renseigner tous les champs obligatoires*",
+    "form_errorSameRSIAccount": "Ce compte RSI est déjà associé",
     "tracking_errorLoadingEmergency": "Une erreur s'est produite lors du chargement de l'urgence en cours",
     "tracking_messageReceived": "Message reçu",
     "tracking_helpOnTheWay": "L'aide est en chemin",
@@ -123,5 +125,7 @@
     "blocklist_NotBlocked": "Pas bloqué",
     "blocklist_Blocked": "Bloqué",
     "blocklist_UserResult": "L'utilisateur {username} a été bloqué",
-    "blocklist_OrgResult": "L'organisation {organisationName} a été bloquée"
+    "blocklist_OrgResult": "L'organisation {organisationName} a été bloquée",
+    "error_UnavailableFeatureBeta": "Indisponible pendant la Beta",
+    "error_UnavailableFeatureLaunch": "Indisponible jusqu'au lancement"
 }

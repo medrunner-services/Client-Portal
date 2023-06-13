@@ -35,7 +35,7 @@ onMounted(async () => {
     await apiWebsocket.start();
 
     apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
-        userStore.user.activeEmergency = newEmergency.id;
+        if (newEmergency.clientId === userStore.user.id) userStore.user.activeEmergency = newEmergency.id;
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
@@ -132,12 +132,12 @@ const isLastPageHistory = computed(() => {
 </script>
 
 <template>
-    <div class="flex flex-col-reverse lg:flex-row lg:justify-between content-container">
-        <div class="mt-10 lg:mt-0 lg:w-[40%] xl:w-[35%] lg:max-w-xl">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
+    <div class="content-container flex flex-col-reverse lg:flex-row lg:justify-between">
+        <div class="mt-10 lg:mt-0 lg:w-[40%] lg:max-w-xl xl:w-[35%]">
+            <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                 {{ t("home_history") }}
             </h2>
-            <div v-auto-animate v-if="loaded && activePage.length > 0">
+            <div class="min-h-[22rem]" v-auto-animate v-if="loaded && activePage.length > 0">
                 <EmergencyHistory
                     v-auto-animate="{ duration: 100 }"
                     v-for="emergency in activePage"
@@ -146,7 +146,7 @@ const isLastPageHistory = computed(() => {
                     :emergency="emergency"
                 />
             </div>
-            <Loader v-else-if="!loaded" class="w-full flex justify-center items-center h-80" />
+            <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
             <div v-else-if="loaded && errorLoadingHistory">
                 <p>{{ t("home_errorLoadingHistory") }}</p>
             </div>
@@ -156,27 +156,33 @@ const isLastPageHistory = computed(() => {
             <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
                 <div
                     @click="previousPage()"
-                    class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
+                    class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
                     :class="{ 'opacity-50': page <= 0 }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 rotate-90" alt="Dropdown arrow" />
+                    <img src="/icons/arrow-icon.svg" class="h-6 w-6 rotate-90" alt="Dropdown arrow" />
                 </div>
-                <div class="w-1/2 xl:w-2/3 flex justify-center items-center font-Inter font-bold">
+                <div class="flex w-1/2 items-center justify-center font-Inter font-bold xl:w-2/3">
                     {{ page + 1 }} / {{ Math.ceil(userStore.totalNumberOfEmergencies / pageSize) }}
                 </div>
                 <div
                     @click="nextPage()"
-                    class="bg-primary-900 cursor-pointer p-3 flex justify-center items-center flex-grow select-none"
+                    class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
                     :class="{ 'opacity-50': isLastPageHistory }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="w-6 h-6 -rotate-90" alt="Dropdown arrow" />
+                    <img src="/icons/arrow-icon.svg" class="h-6 w-6 -rotate-90" alt="Dropdown arrow" />
                 </div>
             </div>
         </div>
-        <div class="lg:w-[50%]">
-            <h2 class="text-3xl lg:text-4xl font-Mohave font-semibold uppercase mb-5">
-                {{ t("home_emergency") }}
-            </h2>
+        <div class="lg:w-1/2 xl:w-1/2">
+            <div class="mb-5 flex items-center">
+                <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
+                    {{ t("home_emergency") }}
+                </h2>
+                <span v-if="emergencyStore.trackedEmergency.id" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-900 opacity-75"></span>
+                    <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-900"></span>
+                </span>
+            </div>
             <EmergencyTracking
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
@@ -189,10 +195,10 @@ const isLastPageHistory = computed(() => {
             <a
                 href="https://discord.gg/medrunner"
                 target="_blank"
-                class="flex text-primary-900 font-Inter font-semibold mt-5 border-b-2 border-primary-900 w-fit items-center"
+                class="mt-5 flex w-fit items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
             >
                 <span>{{ t("home_GetHelp") }}</span>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-2 h-5 w-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                 </svg>
             </a>
