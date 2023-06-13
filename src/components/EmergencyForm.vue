@@ -11,10 +11,6 @@ const emergencyStore = useEmergencyStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const isUpdatingRsiHandle = ref(false);
-const newRsiHandle = ref(userStore.user.rsiHandle);
-const rsiHandleErrorMessage = ref("");
-const rsiHandleApiUpdating = ref(false);
 const formSubmittingEmergency = ref(false);
 const formErrorMessage = ref("");
 
@@ -23,30 +19,6 @@ const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
 const formRemarks = ref("");
 const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
-
-async function updateRsiHandle(): Promise<void> {
-    if (!isUpdatingRsiHandle.value) {
-        isUpdatingRsiHandle.value = true;
-        return;
-    }
-
-    rsiHandleApiUpdating.value = true;
-    try {
-        if (newRsiHandle.value) {
-            await userStore.linkUser(newRsiHandle.value);
-        }
-
-        isUpdatingRsiHandle.value = false;
-        rsiHandleApiUpdating.value = false;
-    } catch (error: any) {
-        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
-        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
-        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
-        else rsiHandleErrorMessage.value = t("form_errorGeneric");
-
-        rsiHandleApiUpdating.value = false;
-    }
-}
 
 async function sendNewEmergency(): Promise<void> {
     if (!formSystem.value || !formSubSystem.value || !formSubThreatLevel.value) {
@@ -88,13 +60,7 @@ async function sendNewEmergency(): Promise<void> {
                     <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
                 </div>
                 <div class="mt-2 flex w-full">
-                    <input
-                        type="text"
-                        v-model="newRsiHandle"
-                        class="w-fit flex-grow"
-                        :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
-                        :disabled="!isUpdatingRsiHandle"
-                    />
+                    <input type="text" class="input-text w-fit flex-grow" :value="userStore.user.rsiHandle" disabled />
                 </div>
             </div>
         </div>

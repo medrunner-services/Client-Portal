@@ -77,6 +77,7 @@
     "form_reportEmergency": "Report Emergency",
     "form_errorRateLimit": "You are sending too many requests, please wait a few minutes and try again",
     "form_errorMissingFields": "Please fill out all required fields*",
+    "form_errorSameRSIAccount": "This RSI account is already linked",
     "tracking_errorLoadingEmergency": "An error occurred loading your ongoing emergency",
     "tracking_messageReceived": "Message received",
     "tracking_helpOnTheWay": "Help is on the way",
