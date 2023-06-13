@@ -98,7 +98,7 @@ async function sendNewEmergency(): Promise<void> {
                     v-if="userStore.user.personType === 0"
                     :disabled="rsiHandleApiUpdating"
                     @click.prevent="updateRsiHandle()"
-                    class="ml-3 flex min-w-fit items-center justify-center border-2 border-primary-900 px-14 font-Inter font-bold lg:px-10"
+                    class="ml-3 flex items-center justify-center border-2 border-primary-900 px-4 font-Inter font-bold lg:px-10"
                 >
                     <svg
                         v-if="rsiHandleApiUpdating"
