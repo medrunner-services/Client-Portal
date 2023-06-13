@@ -137,21 +137,24 @@ const isLastPageHistory = computed(() => {
             <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                 {{ t("home_history") }}
             </h2>
-            <div class="min-h-[22rem]" v-auto-animate v-if="loaded && activePage.length > 0">
-                <EmergencyHistory
-                    v-auto-animate="{ duration: 100 }"
-                    v-for="emergency in activePage"
-                    :key="emergency.creationTimestamp"
-                    class="mt-4 first:mt-0"
-                    :emergency="emergency"
-                />
-            </div>
-            <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
-            <div v-else-if="loaded && errorLoadingHistory">
-                <p>{{ t("home_errorLoadingHistory") }}</p>
-            </div>
-            <div v-else-if="loaded && activePage.length === 0">
-                <p>{{ t("home_noEmergencies") }}</p>
+            <div class="min-h-[22rem]">
+                <div v-auto-animate v-if="loaded && activePage.length > 0">
+                    <EmergencyHistory
+                        v-auto-animate="{ duration: 100 }"
+                        v-for="emergency in activePage"
+                        :key="emergency.creationTimestamp"
+                        class="mt-4 first:mt-0"
+                        :emergency="emergency"
+                    />
+                </div>
+                <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
+
+                <div v-else-if="loaded && errorLoadingHistory">
+                    <p class="text-primary-400">{{ t("home_errorLoadingHistory") }}</p>
+                </div>
+                <div v-else-if="loaded && activePage.length === 0">
+                    <p>{{ t("home_noEmergencies") }}</p>
+                </div>
             </div>
             <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
                 <div
