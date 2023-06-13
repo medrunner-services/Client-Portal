@@ -50,7 +50,7 @@ module.exports = {
                 tiny: "10px",
             },
             screens: {
-                "3xl": "2560px",
+                "3xl": "3000px",
             },
         },
     },
