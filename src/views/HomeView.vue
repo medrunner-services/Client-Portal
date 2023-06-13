@@ -137,7 +137,7 @@ const isLastPageHistory = computed(() => {
             <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                 {{ t("home_history") }}
             </h2>
-            <div v-auto-animate v-if="loaded && activePage.length > 0">
+            <div class="min-h-[22rem]" v-auto-animate v-if="loaded && activePage.length > 0">
                 <EmergencyHistory
                     v-auto-animate="{ duration: 100 }"
                     v-for="emergency in activePage"
@@ -173,7 +173,7 @@ const isLastPageHistory = computed(() => {
                 </div>
             </div>
         </div>
-        <div class="lg:w-1/2 xl:w-2/5">
+        <div class="lg:w-1/2 xl:w-1/2">
             <div class="mb-5 flex items-center">
                 <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                     {{ t("home_emergency") }}

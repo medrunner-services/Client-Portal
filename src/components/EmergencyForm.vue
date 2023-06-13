@@ -145,7 +145,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <button
             type="submit"
-            class="my-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mb-0 lg:mt-[5.5rem] lg:w-fit"
+            class="my-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mb-0 lg:mt-[7.3rem] lg:w-fit"
             :disabled="formSubmittingEmergency"
         >
             <svg
