@@ -173,7 +173,7 @@ const isLastPageHistory = computed(() => {
                 </div>
             </div>
         </div>
-        <div class="lg:w-[50%]">
+        <div class="lg:w-1/2 xl:w-2/5">
             <div class="mb-5 flex items-center">
                 <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                     {{ t("home_emergency") }}

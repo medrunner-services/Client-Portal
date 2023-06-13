@@ -80,8 +80,8 @@ async function sendNewEmergency(): Promise<void> {
 </script>
 
 <template>
-    <form class="xl:w-5/6" @submit.prevent="sendNewEmergency()">
-        <div class="lg:w-[48%]">
+    <form @submit.prevent="sendNewEmergency()">
+        <div class="lg:w-1/2 2xl:w-1/3">
             <div class="flex items-center">
                 <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
                 <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
@@ -90,6 +90,7 @@ async function sendNewEmergency(): Promise<void> {
                 <input
                     type="text"
                     v-model="newRsiHandle"
+                    class="w-fit flex-grow"
                     :class="[rsiHandleErrorMessage ? 'input-text-error' : 'input-text', userStore.user.personType !== 0 ? 'w-full' : '']"
                     :disabled="!isUpdatingRsiHandle"
                 />
@@ -97,7 +98,7 @@ async function sendNewEmergency(): Promise<void> {
                     v-if="userStore.user.personType === 0"
                     :disabled="rsiHandleApiUpdating"
                     @click.prevent="updateRsiHandle()"
-                    class="ml-3 flex min-w-[6rem] flex-grow items-center justify-center border-2 border-primary-900 font-Inter font-bold lg:px-3"
+                    class="ml-3 flex min-w-fit items-center justify-center border-2 border-primary-900 px-14 font-Inter font-bold lg:px-10"
                 >
                     <svg
                         v-if="rsiHandleApiUpdating"

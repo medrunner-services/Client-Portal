@@ -49,6 +49,9 @@ module.exports = {
                 verysmall: "12px",
                 tiny: "10px",
             },
+            screens: {
+                "3xl": "2560px",
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],
