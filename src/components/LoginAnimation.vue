@@ -25,7 +25,7 @@ onMounted(() => {
         y: 0,
         tx: 0,
         ty: 0,
-        z: 0.0003,
+        z: 0.0001,
     };
     if (reduceMotion) {
         velocity.z = 0;
@@ -143,9 +143,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div id="animation-container">
-        <canvas> </canvas>
-    </div>
+    <canvas> </canvas>
 </template>
 
 <style scoped>
@@ -153,17 +151,5 @@ canvas {
     position: fixed;
     width: 100%;
     height: 100%;
-}
-
-a {
-    position: absolute;
-    bottom: 2vmin;
-    right: 2vmin;
-    color: rgba(255, 255, 255, 0.2);
-    text-decoration: none;
-}
-
-a:hover {
-    color: #fff;
 }
 </style>

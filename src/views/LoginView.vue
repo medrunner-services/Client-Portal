@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
@@ -14,18 +14,12 @@ const { t } = useI18n();
 
 const formUsername = ref("");
 const waitingForApi = ref(false);
-const loginErrorAlert = ref(false);
 const formErrorMessage = ref(t("login_genericError"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
 
-onMounted(() => {
-    if (route.query.error) loginErrorAlert.value = true;
-});
-
 const submittingLinkForm = async (): Promise<void> => {
     waitingForApi.value = true;
-    loginErrorAlert.value = false;
 
     try {
         await userStore.linkUser(formUsername.value);
@@ -53,7 +47,7 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2 my-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
         .substring(title.indexOf("Medrunner"))
         .substring(9)}`;
 }
@@ -68,13 +62,10 @@ function getAddToBioText(): string {
 </script>
 
 <template>
-    <div class="pt-0 h-screen flex justify-center bg-white" id="animation-bg">
-        <div v-if="loginErrorAlert" class="absolute z-10 top-14 lg:top-10 bg-primary-100 font-Mohave font-bold py-4 px-8 border-2 border-primary-900">
-            <p>{{ t("login_modalErrorMessage") }}</p>
-        </div>
-        <LoginAnimation class="md:w-[55%] hidden md:flex" />
-        <div class="flex flex-col justify-center items-center h-full w-full md:w-[45%] z-10 bg-white">
-            <h1 class="text-center uppercase text-neutral-900 text-title font-Mohave font-bold" v-html="getColoredTitle()"></h1>
+    <div class="h-screen flex justify-center items-center bg-white" id="animation-bg">
+        <LoginAnimation />
+        <div class="flex flex-col justify-center items-center px-5 py-10 md:py-24 md:px-20 lg:mr-[50%] z-10 bg-white h-full w-full md:h-fit md:w-fit">
+            <h1 class="text-center uppercase text-neutral-900 text-3xl lg:text-4xl font-Mohave font-bold" v-html="getColoredTitle()"></h1>
 
             <div v-if="route.path === '/login/link'" class="flex w-4/5 xl:w-3/5 flex-col mt-20">
                 <div class="w-full">
@@ -130,7 +121,7 @@ function getAddToBioText(): string {
                     {{ formErrorMessage }}
                 </p>
             </div>
-            <div v-else class="flex flex-col mt-14">
+            <div v-else class="flex flex-col mt-14 lg:mt-28">
                 <button class="button-primary button-48" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
