@@ -156,6 +156,7 @@ const isLastPageHistory = computed(() => {
                     <p>{{ t("home_noEmergencies") }}</p>
                 </div>
             </div>
+
             <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
                 <div
                     @click="previousPage()"

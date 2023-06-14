@@ -125,7 +125,6 @@ function getAddToBioText(): string {
                 <button class="button-48 bg-primary-900 text-white" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <!--                <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureLaunch") }}</p>-->
                 <button disabled class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50">
                     {{ t("login_registerButton") }}
                 </button>
