@@ -1,26 +1,25 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-onMounted(() => {
-    interface Star {
-        x: number;
-        y: number;
-        z: number;
-    }
+import AxisAlignedBoundingBox from "@/components/adequateLogInScreen/AxisAlignedBoundingBox";
+import Star from "@/components/adequateLogInScreen/Star";
+import { AdjustShadeRgb, randomStar } from "@/components/adequateLogInScreen/stars/StarClass";
+import Vector2 from "@/components/adequateLogInScreen/Vector2";
 
+onMounted(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const STAR_COLOR = "#fff";
-    const STAR_SIZE = 3;
-    const STAR_MIN_SCALE = 0.2;
+    const GLOBAL_STAR_SIZE = 2;
+    const GLOBAL_GLOW_SIZE = 2;
+    const STAR_MIN_Z = 0.2;
     const OVERFLOW_THRESHOLD = 50;
-    const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8;
+    let lastFrameTime = Date.now();
     const canvas = document.querySelector("canvas")!,
         context = canvas.getContext("2d")!;
     let scale = 1,
-        width: number,
-        height: number;
+        width = 0,
+        height = 0;
     let stars: Star[] = [];
-    let velocity = {
+    let cameraVelocity = {
         x: 0,
         y: 0,
         tx: 0,
@@ -28,116 +27,170 @@ onMounted(() => {
         z: 0.0001,
     };
     if (reduceMotion) {
-        velocity.z = 0;
+        cameraVelocity.z = 0;
     }
-    generate();
     resize();
     step();
     window.onresize = resize;
-    function generate() {
-        for (let i = 0; i < STAR_COUNT; i++) {
-            stars.push({
-                x: 0,
-                y: 0,
-                z: STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE),
-            });
-        }
+    function expectedStarCount() {
+        return (window.innerWidth * window.innerHeight) / 40000;
     }
-    function placeStar(star: Star) {
-        star.x = Math.random() * width;
-        star.y = Math.random() * height;
+
+    function windowBox(): AxisAlignedBoundingBox {
+        return new AxisAlignedBoundingBox(new Vector2(0, 0), new Vector2(width, height));
     }
-    function recycleStar(star: Star) {
-        let direction = "z";
-        let vx = Math.abs(velocity.x),
-            vy = Math.abs(velocity.y);
-        if (vx > 1 || vy > 1) {
-            let axis;
-            if (vx > vy) {
-                axis = Math.random() < vx / (vx + vy) ? "h" : "v";
-            } else {
-                axis = Math.random() < vy / (vx + vy) ? "v" : "h";
-            }
-            if (axis === "h") {
-                direction = velocity.x > 0 ? "l" : "r";
-            } else {
-                direction = velocity.y > 0 ? "t" : "b";
-            }
-        }
-        star.z = STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE);
-        if (direction === "z") {
-            star.z = 0.1;
-            star.x = Math.random() * width;
-            star.y = Math.random() * height;
-        } else if (direction === "l") {
-            star.x = -OVERFLOW_THRESHOLD;
-            star.y = height * Math.random();
-        } else if (direction === "r") {
-            star.x = width + OVERFLOW_THRESHOLD;
-            star.y = height * Math.random();
-        } else if (direction === "t") {
-            star.x = width * Math.random();
-            star.y = -OVERFLOW_THRESHOLD;
-        } else if (direction === "b") {
-            star.x = width * Math.random();
-            star.y = height + OVERFLOW_THRESHOLD;
-        }
+
+    function newStar(x: number, y: number): Star {
+        const z = STAR_MIN_Z + Math.random() * (1 - STAR_MIN_Z);
+        return new Star(x, y, z, randomStar());
     }
+
+    function makeStarInBounds(bounds?: AxisAlignedBoundingBox): Star {
+        const box = bounds ?? windowBox();
+        const xDiff = box.Max.X - box.Min.X;
+        const yDiff = box.Max.Y - box.Min.Y;
+        const x = Math.random() * xDiff + box.Min.X;
+        const y = Math.random() * yDiff + box.Min.Y;
+        return newStar(x, y);
+    }
+
     function resize() {
         scale = window.devicePixelRatio || 1;
-        width = window.innerWidth * scale;
-        height = window.innerHeight * scale;
+
+        const newWidth = window.innerWidth * scale;
+        const xMin = Math.min(width, newWidth);
+        const xMax = Math.max(width, newWidth);
+        const xGrew = newWidth > width;
+        width = newWidth;
+        const newHeight = window.innerHeight * scale;
+        const yMin = Math.min(height, newHeight);
+        const yMax = Math.max(height, newHeight);
+        const yGrew = newHeight > height;
+        height = newHeight;
         canvas.width = width;
         canvas.height = height;
-        stars.forEach(placeStar);
+
+        const existingStars = stars.length;
+        const newStars = expectedStarCount();
+
+        const boxes: AxisAlignedBoundingBox[] = [];
+
+        if (xGrew && yGrew) {
+            // worst case, 3 boxes
+            boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, 0), new Vector2(xMax, yMin)));
+            boxes.push(new AxisAlignedBoundingBox(new Vector2(0, yMin), new Vector2(xMin, yMax)));
+            boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, yMin), new Vector2(xMax, yMax)));
+        } else if (xGrew) {
+            boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, 0), new Vector2(xMax, height)));
+        } else if (yGrew) {
+            boxes.push(new AxisAlignedBoundingBox(new Vector2(0, yMin), new Vector2(width, yMax)));
+        }
+
+        const newStarCount = newStars - existingStars;
+
+        const totalArea = boxes.map(b => b.Area).reduce((a, b) => a + b, 0);
+
+        for (const box of boxes) {
+            const starRatio = box.Area / totalArea;
+            let starsInBox = newStarCount * starRatio;
+
+            // if starsInBox = 0.3, there should only be a 30% chance of generating a star
+            if (starsInBox < 1) {
+                const r = Math.random();
+                if (r < starsInBox) {
+                    starsInBox = 1;
+                } else {
+                    starsInBox = 0;
+                }
+            }
+
+            for (let i = 0; i < starsInBox; i++) {
+                // need to draw a box
+                const newStar = makeStarInBounds(box);
+                stars.push(newStar);
+            }
+        }
     }
+
     function step() {
+        lastFrameTime = Date.now();
         context.clearRect(0, 0, width, height);
         update();
-        render();
         requestAnimationFrame(step);
     }
+
     function update() {
-        velocity.tx *= 0.96;
-        velocity.ty *= 0.96;
-        velocity.x += (velocity.tx - velocity.x) * 0.8;
-        velocity.y += (velocity.ty - velocity.y) * 0.8;
-        stars.forEach(star => {
-            star.x += velocity.x * star.z;
-            star.y += velocity.y * star.z;
-            star.x += (star.x - width / 2) * velocity.z * star.z;
-            star.y += (star.y - height / 2) * velocity.z * star.z;
-            star.z += velocity.z;
+        cameraVelocity.tx *= 0.96;
+        cameraVelocity.ty *= 0.96;
+        cameraVelocity.x += (cameraVelocity.tx - cameraVelocity.x) * 0.8;
+        cameraVelocity.y += (cameraVelocity.ty - cameraVelocity.y) * 0.8;
+        let starsToRemove = stars.length - expectedStarCount();
+        const removeIndices: number[] = [];
+        for (let i = 0; i < stars.length; i++) {
+            const star = stars[i];
+            star.X += cameraVelocity.x * star.Z;
+            star.Y += cameraVelocity.y * star.Z;
+            star.X += (star.X - width / 2) * cameraVelocity.z * star.Z;
+            star.Y += (star.Y - height / 2) * cameraVelocity.z * star.Z;
+            star.Z *= 1 + cameraVelocity.z;
 
             // recycle when out of bounds
             if (
-                star.x < -OVERFLOW_THRESHOLD ||
-                star.x > width + OVERFLOW_THRESHOLD ||
-                star.y < -OVERFLOW_THRESHOLD ||
-                star.y > height + OVERFLOW_THRESHOLD
+                star.X < -OVERFLOW_THRESHOLD ||
+                star.X > width + OVERFLOW_THRESHOLD ||
+                star.Y < -OVERFLOW_THRESHOLD ||
+                star.Y > height + OVERFLOW_THRESHOLD
             ) {
-                recycleStar(star);
+                if (starsToRemove-- >= 1) {
+                    removeIndices.push(i);
+                } else {
+                    const newStar = makeStarInBounds();
+                    newStar.Z = STAR_MIN_Z;
+                    stars[i] = newStar;
+                }
+            } else {
+                renderStar(star);
             }
+        }
+
+        // remove excess
+        removeIndices.reverse().forEach((i: number) => {
+            stars.splice(i, 1);
+            console.log("removing extra star");
         });
     }
-    function render() {
-        stars.forEach(star => {
-            context.beginPath();
-            context.lineCap = "round";
-            context.lineWidth = STAR_SIZE * star.z * scale;
-            context.globalAlpha = 0.5 + 0.5 * Math.random();
-            context.strokeStyle = STAR_COLOR;
-            context.beginPath();
-            context.moveTo(star.x, star.y);
-            let tailX = velocity.x * 2,
-                tailY = velocity.y * 2;
 
-            // stroke() wont work on an invisible line
-            if (Math.abs(tailX) < 0.1) tailX = 0.5;
-            if (Math.abs(tailY) < 0.1) tailY = 0.5;
-            context.lineTo(star.x + tailX, star.y + tailY);
-            context.stroke();
-        });
+    function renderStar(star: Star) {
+        const renderSize = star.Properties.radius;
+
+        const radius = renderSize * GLOBAL_STAR_SIZE * star.Z * scale;
+        // make more luminous stars glow more
+        // at worst, ln(luminosity) is -3, so add 3 to compensate
+        const glowSize = radius + GLOBAL_GLOW_SIZE * (Math.log(star.Properties.luminosity) + 3);
+        if (glowSize < 2) {
+            // ensure a smooth fade-in
+            // todo: seems like this doesn't work? stars still pop in abruptly
+            context.globalAlpha = glowSize / 2;
+        } else {
+            context.globalAlpha = 1;
+        }
+        const gradient = context.createRadialGradient(star.X, star.Y, radius / 10, star.X, star.Y, radius);
+
+        // brighten the star as it gets closer to us
+        const colorAdjustment = Math.min(1, Math.max(0, Math.log(star.Z)));
+        gradient.addColorStop(0, AdjustShadeRgb(colorAdjustment, star.Properties.color));
+        gradient.addColorStop(1, star.Properties.edgeColor);
+        if (glowSize > 2) {
+            context.shadowBlur = glowSize;
+            context.shadowColor = star.Properties.edgeColor;
+        } else {
+            // if it's too small, don't glow at all (save resources)
+            context.shadowBlur = 0;
+        }
+        context.beginPath();
+        context.arc(star.X, star.Y, radius, 0, 2 * Math.PI);
+        context.fillStyle = gradient;
+        context.fill();
     }
 });
 </script>
