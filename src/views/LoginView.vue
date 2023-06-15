@@ -20,7 +20,7 @@ const clipboardIcon = ref("/icons/copy-icon.svg");
 
 onMounted(() => {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.ctrlKey && event.shiftKey && event.altKey && event.key.toLowerCase() === "l") redirectToDiscordLogin();
+        if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "z") redirectToDiscordLogin();
     });
 });
 
