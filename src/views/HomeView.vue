@@ -82,13 +82,14 @@ async function loadHistory(skipFirst = false) {
     try {
         const historyResponse = await userStore.fetchUserHistory(fetchAmount, paginationToken.value);
 
-        paginationToken.value = historyResponse.paginationToken;
+        if (historyResponse.data.length > 0) {
+            paginationToken.value = historyResponse.paginationToken;
+            const emergencies = await bulkLoadEmergencies(historyResponse.data);
+            const sortedEmergencies = emergencies.filter(e => e.isComplete);
 
-        const emergencies = await bulkLoadEmergencies(historyResponse.data);
-        const sortedEmergencies = emergencies.filter(e => e.isComplete);
-
-        loadedHistory.push(...sortedEmergencies);
-        setActivePageFromCache(0);
+            loadedHistory.push(...sortedEmergencies);
+            setActivePageFromCache(0);
+        }
     } catch (error: any) {
         errorLoadingHistory.value = true;
         loaded.value = true;
