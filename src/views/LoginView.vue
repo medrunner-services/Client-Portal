@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
@@ -17,6 +17,12 @@ const waitingForApi = ref(false);
 const formErrorMessage = ref(t("login_genericError"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
+
+onMounted(() => {
+    document.addEventListener("keydown", (event: KeyboardEvent) => {
+        if (event.ctrlKey && event.shiftKey && event.altKey && event.key.toLowerCase() === "l") redirectToDiscordLogin();
+    });
+});
 
 const submittingLinkForm = async (): Promise<void> => {
     waitingForApi.value = true;
@@ -122,7 +128,7 @@ function getAddToBioText(): string {
                 </p>
             </div>
             <div v-else class="mt-14 flex flex-col lg:mt-28">
-                <button disabled class="button-48 cursor-not-allowed bg-primary-900/50 text-white" @click="redirectToDiscordLogin()">
+                <button disabled class="button-48 cursor-not-allowed bg-primary-900/50 text-white">
                     {{ t("login_logInButton") }}
                 </button>
                 <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureLaunch") }}</p>
