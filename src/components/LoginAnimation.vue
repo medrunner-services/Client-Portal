@@ -156,7 +156,6 @@ onMounted(() => {
         // remove excess
         removeIndices.reverse().forEach((i: number) => {
             stars.splice(i, 1);
-            console.log("removing extra star");
         });
     }
 
