@@ -20,7 +20,10 @@ async function isUserComplete(): Promise<string | boolean> {
     const logicStore = useLogicStore();
     logicStore.isRouterLoading = true;
 
-    if (!userStore.isAuthenticated) {
+    if (!localStorage.getItem("refreshToken")) {
+        logicStore.isRouterLoading = false;
+        return "/login";
+    } else if (!userStore.isAuthenticated) {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
