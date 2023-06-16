@@ -18,7 +18,6 @@ onMounted(async () => {
 
     if (route.path === "/auth" && !userStore.isAuthenticated) {
         try {
-            console.log("Getting tokens in /auth");
             const response = await axios.get(
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
@@ -26,10 +25,8 @@ onMounted(async () => {
             localStorage.setItem("refreshToken", response.data.refreshToken);
             initializeApi(response.data.refreshToken);
 
-            console.log("Pushing home");
             await router.push("/");
         } catch (e) {
-            console.log("Pushing login");
             await router.push("/login?error=true");
         }
     }
