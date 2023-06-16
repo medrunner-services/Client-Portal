@@ -105,7 +105,7 @@ function getResponders(responders: any): string {
     for (const responder of responders) {
         responderArray.push(responder.rsiHandle);
     }
-    return responderArray.toString();
+    return responderArray.join(", ");
 }
 </script>
 
