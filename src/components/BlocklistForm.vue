@@ -28,7 +28,7 @@ async function searchBlocklist() {
         }
         formSubmittingSearch.value = false;
     } catch (error) {
-        formErrorMessage.value = t("form_errorGeneric");
+        formErrorMessage.value = t("error_generic");
         formSubmittingSearch.value = false;
     }
 }

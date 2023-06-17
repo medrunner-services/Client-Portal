@@ -22,7 +22,7 @@ const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.u
 
 async function sendNewEmergency(): Promise<void> {
     if (!formSystem.value || !formSubSystem.value || !formSubThreatLevel.value) {
-        formErrorMessage.value = t("form_errorMissingFields");
+        formErrorMessage.value = t("error_missingFields");
         return;
     }
     try {
@@ -44,9 +44,9 @@ async function sendNewEmergency(): Promise<void> {
         formRemarks.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error.statusCode === 403) formErrorMessage.value = t("form_errorBlockedAccount");
-        if (error.statusCode === 429) formErrorMessage.value = t("form_errorRateLimit");
-        else formErrorMessage.value = t("form_errorGeneric");
+        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
+        if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
+        else formErrorMessage.value = t("error_generic");
     }
 }
 </script>

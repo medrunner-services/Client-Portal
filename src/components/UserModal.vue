@@ -30,12 +30,12 @@ async function updateRsiHandle(): Promise<void> {
         rsiHandleUpdating.value = false;
         rsiHandleErrorMessage.value = "";
     } catch (error: any) {
-        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
-        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
-        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
-        else if (error.statusCode === 409) rsiHandleErrorMessage.value = t("form_errorSameRSIAccount");
-        else if (error.statusCode === 429) rsiHandleErrorMessage.value = t("form_errorRateLimit");
-        else rsiHandleErrorMessage.value = t("form_errorGeneric");
+        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("error_blockedUser");
+        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("error_noIdRsiBio");
+        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("error_unknownRsiAccount");
+        else if (error.statusCode === 409) rsiHandleErrorMessage.value = t("error_rsiAccountLinked");
+        else if (error.statusCode === 429) rsiHandleErrorMessage.value = t("error_rateLimit");
+        else rsiHandleErrorMessage.value = t("error_generic");
 
         rsiHandleUpdating.value = false;
     }

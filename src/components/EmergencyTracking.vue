@@ -138,7 +138,7 @@ function cancelEmergency(): void {
 <template>
     <Loader v-if="loadingEmergency" class="flex h-80 w-full items-center justify-center" />
     <div v-else-if="errorLoadingEmergency || errorLoadingTrackedEmergency">
-        <p class="text-primary-400">{{ t("tracking_errorLoadingEmergency") }}</p>
+        <p class="text-primary-400">{{ t("error_loadingTrackedEmergency") }}</p>
         <button
             class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="reloadPage()"

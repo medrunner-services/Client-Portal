@@ -154,7 +154,7 @@ const isLastPageHistory = computed(() => {
                 <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
 
                 <div v-else-if="loaded && errorLoadingHistory">
-                    <p class="text-primary-400">{{ t("home_errorLoadingHistory") }}</p>
+                    <p class="text-primary-400">{{ t("error_loadingHistory") }}</p>
                 </div>
                 <div v-else-if="loaded && activePage.length === 0">
                     <p>{{ t("home_noEmergencies") }}</p>
