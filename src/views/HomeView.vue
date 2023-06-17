@@ -49,10 +49,12 @@ onMounted(async () => {
     });
 
     apiWebsocket.onreconnected(async () => {
-        try {
-            emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency ?? "");
-        } catch (e) {
-            errorLoadingTrackedEmergency.value = true;
+        if (userStore.user.activeEmergency) {
+            try {
+                emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+            } catch (e) {
+                errorLoadingTrackedEmergency.value = true;
+            }
         }
     });
 });
