@@ -37,6 +37,11 @@ async function sendNewEmergency(): Promise<void> {
 
         userStore.user.activeEmergency = response.id;
 
+        await emergencyStore.sendEmergencyMessage({
+            emergencyId: response.id,
+            contents: "This emergency was submitted via the __**Client Portal**__",
+        });
+
         formSubmittingEmergency.value = false;
         formSystem.value = "Stanton";
         formSubSystem.value = "";

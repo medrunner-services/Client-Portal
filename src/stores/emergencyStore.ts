@@ -1,4 +1,4 @@
-import type { CancellationReason, Emergency, ResponseRating } from "@medrunner-services/api-client";
+import type { CancellationReason, ChatMessageRequest, Emergency, ResponseRating } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
@@ -68,6 +68,14 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function sendEmergencyMessage(chatMessageRequest: ChatMessageRequest): Promise<void> {
+        const response = await api.chatMessage.sendMessage(chatMessageRequest);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     return {
         trackedEmergency,
         fetchEmergency,
@@ -75,5 +83,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         createEmergency,
         cancelEmergency,
         rateCompletedEmergency,
+        sendEmergencyMessage,
     };
 });
