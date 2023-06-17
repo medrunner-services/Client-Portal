@@ -83,13 +83,11 @@ async function updateRsiHandle(): Promise<void> {
                         <span v-else>{{ isInputtingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
                     </button>
                 </div>
-
-                <div class="mt-2 flex w-full"></div>
                 <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
                     {{ rsiHandleErrorMessage }}
                 </p>
 
-                <button @click="emit('disconnectUser')" class="button-primary button-48 mt-20 w-full lg:w-fit">
+                <button @click="emit('disconnectUser')" class="button-primary button-48 mt-10 w-full lg:w-fit">
                     {{ t("navbar_disconnect") }}
                 </button>
             </div>

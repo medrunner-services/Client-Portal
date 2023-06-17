@@ -6,11 +6,13 @@ import { useI18n } from "vue-i18n";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { useLogicStore } from "@/stores/logicStore";
 
 const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 defineProps<{
@@ -22,7 +24,6 @@ const errorLoadingEmergency = ref(false);
 const loadingCancelEmergencyError = ref(false);
 const cancelReason: Ref<CancellationReason> = ref(CancellationReason.NONE);
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
-const discordBaseUrl = ref("discord://");
 const isEmergencyCanceled = ref(false);
 
 onMounted(async () => {
@@ -41,8 +42,6 @@ onMounted(async () => {
             errorLoadingEmergency.value = true;
         }
     }
-
-    if (navigator.userAgent.includes("Android")) discordBaseUrl.value = "https://";
 });
 
 const emergencyTitle = computed(() => {
@@ -218,7 +217,7 @@ function cancelEmergency(): void {
                         emergencyStore.trackedEmergency.status === 2 ||
                         emergencyStore.trackedEmergency.status === 10)
                 "
-                :href="`${discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 lg:mt-0 lg:w-fit"
             >

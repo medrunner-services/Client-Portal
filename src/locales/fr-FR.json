@@ -131,5 +131,9 @@
     "login_errorUnknownRSIAccount": "Impossible de trouver un compte RSI avec ce nom d'utilisateur. Si vous venez de créer votre compte RSI, cela peut prendre quelques minutes pour le trouver",
     "navbar_blocklist": "Bannissements",
     "navbar_emergency": "Urgence",
-    "navbar_disconnect": "Déconnexion"
+    "navbar_disconnect": "Déconnexion",
+    "navbar_reportBug": "Signaler un bug",
+    "bugReport_title": "Signaler un bug",
+    "bugReport_copyUserAgent": "Veuillez ajouter ceci à votre signalement :",
+    "bugReport_createBugReport": "Créer un rapport de bug"
 }

@@ -26,9 +26,18 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    const discordBaseUrl = computed(() => {
+        if (navigator.userAgent.includes("Android")) {
+            return "https://";
+        } else {
+            return "discord://";
+        }
+    });
+
     return {
         isRouterLoading,
         userDevice,
         userBrowser,
+        discordBaseUrl,
     };
 });
