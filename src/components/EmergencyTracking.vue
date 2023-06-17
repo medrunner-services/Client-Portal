@@ -56,8 +56,12 @@ const emergencyTitle = computed(() => {
             return "✅ " + t("tracking_operationSuccessful");
         case 4:
             return "❌ " + t("tracking_operationFailed");
+        case 5:
+            return "🚫 " + t("tracking_operationNoContact");
         case 6:
             return "🚫 " + t("tracking_operationCanceled");
+        case 7:
+            return "⛔ " + t("tracking_operationRefused");
         case 8:
             return "↩️ " + t("tracking_operationAborted");
         case 9:
@@ -76,8 +80,12 @@ const emergencySubTitle = computed(() => {
             return t("tracking_statusTextSuccess");
         case 4:
             return t("tracking_statusTextFailed");
+        case 5:
+            return t("tracking_statusTextNoContact");
         case 6:
             return t("tracking_statusTextCanceled");
+        case 7:
+            return t("tracking_statusTextRefused");
         case 8:
             return t("tracking_statusTextAborted");
         case 9:
@@ -253,9 +261,11 @@ function cancelEmergency(): void {
 
         <button
             v-if="
+                emergencyStore.trackedEmergency.status === 5 ||
+                emergencyStore.trackedEmergency.status === 6 ||
+                emergencyStore.trackedEmergency.status === 7 ||
                 emergencyStore.trackedEmergency.status === 8 ||
-                emergencyStore.trackedEmergency.status === 9 ||
-                emergencyStore.trackedEmergency.status === 6
+                emergencyStore.trackedEmergency.status === 9
             "
             class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="$emit('completeEmergency')"
