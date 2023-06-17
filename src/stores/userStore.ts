@@ -22,7 +22,6 @@ export const useUserStore = defineStore("user", () => {
             await api.auth.signOut({ refreshToken: localStorage.getItem("refreshToken") ?? "" });
         } finally {
             localStorage.removeItem("refreshToken");
-            user.value = {} as Person;
             isAuthenticated.value = false;
         }
     }
