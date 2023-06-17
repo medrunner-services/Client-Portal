@@ -21,6 +21,7 @@ const displayBugReportModal = ref(false);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
+    const availableMainLocales = availableLocales.map(locale => locale.split("-")[0]);
 
     if (userLanguage) {
         newLocaleLanguage.value = userLanguage;
@@ -28,6 +29,15 @@ onMounted(() => {
     } else if (availableLocales.includes(navigator.language)) {
         newLocaleLanguage.value = navigator.language;
         locale.value = navigator.language;
+    } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
+        const fallbackLocal = availableLocales.find(item => item.indexOf("fr") === 0);
+        if (fallbackLocal) {
+            newLocaleLanguage.value = fallbackLocal;
+            locale.value = fallbackLocal;
+        } else {
+            newLocaleLanguage.value = "en-US";
+            locale.value = "en-US";
+        }
     } else {
         newLocaleLanguage.value = "en-US";
         locale.value = "en-US";
