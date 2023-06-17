@@ -5,8 +5,8 @@ import { useI18n } from "vue-i18n";
 
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useUserStore } from "@/stores/userStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { useUserStore } from "@/stores/userStore";
 
 const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency"]);
 
