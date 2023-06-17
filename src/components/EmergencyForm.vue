@@ -22,7 +22,7 @@ const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.u
 
 async function sendNewEmergency(): Promise<void> {
     if (!formSystem.value || !formSubSystem.value || !formSubThreatLevel.value) {
-        formErrorMessage.value = t("form_errorMissingFields");
+        formErrorMessage.value = t("error_missingFields");
         return;
     }
     try {
@@ -37,6 +37,11 @@ async function sendNewEmergency(): Promise<void> {
 
         userStore.user.activeEmergency = response.id;
 
+        await emergencyStore.sendEmergencyMessage({
+            emergencyId: response.id,
+            contents: "This emergency was submitted via the __**Client Portal**__",
+        });
+
         formSubmittingEmergency.value = false;
         formSystem.value = "Stanton";
         formSubSystem.value = "";
@@ -44,9 +49,9 @@ async function sendNewEmergency(): Promise<void> {
         formRemarks.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error.statusCode === 403) formErrorMessage.value = t("form_errorBlockedAccount");
-        if (error.statusCode === 429) formErrorMessage.value = t("form_errorRateLimit");
-        else formErrorMessage.value = t("form_errorGeneric");
+        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
+        if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
+        else formErrorMessage.value = t("error_generic");
     }
 }
 </script>

@@ -14,7 +14,7 @@ const { t } = useI18n();
 
 const formUsername = ref("");
 const waitingForApi = ref(false);
-const formErrorMessage = ref(t("login_genericError"));
+const formErrorMessage = ref(t("error_generic"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref("/icons/copy-icon.svg");
 
@@ -31,9 +31,9 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         await router.push("/");
     } catch (error: any) {
-        if (error.statusCode === 451) formErrorMessage.value = t("login_errorAccountBlocked");
-        if (error.statusCode === 403) formErrorMessage.value = t("login_errorMissingMedrunnerId");
-        if (error.statusCode === 404) formErrorMessage.value = t("login_errorUnknownRSIAccount");
+        if (error.statusCode === 451) formErrorMessage.value = t("error_blockedUser");
+        if (error.statusCode === 403) formErrorMessage.value = t("error_noIdRsiBio");
+        if (error.statusCode === 404) formErrorMessage.value = t("error_unknownRsiAccount");
 
         formErrorActive.value = true;
         waitingForApi.value = false;

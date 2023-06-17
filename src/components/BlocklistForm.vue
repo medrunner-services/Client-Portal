@@ -28,7 +28,7 @@ async function searchBlocklist() {
         }
         formSubmittingSearch.value = false;
     } catch (error) {
-        formErrorMessage.value = t("form_errorGeneric");
+        formErrorMessage.value = t("error_generic");
         formSubmittingSearch.value = false;
     }
 }
@@ -58,6 +58,7 @@ function clearForm() {
 
             <input
                 type="text"
+                autocomplete="off"
                 v-model="formName"
                 class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                 :class="formErrorMessage ? 'input-text-error' : 'input-text'"

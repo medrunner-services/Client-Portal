@@ -4,17 +4,19 @@ import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 import Loader from "@/components/Loader.vue";
+import { useUserStore } from "@/stores/userStore";
 import { initializeApi } from "@/utils/medrunnerClient";
 
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 onMounted(async () => {
     if (!route.query.code) {
         await router.push("/login");
     }
 
-    if (route.path === "/auth") {
+    if (route.path === "/auth" && !userStore.isAuthenticated) {
         try {
             const response = await axios.get(
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
@@ -29,7 +31,7 @@ onMounted(async () => {
         }
     }
     // TODO: Reactivate with registration
-    // else if (route.path === "/auth/register") {
+    // else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
     //     try {
     //         const response = await axios.get(
     //             `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${

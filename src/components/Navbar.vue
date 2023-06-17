@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
+import BugReportModal from "@/components/BugReportModal.vue";
 import UserModal from "@/components/UserModal.vue";
 import { useUserStore } from "@/stores/userStore";
 
@@ -16,9 +17,11 @@ const newLocaleLanguage = ref("");
 const currentPage = ref(route.path);
 const scrollEnabled = ref(true);
 const displayUserModal = ref(false);
+const displayBugReportModal = ref(false);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
+    const availableMainLocales = availableLocales.map(locale => locale.split("-")[0]);
 
     if (userLanguage) {
         newLocaleLanguage.value = userLanguage;
@@ -26,6 +29,15 @@ onMounted(() => {
     } else if (availableLocales.includes(navigator.language)) {
         newLocaleLanguage.value = navigator.language;
         locale.value = navigator.language;
+    } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
+        const fallbackLocal = availableLocales.find(item => item.indexOf("fr") === 0);
+        if (fallbackLocal) {
+            newLocaleLanguage.value = fallbackLocal;
+            locale.value = fallbackLocal;
+        } else {
+            newLocaleLanguage.value = "en-US";
+            locale.value = "en-US";
+        }
     } else {
         newLocaleLanguage.value = "en-US";
         locale.value = "en-US";
@@ -43,6 +55,10 @@ function switchNavMenuSate(): void {
 
 function switchUserModalSate(): void {
     displayUserModal.value = !displayUserModal.value;
+}
+
+function switchBugReportModalSate(): void {
+    displayBugReportModal.value = !displayBugReportModal.value;
 }
 
 function changeLanguage(): void {
@@ -79,6 +95,12 @@ function enableScrolling(): void {
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
                 <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }} </RouterLink>
+                <div
+                    @click="switchBugReportModalSate()"
+                    class="ml-8 flex w-fit cursor-pointer items-center font-Mohave font-semibold text-primary-900"
+                >
+                    {{ t("navbar_reportBug") }}
+                </div>
                 <div>
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
@@ -108,7 +130,13 @@ function enableScrolling(): void {
                         t("navbar_blocklist")
                     }}</RouterLink>
                 </div>
-                <div class="mt-16 flex w-full justify-between">
+                <div
+                    @click="switchBugReportModalSate()"
+                    class="mt-16 flex w-fit cursor-pointer items-center font-Mohave font-semibold text-primary-900"
+                >
+                    {{ t("navbar_reportBug") }}
+                </div>
+                <div class="mt-5 flex w-full justify-between">
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
                         <option value="fr-FR">Français</option>
@@ -122,6 +150,7 @@ function enableScrolling(): void {
     </div>
 
     <UserModal @click.self="switchUserModalSate()" v-if="displayUserModal" @disconnect-user="disconnect()" @close-modal="switchUserModalSate()" />
+    <BugReportModal @click.self="switchBugReportModalSate()" v-if="displayBugReportModal" @close-modal="switchBugReportModalSate()" />
 </template>
 
 <style scoped>
