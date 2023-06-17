@@ -5,12 +5,14 @@ import { useI18n } from "vue-i18n";
 
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-const emit = defineEmits(["completedTrackedEmergency", "completeEmergency"]);
+const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 defineProps<{
@@ -22,7 +24,6 @@ const errorLoadingEmergency = ref(false);
 const loadingCancelEmergencyError = ref(false);
 const cancelReason: Ref<CancellationReason> = ref(CancellationReason.NONE);
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
-const discordBaseUrl = ref("discord://");
 const isEmergencyCanceled = ref(false);
 
 onMounted(async () => {
@@ -41,8 +42,6 @@ onMounted(async () => {
             errorLoadingEmergency.value = true;
         }
     }
-
-    if (navigator.userAgent.includes("Android")) discordBaseUrl.value = "https://";
 });
 
 const emergencyTitle = computed(() => {
@@ -56,8 +55,12 @@ const emergencyTitle = computed(() => {
             return "✅ " + t("tracking_operationSuccessful");
         case 4:
             return "❌ " + t("tracking_operationFailed");
+        case 5:
+            return "🚫 " + t("tracking_operationNoContact");
         case 6:
             return "🚫 " + t("tracking_operationCanceled");
+        case 7:
+            return "⛔ " + t("tracking_operationRefused");
         case 8:
             return "↩️ " + t("tracking_operationAborted");
         case 9:
@@ -76,8 +79,12 @@ const emergencySubTitle = computed(() => {
             return t("tracking_statusTextSuccess");
         case 4:
             return t("tracking_statusTextFailed");
+        case 5:
+            return t("tracking_statusTextNoContact");
         case 6:
             return t("tracking_statusTextCanceled");
+        case 7:
+            return t("tracking_statusTextRefused");
         case 8:
             return t("tracking_statusTextAborted");
         case 9:
@@ -121,12 +128,17 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
 async function reloadPage(): Promise<void> {
     location.reload();
 }
+
+function cancelEmergency(): void {
+    isEmergencyCanceled.value = true;
+    emit("canceledEmergency");
+}
 </script>
 
 <template>
     <Loader v-if="loadingEmergency" class="flex h-80 w-full items-center justify-center" />
     <div v-else-if="errorLoadingEmergency || errorLoadingTrackedEmergency">
-        <p class="text-primary-400">{{ t("tracking_errorLoadingEmergency") }}</p>
+        <p class="text-primary-400">{{ t("error_loadingTrackedEmergency") }}</p>
         <button
             class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="reloadPage()"
@@ -147,9 +159,10 @@ async function reloadPage(): Promise<void> {
         <div
             class="mt-10"
             v-if="
-                (!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 1) ||
-                emergencyStore.trackedEmergency.status === 2 ||
-                emergencyStore.trackedEmergency.status === 10
+                !isEmergencyCanceled &&
+                (emergencyStore.trackedEmergency.status === 1 ||
+                    emergencyStore.trackedEmergency.status === 2 ||
+                    emergencyStore.trackedEmergency.status === 10)
             "
         >
             <div class="lg:flex lg:justify-between">
@@ -177,7 +190,7 @@ async function reloadPage(): Promise<void> {
         </div>
 
         <div
-            v-if="(!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 2) || emergencyStore.trackedEmergency.status === 10"
+            v-if="!isEmergencyCanceled && (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)"
             class="mt-10"
         >
             <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
@@ -192,28 +205,25 @@ async function reloadPage(): Promise<void> {
             <button
                 v-if="emergencyStore.trackedEmergency.status === 1 && !isEmergencyCanceled"
                 class="flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mr-5 lg:w-fit"
-                @click="isEmergencyCanceled = true"
+                @click="cancelEmergency"
             >
                 {{ t("tracking_cancelButton") }}
             </button>
 
             <a
                 v-if="
-                    (!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 1) ||
-                    emergencyStore.trackedEmergency.status === 2 ||
-                    emergencyStore.trackedEmergency.status === 10
+                    !isEmergencyCanceled &&
+                    (emergencyStore.trackedEmergency.status === 1 ||
+                        emergencyStore.trackedEmergency.status === 2 ||
+                        emergencyStore.trackedEmergency.status === 10)
                 "
-                :href="`${discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 lg:mt-0 lg:w-fit"
             >
                 {{ t("tracking_chatButton") }}
             </a>
         </div>
-
-        <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
-            {{ t("tracking_errorCancel") }}
-        </p>
 
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave text-xl font-semibold">{{ t("tracking_ratingTitle") }}</p>
@@ -243,13 +253,18 @@ async function reloadPage(): Promise<void> {
                 <option :value="CancellationReason.RESPAWNED">🏥 {{ t("tracking_respawned") }}</option>
                 <option :value="CancellationReason.OTHER">📝 {{ t("tracking_other") }}</option>
             </select>
+            <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
+                {{ t("tracking_errorCancel") }}
+            </p>
         </form>
 
         <button
             v-if="
+                emergencyStore.trackedEmergency.status === 5 ||
+                emergencyStore.trackedEmergency.status === 6 ||
+                emergencyStore.trackedEmergency.status === 7 ||
                 emergencyStore.trackedEmergency.status === 8 ||
-                emergencyStore.trackedEmergency.status === 9 ||
-                emergencyStore.trackedEmergency.status === 6
+                emergencyStore.trackedEmergency.status === 9
             "
             class="mt-10 flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:w-fit"
             @click="$emit('completeEmergency')"

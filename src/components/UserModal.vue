@@ -30,12 +30,12 @@ async function updateRsiHandle(): Promise<void> {
         rsiHandleUpdating.value = false;
         rsiHandleErrorMessage.value = "";
     } catch (error: any) {
-        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("form_errorBlockedAccount");
-        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("form_errorMissingMedrunnerID");
-        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("form_errorUnknownRSIAccount");
-        else if (error.statusCode === 409) rsiHandleErrorMessage.value = t("form_errorSameRSIAccount");
-        else if (error.statusCode === 429) rsiHandleErrorMessage.value = t("form_errorRateLimit");
-        else rsiHandleErrorMessage.value = t("form_errorGeneric");
+        if (error.statusCode === 451) rsiHandleErrorMessage.value = t("error_blockedUser");
+        else if (error.statusCode === 403) rsiHandleErrorMessage.value = t("error_noIdRsiBio");
+        else if (error.statusCode === 404) rsiHandleErrorMessage.value = t("error_unknownRsiAccount");
+        else if (error.statusCode === 409) rsiHandleErrorMessage.value = t("error_rsiAccountLinked");
+        else if (error.statusCode === 429) rsiHandleErrorMessage.value = t("error_rateLimit");
+        else rsiHandleErrorMessage.value = t("error_generic");
 
         rsiHandleUpdating.value = false;
     }
@@ -83,13 +83,11 @@ async function updateRsiHandle(): Promise<void> {
                         <span v-else>{{ isInputtingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
                     </button>
                 </div>
-
-                <div class="mt-2 flex w-full"></div>
                 <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
                     {{ rsiHandleErrorMessage }}
                 </p>
 
-                <button @click="emit('disconnectUser')" class="button-primary button-48 mt-20 w-full lg:w-fit">
+                <button @click="emit('disconnectUser')" class="button-primary button-48 mt-10 w-full lg:w-fit">
                     {{ t("navbar_disconnect") }}
                 </button>
             </div>

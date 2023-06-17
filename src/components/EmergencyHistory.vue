@@ -5,21 +5,21 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const props = defineProps(["emergency"]);
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const showCard = ref(false);
 let emergencyInfo: Emergency = props.emergency;
 
 function timestampToHours(timestamp: number | undefined): string {
     if (!timestamp) return "";
-    return new Date(timestamp).toLocaleTimeString([], {
+    return new Date(timestamp).toLocaleTimeString(locale.value, {
         hour: "2-digit",
         minute: "2-digit",
     });
 }
 
 function timestampToDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleDateString([], {
+    return new Date(timestamp).toLocaleDateString(locale.value, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -105,7 +105,7 @@ function getResponders(responders: any): string {
     for (const responder of responders) {
         responderArray.push(responder.rsiHandle);
     }
-    return responderArray.toString();
+    return responderArray.join(", ");
 }
 </script>
 
