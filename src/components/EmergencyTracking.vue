@@ -7,7 +7,7 @@ import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 
-const emit = defineEmits(["completedTrackedEmergency", "completeEmergency"]);
+const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -121,6 +121,11 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
 async function reloadPage(): Promise<void> {
     location.reload();
 }
+
+function cancelEmergency(): void {
+    isEmergencyCanceled.value = true;
+    emit("canceledEmergency");
+}
 </script>
 
 <template>
@@ -147,9 +152,10 @@ async function reloadPage(): Promise<void> {
         <div
             class="mt-10"
             v-if="
-                (!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 1) ||
-                emergencyStore.trackedEmergency.status === 2 ||
-                emergencyStore.trackedEmergency.status === 10
+                !isEmergencyCanceled &&
+                (emergencyStore.trackedEmergency.status === 1 ||
+                    emergencyStore.trackedEmergency.status === 2 ||
+                    emergencyStore.trackedEmergency.status === 10)
             "
         >
             <div class="lg:flex lg:justify-between">
@@ -177,7 +183,7 @@ async function reloadPage(): Promise<void> {
         </div>
 
         <div
-            v-if="(!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 2) || emergencyStore.trackedEmergency.status === 10"
+            v-if="!isEmergencyCanceled && (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)"
             class="mt-10"
         >
             <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
@@ -192,16 +198,17 @@ async function reloadPage(): Promise<void> {
             <button
                 v-if="emergencyStore.trackedEmergency.status === 1 && !isEmergencyCanceled"
                 class="flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mr-5 lg:w-fit"
-                @click="isEmergencyCanceled = true"
+                @click="cancelEmergency"
             >
                 {{ t("tracking_cancelButton") }}
             </button>
 
             <a
                 v-if="
-                    (!isEmergencyCanceled && emergencyStore.trackedEmergency.status === 1) ||
-                    emergencyStore.trackedEmergency.status === 2 ||
-                    emergencyStore.trackedEmergency.status === 10
+                    !isEmergencyCanceled &&
+                    (emergencyStore.trackedEmergency.status === 1 ||
+                        emergencyStore.trackedEmergency.status === 2 ||
+                        emergencyStore.trackedEmergency.status === 10)
                 "
                 :href="`${discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
@@ -210,10 +217,6 @@ async function reloadPage(): Promise<void> {
                 {{ t("tracking_chatButton") }}
             </a>
         </div>
-
-        <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
-            {{ t("tracking_errorCancel") }}
-        </p>
 
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave text-xl font-semibold">{{ t("tracking_ratingTitle") }}</p>
@@ -243,6 +246,9 @@ async function reloadPage(): Promise<void> {
                 <option :value="CancellationReason.RESPAWNED">🏥 {{ t("tracking_respawned") }}</option>
                 <option :value="CancellationReason.OTHER">📝 {{ t("tracking_other") }}</option>
             </select>
+            <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
+                {{ t("tracking_errorCancel") }}
+            </p>
         </form>
 
         <button
