@@ -6,7 +6,7 @@ import { useRoute } from "vue-router";
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/userStore";
-import { redirectToDiscordLogin } from "@/utils/discordRedirects";
+import { redirectToDiscordLogin, redirectToDiscordRegister } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
 const route = useRoute();
@@ -131,10 +131,9 @@ function getAddToBioText(): string {
                 <button class="button-48 bg-primary-900 text-white" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <button disabled class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50">
+                <button class="button-48 mt-5 border-2 border-primary-900 text-black" @click="redirectToDiscordRegister()">
                     {{ t("login_registerButton") }}
                 </button>
-                <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureBeta") }}</p>
             </div>
         </div>
     </div>

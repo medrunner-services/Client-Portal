@@ -29,25 +29,22 @@ onMounted(async () => {
         } catch (e) {
             await router.push("/login?error=true");
         }
-    }
-    // TODO: Reactivate with registration
-    // else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
-    //     try {
-    //         const response = await axios.get(
-    //             `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
-    //                 import.meta.env.VITE_CALLBACK_URL
-    //             }/auth/register`,
-    //         );
-    //
-    //         localStorage.setItem("refreshToken", response.data.refreshToken);
-    //         initializeApi(response.data.refreshToken);
-    //
-    //         await router.push("/login/link");
-    //     } catch (e) {
-    //         await router.push("/login?error=true");
-    //     }
-    // }
-    else {
+    } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth/register`,
+            );
+
+            localStorage.setItem("refreshToken", response.data.refreshToken);
+            initializeApi(response.data.refreshToken);
+
+            await router.push("/login/link");
+        } catch (e) {
+            await router.push("/login?error=true");
+        }
+    } else {
         await router.push("/login?error=true");
     }
 });
