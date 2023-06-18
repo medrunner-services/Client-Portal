@@ -105,6 +105,7 @@ function enableScrolling(): void {
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
                         <option value="fr-FR">Français</option>
+                        <option value="de-DE">Deutsch</option>
                     </select>
                 </div>
                 <div v-if="userStore.isAuthenticated">
@@ -140,6 +141,7 @@ function enableScrolling(): void {
                     <select @change="changeLanguage" v-model="newLocaleLanguage">
                         <option value="en-US">English</option>
                         <option value="fr-FR">Français</option>
+                        <option value="de-DE">Deutsch</option>
                     </select>
                     <div @click="switchUserModalSate()" class="cursor-pointer">
                         <img src="/icons/user-profile.svg" alt="User profile" />
