@@ -13,6 +13,7 @@ const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
 const rsiHandleUpdating = ref(false);
+const appVersion = APP_VERSION;
 
 async function updateRsiHandle(): Promise<void> {
     if (!isInputtingRsiHandle.value) {
@@ -87,9 +88,13 @@ async function updateRsiHandle(): Promise<void> {
                     {{ rsiHandleErrorMessage }}
                 </p>
 
-                <button @click="emit('disconnectUser')" class="button-primary button-48 mt-10 w-full lg:w-fit">
-                    {{ t("navbar_disconnect") }}
-                </button>
+                <div class="mt-16 lg:flex lg:items-end lg:justify-between">
+                    <button @click="emit('disconnectUser')" class="button-primary button-48 w-full lg:w-fit">
+                        {{ t("navbar_disconnect") }}
+                    </button>
+
+                    <p class="mt-5 w-fit text-xs lg:mt-0">v{{ appVersion }}</p>
+                </div>
             </div>
         </div>
     </div>
