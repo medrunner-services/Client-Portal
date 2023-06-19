@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
 import BugReportModal from "@/components/BugReportModal.vue";
 import UserModal from "@/components/UserModal.vue";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const route = useRoute();
 const router = useRouter();
 const { t, locale, availableLocales } = useI18n({ useScope: "global" });
@@ -30,7 +32,7 @@ onMounted(() => {
         newLocaleLanguage.value = navigator.language;
         locale.value = navigator.language;
     } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
-        const fallbackLocal = availableLocales.find(item => item.indexOf("fr") === 0);
+        const fallbackLocal = availableLocales.find(item => item.indexOf(navigator.language.split("-")[0]) === 0);
         if (fallbackLocal) {
             newLocaleLanguage.value = fallbackLocal;
             locale.value = fallbackLocal;
@@ -46,14 +48,6 @@ onMounted(() => {
 
 watch(route, async (oldRoute, newRoute) => {
     currentPage.value = newRoute.path;
-});
-
-const logoUrl = computed(() => {
-    if (import.meta.env.MODE === "development") {
-        return "/images/medrunner-logo-dev.webp";
-    } else {
-        return "/images/medrunner-logo-beta.webp";
-    }
 });
 
 function switchNavMenuSate(): void {
@@ -99,7 +93,7 @@ function enableScrolling(): void {
 <template>
     <div class="flex w-full flex-col bg-white shadow-md md:static">
         <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:py-3">
-            <img class="h-8 md:h-12" :src="logoUrl" alt="Medrunner Logo" />
+            <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>

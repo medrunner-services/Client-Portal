@@ -5,10 +5,12 @@ import { useRoute } from "vue-router";
 
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const route = useRoute();
 const { t } = useI18n();
 
@@ -53,9 +55,9 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2 my-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
-        .substring(title.indexOf("Medrunner"))
-        .substring(9)}`;
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2 my-2" src="${
+        logicStore.medrunnerLogoUrl
+    }" alt="Medrunner Logo" /></span> ${title.substring(title.indexOf("Medrunner")).substring(9)}`;
 }
 
 function getAddToBioText(): string {
