@@ -64,7 +64,7 @@ function switchBugReportModalSate(): void {
 function changeLanguage(): void {
     locale.value = newLocaleLanguage.value;
     localStorage.setItem("selectedLanguage", newLocaleLanguage.value);
-    navMenuCollapsed.value = false;
+    switchNavMenuSate();
 }
 
 async function disconnect(): Promise<void> {
