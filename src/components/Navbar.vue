@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
@@ -48,6 +48,14 @@ watch(route, async (oldRoute, newRoute) => {
     currentPage.value = newRoute.path;
 });
 
+const logoUrl = computed(() => {
+    if (import.meta.env.MODE === "development") {
+        return "/images/medrunner-logo-dev.webp";
+    } else {
+        return "/images/medrunner-logo-beta.webp";
+    }
+});
+
 function switchNavMenuSate(): void {
     navMenuCollapsed.value = !navMenuCollapsed.value;
     scrollEnabled.value ? disableScrolling() : enableScrolling();
@@ -91,7 +99,7 @@ function enableScrolling(): void {
 <template>
     <div class="flex w-full flex-col bg-white shadow-md md:static">
         <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:py-3">
-            <img class="h-8 md:h-12" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" />
+            <img class="h-8 md:h-12" :src="logoUrl" alt="Medrunner Logo" />
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
