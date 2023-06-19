@@ -21,10 +21,11 @@ defineProps<{
 
 const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref(false);
-const loadingCancelEmergencyError = ref(false);
-const cancelReason: Ref<CancellationReason> = ref(CancellationReason.NONE);
+const cancelEmergencyError = ref(false);
+const cancelReason: Ref<CancellationReason | string> = ref("");
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
-const isEmergencyCanceled = ref(false);
+const formCancelingEmergency = ref(false);
+const isCancelConflictError = ref(false);
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -109,11 +110,22 @@ function getThreatString(id: number): string {
 }
 
 async function submitCancelEmergency(): Promise<void> {
-    try {
-        await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id, cancelReason.value);
-        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
-    } catch (error: any) {
-        loadingCancelEmergencyError.value = true;
+    formCancelingEmergency.value = true;
+    if (typeof cancelReason.value === "string") {
+        cancelEmergencyError.value = true;
+        formCancelingEmergency.value = false;
+    } else {
+        try {
+            await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id, cancelReason.value);
+            cancelReason.value = "";
+            emergencyStore.isTrackedEmergencyCanceled = false;
+            emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
+        } catch (error: any) {
+            if (error.statusCode === 409) isCancelConflictError.value = true;
+            else cancelEmergencyError.value = true;
+        } finally {
+            formCancelingEmergency.value = false;
+        }
     }
 }
 
@@ -125,13 +137,15 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
     }
 }
 
-async function reloadPage(): Promise<void> {
+function reloadPage(): void {
     location.reload();
 }
 
-function cancelEmergency(): void {
-    isEmergencyCanceled.value = true;
-    emit("canceledEmergency");
+function rejoinEmergency(): void {
+    emergencyStore.isTrackedEmergencyCanceled = false;
+    isCancelConflictError.value = false;
+    cancelEmergencyError.value = false;
+    cancelReason.value = "";
 }
 </script>
 
@@ -147,7 +161,7 @@ function cancelEmergency(): void {
         </button>
     </div>
     <div v-else v-auto-animate>
-        <div v-if="isEmergencyCanceled">
+        <div v-if="emergencyStore.isTrackedEmergencyCanceled">
             <p class="font-Mohave text-3xl font-semibold text-primary-900">{{ `🚫 ${t("tracking_operationCanceled")}` }}</p>
             <p class="text-sm font-medium">{{ t("tracking_statusTextCanceled") }}</p>
         </div>
@@ -159,7 +173,7 @@ function cancelEmergency(): void {
         <div
             class="mt-10"
             v-if="
-                !isEmergencyCanceled &&
+                !emergencyStore.isTrackedEmergencyCanceled &&
                 (emergencyStore.trackedEmergency.status === 1 ||
                     emergencyStore.trackedEmergency.status === 2 ||
                     emergencyStore.trackedEmergency.status === 10)
@@ -190,7 +204,10 @@ function cancelEmergency(): void {
         </div>
 
         <div
-            v-if="!isEmergencyCanceled && (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)"
+            v-if="
+                !emergencyStore.isTrackedEmergencyCanceled &&
+                (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)
+            "
             class="mt-10"
         >
             <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
@@ -203,16 +220,16 @@ function cancelEmergency(): void {
 
         <div class="mt-10 flex flex-col lg:flex-row">
             <button
-                v-if="emergencyStore.trackedEmergency.status === 1 && !isEmergencyCanceled"
+                v-if="emergencyStore.trackedEmergency.status === 1 && !emergencyStore.isTrackedEmergencyCanceled"
                 class="flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mr-5 lg:w-fit"
-                @click="cancelEmergency"
+                @click="emergencyStore.isTrackedEmergencyCanceled = true"
             >
                 {{ t("tracking_cancelButton") }}
             </button>
 
             <a
                 v-if="
-                    !isEmergencyCanceled &&
+                    !emergencyStore.isTrackedEmergencyCanceled &&
                     (emergencyStore.trackedEmergency.status === 1 ||
                         emergencyStore.trackedEmergency.status === 2 ||
                         emergencyStore.trackedEmergency.status === 10)
@@ -237,14 +254,18 @@ function cancelEmergency(): void {
             </div>
         </div>
 
-        <form v-if="isEmergencyCanceled" class="mt-7">
-            <label class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
+        <form v-if="emergencyStore.isTrackedEmergencyCanceled" class="mt-7" @submit.prevent="submitCancelEmergency()">
+            <p v-if="isCancelConflictError">
+                {{ t("tracking_cancelConflictError") }}
+            </p>
+            <label v-if="!isCancelConflictError" class="text-sm font-semibold">{{ t("tracking_cancelTitle") }}</label>
             <select
+                v-if="!isCancelConflictError"
+                required
                 class="w-full border-gray-400 focus:border-secondary-500 focus:ring-secondary-500"
                 v-model="cancelReason"
-                @change="submitCancelEmergency"
             >
-                <option :value="CancellationReason.NONE" disabled hidden>
+                <option selected hidden disabled value="">
                     {{ t("tracking_cancelQuestionValue") }}
                 </option>
                 <option :value="CancellationReason.RESCUED">🤝 {{ t("tracking_rescued") }}</option>
@@ -253,7 +274,41 @@ function cancelEmergency(): void {
                 <option :value="CancellationReason.RESPAWNED">🏥 {{ t("tracking_respawned") }}</option>
                 <option :value="CancellationReason.OTHER">📝 {{ t("tracking_other") }}</option>
             </select>
-            <p v-if="loadingCancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
+
+            <div class="my-10 flex flex-col lg:flex-row lg:gap-10">
+                <button
+                    type="submit"
+                    class="flex w-full items-center justify-center bg-primary-900 px-6 py-3 font-medium text-gray-50 lg:mt-5"
+                    :disabled="formCancelingEmergency"
+                    v-if="!isCancelConflictError"
+                >
+                    <svg
+                        v-if="formCancelingEmergency"
+                        class="mx-14 my-0.5 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                    >
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path
+                            class="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                    </svg>
+                    <span v-else>{{ t("tracking_confirmCancelButton") }}</span>
+                </button>
+
+                <button
+                    class="mt-5 flex w-full items-center justify-center border-2 border-primary-900 px-6 py-3 font-medium"
+                    :disabled="formCancelingEmergency"
+                    @click.prevent="rejoinEmergency()"
+                >
+                    {{ t("tracking_backCancelButton") }}
+                </button>
+            </div>
+
+            <p v-if="cancelEmergencyError" class="mt-2 w-full text-sm text-primary-400">
                 {{ t("tracking_errorCancel") }}
             </p>
         </form>
