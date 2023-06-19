@@ -30,7 +30,7 @@ onMounted(() => {
         newLocaleLanguage.value = navigator.language;
         locale.value = navigator.language;
     } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
-        const fallbackLocal = availableLocales.find(item => item.indexOf("fr") === 0);
+        const fallbackLocal = availableLocales.find(item => item.indexOf(navigator.language.split("-")[0]) === 0);
         if (fallbackLocal) {
             newLocaleLanguage.value = fallbackLocal;
             locale.value = fallbackLocal;
