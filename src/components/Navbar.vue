@@ -5,41 +5,41 @@ import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
 import BugReportModal from "@/components/BugReportModal.vue";
+import LanguageSelectorModal from "@/components/LanguageSelectorModal.vue";
+import Modal from "@/components/Modal.vue";
 import UserModal from "@/components/UserModal.vue";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const route = useRoute();
 const router = useRouter();
 const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
-const newLocaleLanguage = ref("");
 const currentPage = ref(route.path);
 const scrollEnabled = ref(true);
 const displayUserModal = ref(false);
 const displayBugReportModal = ref(false);
+const displayLanguageSelectorModal = ref(false);
+const displayLanguageSelector = ref(false);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
     const availableMainLocales = availableLocales.map(locale => locale.split("-")[0]);
 
     if (userLanguage) {
-        newLocaleLanguage.value = userLanguage;
         locale.value = userLanguage;
     } else if (availableLocales.includes(navigator.language)) {
-        newLocaleLanguage.value = navigator.language;
         locale.value = navigator.language;
     } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
-        const fallbackLocal = availableLocales.find(item => item.indexOf("fr") === 0);
+        const fallbackLocal = availableLocales.find(item => item.indexOf(navigator.language.split("-")[0]) === 0);
         if (fallbackLocal) {
-            newLocaleLanguage.value = fallbackLocal;
             locale.value = fallbackLocal;
         } else {
-            newLocaleLanguage.value = "en-US";
             locale.value = "en-US";
         }
     } else {
-        newLocaleLanguage.value = "en-US";
         locale.value = "en-US";
     }
 });
@@ -53,23 +53,32 @@ function switchNavMenuSate(): void {
     scrollEnabled.value ? disableScrolling() : enableScrolling();
 }
 
-function switchUserModalSate(): void {
-    displayUserModal.value = !displayUserModal.value;
-}
-
-function switchBugReportModalSate(): void {
-    displayBugReportModal.value = !displayBugReportModal.value;
-}
-
-function changeLanguage(): void {
-    locale.value = newLocaleLanguage.value;
-    localStorage.setItem("selectedLanguage", newLocaleLanguage.value);
-    navMenuCollapsed.value = false;
+function changeLanguage(newLanguage: string): void {
+    locale.value = newLanguage;
+    localStorage.setItem("selectedLanguage", newLanguage);
+    displayLanguageSelectorModal.value = false;
 }
 
 async function disconnect(): Promise<void> {
     await userStore.disconnectUser();
     await router.push("/login");
+}
+
+function getLanguageString(languageLocal: string): string {
+    switch (languageLocal) {
+        case "en-US":
+            return "English";
+        case "fr-FR":
+            return "Français";
+        case "de-DE":
+            return "Deutsch";
+        case "it-IT":
+            return "Italiano";
+        case "da-DK":
+            return "Dansk";
+        default:
+            return "English";
+    }
 }
 
 function disableScrolling(): void {
@@ -90,32 +99,53 @@ function enableScrolling(): void {
 <template>
     <div class="flex w-full flex-col bg-white shadow-md md:static">
         <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:py-3">
-            <img class="h-8 md:h-12" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" />
+            <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
 
-            <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold md:flex">
+            <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold lg:flex">
                 <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
                 <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }} </RouterLink>
                 <div
-                    @click="switchBugReportModalSate()"
+                    @click="displayBugReportModal = !displayBugReportModal"
                     class="ml-8 flex w-fit cursor-pointer items-center font-Mohave font-semibold text-primary-900"
                 >
                     {{ t("navbar_reportBug") }}
                 </div>
-                <div>
-                    <select @change="changeLanguage" v-model="newLocaleLanguage">
-                        <option value="en-US">English</option>
-                        <option value="fr-FR">Français</option>
-                        <option value="de-DE">Deutsch</option>
-                    </select>
+                <div class="relative">
+                    <div
+                        class="flex cursor-pointer items-center px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        :class="displayLanguageSelector ? 'border-2 border-secondary-600' : 'border border-gray-400'"
+                        @click="displayLanguageSelector = !displayLanguageSelector"
+                    >
+                        <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
+                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ getLanguageString(locale) }}</p>
+                        <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
+                    </div>
+
+                    <div class="absolute right-0 top-14 w-96 border border-gray-400 bg-gray-50 p-4 shadow-xl" v-if="displayLanguageSelector">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div
+                                v-for="language in availableLocales"
+                                :key="language"
+                                @click="
+                                    changeLanguage(language);
+                                    displayLanguageSelector = !displayLanguageSelector;
+                                "
+                                class="flex w-fit cursor-pointer items-center gap-2"
+                            >
+                                <img :src="`/icons/flags/${language.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
+                                <p class="font-Mohave text-xl">{{ getLanguageString(language) }}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div v-if="userStore.isAuthenticated">
-                    <div @click="switchUserModalSate()" class="cursor-pointer">
+                    <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
                         <img src="/icons/user-profile.svg" alt="User profile" />
                     </div>
                 </div>
             </nav>
 
-            <button @click="switchNavMenuSate()" class="ml-auto md:hidden">
+            <button @click="switchNavMenuSate()" class="ml-auto lg:hidden">
                 <img v-if="!navMenuCollapsed" src="/icons/burger-button.svg" alt="Open menu" />
                 <img v-else src="/icons/close-button.svg" alt="Close menu" />
             </button>
@@ -132,18 +162,21 @@ function enableScrolling(): void {
                     }}</RouterLink>
                 </div>
                 <div
-                    @click="switchBugReportModalSate()"
+                    @click="displayBugReportModal = !displayBugReportModal"
                     class="mt-16 flex w-fit cursor-pointer items-center font-Mohave font-semibold text-primary-900"
                 >
                     {{ t("navbar_reportBug") }}
                 </div>
-                <div class="mt-5 flex w-full justify-between">
-                    <select @change="changeLanguage" v-model="newLocaleLanguage">
-                        <option value="en-US">English</option>
-                        <option value="fr-FR">Français</option>
-                        <option value="de-DE">Deutsch</option>
-                    </select>
-                    <div @click="switchUserModalSate()" class="cursor-pointer">
+                <div class="mt-5 flex w-full items-center justify-between">
+                    <div
+                        class="flex cursor-pointer items-center border border-gray-400 px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        @click="displayLanguageSelectorModal = !displayLanguageSelectorModal"
+                    >
+                        <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
+                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ getLanguageString(locale) }}</p>
+                        <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
+                    </div>
+                    <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
                         <img src="/icons/user-profile.svg" alt="User profile" />
                     </div>
                 </div>
@@ -151,8 +184,25 @@ function enableScrolling(): void {
         </div>
     </div>
 
-    <UserModal @click.self="switchUserModalSate()" v-if="displayUserModal" @disconnect-user="disconnect()" @close-modal="switchUserModalSate()" />
-    <BugReportModal @click.self="switchBugReportModalSate()" v-if="displayBugReportModal" @close-modal="switchBugReportModalSate()" />
+    <Modal @close-modal="displayUserModal = !displayUserModal" @click.self="displayUserModal = !displayUserModal" v-if="displayUserModal">
+        <UserModal @disconnect-user="disconnect()" />
+    </Modal>
+
+    <Modal
+        @close-modal="displayBugReportModal = !displayBugReportModal"
+        @click.self="displayBugReportModal = !displayBugReportModal"
+        v-if="displayBugReportModal"
+    >
+        <BugReportModal />
+    </Modal>
+
+    <Modal
+        @close-modal="displayLanguageSelectorModal = !displayLanguageSelectorModal"
+        @click.self="displayLanguageSelectorModal = !displayLanguageSelectorModal"
+        v-if="displayLanguageSelectorModal"
+    >
+        <LanguageSelectorModal :available-locales="availableLocales" @change-language="language => changeLanguage(language)" />
+    </Modal>
 </template>
 
 <style scoped>
