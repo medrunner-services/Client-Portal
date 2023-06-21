@@ -112,8 +112,8 @@ function enableScrolling(): void {
                 </div>
                 <div class="relative">
                     <div
-                        class="flex cursor-pointer items-center px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
-                        :class="displayLanguageSelector ? 'border-2 border-secondary-600' : 'border border-gray-400'"
+                        class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"
                         @click="displayLanguageSelector = !displayLanguageSelector"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
