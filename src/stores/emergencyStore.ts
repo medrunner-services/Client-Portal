@@ -15,6 +15,7 @@ interface CreatEmergencyForm {
 export const useEmergencyStore = defineStore("emergency", () => {
     const userStore = useUserStore();
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
+    const isTrackedEmergencyCanceled = ref(false);
 
     async function fetchEmergency(id: string): Promise<Emergency> {
         const response = await api.emergency.getEmergency(id);
@@ -78,6 +79,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
 
     return {
         trackedEmergency,
+        isTrackedEmergencyCanceled,
         fetchEmergency,
         fetchEmergencies,
         createEmergency,

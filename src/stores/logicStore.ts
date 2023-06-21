@@ -34,10 +34,19 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    const medrunnerLogoUrl = computed(() => {
+        if (import.meta.env.MODE === "development") {
+            return "/images/medrunner-logo-dev.webp";
+        } else {
+            return "/images/medrunner-logo-beta.webp";
+        }
+    });
+
     return {
         isRouterLoading,
         userDevice,
         userBrowser,
         discordBaseUrl,
+        medrunnerLogoUrl,
     };
 });

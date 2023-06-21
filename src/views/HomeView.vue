@@ -190,7 +190,7 @@ const isLastPageHistory = computed(() => {
                     v-if="
                         emergencyStore.trackedEmergency.id &&
                         !errorLoadingTrackedEmergency &&
-                        !canceledEmergency &&
+                        !emergencyStore.isTrackedEmergencyCanceled &&
                         (emergencyStore.trackedEmergency.status === 1 ||
                             emergencyStore.trackedEmergency.status === 2 ||
                             emergencyStore.trackedEmergency.status === 10)

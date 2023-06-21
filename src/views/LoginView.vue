@@ -5,10 +5,12 @@ import { useRoute } from "vue-router";
 
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const route = useRoute();
 const { t } = useI18n();
 
@@ -53,9 +55,9 @@ function getColoredTitle(): string {
     return `${title.substring(
         0,
         title.indexOf("Medrunner"),
-    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2 my-2" src="/images/medrunner-logo-beta.webp" alt="Medrunner Logo" /></span> ${title
-        .substring(title.indexOf("Medrunner"))
-        .substring(9)}`;
+    )} <span class="text-primary-900 flex items-center justify-center"><img class="h-12 mr-2 my-2" src="${
+        logicStore.medrunnerLogoUrl
+    }" alt="Medrunner Logo" /></span> ${title.substring(title.indexOf("Medrunner")).substring(9)}`;
 }
 
 function getAddToBioText(): string {
@@ -73,7 +75,7 @@ function getAddToBioText(): string {
         <div class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-10 md:h-fit md:w-fit md:px-20 md:py-24 lg:mr-[50%]">
             <h1 class="text-center font-Mohave text-3xl font-bold uppercase text-neutral-900 lg:text-4xl" v-html="getColoredTitle()"></h1>
 
-            <div v-if="route.path === '/login/link'" class="mt-20 flex w-4/5 flex-col xl:w-3/5">
+            <div v-if="route.path === '/login/link'" class="mt-14 flex flex-col lg:mt-28">
                 <div class="w-full">
                     <p class="font-Inter text-small font-semibold text-neutral-900" v-html="getAddToBioText()"></p>
                     <div class="mt-2 flex">

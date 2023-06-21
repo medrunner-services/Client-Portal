@@ -30,7 +30,7 @@ input {
 }
 
 .content-container {
-    @apply px-4 lg:px-12 xl:px-48 2xl:px-56 3xl:px-[40rem];
+    @apply max-w-[200rem] px-4 lg:px-12 2xl:px-12 3xl:px-56 4xl:px-[35rem] 5xl:px-[40rem];
 }
 
 .button-primary {
