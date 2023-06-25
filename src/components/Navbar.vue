@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
-import BugReportModal from "@/components/BugReportModal.vue";
-import LanguageSelectorModal from "@/components/LanguageSelectorModal.vue";
 import Modal from "@/components/Modal.vue";
-import UserModal from "@/components/UserModal.vue";
+import BugReportModal from "@/components/Modals/BugReportModal.vue";
+import LanguageSelectorModal from "@/components/Modals/LanguageSelectorModal.vue";
+import UserModal from "@/components/Modals/UserModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
-const route = useRoute();
 const router = useRouter();
 const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
