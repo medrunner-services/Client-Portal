@@ -1,6 +1,6 @@
 {
   "name": "client-portal",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "private": true,
   "web-types": "./web-types.json",
   "scripts": {
