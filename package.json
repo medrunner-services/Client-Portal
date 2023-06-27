@@ -7,14 +7,16 @@
     "dev": "vite",
     "dev-network": "vite --host --mode development-network",
     "build": "run-p type-check build-only",
+    "build:staging": "run-p type-check build-only:staging",
     "preview": "vite preview",
     "build-only": "vite build",
+    "build-only:staging": "vite build --mode staging",
     "type-check": "vue-tsc --noEmit",
     "lint": "npx eslint src",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
-    "prepush": "npm run prettier:fix && npm run lint:fix && npm run type-check",
+    "prepush": "run-p prettier:fix lint:fix type-check",
     "update-locals": "node update-locals.mjs"
   },
   "dependencies": {

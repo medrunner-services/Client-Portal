@@ -35,7 +35,7 @@ export const useLogicStore = defineStore("logic", () => {
     });
 
     const medrunnerLogoUrl = computed(() => {
-        if (import.meta.env.MODE === "development") {
+        if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
             return "/images/medrunner-logo-dev.webp";
         } else {
             return "/images/medrunner-logo-beta.webp";
