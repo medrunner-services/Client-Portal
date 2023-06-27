@@ -2,7 +2,6 @@ import type { CancellationReason, ChatMessageRequest, Emergency, ResponseRating 
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
 
-import { useUserStore } from "@/stores/userStore";
 import { api } from "@/utils/medrunnerClient";
 
 interface CreatEmergencyForm {
@@ -13,7 +12,6 @@ interface CreatEmergencyForm {
 }
 
 export const useEmergencyStore = defineStore("emergency", () => {
-    const userStore = useUserStore();
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
     const isTrackedEmergencyCanceled = ref(false);
 
@@ -38,13 +36,18 @@ export const useEmergencyStore = defineStore("emergency", () => {
     }
 
     async function createEmergency(emergency: CreatEmergencyForm): Promise<Emergency> {
-        if (!userStore.user.rsiHandle) throw Error;
-        if (!emergency.remarks) delete emergency.remarks;
-        const response = await api.emergency.createEmergency({
-            ...emergency,
-            clientRsiHandle: userStore.user.rsiHandle,
-            clientDiscordId: userStore.user.discordId,
-        });
+        const emergencyBody = {
+            remarks: emergency.remarks,
+            location: {
+                system: emergency.system,
+                subsystem: emergency.subsystem,
+            },
+            threatLevel: emergency.threatLevel,
+        };
+
+        if (emergency.remarks === "") delete emergencyBody.remarks;
+
+        const response = await api.emergency.createEmergency(emergencyBody);
 
         if (response.success && response.data) {
             return response.data;

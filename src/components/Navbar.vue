@@ -1,23 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 
-import BugReportModal from "@/components/BugReportModal.vue";
-import LanguageSelectorModal from "@/components/LanguageSelectorModal.vue";
 import Modal from "@/components/Modal.vue";
-import UserModal from "@/components/UserModal.vue";
+import BugReportModal from "@/components/Modals/BugReportModal.vue";
+import LanguageSelectorModal from "@/components/Modals/LanguageSelectorModal.vue";
+import UserModal from "@/components/Modals/UserModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
-const route = useRoute();
 const router = useRouter();
 const { t, locale, availableLocales } = useI18n({ useScope: "global" });
 const navMenuCollapsed = ref(false);
-const currentPage = ref(route.path);
 const scrollEnabled = ref(true);
 const displayUserModal = ref(false);
 const displayBugReportModal = ref(false);
@@ -42,10 +39,6 @@ onMounted(() => {
     } else {
         locale.value = "en-US";
     }
-});
-
-watch(route, async (oldRoute, newRoute) => {
-    currentPage.value = newRoute.path;
 });
 
 function switchNavMenuSate(): void {
@@ -94,6 +87,13 @@ function enableScrolling(): void {
 
     scrollEnabled.value = true;
 }
+
+async function gotoDevView(): Promise<void> {
+    displayUserModal.value = false;
+    navMenuCollapsed.value = false;
+    enableScrolling();
+    await router.push("/developer");
+}
 </script>
 
 <template>
@@ -102,8 +102,8 @@ function enableScrolling(): void {
             <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold lg:flex">
-                <RouterLink to="/" :class="currentPage === '/' ? 'current-link' : ''">{{ t("navbar_emergency") }}</RouterLink>
-                <RouterLink to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{ t("navbar_blocklist") }} </RouterLink>
+                <RouterLink to="/">{{ t("navbar_emergency") }}</RouterLink>
+                <RouterLink to="/blocklist">{{ t("navbar_blocklist") }} </RouterLink>
                 <div
                     @click="displayBugReportModal = !displayBugReportModal"
                     class="ml-8 flex w-fit cursor-pointer items-center font-Mohave font-semibold text-primary-900"
@@ -112,8 +112,8 @@ function enableScrolling(): void {
                 </div>
                 <div class="relative">
                     <div
-                        class="flex cursor-pointer items-center px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
-                        :class="displayLanguageSelector ? 'border-2 border-secondary-600' : 'border border-gray-400'"
+                        class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"
                         @click="displayLanguageSelector = !displayLanguageSelector"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
@@ -154,12 +154,8 @@ function enableScrolling(): void {
         <div @click.self="switchNavMenuSate()" v-if="navMenuCollapsed" class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-400/50">
             <nav class="content-container absolute top-14 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg">
                 <div class="flex flex-col gap-4 font-Mohave">
-                    <RouterLink @click="switchNavMenuSate()" to="/" :class="currentPage === '/' ? 'current-link' : ''">{{
-                        t("navbar_emergency")
-                    }}</RouterLink>
-                    <RouterLink @click="switchNavMenuSate()" to="/blocklist" :class="currentPage === '/blocklist' ? 'current-link' : ''">{{
-                        t("navbar_blocklist")
-                    }}</RouterLink>
+                    <RouterLink @click="switchNavMenuSate()" to="/">{{ t("navbar_emergency") }}</RouterLink>
+                    <RouterLink @click="switchNavMenuSate()" to="/blocklist">{{ t("navbar_blocklist") }}</RouterLink>
                 </div>
                 <div
                     @click="displayBugReportModal = !displayBugReportModal"
@@ -185,7 +181,7 @@ function enableScrolling(): void {
     </div>
 
     <Modal @close-modal="displayUserModal = !displayUserModal" @click.self="displayUserModal = !displayUserModal" v-if="displayUserModal">
-        <UserModal @disconnect-user="disconnect()" />
+        <UserModal @disconnectUser="disconnect()" @gotoDevView="gotoDevView" />
     </Modal>
 
     <Modal
@@ -206,7 +202,7 @@ function enableScrolling(): void {
 </template>
 
 <style scoped>
-.current-link {
+.router-link-active {
     @apply underline decoration-[3px] underline-offset-8;
 }
 </style>

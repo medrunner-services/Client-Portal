@@ -7,7 +7,7 @@ const { t } = useI18n();
 
 const userStore = useUserStore();
 
-const emit = defineEmits(["disconnectUser", "closeModal"]);
+const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 
 const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
@@ -82,6 +82,9 @@ async function updateRsiHandle(): Promise<void> {
     <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
         {{ rsiHandleErrorMessage }}
     </p>
+
+    <!--  TODO: Add localization  -->
+    <p @click="$emit('gotoDevView')" class="mt-16 w-fit cursor-pointer font-semibold underline decoration-2">Developer section</p>
 
     <div class="mt-16 lg:flex lg:items-end lg:justify-between">
         <button @click="emit('disconnectUser')" class="button-primary button-48 w-full lg:w-fit">

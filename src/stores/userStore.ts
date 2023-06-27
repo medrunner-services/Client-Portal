@@ -1,4 +1,4 @@
-import type { ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
+import type { ApiToken, ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { computed, type Ref, ref } from "vue";
 
@@ -56,6 +56,34 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function fetchUserApiTokens(): Promise<ApiToken[]> {
+        const response = await api.auth.getApiTokens();
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
+    async function createApiToken(name: string, expirationDate?: Date): Promise<string> {
+        const response = await api.auth.createApiToken({ name, expirationDate });
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
+    async function deleteApiToken(id: string): Promise<void> {
+        const response = await api.auth.deleteApiToken(id);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
@@ -65,5 +93,8 @@ export const useUserStore = defineStore("user", () => {
         linkUser,
         fetchUser,
         fetchUserHistory,
+        fetchUserApiTokens,
+        createApiToken,
+        deleteApiToken,
     };
 });

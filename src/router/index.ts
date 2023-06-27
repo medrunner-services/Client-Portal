@@ -76,6 +76,12 @@ const router = createRouter({
             component: () => import("@/views/BlocklistView.vue"),
             beforeEnter: isUserComplete,
         },
+        {
+            path: "/developer",
+            name: "developer",
+            component: () => import("@/views/DeveloperView.vue"),
+            beforeEnter: isUserComplete,
+        },
     ],
 });
 
