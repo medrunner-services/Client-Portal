@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CancellationReason, ResponseRating } from "@medrunner-services/api-client";
+import { CancellationReason, ResponseRating, type TeamMember } from "@medrunner-services/api-client";
 import { computed, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -44,6 +44,22 @@ onMounted(async () => {
         }
     }
 });
+
+function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
+    const transformedObj: Record<number, TeamMember[]> = {};
+
+    array.forEach(TeamMember => {
+        const { class: classValue } = TeamMember;
+
+        if (!transformedObj[classValue]) {
+            transformedObj[classValue] = [];
+        }
+
+        transformedObj[classValue].push(TeamMember);
+    });
+
+    return transformedObj;
+}
 
 const emergencyTitle = computed(() => {
     switch (emergencyStore.trackedEmergency.status) {
@@ -106,6 +122,25 @@ function getThreatString(id: number): string {
 
         default:
             return t("tracking_unknown");
+    }
+}
+
+// TODO: Add localization
+function getClassString(id: number): string {
+    switch (id) {
+        case 1:
+            return "🩺 Medic";
+        case 2:
+            return "🛡️ Security";
+        case 3:
+            return "✈️ Pilot";
+        case 4:
+            return "🗣️ Lead";
+        case 9:
+            return "🚁 Quick Response Force";
+
+        default:
+            return "Others";
     }
 }
 
@@ -201,21 +236,42 @@ function rejoinEmergency(): void {
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
-        </div>
 
-        <div
-            v-if="
-                !emergencyStore.isTrackedEmergencyCanceled &&
-                (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)
-            "
-            class="mt-10"
-        >
-            <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
-                {{ t("tracking_responders") }}
-            </p>
-            <p v-for="responder in emergencyStore.trackedEmergency.respondingTeam.staff" class="font-medium">
-                {{ responder.rsiHandle }}
-            </p>
+            <div v-auto-animate class="mt-10">
+                <p
+                    v-if="
+                        emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0 ||
+                        emergencyStore.trackedEmergency.respondingTeam.staff.length > 0
+                    "
+                    class="mb-3 font-Mohave text-2xl font-semibold text-primary-900"
+                >
+                    {{ t("tracking_responders") }}
+                </p>
+
+                <!--  TODO: Add localization -->
+                <div v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0" class="lg:mt-5 lg:flex lg:justify-between">
+                    <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                        <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 Dispatcher</p>
+                        <ul class="mt-2 list-none">
+                            <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers">{{ dispatcher.rsiHandle }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
+                    <div class="grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
+                        <div
+                            v-for="responderClass in ResponderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
+                            class="bg-gray-50 p-4 shadow-md"
+                        >
+                            <p class="font-Mohave text-2xl font-semibold lg:text-xl">{{ getClassString(responderClass[0].class) }}</p>
+                            <ul class="mt-2 list-none">
+                                <li v-for="responder in responderClass">{{ responder.rsiHandle }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="mt-10 flex flex-col lg:flex-row">
