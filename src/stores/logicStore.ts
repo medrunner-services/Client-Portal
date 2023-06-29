@@ -42,11 +42,29 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    function getLanguageString(languageLocal: string): string {
+        switch (languageLocal) {
+            case "en-US":
+                return "English";
+            case "fr-FR":
+                return "Français";
+            case "de-DE":
+                return "Deutsch";
+            case "it-IT":
+                return "Italiano";
+            case "da-DK":
+                return "Dansk";
+            default:
+                return "English";
+        }
+    }
+
     return {
         isRouterLoading,
         userDevice,
         userBrowser,
         discordBaseUrl,
         medrunnerLogoUrl,
+        getLanguageString,
     };
 });

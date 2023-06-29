@@ -45,22 +45,6 @@ onMounted(async () => {
     }
 });
 
-function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
-    const transformedObj: Record<number, TeamMember[]> = {};
-
-    array.forEach(TeamMember => {
-        const { class: classValue } = TeamMember;
-
-        if (!transformedObj[classValue]) {
-            transformedObj[classValue] = [];
-        }
-
-        transformedObj[classValue].push(TeamMember);
-    });
-
-    return transformedObj;
-}
-
 const emergencyTitle = computed(() => {
     switch (emergencyStore.trackedEmergency.status) {
         case 1:
@@ -181,6 +165,22 @@ function rejoinEmergency(): void {
     isCancelConflictError.value = false;
     cancelEmergencyError.value = false;
     cancelReason.value = "";
+}
+
+function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
+    const transformedObj: Record<number, TeamMember[]> = {};
+
+    array.forEach(TeamMember => {
+        const { class: classValue } = TeamMember;
+
+        if (!transformedObj[classValue]) {
+            transformedObj[classValue] = [];
+        }
+
+        transformedObj[classValue].push(TeamMember);
+    });
+
+    return transformedObj;
 }
 </script>
 

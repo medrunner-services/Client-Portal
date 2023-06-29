@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import LanguageSelector from "@/components/LanguageSelector.vue";
 import Modal from "@/components/Modal.vue";
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
 import LanguageSelectorModal from "@/components/Modals/LanguageSelectorModal.vue";
@@ -20,6 +21,7 @@ const displayUserModal = ref(false);
 const displayBugReportModal = ref(false);
 const displayLanguageSelectorModal = ref(false);
 const displayLanguageSelector = ref(false);
+const selectorParent: Ref<HTMLDivElement | null> = ref(null);
 
 onMounted(() => {
     const userLanguage = localStorage.getItem("selectedLanguage");
@@ -50,28 +52,12 @@ function changeLanguage(newLanguage: string): void {
     locale.value = newLanguage;
     localStorage.setItem("selectedLanguage", newLanguage);
     displayLanguageSelectorModal.value = false;
+    displayLanguageSelector.value = false;
 }
 
 async function disconnect(): Promise<void> {
     await userStore.disconnectUser();
     await router.push("/login");
-}
-
-function getLanguageString(languageLocal: string): string {
-    switch (languageLocal) {
-        case "en-US":
-            return "English";
-        case "fr-FR":
-            return "Français";
-        case "de-DE":
-            return "Deutsch";
-        case "it-IT":
-            return "Italiano";
-        case "da-DK":
-            return "Dansk";
-        default:
-            return "English";
-    }
 }
 
 function disableScrolling(): void {
@@ -115,28 +101,21 @@ async function gotoDevView(): Promise<void> {
                         class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
                         :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"
                         @click="displayLanguageSelector = !displayLanguageSelector"
+                        ref="selectorParent"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
-                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ getLanguageString(locale) }}</p>
+                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
                         <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
                     </div>
 
-                    <div class="absolute right-0 top-14 w-96 border border-gray-400 bg-gray-50 p-4 shadow-xl" v-if="displayLanguageSelector">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div
-                                v-for="language in availableLocales"
-                                :key="language"
-                                @click="
-                                    changeLanguage(language);
-                                    displayLanguageSelector = !displayLanguageSelector;
-                                "
-                                class="flex w-fit cursor-pointer items-center gap-2"
-                            >
-                                <img :src="`/icons/flags/${language.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
-                                <p class="font-Mohave text-xl">{{ getLanguageString(language) }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <LanguageSelector
+                        :available-locales="availableLocales"
+                        :selector-parent="selectorParent"
+                        @change-language="language => changeLanguage(language)"
+                        @closeSelector="displayLanguageSelector = false"
+                        v-if="displayLanguageSelector"
+                        class="absolute right-0 top-14 w-96 border border-gray-400 bg-gray-50 p-4 shadow-xl"
+                    />
                 </div>
                 <div v-if="userStore.isAuthenticated">
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
@@ -169,7 +148,7 @@ async function gotoDevView(): Promise<void> {
                         @click="displayLanguageSelectorModal = !displayLanguageSelectorModal"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
-                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ getLanguageString(locale) }}</p>
+                        <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
                         <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
                     </div>
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
