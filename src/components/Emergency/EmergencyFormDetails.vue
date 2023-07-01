@@ -93,11 +93,10 @@ async function sendDetails(): Promise<void> {
 </script>
 
 <template>
-    <!--  TODO: Add localization -->
     <form class="mt-10" @submit.prevent="sendDetails()">
         <div class="lg:flex lg:gap-4">
             <div class="w-full">
-                <LabelEmergencyForm title-local="Situation" description-local="Which kind of situation are you in?" />
+                <LabelEmergencyForm title-local="formDetailed_situation" description-local="formDetailed_helpSituation" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -105,17 +104,17 @@ async function sendDetails(): Promise<void> {
                         v-model="formSituation"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option hidden value>Select a situation</option>
-                        <option value="Unconscious">Unconscious</option>
-                        <option value="Out of fuel">Out of fuel</option>
-                        <option value="Stranded">Stranded</option>
-                        <option value="Other">Other</option>
+                        <option hidden value>{{ t("formDetailed_selectSituation") }}</option>
+                        <option value="Unconscious">{{ t("formDetailed_situationUnconscious") }}</option>
+                        <option value="Out of fuel">{{ t("formDetailed_situationFuel") }}</option>
+                        <option value="Stranded">{{ t("formDetailed_situationStranded") }}</option>
+                        <option value="Other">{{ t("formDetailed_situationOther") }}</option>
                     </select>
                 </div>
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm title-local="Exact location" description-local="What is your exact location?" />
+                <LabelEmergencyForm title-local="formDetailed_location" description-local="formDetailed_helpLocation" />
                 <div class="mt-2 flex w-full">
                     <input
                         type="text"
@@ -123,7 +122,7 @@ async function sendDetails(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formLocation"
-                        placeholder="Your location"
+                        :placeholder="t('formDetailed_placeholderLocation')"
                     />
                 </div>
             </div>
@@ -131,7 +130,7 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
             <div class="w-full">
-                <LabelEmergencyForm title-local="Are you injured?" description-local="Are you injured? If yes which Tier of injuries do you have?" />
+                <LabelEmergencyForm title-local="formDetailed_injury" description-local="formDetailed_helpInjury" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -139,8 +138,8 @@ async function sendDetails(): Promise<void> {
                         v-model="formInjuries"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option :value="true">Yes</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ t("formDetailed_yes") }}</option>
+                        <option :value="false">{{ t("formDetailed_no") }}</option>
                     </select>
                     <input
                         type="text"
@@ -149,17 +148,13 @@ async function sendDetails(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formInjuriesDetails"
-                        placeholder="Which Tier of injuries do you have?"
+                        :placeholder="t('formDetailed_placeholderInjury')"
                     />
                 </div>
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm
-                    title-local="Have you submitted a in-game beacon?"
-                    description-local="Have you submitted a in-game beacon? If yes please please cancel it if you can!"
-                    alignment="left"
-                />
+                <LabelEmergencyForm title-local="formDetailed_beacon" description-local="formDetailed_helpBeacon" alignment="left" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -167,20 +162,17 @@ async function sendDetails(): Promise<void> {
                         v-model="formIGBeacon"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option :value="true">Yes</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ t("formDetailed_yes") }}</option>
+                        <option :value="false">{{ t("formDetailed_no") }}</option>
                     </select>
-                    <p v-if="formIGBeacon" class="mt-2 italic text-primary-900">Please cancel the beacon if you can!</p>
+                    <p v-if="formIGBeacon" class="mt-2 italic text-primary-900">{{ t("formDetailed_beaconCancelMessage") }}</p>
                 </div>
             </div>
         </div>
 
         <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
             <div class="w-full lg:mt-0">
-                <LabelEmergencyForm
-                    title-local="Are you in a team?"
-                    description-local="Are you in a team? If yes please write your teammates names so we can add include them in our services!"
-                />
+                <LabelEmergencyForm title-local="formDetailed_team" description-local="formDetailed_helpTeam" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -188,8 +180,8 @@ async function sendDetails(): Promise<void> {
                         v-model="formTeam"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option :value="true">Yes</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ t("formDetailed_yes") }}</option>
+                        <option :value="false">{{ t("formDetailed_no") }}</option>
                     </select>
                     <input
                         type="text"
@@ -198,16 +190,13 @@ async function sendDetails(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formTeamDetails"
-                        placeholder="Please write your teammates names"
+                        :placeholder="t('formDetailed_placeholderTeam')"
                     />
                 </div>
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm
-                    title-local="Are there enemies at your location?"
-                    description-local="Are there enemies at your location? If yes how many?"
-                />
+                <LabelEmergencyForm title-local="formDetailed_enemies" description-local="formDetailed_helpEnemies" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -215,8 +204,8 @@ async function sendDetails(): Promise<void> {
                         v-model="formEnemies"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option :value="true">Yes</option>
-                        <option :value="false">No</option>
+                        <option :value="true">{{ t("formDetailed_yes") }}</option>
+                        <option :value="false">{{ t("formDetailed_no") }}</option>
                     </select>
                     <input
                         type="text"
@@ -225,7 +214,7 @@ async function sendDetails(): Promise<void> {
                         :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formEnemiesDetails"
-                        placeholder="How many enemies are there?"
+                        :placeholder="t('formDetailed_placeholderEnemies')"
                     />
                 </div>
             </div>
@@ -264,7 +253,7 @@ async function sendDetails(): Promise<void> {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                 </svg>
-                <span v-else>Send details</span>
+                <span v-else>{{ t("formDetailed_sendButton") }}</span>
             </button>
 
             <button
@@ -272,7 +261,7 @@ async function sendDetails(): Promise<void> {
                 class="mt-5 flex w-full items-center justify-center border-2 border-primary-900 px-6 py-3 font-medium text-primary-900 lg:mt-0 lg:w-fit"
                 :disabled="formSubmittingEmergency"
             >
-                Skip details
+                {{ t("formDetailed_skipButton") }}
             </button>
         </div>
         <p v-if="formErrorMessage" class="mt-2 w-full text-sm text-primary-400">

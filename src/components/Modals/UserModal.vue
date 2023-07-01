@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
-const { t } = useI18n();
+const { t, te } = useI18n();
 
 const userStore = useUserStore();
 
@@ -16,6 +16,25 @@ const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
+const appVersionLocal = appVersion.replace(/\./g, "-");
+
+const newFeatures = computed(() => {
+    if (te(`update_newFeatures_${appVersionLocal}`)) {
+        return t(`update_newFeatures_${appVersionLocal}`).split(",");
+    } else return undefined;
+});
+
+const newBugFixes = computed(() => {
+    if (te(`update_bugFixes_${appVersionLocal}`)) {
+        return t(`update_bugFixes_${appVersionLocal}`).split(",");
+    } else return undefined;
+});
+
+const newImprovements = computed(() => {
+    if (te(`update_improvements_${appVersionLocal}`)) {
+        return t(`update_improvements_${appVersionLocal}`).split(",");
+    } else return undefined;
+});
 
 async function updateRsiHandle(): Promise<void> {
     if (!isInputtingRsiHandle.value) {
@@ -88,42 +107,36 @@ async function updateRsiHandle(): Promise<void> {
 
     <!--  TODO: Add localization  -->
     <div v-auto-animate class="border-b border-gray-200 py-5">
-        <p class="font-Mohave text-2xl font-semibold text-primary-900">What's new</p>
-        <p class="mt-2 font-semibold">New Features ✨</p>
-        <ul class="list-inside list-disc">
-            <li>New logo on different environments</li>
-            <li>Added the version number in the user profile</li>
-            <li>Add German to the available languages</li>
+        <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
+        <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
+        <ul v-if="newFeatures" class="list-inside list-disc">
+            <li v-for="feature in newFeatures">{{ feature }}</li>
         </ul>
+        <p v-else class="mt-2">{{ t("user_noFeatures") }}</p>
         <div v-if="displayFullUpdateNotes">
-            <p class="mt-4 font-semibold">Bug Fixes 🐛</p>
-            <ul class="list-inside list-disc">
-                <li>Dialect fallback is only going to French</li>
-                <li>Scrolling blocked after changing the language on mobile</li>
+            <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
+            <ul v-if="newBugFixes" class="list-inside list-disc">
+                <li v-for="bugFixe in newBugFixes">{{ bugFixe }}</li>
             </ul>
-            <p class="mt-4 font-semibold">Improvements 🛠️</p>
-            <ul class="list-inside list-disc">
-                <li>Improved responsive behavior on ultra-side screens</li>
-                <li>Language selector overhaul</li>
-                <li>Added confirm and back button when canceling an emergency</li>
-                <li>Added clear error messages on emergency cancel error</li>
-                <li>Updated cancel emergency screen texts</li>
-                <li>Improved linking screen UI</li>
+            <p v-else class="mt-2">{{ t("user_noBugFixes") }}</p>
+            <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
+            <ul v-if="newImprovements" class="list-inside list-disc">
+                <li v-for="improvements in newImprovements">{{ improvements }}</li>
             </ul>
+            <p v-else class="mt-2">{{ t("user_noImprovements") }}</p>
         </div>
         <p v-else class="mt-2 cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
     </div>
 
     <div class="border-b border-gray-200 py-5">
-        <!--  TODO: Add localization  -->
-        <p @click="$emit('gotoDevView')" class="mb-2 w-fit cursor-pointer font-semibold underline decoration-2">Developer section</p>
+        <p @click="$emit('gotoDevView')" class="mb-2 w-fit cursor-pointer font-semibold underline decoration-2">{{ t("user_developerLink") }}</p>
         <div class="w-fit cursor-pointer">
             <a
                 href="https://www.medrunner.space/legal-information"
                 target="_blank"
                 class="flex w-fit items-center font-semibold underline decoration-2"
             >
-                <span>Privacy Policy</span>
+                <span>{{ t("user_privacyPolicyLink") }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke-width="1.5" stroke="currentColor" class="ml-1 h-3 w-3">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
                 </svg>

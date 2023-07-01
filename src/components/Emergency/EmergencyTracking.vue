@@ -111,22 +111,21 @@ function getThreatString(id: number): string {
     }
 }
 
-// TODO: Add localization
 function getClassString(id: number): string {
     switch (id) {
         case 1:
-            return "🩺 Medic";
+            return `🩺 ${t("tracking_classMedic")}`;
         case 2:
-            return "🛡️ Security";
+            return `🛡️ ${t("tracking_classSecurity")}`;
         case 3:
-            return "✈️ Pilot";
+            return `✈️ ${t("tracking_classPilot")}`;
         case 4:
-            return "🗣️ Lead";
+            return `🗣️ ${t("tracking_classLead")}`;
         case 9:
-            return "🚁 Quick Response Force";
+            return `🚁 ${t("tracking_classQRF")}`;
 
         default:
-            return "Others";
+            return t("tracking_classOthers");
     }
 }
 
@@ -253,10 +252,9 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                     {{ t("tracking_responders") }}
                 </p>
 
-                <!--  TODO: Add localization -->
                 <div v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0" class="lg:mt-5 lg:flex lg:justify-between">
                     <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
-                        <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 Dispatcher</p>
+                        <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
                         <ul class="mt-2 list-none">
                             <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers">{{ dispatcher.rsiHandle }}</li>
                         </ul>
@@ -284,7 +282,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             @click="displayFormDetails = true"
             class="mt-10 w-fit cursor-pointer items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
         >
-            Send detailed information
+            {{ t("tracking_sendDetailedInformationButton") }}
         </p>
 
         <div class="mt-10 flex flex-col lg:flex-row">
