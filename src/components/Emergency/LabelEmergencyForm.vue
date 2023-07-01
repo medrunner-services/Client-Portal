@@ -1,24 +1,39 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, type Ref, ref } from "vue";
+import { type Ref, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
-defineProps<{
-    titleLocal: string;
-    descriptionLocal: string;
-}>();
+const props = defineProps({
+    titleLocal: {
+        type: String,
+        required: true,
+    },
+    descriptionLocal: {
+        type: String,
+        required: true,
+    },
+    alignment: {
+        validator(value: string) {
+            return ["left", "right"].includes(value);
+        },
+        default() {
+            return "right";
+        },
+    },
+});
 
 const displayTooltip = ref(false);
 const tooltipDiv: Ref<HTMLDivElement | null> = ref(null);
 const tooltipImg: Ref<HTMLImageElement | null> = ref(null);
+const labelContainer: Ref<HTMLDivElement | null> = ref(null);
 
-onMounted(() => {
-    document.addEventListener("click", handleClickOutside);
-});
-
-onBeforeUnmount(() => {
-    document.removeEventListener("click", handleClickOutside);
+watch(displayTooltip, async newValue => {
+    if (newValue) {
+        document.addEventListener("click", handleClickOutside);
+    } else {
+        document.removeEventListener("click", handleClickOutside);
+    }
 });
 
 const handleClickOutside = (event: MouseEvent) => {
@@ -34,7 +49,7 @@ const handleClickOutside = (event: MouseEvent) => {
 </script>
 
 <template>
-    <div class="flex w-full items-center">
+    <div ref="labelContainer" class="flex w-full items-center">
         <label class="text-sm font-semibold">{{ t(titleLocal) }}</label>
         <div class="relative">
             <img
@@ -45,7 +60,13 @@ const handleClickOutside = (event: MouseEvent) => {
                 @click="displayTooltip = !displayTooltip"
             />
 
-            <div ref="tooltipDiv" v-if="displayTooltip" class="absolute bottom-5 left-0 z-10 w-56 border bg-gray-50 px-2 py-3 shadow-xl">
+            <div
+                ref="tooltipDiv"
+                id="test"
+                v-if="displayTooltip"
+                class="absolute bottom-5 z-10 w-56 border bg-gray-50 px-2 py-3 shadow-xl"
+                :class="alignment === 'left' ? '-right-10' : '-left-10'"
+            >
                 <p class="text-sm">{{ t(descriptionLocal) }}</p>
             </div>
         </div>

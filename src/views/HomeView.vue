@@ -4,9 +4,9 @@ import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import EmergencyForm from "@/components/EmergencyForm.vue";
-import EmergencyHistory from "@/components/EmergencyHistory.vue";
-import EmergencyTracking from "@/components/EmergencyTracking.vue";
+import EmergencyForm from "@/components/Emergency/EmergencyForm.vue";
+import EmergencyHistory from "@/components/Emergency/EmergencyHistory.vue";
+import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import LabelEmergencyForm from "@/components/LabelEmergencyForm.vue";
+import LabelEmergencyForm from "@/components/Emergency/LabelEmergencyForm.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
@@ -18,7 +18,6 @@ const formErrorMessage = ref("");
 const formSystem = ref("Stanton");
 const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
-const formRemarks = ref("");
 const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
 
 async function sendNewEmergency(): Promise<void> {
@@ -30,10 +29,11 @@ async function sendNewEmergency(): Promise<void> {
         formSubmittingEmergency.value = true;
 
         const response = await emergencyStore.createEmergency({
-            system: formSystem.value,
-            subsystem: formSubSystem.value,
+            location: {
+                system: formSystem.value,
+                subsystem: formSubSystem.value,
+            },
             threatLevel: parseInt(formSubThreatLevel.value),
-            remarks: formRemarks.value,
         });
 
         userStore.user.activeEmergency = response.id;
@@ -47,7 +47,6 @@ async function sendNewEmergency(): Promise<void> {
         formSystem.value = "Stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
-        formRemarks.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
         if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
@@ -117,19 +116,6 @@ async function sendNewEmergency(): Promise<void> {
                         <option value="2">🟡 {{ t("form_mediumThreat") }}</option>
                         <option value="3">🔴 {{ t("form_highThreat") }}</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="mt-5 lg:mt-0 lg:w-[48%]">
-                <LabelEmergencyForm title-local="form_remarks" description-local="form_helpRemarks" />
-                <div class="mt-2">
-                    <textarea
-                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage && !isFirefoxAndroid ? 'border-primary-400' : 'border-gray-400'"
-                        rows="1"
-                        v-model="formRemarks"
-                        :disabled="formSubmittingEmergency"
-                    />
                 </div>
             </div>
         </div>

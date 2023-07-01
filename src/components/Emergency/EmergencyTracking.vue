@@ -3,6 +3,7 @@ import { CancellationReason, ResponseRating, type TeamMember } from "@medrunner-
 import { computed, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
@@ -26,6 +27,7 @@ const cancelReason: Ref<CancellationReason | string> = ref("");
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
+const displayFormDetails = ref(true);
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -205,10 +207,13 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
         </div>
 
+        <EmergencyFormDetails v-if="!emergencyStore.isTrackedEmergencyCanceled && displayFormDetails" @details-sent="displayFormDetails = false" />
+
         <div
             class="mt-10"
             v-if="
                 !emergencyStore.isTrackedEmergencyCanceled &&
+                !displayFormDetails &&
                 (emergencyStore.trackedEmergency.status === 1 ||
                     emergencyStore.trackedEmergency.status === 2 ||
                     emergencyStore.trackedEmergency.status === 10)
@@ -273,6 +278,14 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 </div>
             </div>
         </div>
+
+        <p
+            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails"
+            @click="displayFormDetails = true"
+            class="mt-10 w-fit cursor-pointer items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
+        >
+            Send detailed information
+        </p>
 
         <div class="mt-10 flex flex-col lg:flex-row">
             <button
