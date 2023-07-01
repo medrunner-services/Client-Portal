@@ -104,7 +104,7 @@ async function loadDataForPage(direction: number): Promise<void> {
     page.value += direction;
 
     const startIndex = page.value * pageSize;
-    if (loadedHistory.length > startIndex) {
+    if (loadedHistory.length > startIndex + pageSize || (loadedHistory.length > startIndex && isLastPageHistory.value)) {
         setActivePageFromCache(startIndex);
         return;
     }
