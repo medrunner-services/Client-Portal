@@ -190,7 +190,7 @@
     "formDetailed_placeholderEnemies": "How many enemies are there?",
     "formDetailed_sendButton": "Send details",
     "formDetailed_skipButton": "Skip details",
-    "update_newFeatures_1-2-8": "Added a new form for the client to send additional informational inspired by the dispatcher template message, Added a \"What's New\" section in the user profile, Added a developer section to create and manage API tokens, Added new languages.",
-    "update_bugFixes_1-2-8": "Only one emergency in the history on each page after completing an emergency, Wrong logo showing up in different environments, Connection to the server not dropping after the maximum number of tries",
-    "update_improvements_1-2-8": "Moved the remarks section to the second form, Made the information text on inputs more user-friendly, Added team roles in the emergency tracking section, Minor UI improvements "
+    "update_newFeatures_1-2-8": "Added a new form for the client to send additional informational inspired by the dispatcher template message; Added a \"What's New\" section in the user profile; Added a developer section to create and manage API tokens; Added new languages.",
+    "update_bugFixes_1-2-8": "Only one emergency in the history on each page after completing an emergency; Wrong logo showing up in different environments; Connection to the server not dropping after the maximum number of tries",
+    "update_improvements_1-2-8": "Moved the remarks section to the second form; Made the information text on inputs more user-friendly; Added team roles in the emergency tracking section; Minor UI improvements"
 }

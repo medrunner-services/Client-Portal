@@ -20,13 +20,13 @@ const appVersionLocal = appVersion.replace(/\./g, "-");
 
 const newFeatures = computed(() => {
     if (te(`update_newFeatures_${appVersionLocal}`)) {
-        return t(`update_newFeatures_${appVersionLocal}`).split(",");
+        return t(`update_newFeatures_${appVersionLocal}`).split(";");
     } else return undefined;
 });
 
 const newBugFixes = computed(() => {
     if (te(`update_bugFixes_${appVersionLocal}`)) {
-        return t(`update_bugFixes_${appVersionLocal}`).split(",");
+        return t(`update_bugFixes_${appVersionLocal}`).split(";");
     } else return undefined;
 });
 
