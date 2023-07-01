@@ -24,6 +24,7 @@ let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
 const errorLoadingTrackedEmergency = ref(false);
 const errorLoadingHistory = ref(false);
+const canceledEmergency = ref(false);
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -204,6 +205,7 @@ const isLastPageHistory = computed(() => {
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
+                @canceledEmergency="canceledEmergency = true"
                 :errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"
             />
 

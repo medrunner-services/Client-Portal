@@ -60,6 +60,23 @@ async function disconnect(): Promise<void> {
     await router.push("/login");
 }
 
+function getLanguageString(languageLocal: string): string {
+    switch (languageLocal) {
+        case "en-US":
+            return "English";
+        case "fr-FR":
+            return "Français";
+        case "de-DE":
+            return "Deutsch";
+        case "it-IT":
+            return "Italiano";
+        case "da-DK":
+            return "Dansk";
+        default:
+            return "English";
+    }
+}
+
 function disableScrolling(): void {
     document.body.style.height = "100%";
     document.body.style.overflow = "hidden";
