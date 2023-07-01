@@ -54,6 +54,8 @@ export const useLogicStore = defineStore("logic", () => {
                 return "Italiano";
             case "da-DK":
                 return "Dansk";
+            case "zh-TW":
+                return "台湾普通话";
             default:
                 return "English";
         }
