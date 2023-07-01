@@ -32,7 +32,7 @@ const newBugFixes = computed(() => {
 
 const newImprovements = computed(() => {
     if (te(`update_improvements_${appVersionLocal}`)) {
-        return t(`update_improvements_${appVersionLocal}`).split(",");
+        return t(`update_improvements_${appVersionLocal}`).split(";");
     } else return undefined;
 });
 
