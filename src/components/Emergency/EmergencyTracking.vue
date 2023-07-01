@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { CancellationReason, ResponseRating } from "@medrunner-services/api-client";
+import { CancellationReason, ResponseRating, type TeamMember } from "@medrunner-services/api-client";
 import { computed, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
@@ -26,6 +27,7 @@ const cancelReason: Ref<CancellationReason | string> = ref("");
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
+const displayFormDetails = ref(true);
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -109,6 +111,24 @@ function getThreatString(id: number): string {
     }
 }
 
+function getClassString(id: number): string {
+    switch (id) {
+        case 1:
+            return `🩺 ${t("tracking_classMedic")}`;
+        case 2:
+            return `🛡️ ${t("tracking_classSecurity")}`;
+        case 3:
+            return `✈️ ${t("tracking_classPilot")}`;
+        case 4:
+            return `🗣️ ${t("tracking_classLead")}`;
+        case 9:
+            return `🚁 ${t("tracking_classQRF")}`;
+
+        default:
+            return t("tracking_classOthers");
+    }
+}
+
 async function submitCancelEmergency(): Promise<void> {
     formCancelingEmergency.value = true;
     if (typeof cancelReason.value === "string") {
@@ -147,6 +167,22 @@ function rejoinEmergency(): void {
     cancelEmergencyError.value = false;
     cancelReason.value = "";
 }
+
+function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
+    const transformedObj: Record<number, TeamMember[]> = {};
+
+    array.forEach(TeamMember => {
+        const { class: classValue } = TeamMember;
+
+        if (!transformedObj[classValue]) {
+            transformedObj[classValue] = [];
+        }
+
+        transformedObj[classValue].push(TeamMember);
+    });
+
+    return transformedObj;
+}
 </script>
 
 <template>
@@ -170,10 +206,13 @@ function rejoinEmergency(): void {
             <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
         </div>
 
+        <EmergencyFormDetails v-if="!emergencyStore.isTrackedEmergencyCanceled && displayFormDetails" @details-sent="displayFormDetails = false" />
+
         <div
             class="mt-10"
             v-if="
                 !emergencyStore.isTrackedEmergencyCanceled &&
+                !displayFormDetails &&
                 (emergencyStore.trackedEmergency.status === 1 ||
                     emergencyStore.trackedEmergency.status === 2 ||
                     emergencyStore.trackedEmergency.status === 10)
@@ -201,22 +240,50 @@ function rejoinEmergency(): void {
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
+
+            <div v-auto-animate class="mt-10">
+                <p
+                    v-if="
+                        emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0 ||
+                        emergencyStore.trackedEmergency.respondingTeam.staff.length > 0
+                    "
+                    class="mb-3 font-Mohave text-2xl font-semibold text-primary-900"
+                >
+                    {{ t("tracking_responders") }}
+                </p>
+
+                <div v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0" class="lg:mt-5 lg:flex lg:justify-between">
+                    <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                        <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
+                        <ul class="mt-2 list-none">
+                            <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers">{{ dispatcher.rsiHandle }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
+                    <div class="grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
+                        <div
+                            v-for="responderClass in ResponderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
+                            class="bg-gray-50 p-4 shadow-md"
+                        >
+                            <p class="font-Mohave text-2xl font-semibold lg:text-xl">{{ getClassString(responderClass[0].class) }}</p>
+                            <ul class="mt-2 list-none">
+                                <li v-for="responder in responderClass">{{ responder.rsiHandle }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div
-            v-if="
-                !emergencyStore.isTrackedEmergencyCanceled &&
-                (emergencyStore.trackedEmergency.status === 2 || emergencyStore.trackedEmergency.status === 10)
-            "
-            class="mt-10"
+        <p
+            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails"
+            @click="displayFormDetails = true"
+            class="mt-10 w-fit cursor-pointer items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
         >
-            <p class="mb-3 font-Mohave text-2xl font-semibold text-primary-900">
-                {{ t("tracking_responders") }}
-            </p>
-            <p v-for="responder in emergencyStore.trackedEmergency.respondingTeam.staff" class="font-medium">
-                {{ responder.rsiHandle }}
-            </p>
-        </div>
+            {{ t("tracking_sendDetailedInformationButton") }}
+        </p>
 
         <div class="mt-10 flex flex-col lg:flex-row">
             <button

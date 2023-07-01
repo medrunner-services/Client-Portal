@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { onMounted, type Ref, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const { t } = useI18n();
 const emit = defineEmits(["tokenCreated"]);
 
 const newTokenName = ref("");
@@ -47,8 +49,7 @@ const copyTokenToClipboard = (): void => {
 
 <template>
     <div v-if="createdToken">
-        <!--  TODO: Add localization -->
-        <p class="mt-4">Make sure to copy your api token now. You won’t be able to see it again!</p>
+        <p class="mt-4">{{ t("developer_createTokenAlertCopy") }}</p>
         <div class="mt-4 flex w-full">
             <div class="bg-neutral-700 text-center font-Inter text-xs text-neutral-50">
                 <p class="break-all px-2 py-3">
@@ -60,9 +61,8 @@ const copyTokenToClipboard = (): void => {
     </div>
 
     <form class="mt-10" @submit.prevent="createToken()" v-else>
-        <!--  TODO: Add localization -->
         <div>
-            <label>Name*</label>
+            <label>{{ t("developer_createTokenFormName") }}</label>
             <input
                 type="text"
                 autocomplete="off"
@@ -70,13 +70,13 @@ const copyTokenToClipboard = (): void => {
                 class="mt-2 w-full focus:border-secondary-500 focus:ring-secondary-500"
                 :class="errorCreationToken ? 'input-text-error' : 'input-text'"
                 :disabled="submittingNewToken"
-                placeholder="Name for the token"
+                :placeholder="t('developer_createTokenPlaceholderFormName')"
                 required
             />
         </div>
 
         <div class="mt-6">
-            <label>Expiration date</label>
+            <label>{{ t("developer_createTokenFormExpirationDate") }}</label>
             <input
                 type="date"
                 v-model="newTokenExpirationDate"
@@ -106,8 +106,7 @@ const copyTokenToClipboard = (): void => {
                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
             </svg>
-            <!--  TODO: Add localization -->
-            <span v-else>Create Token</span>
+            <span v-else>{{ t("developer_createTokenFormButton") }}</span>
         </button>
     </form>
 </template>

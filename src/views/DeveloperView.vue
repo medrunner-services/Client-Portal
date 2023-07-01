@@ -43,26 +43,22 @@ async function deletedToken(id: string): Promise<void> {
         <div class="content-container">
             <div class="mb-10 flex items-center justify-between">
                 <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
-                    <!--  TODO: Add localization -->
-                    API Tokens
+                    {{ t("developer_apiTokensTitle") }}
                 </h2>
 
                 <button class="h-fit bg-primary-900 px-6 py-2 font-medium text-gray-50" @click="displayCreateTokenModal = true">
-                    <!--  TODO: Add localization -->
-                    Create Token
+                    {{ t("developer_createTokenButton") }}
                 </button>
             </div>
 
             <Loader v-if="loadingTokens" class="flex h-80 w-full items-center justify-center" />
-            <!--  TODO: Add localization -->
-            <p class="text-primary-400" v-if="loadingTokensError">Error Loading tokens</p>
+            <p class="text-primary-400" v-if="loadingTokensError">{{ t("error_loadingTokens") }}</p>
 
             <div v-auto-animate v-if="!loadingTokens">
                 <div class="mb-4 flex justify-between gap-4">
                     <div class="grid w-full grid-cols-2 font-Mohave text-xl font-semibold text-primary-900">
-                        <!--  TODO: Add localization -->
-                        <div>Name</div>
-                        <div>Last Used</div>
+                        <div>{{ t("developer_tokenListName") }}</div>
+                        <div>{{ t("developer_tokenListLastUsed") }}</div>
                     </div>
                     <div class="w-5"></div>
                 </div>

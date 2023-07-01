@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import LabelEmergencyForm from "@/components/Emergency/LabelEmergencyForm.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
@@ -17,7 +18,6 @@ const formErrorMessage = ref("");
 const formSystem = ref("Stanton");
 const formSubSystem = ref("");
 const formSubThreatLevel = ref("");
-const formRemarks = ref("");
 const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
 
 async function sendNewEmergency(): Promise<void> {
@@ -29,10 +29,11 @@ async function sendNewEmergency(): Promise<void> {
         formSubmittingEmergency.value = true;
 
         const response = await emergencyStore.createEmergency({
-            system: formSystem.value,
-            subsystem: formSubSystem.value,
+            location: {
+                system: formSystem.value,
+                subsystem: formSubSystem.value,
+            },
             threatLevel: parseInt(formSubThreatLevel.value),
-            remarks: formRemarks.value,
         });
 
         userStore.user.activeEmergency = response.id;
@@ -46,7 +47,6 @@ async function sendNewEmergency(): Promise<void> {
         formSystem.value = "Stanton";
         formSubSystem.value = "";
         formSubThreatLevel.value = "";
-        formRemarks.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
         if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
@@ -60,10 +60,7 @@ async function sendNewEmergency(): Promise<void> {
     <form @submit.prevent="sendNewEmergency()">
         <div class="lg:w-full">
             <div class="lg:w-[48%]">
-                <div class="flex w-full items-center">
-                    <label class="text-sm font-semibold">{{ t("form_SCUsername") }}</label>
-                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSCUsername')" />
-                </div>
+                <LabelEmergencyForm title-local="form_SCUsername" description-local="form_helpSCUsername" />
                 <div class="mt-2 flex w-full">
                     <input type="text" class="input-text w-fit flex-grow" :value="userStore.user.rsiHandle" disabled />
                 </div>
@@ -72,10 +69,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <div class="mt-10 lg:flex lg:w-full lg:justify-between">
             <div class="lg:w-[48%]">
-                <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_system") }}*</label>
-                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSystem')" />
-                </div>
+                <LabelEmergencyForm title-local="form_system" description-local="form_helpSystem" />
                 <div class="mt-2">
                     <select class="w-full" disabled v-model="formSystem" :required="!isFirefoxAndroid">
                         <option value="Stanton">Stanton</option>
@@ -84,10 +78,7 @@ async function sendNewEmergency(): Promise<void> {
             </div>
 
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
-                <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_subSystem") }}*</label>
-                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpSubSystem')" />
-                </div>
+                <LabelEmergencyForm title-local="form_subSystem" description-local="form_helpSubSystem" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -108,10 +99,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <div class="mt-5 lg:flex lg:w-full lg:justify-between">
             <div class="lg:mt-0 lg:w-[48%]">
-                <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_threatLevel") }}*</label>
-                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpThreatLevel')" />
-                </div>
+                <LabelEmergencyForm title-local="form_threatLevel" description-local="form_helpThreatLevel" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -128,22 +116,6 @@ async function sendNewEmergency(): Promise<void> {
                         <option value="2">🟡 {{ t("form_mediumThreat") }}</option>
                         <option value="3">🔴 {{ t("form_highThreat") }}</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="mt-5 lg:mt-0 lg:w-[48%]">
-                <div class="flex items-center">
-                    <label class="text-sm font-semibold">{{ t("form_remarks") }}</label>
-                    <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('form_helpRemarks')" />
-                </div>
-                <div class="mt-2">
-                    <textarea
-                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage && !isFirefoxAndroid ? 'border-primary-400' : 'border-gray-400'"
-                        rows="1"
-                        v-model="formRemarks"
-                        :disabled="formSubmittingEmergency"
-                    />
                 </div>
             </div>
         </div>
