@@ -278,7 +278,13 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
         </div>
 
         <p
-            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails"
+            v-if="
+                !emergencyStore.isTrackedEmergencyCanceled &&
+                !displayFormDetails &&
+                (emergencyStore.trackedEmergency.status === 1 ||
+                    emergencyStore.trackedEmergency.status === 2 ||
+                    emergencyStore.trackedEmergency.status === 10)
+            "
             @click="displayFormDetails = true"
             class="mt-10 w-fit cursor-pointer items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
         >
