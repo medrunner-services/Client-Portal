@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 
 export const useLogicStore = defineStore("logic", () => {
     const isRouterLoading = ref(false);
+    const isNotificationGranted = ref(Notification.permission === "granted");
 
     const userDevice = computed(() => {
         if (navigator.userAgent.includes("Android")) {
@@ -63,6 +64,7 @@ export const useLogicStore = defineStore("logic", () => {
 
     return {
         isRouterLoading,
+        isNotificationGranted,
         userDevice,
         userBrowser,
         discordBaseUrl,

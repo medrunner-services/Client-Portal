@@ -27,7 +27,7 @@ const cancelReason: Ref<CancellationReason | string> = ref("");
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
-const displayFormDetails = ref(true);
+const displayFormDetails = ref(false);
 
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
@@ -35,6 +35,7 @@ onMounted(async () => {
         if (userStore.user.activeEmergency) {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+                if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
             } catch (e) {
                 errorLoadingEmergency.value = true;
             }
@@ -206,7 +207,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
         </div>
 
-        <EmergencyFormDetails v-if="!emergencyStore.isTrackedEmergencyCanceled && displayFormDetails" @details-sent="displayFormDetails = false" />
+        <EmergencyFormDetails v-if="!emergencyStore.isTrackedEmergencyCanceled && displayFormDetails" @close="displayFormDetails = false" />
 
         <div
             class="mt-10"

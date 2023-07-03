@@ -9,11 +9,13 @@ import EmergencyHistory from "@/components/Emergency/EmergencyHistory.vue";
 import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { api } from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const pageSize = 5;
@@ -31,11 +33,25 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
+    if (!logicStore.isNotificationGranted) {
+        Notification.requestPermission().then(permission => {
+            if (permission == "granted") logicStore.isNotificationGranted = true;
+        });
+    }
+
     const apiWebsocket = await api.websocket.initialize();
     await apiWebsocket.start();
 
     apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
-        if (newEmergency.clientId === userStore.user.id) userStore.user.activeEmergency = newEmergency.id;
+        if (newEmergency.clientId === userStore.user.id) {
+            userStore.user.activeEmergency = newEmergency.id;
+            if (logicStore.isNotificationGranted) {
+                new Notification(`Emergency created!`, {
+                    body: "Your emergency has been received, a team will be dispatched to your location shortly.",
+                    icon: "/images/medrunner-logo-square.webp",
+                });
+            }
+        }
     });
 
     apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {

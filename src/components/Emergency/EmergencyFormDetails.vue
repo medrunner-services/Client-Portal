@@ -8,7 +8,7 @@ import { useEmergencyStore } from "@/stores/emergencyStore";
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
-const emit = defineEmits(["detailsSent"]);
+const emit = defineEmits(["close"]);
 
 const formErrorMessage = ref("");
 const formSubmittingEmergency = ref(false);
@@ -82,7 +82,7 @@ async function sendDetails(): Promise<void> {
         formEnemiesDetails.value = "";
         formRemarks.value = "";
 
-        emit("detailsSent");
+        emit("close");
     } catch (error: any) {
         formSubmittingEmergency.value = false;
         if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
@@ -257,7 +257,7 @@ async function sendDetails(): Promise<void> {
             </button>
 
             <button
-                @click="$emit('detailsSent')"
+                @click.prevent="$emit('close')"
                 class="mt-5 flex w-full items-center justify-center border-2 border-primary-900 px-6 py-3 font-medium text-primary-900 lg:mt-0 lg:w-fit"
                 :disabled="formSubmittingEmergency"
             >
