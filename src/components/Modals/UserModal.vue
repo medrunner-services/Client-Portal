@@ -15,7 +15,7 @@ const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
-const updateNotificationError = ref(false);
+const updateNotificationError = ref("");
 const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
 const notificationCheckbox = ref(logicStore.isNotificationGranted);
@@ -81,20 +81,21 @@ function updateNotificationPerms(): void {
         } else {
             Notification.requestPermission()
                 .then(permission => {
-                    if (permission == "granted") {
+                    if (permission === "granted") {
                         notificationCheckbox.value = true;
+                        updateNotificationError.value = "";
                         logicStore.isNotificationGranted = true;
                         localStorage.setItem("notificationActivated", "true");
                     } else {
                         notificationCheckbox.value = false;
                         logicStore.isNotificationGranted = false;
-                        updateNotificationError.value = true;
+                        updateNotificationError.value = t("error_notificationPermissions");
                     }
                 })
                 .catch(() => {
                     notificationCheckbox.value = false;
                     logicStore.isNotificationGranted = false;
-                    updateNotificationError.value = true;
+                    updateNotificationError.value = t("error_generic");
                 });
         }
     }
@@ -174,7 +175,7 @@ function updateNotificationPerms(): void {
                 ></div>
             </label>
         </div>
-        <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ t("error_generic") }}</p>
+        <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ updateNotificationError }}</p>
     </div>
 
     <div class="border-b border-gray-200 py-5">

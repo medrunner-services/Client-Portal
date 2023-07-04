@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "此RSI帳戶已被綁定",
     "error_loadingTrackedEmergency": "再載入您的緊急需求當中遇到錯誤",
     "error_loadingTokens": null,
+    "error_notificationPermissions": null,
     "history_unknown": "未知",
     "history_low": "低",
     "history_medium": "中",

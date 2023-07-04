@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "This RSI account is already linked",
     "error_loadingTrackedEmergency": "An error occurred loading your ongoing emergency",
     "error_loadingTokens": "Error loading tokens",
+    "error_notificationPermissions": "You must allow browser notifications to use this feature",
     "history_unknown": "Unknown",
     "history_low": "No threat",
     "history_medium": "PvE",

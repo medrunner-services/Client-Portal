@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Dieses RSI-Konto ist bereits verlinkt",
     "error_loadingTrackedEmergency": "Beim Laden Ihres laufenden Notrufs ist ein Fehler aufgetreten",
     "error_loadingTokens": "Fehler beim Laden der Tokens",
+    "error_notificationPermissions": null,
     "history_unknown": "Unbekannt",
     "history_low": "Keine Gefahr",
     "history_medium": "PvE-Gefahr",

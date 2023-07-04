@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Questo account RSI è già collegato",
     "error_loadingTrackedEmergency": "Si è verificato un errore durante il caricamento della tua emergenza in corso",
     "error_loadingTokens": null,
+    "error_notificationPermissions": null,
     "history_unknown": "Sconosciuto",
     "history_low": "Basso",
     "history_medium": "Medio",

@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Ce compte RSI est déjà associé",
     "error_loadingTrackedEmergency": "Une erreur s'est produite lors du chargement de l'urgence en cours",
     "error_loadingTokens": "Erreur lors du chargement des jetons",
+    "error_notificationPermissions": "Vous devez autoriser les notifications du navigateur pour utiliser cette fonctionnalité",
     "history_unknown": "Inconnu",
     "history_low": "Pas de danger",
     "history_medium": "PvE",

@@ -57,7 +57,7 @@ async function deletedToken(id: string): Promise<void> {
 
             <div v-auto-animate v-if="!loadingTokens">
                 <div class="mb-4 flex justify-between gap-4">
-                    <div class="grid w-full grid-cols-2 font-Mohave text-xl font-semibold text-primary-900">
+                    <div class="grid w-full grid-cols-2 gap-x-8 font-Mohave text-xl font-semibold text-primary-900 lg:gap-x-0">
                         <div>{{ t("developer_tokenListName") }}</div>
                         <div>{{ t("developer_tokenListLastUsed") }}</div>
                     </div>

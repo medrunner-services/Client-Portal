@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Denne RSI-konto er allerede tilknyttet",
     "error_loadingTrackedEmergency": "Der opstod en fejl ved indlæsning din nødsituation",
     "error_loadingTokens": null,
+    "error_notificationPermissions": null,
     "history_unknown": "Ukendt",
     "history_low": "Lav",
     "history_medium": "Medium",
