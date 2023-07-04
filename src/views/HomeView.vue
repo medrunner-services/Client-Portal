@@ -174,7 +174,7 @@ const isLastPageHistory = computed(() => {
                     <EmergencyHistory
                         v-auto-animate="{ duration: 100 }"
                         v-for="emergency in activePage"
-                        :key="emergency.creationTimestamp"
+                        :key="emergency.id"
                         class="mt-4 first:mt-0"
                         :emergency="emergency"
                     />

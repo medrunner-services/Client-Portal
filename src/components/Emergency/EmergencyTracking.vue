@@ -220,7 +220,9 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                     <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
                         <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
                         <ul class="mt-2 list-none">
-                            <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers">{{ dispatcher.rsiHandle }}</li>
+                            <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers" :key="dispatcher.discordId">
+                                {{ dispatcher.rsiHandle }}
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -233,7 +235,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                         >
                             <p class="font-Mohave text-2xl font-semibold lg:text-xl">{{ getClassString(responderClass[0].class) }}</p>
                             <ul class="mt-2 list-none">
-                                <li v-for="responder in responderClass">{{ responder.rsiHandle }}</li>
+                                <li v-for="responder in responderClass" :key="responder.discordId">{{ responder.rsiHandle }}</li>
                             </ul>
                         </div>
                     </div>
