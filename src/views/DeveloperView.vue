@@ -25,7 +25,8 @@ onMounted(async () => {
 async function getTokens(): Promise<void> {
     loadingTokens.value = true;
     try {
-        tokens.value = await userStore.fetchUserApiTokens();
+        const apiTokens = await userStore.fetchUserApiTokens();
+        tokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
     } catch (e) {
         loadingTokensError.value = true;
     } finally {
