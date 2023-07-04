@@ -162,9 +162,6 @@
     "user_improvementsTitle": "Améliorations",
     "user_developerLink": "Section développeur",
     "user_privacyPolicyLink": "Politique de confidentialité",
-    "user_noFeatures": "Pas de nouvelles fonctionnalités",
-    "user_noBugFixes": "Pas de nouvelles corrections de bugs",
-    "user_noImprovements": "Pas de nouvelles améliorations",
     "formDetailed_yes": "Oui",
     "formDetailed_no": "Non",
     "formDetailed_situation": "Situation",
@@ -190,8 +187,5 @@
     "formDetailed_helpEnemies": "Y a-t-il des ennemis sur votre position ? Si oui, combien ?",
     "formDetailed_placeholderEnemies": "Combien y a-t-il d'ennemis ?",
     "formDetailed_sendButton": "Envoyer les informations",
-    "formDetailed_skipButton": "Ignorer les informations",
-    "update_newFeatures_1-2-8": "Ajout d'un nouveau formulaire permettant au client d'envoyer des informations supplémentaires inspirées du message type du dispatch; Ajout d'une section \"Quoi de neuf\" dans le profil de l'utilisateur; Ajout d'une section pour les développeurs permettant de créer et de gérer des jetons d'API; Ajout de nouvelles langues.",
-    "update_bugFixes_1-2-8": "Une seule urgence dans l'historique sur chaque page après avoir terminé une urgence; Logo erroné apparaissant dans différents environnements; Connexion au serveur ne s'interrompant pas après le nombre maximum de tentatives",
-    "update_improvements_1-2-8": "Déplacement de la section des remarques vers le deuxième formulaire; Amélioration des textes d'information sur les entrées des formulaires; Ajout de rôles d'équipe dans la section de suivi des urgences; Améliorations mineures de l'interface"
+    "formDetailed_skipButton": "Ignorer les informations"
 }

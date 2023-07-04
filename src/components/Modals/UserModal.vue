@@ -21,25 +21,6 @@ const displayFullUpdateNotes = ref(false);
 const notificationCheckbox = ref(logicStore.isNotificationGranted);
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
-const appVersionLocal = appVersion.replace(/\./g, "-");
-
-const newFeatures = computed(() => {
-    if (te(`update_newFeatures_${appVersionLocal}`)) {
-        return t(`update_newFeatures_${appVersionLocal}`).split(";");
-    } else return undefined;
-});
-
-const newBugFixes = computed(() => {
-    if (te(`update_bugFixes_${appVersionLocal}`)) {
-        return t(`update_bugFixes_${appVersionLocal}`).split(";");
-    } else return undefined;
-});
-
-const newImprovements = computed(() => {
-    if (te(`update_improvements_${appVersionLocal}`)) {
-        return t(`update_improvements_${appVersionLocal}`).split(";");
-    } else return undefined;
-});
 
 async function updateRsiHandle(): Promise<void> {
     if (!isInputtingRsiHandle.value) {
@@ -146,21 +127,27 @@ function updateNotificationPerms(): void {
     <div v-auto-animate class="border-b border-gray-200 py-5">
         <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
         <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
-        <ul v-if="newFeatures" class="list-inside list-disc">
-            <li v-for="feature in newFeatures">{{ feature }}</li>
+        <ul class="list-inside list-disc">
+            <li>Added a new form for the client to send additional informational inspired by the dispatcher template message</li>
+            <li>"What's New" section in the user profile</li>
+            <li>Notifications are now sent on supported browsers when an emergency is updated (can be toggled on and off in the user profile).</li>
+            <li>Developer section to create and manage API tokens</li>
+            <li>3 new languages are available</li>
         </ul>
-        <p v-else class="mt-2">{{ t("user_noFeatures") }}</p>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
-            <ul v-if="newBugFixes" class="list-inside list-disc">
-                <li v-for="bugFixe in newBugFixes">{{ bugFixe }}</li>
+            <ul class="list-inside list-disc">
+                <li>Only one emergency in the history on each page after completing an emergency</li>
+                <li>Wrong logo showing up in different environments</li>
+                <li>Connection to the server not dropping after the maximum number of tries</li>
             </ul>
-            <p v-else class="mt-2">{{ t("user_noBugFixes") }}</p>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
-            <ul v-if="newImprovements" class="list-inside list-disc">
-                <li v-for="improvements in newImprovements">{{ improvements }}</li>
+            <ul class="list-inside list-disc">
+                <li>Moved the remarks section to the second form</li>
+                <li>Made the information text on inputs more user-friendly</li>
+                <li>Added team roles in the emergency tracking section</li>
+                <li>Minor UI improvements</li>
             </ul>
-            <p v-else class="mt-2">{{ t("user_noImprovements") }}</p>
         </div>
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
     </div>

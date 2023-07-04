@@ -162,9 +162,6 @@
     "user_improvementsTitle": null,
     "user_developerLink": null,
     "user_privacyPolicyLink": null,
-    "user_noFeatures": null,
-    "user_noBugFixes": null,
-    "user_noImprovements": null,
     "formDetailed_yes": null,
     "formDetailed_no": null,
     "formDetailed_situation": null,
@@ -190,8 +187,5 @@
     "formDetailed_helpEnemies": null,
     "formDetailed_placeholderEnemies": null,
     "formDetailed_sendButton": null,
-    "formDetailed_skipButton": null,
-    "update_newFeatures_1-2-8": null,
-    "update_bugFixes_1-2-8": null,
-    "update_improvements_1-2-8": null
+    "formDetailed_skipButton": null
 }
