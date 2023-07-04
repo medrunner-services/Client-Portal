@@ -154,7 +154,7 @@ function updateNotificationPerms(): void {
 
     <div class="border-b border-gray-200 py-5">
         <div class="flex items-center justify-between">
-            <span class="font-semibold">Notifications</span>
+            <span class="font-semibold">{{ t("user_notificationSetting") }}</span>
             <label class="relative mr-5 inline-flex cursor-pointer items-center">
                 <input @click="updateNotificationPerms" type="checkbox" v-model="notificationCheckbox" class="peer sr-only" />
                 <div

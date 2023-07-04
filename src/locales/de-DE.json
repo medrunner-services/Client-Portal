@@ -162,6 +162,7 @@
     "user_improvementsTitle": "Verbesserungen",
     "user_developerLink": "Entwicklerbereich",
     "user_privacyPolicyLink": "Datenschutzrichtlinie",
+    "user_notificationSetting": null,
     "formDetailed_yes": "Ja",
     "formDetailed_no": "Nein",
     "formDetailed_situation": "Situation",
