@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CancellationReason, ResponseRating, type TeamMember } from "@medrunner-services/api-client";
-import { computed, onMounted, type Ref, ref } from "vue";
+import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
@@ -45,54 +45,6 @@ onMounted(async () => {
             loadingEmergency.value = false;
             errorLoadingEmergency.value = true;
         }
-    }
-});
-
-const emergencyTitle = computed(() => {
-    switch (emergencyStore.trackedEmergency.status) {
-        case 1:
-            return "📡 " + t("tracking_messageReceived");
-        case 2:
-        case 10:
-            return "🚑 " + t("tracking_helpOnTheWay");
-        case 3:
-            return "✅ " + t("tracking_operationSuccessful");
-        case 4:
-            return "❌ " + t("tracking_operationFailed");
-        case 5:
-            return "🚫 " + t("tracking_operationNoContact");
-        case 6:
-            return "🚫 " + t("tracking_operationCanceled");
-        case 7:
-            return "⛔ " + t("tracking_operationRefused");
-        case 8:
-            return "↩️ " + t("tracking_operationAborted");
-        case 9:
-            return "🖥️ " + t("tracking_serverError");
-    }
-});
-
-const emergencySubTitle = computed(() => {
-    switch (emergencyStore.trackedEmergency.status) {
-        case 1:
-            return t("tracking_statusTextReceived");
-        case 2:
-        case 10:
-            return t("tracking_statusTextOnTheirWay");
-        case 3:
-            return t("tracking_statusTextSuccess");
-        case 4:
-            return t("tracking_statusTextFailed");
-        case 5:
-            return t("tracking_statusTextNoContact");
-        case 6:
-            return t("tracking_statusTextCanceled");
-        case 7:
-            return t("tracking_statusTextRefused");
-        case 8:
-            return t("tracking_statusTextAborted");
-        case 9:
-            return t("tracking_statusTextServerError");
     }
 });
 
@@ -203,11 +155,22 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             <p class="text-sm font-medium">{{ t("tracking_statusTextCanceled") }}</p>
         </div>
         <div v-else>
-            <p class="font-Mohave text-3xl font-semibold text-primary-900">{{ emergencyTitle }}</p>
-            <p class="text-sm font-medium">{{ emergencySubTitle }}</p>
+            <p class="font-Mohave text-3xl font-semibold text-primary-900">
+                {{ logicStore.getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
+            </p>
+            <p class="text-sm font-medium">{{ logicStore.getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
         </div>
 
-        <EmergencyFormDetails v-if="!emergencyStore.isTrackedEmergencyCanceled && displayFormDetails" @close="displayFormDetails = false" />
+        <EmergencyFormDetails
+            v-if="
+                !emergencyStore.isTrackedEmergencyCanceled &&
+                (emergencyStore.trackedEmergency.status === 1 ||
+                    emergencyStore.trackedEmergency.status === 2 ||
+                    emergencyStore.trackedEmergency.status === 10) &&
+                displayFormDetails
+            "
+            @close="displayFormDetails = false"
+        />
 
         <div
             class="mt-10"

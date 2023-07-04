@@ -26,6 +26,7 @@ let activePage: Ref<Array<Emergency>> = ref([]);
 const loaded = ref(false);
 const errorLoadingTrackedEmergency = ref(false);
 const errorLoadingHistory = ref(false);
+const currentTrackedEmergencyStatus = ref();
 
 onMounted(async () => {
     const shouldFetchExtra = userStore.user?.activeEmergency !== undefined;
@@ -33,9 +34,12 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
-    if (!logicStore.isNotificationGranted) {
+    if (Notification.permission === "default" && localStorage.getItem("notificationActivated") == null) {
         Notification.requestPermission().then(permission => {
-            if (permission == "granted") logicStore.isNotificationGranted = true;
+            if (permission == "granted") {
+                logicStore.isNotificationGranted = true;
+                localStorage.setItem("notificationActivated", "true");
+            }
         });
     }
 
@@ -45,12 +49,7 @@ onMounted(async () => {
     apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
         if (newEmergency.clientId === userStore.user.id) {
             userStore.user.activeEmergency = newEmergency.id;
-            if (logicStore.isNotificationGranted) {
-                new Notification(`Emergency created!`, {
-                    body: "Your emergency has been received, a team will be dispatched to your location shortly.",
-                    icon: "/images/medrunner-logo-square.webp",
-                });
-            }
+            currentTrackedEmergencyStatus.value = newEmergency.status;
         }
     });
 
@@ -58,8 +57,22 @@ onMounted(async () => {
         if (updatedEmergency.id === userStore.user.activeEmergency && !loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
             if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
                 completeEmergency(updatedEmergency);
+                currentTrackedEmergencyStatus.value = updatedEmergency.status;
             } else {
                 emergencyStore.trackedEmergency = updatedEmergency;
+
+                if (
+                    logicStore.isNotificationGranted &&
+                    updatedEmergency.status !== currentTrackedEmergencyStatus.value &&
+                    ![1, 10].includes(updatedEmergency.status)
+                ) {
+                    new Notification(logicStore.getEmergencyStatusTitle(updatedEmergency.status), {
+                        body: logicStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                        icon: "/images/medrunner-logo-square.webp",
+                    });
+                }
+
+                currentTrackedEmergencyStatus.value = updatedEmergency.status;
             }
         }
     });

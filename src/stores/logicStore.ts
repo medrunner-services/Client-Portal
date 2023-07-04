@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 export const useLogicStore = defineStore("logic", () => {
+    const { t } = useI18n();
     const isRouterLoading = ref(false);
-    const isNotificationGranted = ref(Notification.permission === "granted");
+    const isNotificationGranted = ref(Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true");
 
     const userDevice = computed(() => {
         if (navigator.userAgent.includes("Android")) {
@@ -43,6 +45,58 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    function getEmergencyStatusTitle(status: number): string {
+        switch (status) {
+            case 1:
+                return "📡 " + t("tracking_messageReceived");
+            case 2:
+            case 10:
+                return "🚑 " + t("tracking_helpOnTheWay");
+            case 3:
+                return "✅ " + t("tracking_operationSuccessful");
+            case 4:
+                return "❌ " + t("tracking_operationFailed");
+            case 5:
+                return "🚫 " + t("tracking_operationNoContact");
+            case 6:
+                return "🚫 " + t("tracking_operationCanceled");
+            case 7:
+                return "⛔ " + t("tracking_operationRefused");
+            case 8:
+                return "↩️ " + t("tracking_operationAborted");
+            case 9:
+                return "🖥️ " + t("tracking_serverError");
+            default:
+                return "Unknown";
+        }
+    }
+
+    function getEmergencyStatusSubtitle(status: number): string {
+        switch (status) {
+            case 1:
+                return t("tracking_statusTextReceived");
+            case 2:
+            case 10:
+                return t("tracking_statusTextOnTheirWay");
+            case 3:
+                return t("tracking_statusTextSuccess");
+            case 4:
+                return t("tracking_statusTextFailed");
+            case 5:
+                return t("tracking_statusTextNoContact");
+            case 6:
+                return t("tracking_statusTextCanceled");
+            case 7:
+                return t("tracking_statusTextRefused");
+            case 8:
+                return t("tracking_statusTextAborted");
+            case 9:
+                return t("tracking_statusTextServerError");
+            default:
+                return "Unknown";
+        }
+    }
+
     function getLanguageString(languageLocal: string): string {
         switch (languageLocal) {
             case "en-US":
@@ -69,6 +123,8 @@ export const useLogicStore = defineStore("logic", () => {
         userBrowser,
         discordBaseUrl,
         medrunnerLogoUrl,
+        getEmergencyStatusTitle,
+        getEmergencyStatusSubtitle,
         getLanguageString,
     };
 });

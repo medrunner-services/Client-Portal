@@ -2,18 +2,23 @@
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+
 const { t, te } = useI18n();
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 
 const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 
 const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
+const updateNotificationError = ref(false);
 const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
+const notificationCheckbox = ref(logicStore.isNotificationGranted);
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
 const appVersionLocal = appVersion.replace(/\./g, "-");
@@ -62,6 +67,38 @@ async function updateRsiHandle(): Promise<void> {
         rsiHandleUpdating.value = false;
     }
 }
+
+function updateNotificationPerms(): void {
+    if (logicStore.isNotificationGranted) {
+        notificationCheckbox.value = false;
+        logicStore.isNotificationGranted = false;
+        localStorage.setItem("notificationActivated", "false");
+    } else {
+        if (Notification.permission === "granted") {
+            notificationCheckbox.value = true;
+            logicStore.isNotificationGranted = true;
+            localStorage.setItem("notificationActivated", "true");
+        } else {
+            Notification.requestPermission()
+                .then(permission => {
+                    if (permission == "granted") {
+                        notificationCheckbox.value = true;
+                        logicStore.isNotificationGranted = true;
+                        localStorage.setItem("notificationActivated", "true");
+                    } else {
+                        notificationCheckbox.value = false;
+                        logicStore.isNotificationGranted = false;
+                        updateNotificationError.value = true;
+                    }
+                })
+                .catch(() => {
+                    notificationCheckbox.value = false;
+                    logicStore.isNotificationGranted = false;
+                    updateNotificationError.value = true;
+                });
+        }
+    }
+}
 </script>
 
 <template>
@@ -105,7 +142,6 @@ async function updateRsiHandle(): Promise<void> {
         </p>
     </div>
 
-    <!--  TODO: Add localization  -->
     <div v-auto-animate class="border-b border-gray-200 py-5">
         <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
         <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
@@ -125,7 +161,20 @@ async function updateRsiHandle(): Promise<void> {
             </ul>
             <p v-else class="mt-2">{{ t("user_noImprovements") }}</p>
         </div>
-        <p v-else class="mt-2 cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
+        <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
+    </div>
+
+    <div class="border-b border-gray-200 py-5">
+        <div class="flex items-center justify-between">
+            <span class="font-semibold">Notifications</span>
+            <label class="relative mr-5 inline-flex cursor-pointer items-center">
+                <input @click="updateNotificationPerms" type="checkbox" v-model="notificationCheckbox" class="peer sr-only" />
+                <div
+                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30"
+                ></div>
+            </label>
+        </div>
+        <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ t("error_generic") }}</p>
     </div>
 
     <div class="border-b border-gray-200 py-5">
