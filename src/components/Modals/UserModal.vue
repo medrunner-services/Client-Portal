@@ -147,6 +147,7 @@ function updateDarkMode(): void {
             <li>"What's New" section in the user profile</li>
             <li>Notifications are now sent on supported browsers when an emergency is updated (can be toggled on and off in the user profile).</li>
             <li>Developer section to create and manage API tokens</li>
+            <li>Dark mode</li>
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
