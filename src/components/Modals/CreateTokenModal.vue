@@ -80,7 +80,7 @@ const copyTokenToClipboard = (): void => {
             <input
                 type="date"
                 v-model="newTokenExpirationDate"
-                class="mt-2 w-full focus:border-secondary-500 focus:ring-secondary-500"
+                class="mt-2 w-full focus:border-secondary-500 focus:ring-secondary-500 dark:[color-scheme:dark]"
                 :class="errorCreationToken ? 'input-text-error' : 'input-text'"
                 :disabled="submittingNewToken"
                 ref="inputExpirationDate"

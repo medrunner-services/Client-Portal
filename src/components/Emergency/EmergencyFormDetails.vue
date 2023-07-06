@@ -258,7 +258,7 @@ async function sendDetails(): Promise<void> {
 
             <button
                 @click.prevent="$emit('close')"
-                class="mt-5 flex w-full items-center justify-center border-2 border-primary-900 px-6 py-3 font-medium text-primary-900 lg:mt-0 lg:w-fit"
+                class="mt-5 flex w-full items-center justify-center border-2 border-primary-900 px-6 py-3 font-medium text-primary-900 dark:text-slate-50 lg:mt-0 lg:w-fit"
                 :disabled="formSubmittingEmergency"
             >
                 {{ t("formDetailed_skipButton") }}
@@ -269,7 +269,7 @@ async function sendDetails(): Promise<void> {
         </p>
     </form>
 
-    <div class="border-b border-gray-200 py-5"></div>
+    <div class="border-b border-gray-200 py-5 dark:border-stone-700"></div>
 </template>
 
 <style scoped></style>

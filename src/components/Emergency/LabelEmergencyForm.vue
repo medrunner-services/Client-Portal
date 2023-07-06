@@ -2,7 +2,10 @@
 import { type Ref, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
+
 const { t } = useI18n();
+const logicStore = useLogicStore();
 
 const props = defineProps({
     titleLocal: {
@@ -54,7 +57,7 @@ const handleClickOutside = (event: MouseEvent) => {
         <div class="relative">
             <img
                 ref="tooltipImg"
-                src="/icons/info-icon.svg"
+                :src="logicStore.darkMode ? '/icons/info-icon-dark.svg' : '/icons/info-icon.svg'"
                 alt="Info label"
                 class="ml-2 h-4 w-4 cursor-pointer"
                 @click="displayTooltip = !displayTooltip"
@@ -64,7 +67,7 @@ const handleClickOutside = (event: MouseEvent) => {
                 ref="tooltipDiv"
                 id="test"
                 v-if="displayTooltip"
-                class="absolute bottom-5 z-10 w-56 border bg-gray-50 px-2 py-3 shadow-xl"
+                class="absolute bottom-5 z-10 w-56 border bg-gray-50 px-2 py-3 shadow-xl dark:border-stone-500 dark:bg-stone-700 dark:shadow-lg dark:shadow-stone-800"
                 :class="alignment === 'left' ? '-right-10' : '-left-10'"
             >
                 <p class="text-sm">{{ t(descriptionLocal) }}</p>

@@ -7,12 +7,12 @@ import { useLogicStore } from "@/stores/logicStore";
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const clipboardIcon = ref("/icons/copy-icon.svg");
+const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
 const userAgent = navigator.userAgent;
 
 const copyUserAgentToClipboard = (): void => {
     navigator.clipboard.writeText(userAgent).then(() => {
-        clipboardIcon.value = "/icons/check-icon.svg";
+        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
     });
 };
 </script>

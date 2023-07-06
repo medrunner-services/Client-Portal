@@ -25,7 +25,8 @@ onMounted(async () => {
 async function getTokens(): Promise<void> {
     loadingTokens.value = true;
     try {
-        tokens.value = await userStore.fetchUserApiTokens();
+        const apiTokens = await userStore.fetchUserApiTokens();
+        tokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
     } catch (e) {
         loadingTokensError.value = true;
     } finally {
@@ -56,16 +57,17 @@ async function deletedToken(id: string): Promise<void> {
 
             <div v-auto-animate v-if="!loadingTokens">
                 <div class="mb-4 flex justify-between gap-4">
-                    <div class="grid w-full grid-cols-2 font-Mohave text-xl font-semibold text-primary-900">
+                    <div class="grid w-full grid-cols-2 gap-x-8 font-Mohave text-xl font-semibold text-primary-900 lg:gap-x-0">
                         <div>{{ t("developer_tokenListName") }}</div>
                         <div>{{ t("developer_tokenListLastUsed") }}</div>
                     </div>
                     <div class="w-5"></div>
                 </div>
                 <ApiTokenLine
-                    class="mb-2 border-b border-gray-200 py-2 last:mb-0"
+                    class="mb-2 border-b border-gray-200 py-2 last:mb-0 dark:border-stone-700"
                     v-for="token in tokens"
                     :token="token"
+                    :key="token.id"
                     @deleted-token="deletedToken"
                     @deleted-token-error="deleteTokenError = true"
                 />

@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Questo account RSI è già collegato",
     "error_loadingTrackedEmergency": "Si è verificato un errore durante il caricamento della tua emergenza in corso",
     "error_loadingTokens": null,
+    "error_notificationPermissions": null,
     "history_unknown": "Sconosciuto",
     "history_low": "Basso",
     "history_medium": "Medio",
@@ -161,9 +162,8 @@
     "user_improvementsTitle": null,
     "user_developerLink": null,
     "user_privacyPolicyLink": null,
-    "user_noFeatures": null,
-    "user_noBugFixes": null,
-    "user_noImprovements": null,
+    "user_notificationSetting": null,
+    "user_darkModeSetting": null,
     "formDetailed_yes": null,
     "formDetailed_no": null,
     "formDetailed_situation": null,
@@ -189,8 +189,5 @@
     "formDetailed_helpEnemies": null,
     "formDetailed_placeholderEnemies": null,
     "formDetailed_sendButton": null,
-    "formDetailed_skipButton": null,
-    "update_newFeatures_1-2-8": null,
-    "update_bugFixes_1-2-8": null,
-    "update_improvements_1-2-8": null
+    "formDetailed_skipButton": null
 }

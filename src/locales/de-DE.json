@@ -92,6 +92,7 @@
     "error_rsiAccountLinked": "Dieses RSI-Konto ist bereits verlinkt",
     "error_loadingTrackedEmergency": "Beim Laden Ihres laufenden Notrufs ist ein Fehler aufgetreten",
     "error_loadingTokens": "Fehler beim Laden der Tokens",
+    "error_notificationPermissions": "Sie müssen Browser-Benachrichtigungen zulassen, um diese Funktion nutzen zu können",
     "history_unknown": "Unbekannt",
     "history_low": "Keine Gefahr",
     "history_medium": "PvE-Gefahr",
@@ -161,9 +162,8 @@
     "user_improvementsTitle": "Verbesserungen",
     "user_developerLink": "Entwicklerbereich",
     "user_privacyPolicyLink": "Datenschutzrichtlinie",
-    "user_noFeatures": "Keine neuen Features",
-    "user_noBugFixes": "Keine neuen Fehlerbehebungen",
-    "user_noImprovements": "Keine neuen Verbesserungen",
+    "user_notificationSetting": "Benachrichtigungen",
+    "user_darkModeSetting": null,
     "formDetailed_yes": "Ja",
     "formDetailed_no": "Nein",
     "formDetailed_situation": "Situation",
@@ -189,8 +189,5 @@
     "formDetailed_helpEnemies": "Befinden sich Gegner an Ihrem Standort? Wenn ja, wie viele?",
     "formDetailed_placeholderEnemies": "Wie viele Gegner gibt es?",
     "formDetailed_sendButton": "Details senden",
-    "formDetailed_skipButton": "Details überspringen",
-    "update_newFeatures_1-2-8": "Hinzufügen eines neuen Formulars für den Kunden, inspiriert durch die Disponenten-Vorlage, um zusätzliche Informationen zu senden; Hinzufügen eines \"Was ist neu\"-Bereichs im Benutzerprofil; Hinzufügen eines Entwicklerbereichs zum Erstellen und Verwalten von API-Tokens; Neue Sprachen hinzugefügt.",
-    "update_bugFixes_1-2-8": "Nur ein Notfall im Verlauf auf jeder Seite, nachdem ein Einsatz abgeschlossen wurde; Falsches Logo in verschiedenen Umgebungen; Verbindung zum Server wurde nicht abgebrochen, nachdem die Maximalanzahl von Versuchen überschritten wurde",
-    "update_improvements_1-2-8": "Verschieben der \"Anmerkungen\"-Sektion in das zweite Formular; Informationstexte der Eingabefelder sind benutzerfreundlicher; Hinzufügen von Teamrollen in der Einsatzverfolgung; Kleinere UI-Verbesserungen"
+    "formDetailed_skipButton": "Details überspringen"
 }
