@@ -11,18 +11,6 @@ const logicStore = useLogicStore();
 
 onMounted(() => {
     if (
-        Notification.permission === "default" &&
-        (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
-    ) {
-        Notification.requestPermission().then(permission => {
-            if (permission == "granted") {
-                logicStore.isNotificationGranted = true;
-                localStorage.setItem("notificationActivated", "true");
-            }
-        });
-    }
-
-    if (
         (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem("darkMode") == null) ||
         localStorage.getItem("darkMode") === "true"
     ) {
