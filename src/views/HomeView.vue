@@ -34,6 +34,18 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
+    if (
+        Notification.permission === "default" &&
+        (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
+    ) {
+        Notification.requestPermission().then(permission => {
+            if (permission == "granted") {
+                logicStore.isNotificationGranted = true;
+                localStorage.setItem("notificationActivated", "true");
+            }
+        });
+    }
+
     const apiWebsocket = await api.websocket.initialize();
     await apiWebsocket.start();
 
