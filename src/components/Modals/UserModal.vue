@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useLogicStore } from "@/stores/logicStore";
@@ -19,6 +19,7 @@ const updateNotificationError = ref("");
 const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
 const notificationCheckbox = ref(logicStore.isNotificationGranted);
+const darkModeCheckbox = ref(logicStore.darkMode);
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
 
@@ -81,10 +82,24 @@ function updateNotificationPerms(): void {
         }
     }
 }
+
+function updateDarkMode(): void {
+    if (darkModeCheckbox.value) {
+        document.documentElement.classList.remove("dark");
+        darkModeCheckbox.value = false;
+        logicStore.darkMode = false;
+        localStorage.setItem("darkMode", "false");
+    } else {
+        document.documentElement.classList.add("dark");
+        darkModeCheckbox.value = true;
+        logicStore.darkMode = true;
+        localStorage.setItem("darkMode", "true");
+    }
+}
 </script>
 
 <template>
-    <div class="border-b border-gray-200 pb-5">
+    <div class="border-b border-gray-200 pb-5 dark:border-stone-700">
         <div class="mt-2 flex flex-col justify-between lg:flex-row lg:items-center">
             <input
                 v-if="isInputtingRsiHandle"
@@ -124,7 +139,7 @@ function updateNotificationPerms(): void {
         </p>
     </div>
 
-    <div v-auto-animate class="border-b border-gray-200 py-5">
+    <div v-auto-animate class="border-b border-gray-200 py-5 dark:border-stone-700">
         <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
         <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
         <ul class="list-inside list-disc">
@@ -132,7 +147,6 @@ function updateNotificationPerms(): void {
             <li>"What's New" section in the user profile</li>
             <li>Notifications are now sent on supported browsers when an emergency is updated (can be toggled on and off in the user profile).</li>
             <li>Developer section to create and manage API tokens</li>
-            <li>3 new languages are available</li>
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
@@ -152,7 +166,7 @@ function updateNotificationPerms(): void {
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
     </div>
 
-    <div class="border-b border-gray-200 py-5">
+    <div class="border-b border-gray-200 py-5 dark:border-stone-700">
         <div class="flex items-center justify-between">
             <span class="font-semibold">{{ t("user_notificationSetting") }}</span>
             <label class="relative mr-5 inline-flex cursor-pointer items-center">
@@ -163,9 +177,18 @@ function updateNotificationPerms(): void {
             </label>
         </div>
         <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ updateNotificationError }}</p>
+        <div class="mt-2 flex items-center justify-between">
+            <span class="font-semibold">{{ t("user_darkModeSetting") }}</span>
+            <label class="relative mr-5 inline-flex cursor-pointer items-center">
+                <input @click="updateDarkMode" type="checkbox" v-model="darkModeCheckbox" class="peer sr-only" />
+                <div
+                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30"
+                ></div>
+            </label>
+        </div>
     </div>
 
-    <div class="border-b border-gray-200 py-5">
+    <div class="border-b border-gray-200 py-5 dark:border-stone-700">
         <p @click="$emit('gotoDevView')" class="mb-2 w-fit cursor-pointer font-semibold underline decoration-2">{{ t("user_developerLink") }}</p>
         <div class="w-fit cursor-pointer">
             <a

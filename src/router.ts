@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-import HomeView from "../views/HomeView.vue";
+import HomeView from "./views/HomeView.vue";
 
 function isUserAuthenticated(): string | boolean {
     const userStore = useUserStore();

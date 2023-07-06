@@ -34,15 +34,6 @@ onMounted(async () => {
     activePage.value = [...loadedHistory];
     loaded.value = true;
 
-    if (Notification.permission === "default" && localStorage.getItem("notificationActivated") == null) {
-        Notification.requestPermission().then(permission => {
-            if (permission == "granted") {
-                logicStore.isNotificationGranted = true;
-                localStorage.setItem("notificationActivated", "true");
-            }
-        });
-    }
-
     const apiWebsocket = await api.websocket.initialize();
     await apiWebsocket.start();
 
@@ -57,7 +48,7 @@ onMounted(async () => {
         if (updatedEmergency.id === userStore.user.activeEmergency && !loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
             if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
                 completeEmergency(updatedEmergency);
-                currentTrackedEmergencyStatus.value = updatedEmergency.status;
+                currentTrackedEmergencyStatus.value = undefined;
             } else {
                 emergencyStore.trackedEmergency = updatedEmergency;
 
@@ -233,6 +224,7 @@ const isLastPageHistory = computed(() => {
                 v-if="userStore.user.activeEmergency"
                 @completed-tracked-emergency="completeEmergency"
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
+                @update-current-emergency-status="status => (currentTrackedEmergencyStatus = status)"
                 :errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"
             />
 

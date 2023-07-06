@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import LabelEmergencyForm from "@/components/Emergency/LabelEmergencyForm.vue";
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useLogicStore } from "@/stores/logicStore";
@@ -18,7 +19,7 @@ const formUsername = ref("");
 const waitingForApi = ref(false);
 const formErrorMessage = ref(t("error_generic"));
 const formErrorActive = ref(false);
-const clipboardIcon = ref("/icons/copy-icon.svg");
+const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
 
 onMounted(() => {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
@@ -45,7 +46,7 @@ const submittingLinkForm = async (): Promise<void> => {
 const copyIdToClipboard = (): void => {
     if (!userStore.user) return;
     navigator.clipboard.writeText(userStore.user.id).then(() => {
-        clipboardIcon.value = "/icons/check-icon.svg";
+        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
     });
 };
 
@@ -70,14 +71,16 @@ function getAddToBioText(): string {
 </script>
 
 <template>
-    <div class="flex h-screen items-center justify-center bg-white" id="animation-bg">
+    <div class="flex h-screen items-center justify-center bg-white dark:bg-stone-900 lg:px-40" id="animation-bg">
         <LoginAnimation />
-        <div class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-10 md:h-fit md:w-fit md:px-20 md:py-24 lg:mr-[50%]">
-            <h1 class="text-center font-Mohave text-3xl font-bold uppercase text-neutral-900 lg:text-4xl" v-html="getColoredTitle()"></h1>
+        <div
+            class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-10 dark:bg-stone-900 md:h-fit md:w-fit md:px-20 md:py-24 lg:mr-auto"
+        >
+            <h1 class="text-center font-Mohave text-3xl font-bold uppercase lg:text-4xl" v-html="getColoredTitle()"></h1>
 
             <div v-if="route.path === '/login/link'" class="mt-14 flex flex-col lg:mt-28">
                 <div class="w-full">
-                    <p class="font-Inter text-small font-semibold text-neutral-900" v-html="getAddToBioText()"></p>
+                    <p class="font-Inter text-small font-semibold" v-html="getAddToBioText()"></p>
                     <div class="mt-2 flex">
                         <div class="w-full bg-neutral-700 text-center font-Inter text-xs text-neutral-50">
                             <p class="mx-auto py-3">
@@ -92,21 +95,18 @@ function getAddToBioText(): string {
                 </div>
                 <form class="mt-10 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
                     <div class="w-full">
-                        <div class="mb-2 flex items-center">
-                            <label for="rsiHandle" class="font-Inter text-small font-semibold text-neutral-900">{{
-                                t("login_starCitizenUsername")
-                            }}</label>
-                            <img src="/icons/info-icon.svg" alt="Info label" class="ml-2 h-4 w-4 cursor-help" :title="t('login_RSIUsername')" />
+                        <LabelEmergencyForm title-local="login_starCitizenUsername" description-local="login_RSIUsername" />
+                        <div class="mt-2 flex w-full">
+                            <input
+                                id="rsiHandle"
+                                v-model="formUsername"
+                                type="text"
+                                name="rsiHandle"
+                                class="w-full"
+                                :class="formErrorActive ? 'input-text-error' : 'input-text'"
+                                :placeholder="t('login_username') + '...'"
+                            />
                         </div>
-                        <input
-                            id="rsiHandle"
-                            v-model="formUsername"
-                            type="text"
-                            name="rsiHandle"
-                            class="w-full"
-                            :class="formErrorActive ? 'input-text-error' : 'input-text'"
-                            :placeholder="t('login_username') + '...'"
-                        />
                     </div>
                     <button :disabled="waitingForApi" class="button-primary mt-4 px-8 py-[11px] font-Inter text-small font-semibold xl:ml-4 xl:mt-0">
                         <svg
@@ -133,7 +133,7 @@ function getAddToBioText(): string {
                 <button class="button-48 bg-primary-900 text-white" @click="redirectToDiscordLogin()">
                     {{ t("login_logInButton") }}
                 </button>
-                <button disabled class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50">
+                <button disabled class="button-48 mt-5 cursor-not-allowed border-2 border-primary-900/50 text-black/50 dark:text-slate-50/50">
                     {{ t("login_registerButton") }}
                 </button>
                 <p class="mt-2 text-xs text-primary-400">{{ t("error_UnavailableFeatureBeta") }}</p>

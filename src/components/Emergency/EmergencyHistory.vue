@@ -110,7 +110,7 @@ function getResponders(responders: any): string {
 </script>
 
 <template>
-    <div class="flex flex-col border-2 border-primary-900 text-neutral-900">
+    <div class="flex flex-col border-2 border-primary-900">
         <div class="flex items-center">
             <p class="flex-grow px-2 py-1 font-Inter font-semibold">
                 {{ timestampToDate(emergencyInfo.creationTimestamp) }} -

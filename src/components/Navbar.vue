@@ -83,8 +83,8 @@ async function gotoDevView(): Promise<void> {
 </script>
 
 <template>
-    <div class="flex w-full flex-col bg-white shadow-md md:static">
-        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 md:py-3">
+    <div class="flex w-full flex-col bg-white shadow-md dark:shadow-stone-800 md:static">
+        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 dark:bg-stone-900 dark:text-white md:py-3">
             <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold lg:flex">
@@ -98,14 +98,18 @@ async function gotoDevView(): Promise<void> {
                 </div>
                 <div class="relative">
                     <div
-                        class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600 dark:text-slate-50"
                         :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"
                         @click="displayLanguageSelector = !displayLanguageSelector"
                         ref="selectorParent"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
                         <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
-                        <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
+                        <img
+                            :src="logicStore.darkMode ? '/icons/chevron-up-down-dark.svg' : '/icons/chevron-up-down.svg'"
+                            class="h-6 w-6"
+                            alt="Arrow"
+                        />
                     </div>
 
                     <LanguageSelector
@@ -114,24 +118,34 @@ async function gotoDevView(): Promise<void> {
                         @change-language="language => changeLanguage(language)"
                         @closeSelector="displayLanguageSelector = false"
                         v-if="displayLanguageSelector"
-                        class="absolute right-0 top-14 w-96 border border-gray-400 bg-gray-50 p-4 shadow-xl"
+                        class="absolute right-0 top-14 w-96 border border-gray-400 bg-gray-50 p-4 shadow-xl dark:border-stone-500 dark:bg-stone-700"
                     />
                 </div>
                 <div v-if="userStore.isAuthenticated">
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
-                        <img src="/icons/user-profile.svg" alt="User profile" />
+                        <img :src="logicStore.darkMode ? '/icons/user-profile-dark.svg' : '/icons/user-profile.svg'" alt="User profile" />
                     </div>
                 </div>
             </nav>
 
             <button @click="switchNavMenuSate()" class="ml-auto lg:hidden">
-                <img v-if="!navMenuCollapsed" src="/icons/burger-button.svg" alt="Open menu" />
-                <img v-else src="/icons/close-button.svg" alt="Close menu" />
+                <img
+                    v-if="!navMenuCollapsed"
+                    :src="logicStore.darkMode ? '/icons/burger-button-dark.svg' : '/icons/burger-button.svg'"
+                    alt="Open menu"
+                />
+                <img v-else :src="logicStore.darkMode ? '/icons/close-button-dark.svg' : '/icons/close-button.svg'" alt="Close menu" />
             </button>
         </div>
 
-        <div @click.self="switchNavMenuSate()" v-if="navMenuCollapsed" class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-400/50">
-            <nav class="content-container absolute top-14 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg">
+        <div
+            @click.self="switchNavMenuSate()"
+            v-if="navMenuCollapsed"
+            class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-400/50 dark:bg-neutral-700/50"
+        >
+            <nav
+                class="content-container absolute top-14 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg dark:bg-stone-900"
+            >
                 <div class="flex flex-col gap-4 font-Mohave">
                     <RouterLink @click="switchNavMenuSate()" to="/">{{ t("navbar_emergency") }}</RouterLink>
                     <RouterLink @click="switchNavMenuSate()" to="/blocklist">{{ t("navbar_blocklist") }}</RouterLink>
@@ -144,15 +158,19 @@ async function gotoDevView(): Promise<void> {
                 </div>
                 <div class="mt-5 flex w-full items-center justify-between">
                     <div
-                        class="flex cursor-pointer items-center border border-gray-400 px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600"
+                        class="flex cursor-pointer items-center border border-gray-400 px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600 dark:text-white"
                         @click="displayLanguageSelectorModal = !displayLanguageSelectorModal"
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
                         <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
-                        <img src="/icons/chevron-up-down.svg" class="h-6 w-6" alt="Arrow" />
+                        <img
+                            :src="logicStore.darkMode ? '/icons/chevron-up-down-dark.svg' : '/icons/chevron-up-down.svg'"
+                            class="h-6 w-6"
+                            alt="Arrow"
+                        />
                     </div>
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
-                        <img src="/icons/user-profile.svg" alt="User profile" />
+                        <img :src="logicStore.darkMode ? '/icons/user-profile-dark.svg' : '/icons/user-profile.svg'" alt="User profile" />
                     </div>
                 </div>
             </nav>

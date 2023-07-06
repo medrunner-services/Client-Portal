@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+    darkMode: "class",
     content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,vue}"],
     theme: {
         extend: {
@@ -53,6 +54,12 @@ module.exports = {
                 "3xl": "2000px",
                 "4xl": "2500px",
                 "5xl": "3000px",
+            },
+            backgroundImage: {
+                "light-arrow-pattern": "url('/icons/chevron-up-down.svg')",
+                "light-disabled-arrow-pattern": "url('/icons/chevron-up-down-disabled.svg')",
+                "dark-arrow-pattern": "url('/icons/chevron-up-down-dark.svg')",
+                "dark-disabled-arrow-pattern": "url('/icons/chevron-up-down-dark-disabled.svg')",
             },
         },
     },

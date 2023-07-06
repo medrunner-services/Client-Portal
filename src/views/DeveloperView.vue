@@ -64,7 +64,7 @@ async function deletedToken(id: string): Promise<void> {
                     <div class="w-5"></div>
                 </div>
                 <ApiTokenLine
-                    class="mb-2 border-b border-gray-200 py-2 last:mb-0"
+                    class="mb-2 border-b border-gray-200 py-2 last:mb-0 dark:border-stone-700"
                     v-for="token in tokens"
                     :token="token"
                     :key="token.id"

@@ -163,6 +163,7 @@
     "user_developerLink": null,
     "user_privacyPolicyLink": null,
     "user_notificationSetting": null,
+    "user_darkModeSetting": null,
     "formDetailed_yes": null,
     "formDetailed_no": null,
     "formDetailed_situation": null,

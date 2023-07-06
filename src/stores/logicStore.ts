@@ -6,6 +6,7 @@ export const useLogicStore = defineStore("logic", () => {
     const { t } = useI18n();
     const isRouterLoading = ref(false);
     const isNotificationGranted = ref(Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true");
+    const darkMode = ref(localStorage.getItem("darkMode") === "true");
 
     const userDevice = computed(() => {
         if (navigator.userAgent.includes("Android")) {
@@ -119,6 +120,7 @@ export const useLogicStore = defineStore("logic", () => {
     return {
         isRouterLoading,
         isNotificationGranted,
+        darkMode,
         userDevice,
         userBrowser,
         discordBaseUrl,

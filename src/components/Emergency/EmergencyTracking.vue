@@ -9,7 +9,7 @@ import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency"]);
+const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency", "updateCurrentEmergencyStatus"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -36,6 +36,7 @@ onMounted(async () => {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
                 if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
+                emit("updateCurrentEmergencyStatus", emergencyStore.trackedEmergency.status);
             } catch (e) {
                 errorLoadingEmergency.value = true;
             }
@@ -183,15 +184,15 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             "
         >
             <div class="lg:flex lg:justify-between">
-                <div class="bg-gray-50 p-4 shadow-md lg:w-[30%]">
+                <div class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:w-[30%]">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌌 {{ t("tracking_system") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.system }}</p>
                 </div>
-                <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
-                <div class="mt-5 h-fit bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                <div class="mt-5 h-fit bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
                         {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
@@ -199,7 +200,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 </div>
             </div>
             <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:mt-5 lg:flex lg:justify-between">
-                <div class="mt-5 w-full bg-gray-50 p-4 shadow-md lg:mt-0">
+                <div class="mt-5 w-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
@@ -217,7 +218,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 </p>
 
                 <div v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0" class="lg:mt-5 lg:flex lg:justify-between">
-                    <div class="mt-5 bg-gray-50 p-4 shadow-md lg:mt-0 lg:w-[30%]">
+                    <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
                         <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
                         <ul class="mt-2 list-none">
                             <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers" :key="dispatcher.discordId">
@@ -231,7 +232,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                     <div class="grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
                         <div
                             v-for="responderClass in ResponderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
-                            class="bg-gray-50 p-4 shadow-md"
+                            class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
                         >
                             <p class="font-Mohave text-2xl font-semibold lg:text-xl">{{ getClassString(responderClass[0].class) }}</p>
                             <ul class="mt-2 list-none">
@@ -275,7 +276,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 "
                 :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
-                class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 lg:mt-0 lg:w-fit"
+                class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 dark:text-slate-50 lg:mt-0 lg:w-fit"
             >
                 {{ t("tracking_chatButton") }}
             </a>
