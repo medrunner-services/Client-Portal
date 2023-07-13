@@ -2,9 +2,11 @@
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 const emit = defineEmits(["tokenCreated"]);
 
@@ -14,7 +16,7 @@ const newTokenExpirationDate = ref("");
 const errorCreationToken = ref(false);
 const submittingNewToken = ref(false);
 const inputExpirationDate: Ref<HTMLInputElement | null> = ref(null);
-const clipboardIcon = ref("/icons/copy-icon.svg");
+const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
 
 onMounted(() => {
     if (inputExpirationDate.value) {
@@ -42,7 +44,7 @@ async function createToken() {
 
 const copyTokenToClipboard = (): void => {
     navigator.clipboard.writeText(createdToken.value).then(() => {
-        clipboardIcon.value = "/icons/check-icon.svg";
+        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
     });
 };
 </script>
