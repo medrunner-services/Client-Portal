@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
-import LabelEmergencyForm from "@/components/Emergency/LabelEmergencyForm.vue";
+import LabelEmergencyForm from "@/components/Emergency/LabelInput.vue";
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useLogicStore } from "@/stores/logicStore";
@@ -95,7 +95,7 @@ function getAddToBioText(): string {
                 </div>
                 <form class="mt-10 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
                     <div class="w-full">
-                        <LabelEmergencyForm title-local="login_starCitizenUsername" description-local="login_RSIUsername" />
+                        <LabelEmergencyForm title-local="login_starCitizenUsername" description-local="login_RSIUsername" :required="true" />
                         <div class="mt-2 flex w-full">
                             <input
                                 id="rsiHandle"

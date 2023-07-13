@@ -152,7 +152,7 @@
     "developer_tokenExpires": "Expire le {date}",
     "developer_tokenNeverExpires": "N'expire jamais",
     "developer_createTokenAlertCopy": "Assurez-vous de copier votre nouveau jeton d'accès personnel immédiatement. Vous ne pourrez pas le voir à nouveau !",
-    "developer_createTokenFormName": "Nom*",
+    "developer_createTokenFormName": "Nom",
     "developer_createTokenFormExpirationDate": "Date d'expiration",
     "developer_createTokenFormButton": "Créer le jeton",
     "developer_createTokenPlaceholderFormName": "Nom pour le jeton",

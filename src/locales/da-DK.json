@@ -152,7 +152,7 @@
     "developer_tokenExpires": "Udløber d. {date}",
     "developer_tokenNeverExpires": "Udløber aldrig",
     "developer_createTokenAlertCopy": "Sørg for at kopiere din API-nøgle nu. Du vil ikke være i stand til at se den igen!",
-    "developer_createTokenFormName": "Navn*",
+    "developer_createTokenFormName": "Navn",
     "developer_createTokenFormExpirationDate": "Udløbsdato",
     "developer_createTokenFormButton": "Generer Token",
     "developer_createTokenPlaceholderFormName": "Navn til tokenet",

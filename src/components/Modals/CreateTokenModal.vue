@@ -62,7 +62,7 @@ const copyTokenToClipboard = (): void => {
 
     <form class="mt-10" @submit.prevent="createToken()" v-else>
         <div>
-            <label>{{ t("developer_createTokenFormName") }}</label>
+            <label>{{ t("developer_createTokenFormName") }} *</label>
             <input
                 type="text"
                 autocomplete="off"

@@ -152,7 +152,7 @@
     "developer_tokenExpires": "Expires on {date}",
     "developer_tokenNeverExpires": "Never expires",
     "developer_createTokenAlertCopy": "Make sure to copy your API token now. You won’t be able to see it again!",
-    "developer_createTokenFormName": "Name*",
+    "developer_createTokenFormName": "Name",
     "developer_createTokenFormExpirationDate": "Expiration date",
     "developer_createTokenFormButton": "Create Token",
     "developer_createTokenPlaceholderFormName": "Name for the token",
