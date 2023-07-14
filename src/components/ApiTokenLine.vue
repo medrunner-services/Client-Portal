@@ -20,6 +20,7 @@ const props = defineProps({
 });
 
 const deleteTokenError = ref(false);
+const isTokenExpired = ref(props.token.expirationDate ? Date.now() / 1000 > props.token.expirationDate : false);
 
 function timestampToDate(timestamp: string | number): string {
     return new Date(timestamp).toLocaleDateString(locale.value, {
@@ -56,7 +57,7 @@ async function deleteToken(): Promise<void> {
                 @click="deleteToken()"
             />
         </div>
-        <p v-if="token.expirationDate" class="mt-4 text-xs font-semibold lg:text-sm">
+        <p v-if="token.expirationDate" class="mt-4 text-xs font-semibold lg:text-sm" :class="isTokenExpired ? 'text-primary-900' : ''">
             {{ t("developer_tokenExpires", { date: timestampToDate(token.expirationDate) }) }}
         </p>
         <p v-else class="mt-4 text-xs font-semibold text-yellow-600 lg:text-sm">{{ t("developer_tokenNeverExpires") }}</p>

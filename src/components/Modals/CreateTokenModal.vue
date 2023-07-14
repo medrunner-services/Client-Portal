@@ -13,7 +13,7 @@ const emit = defineEmits(["tokenCreated"]);
 const newTokenName = ref("");
 const createdToken = ref("");
 const newTokenExpirationDate = ref("");
-const errorCreationToken = ref(false);
+const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const inputExpirationDate: Ref<HTMLInputElement | null> = ref(null);
 const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
@@ -26,7 +26,7 @@ onMounted(() => {
 
 async function createToken() {
     submittingNewToken.value = true;
-    errorCreationToken.value = false;
+    errorCreationToken.value = "";
 
     try {
         if (newTokenExpirationDate.value) {
@@ -36,9 +36,12 @@ async function createToken() {
         }
         submittingNewToken.value = false;
         emit("tokenCreated");
-    } catch (error) {
-        errorCreationToken.value = true;
+    } catch (error: any) {
         submittingNewToken.value = false;
+
+        if (error.statusCode === 403) errorCreationToken.value = t("error_blockedUser");
+        if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
+        else errorCreationToken.value = t("error_generic");
     }
 }
 
@@ -110,6 +113,8 @@ const copyTokenToClipboard = (): void => {
             </svg>
             <span v-else>{{ t("developer_createTokenFormButton") }}</span>
         </button>
+
+        <p v-if="errorCreationToken" class="mt-2 w-full text-sm text-primary-400">{{ errorCreationToken }}</p>
     </form>
 </template>
 
