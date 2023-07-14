@@ -167,9 +167,15 @@ function updateAnalytics(): void {
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
-            <ul class="list-inside list-disc"></ul>
+            <ul class="list-inside list-disc">
+                <li>Missing asterisks on required inputs</li>
+                <li>Api token copy icon stays black in dark mode</li>
+                <li>Error messages not displaying on login page</li>
+            </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
-            <ul class="list-inside list-disc"></ul>
+            <ul class="list-inside list-disc">
+                <li>API tokens expiration date is now red when reached</li>
+            </ul>
         </div>
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
     </div>

@@ -30,11 +30,11 @@ async function isUserComplete(): Promise<string | boolean> {
             userStore.isAuthenticated = true;
         } catch (error) {
             logicStore.isRouterLoading = false;
-            return "/login";
+            return "/login?error=generic";
         }
     } else if (!userStore.user.active) {
         logicStore.isRouterLoading = false;
-        return "/login";
+        return "/login?error=deactivated";
     } else if (!userStore.user.rsiHandle) {
         logicStore.isRouterLoading = false;
         return "/login/link";
