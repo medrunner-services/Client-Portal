@@ -175,6 +175,8 @@ function updateAnalytics(): void {
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
                 <li>API tokens expiration date is now red when reached</li>
+                <li>Added a 404 page so that you know when you are lost</li>
+                <li>Added some missing animations</li>
             </ul>
         </div>
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>

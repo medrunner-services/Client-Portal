@@ -100,7 +100,7 @@ async function gotoDevView(): Promise<void> {
                 >
                     {{ t("navbar_reportBug") }}
                 </div>
-                <div class="relative">
+                <div class="relative" v-auto-animate="{ duration: 100 }">
                     <div
                         class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600 dark:text-slate-50"
                         :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"

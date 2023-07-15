@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
-import LabelEmergencyForm from "@/components/Emergency/LabelInput.vue";
+import LabelEmergencyForm from "@/components/LabelInput.vue";
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useLogicStore } from "@/stores/logicStore";

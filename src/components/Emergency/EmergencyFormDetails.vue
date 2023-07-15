@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import LabelEmergencyForm from "@/components/Emergency/LabelInput.vue";
+import LabelEmergencyForm from "@/components/LabelInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 
 const emergencyStore = useEmergencyStore();
