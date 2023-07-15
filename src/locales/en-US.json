@@ -97,6 +97,7 @@
     "error_loginDiscordDenied": "You have canceled the Discord login process, please try again to log in using Discord",
     "error_loginAccountUnknown": "Unknown account, please sign up",
     "error_loginAccountKnown": "Account already created, please sign in",
+    "error_pageNotFound": "Page not found",
     "history_unknown": "Unknown",
     "history_low": "No threat",
     "history_medium": "PvE",

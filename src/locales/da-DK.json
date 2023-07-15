@@ -97,6 +97,7 @@
     "error_loginDiscordDenied": null,
     "error_loginAccountUnknown": null,
     "error_loginAccountKnown": null,
+    "error_pageNotFound": null,
     "history_unknown": "Ukendt",
     "history_low": "Lav",
     "history_medium": "Medium",

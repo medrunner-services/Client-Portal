@@ -83,6 +83,11 @@ const router = createRouter({
             component: () => import("@/views/DeveloperView.vue"),
             beforeEnter: isUserComplete,
         },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "404",
+            component: () => import("@/views/404.vue"),
+        },
     ],
 });
 

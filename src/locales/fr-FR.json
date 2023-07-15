@@ -97,6 +97,7 @@
     "error_loginDiscordDenied": "Vous avez annulé le processus de connexion à Discord, veuillez réessayer de vous connecter à l'aide de Discord",
     "error_loginAccountUnknown": "Compte inconnu, veuillez vous inscrire",
     "error_loginAccountKnown": "Compte déjà créé, veuillez vous connecter",
+    "error_pageNotFound": "Page introuvable",
     "history_unknown": "Inconnu",
     "history_low": "Pas de danger",
     "history_medium": "PvE",
