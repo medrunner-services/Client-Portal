@@ -80,6 +80,7 @@
     "tracking_classQRF": "Reaktionsstyrke",
     "tracking_classOthers": null,
     "tracking_sendDetailedInformationButton": null,
+    "tracking_statusTextConfirmedCanceled": null,
     "error_UnavailableFeatureBeta": "Ikke tilgængelig under beta",
     "error_UnavailableFeatureLaunch": "Ikke tilgængelig før lancering",
     "error_loadingHistory": "Der opstod en fejl ved indlæsning af din historik",

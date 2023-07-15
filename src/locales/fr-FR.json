@@ -80,6 +80,7 @@
     "tracking_classQRF": "Force d'intervention rapide",
     "tracking_classOthers": "Autre",
     "tracking_sendDetailedInformationButton": "Ajouter des informations",
+    "tracking_statusTextConfirmedCanceled": "Votre demande d'assistance a été annulée",
     "error_UnavailableFeatureBeta": "Indisponible durant la beta",
     "error_UnavailableFeatureLaunch": "Indisponible jusqu'au lancement",
     "error_loadingHistory": "Une erreur s'est produite lors du chargement de votre historique",

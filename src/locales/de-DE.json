@@ -80,6 +80,7 @@
     "tracking_classQRF": "Schnelle Eingreiftruppe",
     "tracking_classOthers": "Andere",
     "tracking_sendDetailedInformationButton": "Weitere Informationen senden",
+    "tracking_statusTextConfirmedCanceled": null,
     "error_UnavailableFeatureBeta": "Während der Beta nicht verfügbar",
     "error_UnavailableFeatureLaunch": "Bis zur Veröffentlichung nicht verfügbar",
     "error_loadingHistory": "Beim Laden Ihres Verlaufs ist ein Fehler aufgetreten",
