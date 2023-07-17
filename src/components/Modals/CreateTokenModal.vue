@@ -2,19 +2,21 @@
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 const emit = defineEmits(["tokenCreated"]);
 
 const newTokenName = ref("");
 const createdToken = ref("");
 const newTokenExpirationDate = ref("");
-const errorCreationToken = ref(false);
+const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const inputExpirationDate: Ref<HTMLInputElement | null> = ref(null);
-const clipboardIcon = ref("/icons/copy-icon.svg");
+const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
 
 onMounted(() => {
     if (inputExpirationDate.value) {
@@ -24,7 +26,7 @@ onMounted(() => {
 
 async function createToken() {
     submittingNewToken.value = true;
-    errorCreationToken.value = false;
+    errorCreationToken.value = "";
 
     try {
         if (newTokenExpirationDate.value) {
@@ -34,15 +36,18 @@ async function createToken() {
         }
         submittingNewToken.value = false;
         emit("tokenCreated");
-    } catch (error) {
-        errorCreationToken.value = true;
+    } catch (error: any) {
         submittingNewToken.value = false;
+
+        if (error.statusCode === 403) errorCreationToken.value = t("error_blockedUser");
+        if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
+        else errorCreationToken.value = t("error_generic");
     }
 }
 
 const copyTokenToClipboard = (): void => {
     navigator.clipboard.writeText(createdToken.value).then(() => {
-        clipboardIcon.value = "/icons/check-icon.svg";
+        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
     });
 };
 </script>
@@ -62,7 +67,7 @@ const copyTokenToClipboard = (): void => {
 
     <form class="mt-10" @submit.prevent="createToken()" v-else>
         <div>
-            <label>{{ t("developer_createTokenFormName") }}</label>
+            <label>{{ t("developer_createTokenFormName") }} *</label>
             <input
                 type="text"
                 autocomplete="off"
@@ -108,6 +113,8 @@ const copyTokenToClipboard = (): void => {
             </svg>
             <span v-else>{{ t("developer_createTokenFormButton") }}</span>
         </button>
+
+        <p v-if="errorCreationToken" class="mt-2 w-full text-sm text-primary-400">{{ errorCreationToken }}</p>
     </form>
 </template>
 

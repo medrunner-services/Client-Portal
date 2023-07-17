@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
-import LabelEmergencyForm from "@/components/Emergency/LabelEmergencyForm.vue";
+import LabelEmergencyForm from "@/components/LabelInput.vue";
 import LoginAnimation from "@/components/LoginAnimation.vue";
 import router from "@/router";
 import { useLogicStore } from "@/stores/logicStore";
@@ -20,12 +20,7 @@ const waitingForApi = ref(false);
 const formErrorMessage = ref(t("error_generic"));
 const formErrorActive = ref(false);
 const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
-
-onMounted(() => {
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === "z") redirectToDiscordLogin();
-    });
-});
+const routeQueryError = ref(route.query.error);
 
 const submittingLinkForm = async (): Promise<void> => {
     waitingForApi.value = true;
@@ -68,11 +63,34 @@ function getAddToBioText(): string {
         )}</a>`,
     });
 }
+
+function getErrorText(): string {
+    switch (routeQueryError.value) {
+        case "deactivated":
+            return t("error_loginAccountDeactivated");
+        case "discord_access_denied":
+            return t("error_loginDiscordDenied");
+        case "accountUnknown":
+            return t("error_loginAccountUnknown");
+        case "accountKnown":
+            return t("error_loginAccountKnown");
+        default:
+            return t("error_generic");
+    }
+}
 </script>
 
 <template>
     <div class="flex h-screen items-center justify-center bg-white dark:bg-stone-900 lg:px-40" id="animation-bg">
         <LoginAnimation />
+
+        <div
+            v-if="routeQueryError"
+            class="absolute top-14 z-20 border-2 border-primary-900 bg-primary-100 px-8 py-4 font-Mohave text-lg font-bold lg:top-14"
+        >
+            <p>{{ getErrorText() }}</p>
+        </div>
+
         <div
             class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-10 dark:bg-stone-900 md:h-fit md:w-fit md:px-20 md:py-24 lg:mr-auto"
         >
@@ -95,7 +113,7 @@ function getAddToBioText(): string {
                 </div>
                 <form class="mt-10 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
                     <div class="w-full">
-                        <LabelEmergencyForm title-local="login_starCitizenUsername" description-local="login_RSIUsername" />
+                        <LabelEmergencyForm title-local="login_starCitizenUsername" description-local="login_RSIUsername" :required="true" />
                         <div class="mt-2 flex w-full">
                             <input
                                 id="rsiHandle"

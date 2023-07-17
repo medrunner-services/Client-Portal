@@ -24,6 +24,12 @@ const props = defineProps({
             return "right";
         },
     },
+    required: {
+        type: Boolean,
+        default() {
+            return false;
+        },
+    },
 });
 
 const displayTooltip = ref(false);
@@ -53,8 +59,8 @@ const handleClickOutside = (event: MouseEvent) => {
 
 <template>
     <div ref="labelContainer" class="flex w-full items-center">
-        <label class="text-sm font-semibold">{{ t(titleLocal) }}</label>
-        <div class="relative">
+        <label class="text-sm font-semibold">{{ t(titleLocal) }} <span v-if="props.required">*</span></label>
+        <div class="relative" v-auto-animate="{ duration: 100 }">
             <img
                 ref="tooltipImg"
                 :src="logicStore.darkMode ? '/icons/info-icon-dark.svg' : '/icons/info-icon.svg'"

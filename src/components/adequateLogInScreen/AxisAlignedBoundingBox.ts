@@ -1,7 +1,10 @@
 import type Vector2 from "@/components/adequateLogInScreen/Vector2";
 
 export default class AxisAlignedBoundingBox {
-    public constructor(private readonly min: Vector2, private readonly max: Vector2) {}
+    public constructor(
+        private readonly min: Vector2,
+        private readonly max: Vector2,
+    ) {}
 
     public get Min() {
         return this.min;

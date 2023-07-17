@@ -3,6 +3,7 @@ import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { ampli } from "@/ampli";
 import LanguageSelector from "@/components/LanguageSelector.vue";
 import Modal from "@/components/Modal.vue";
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
@@ -31,6 +32,7 @@ onMounted(() => {
         locale.value = userLanguage;
     } else if (availableLocales.includes(navigator.language)) {
         locale.value = navigator.language;
+        localStorage.setItem("selectedLanguage", navigator.language);
     } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
         const fallbackLocal = availableLocales.find(item => item.indexOf(navigator.language.split("-")[0]) === 0);
         if (fallbackLocal) {
@@ -57,6 +59,8 @@ function changeLanguage(newLanguage: string): void {
 
 async function disconnect(): Promise<void> {
     await userStore.disconnectUser();
+    ampli.client.setOptOut(true);
+    ampli.client.flush();
     await router.push("/login");
 }
 
@@ -96,7 +100,7 @@ async function gotoDevView(): Promise<void> {
                 >
                     {{ t("navbar_reportBug") }}
                 </div>
-                <div class="relative">
+                <div class="relative" v-auto-animate="{ duration: 100 }">
                     <div
                         class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600 dark:text-slate-50"
                         :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"

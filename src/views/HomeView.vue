@@ -35,6 +35,7 @@ onMounted(async () => {
     loaded.value = true;
 
     if (
+        "Notification" in window &&
         Notification.permission === "default" &&
         (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
     ) {
@@ -70,7 +71,10 @@ onMounted(async () => {
                     ![1, 10].includes(updatedEmergency.status)
                 ) {
                     new Notification(logicStore.getEmergencyStatusTitle(updatedEmergency.status), {
-                        body: logicStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                        body:
+                            updatedEmergency.status === 6
+                                ? t("tracking_statusTextConfirmedCanceled")
+                                : logicStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                         icon: "/images/medrunner-logo-square.webp",
                     });
                 }
