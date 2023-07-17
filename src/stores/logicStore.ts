@@ -5,7 +5,9 @@ import { useI18n } from "vue-i18n";
 export const useLogicStore = defineStore("logic", () => {
     const { t } = useI18n();
     const isRouterLoading = ref(false);
-    const isNotificationGranted = ref(Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true");
+    const isNotificationGranted = ref(
+        "Notification" in window ? Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true" : false,
+    );
     const darkMode = ref(localStorage.getItem("darkMode") === "true");
     const isAnalyticsAllowed = ref(localStorage.getItem("analyticsActivated") === "true" || localStorage.getItem("analyticsActivated") === null);
 

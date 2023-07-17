@@ -35,6 +35,7 @@ onMounted(async () => {
     loaded.value = true;
 
     if (
+        "Notification" in window &&
         Notification.permission === "default" &&
         (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
     ) {

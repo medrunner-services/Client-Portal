@@ -58,11 +58,11 @@ function updateNotificationPerms(): void {
         logicStore.isNotificationGranted = false;
         localStorage.setItem("notificationActivated", "false");
     } else {
-        if (Notification.permission === "granted") {
+        if ("Notification" in window && Notification.permission === "granted") {
             notificationCheckbox.value = true;
             logicStore.isNotificationGranted = true;
             localStorage.setItem("notificationActivated", "true");
-        } else {
+        } else if ("Notification" in window) {
             Notification.requestPermission()
                 .then(permission => {
                     if (permission === "granted") {
