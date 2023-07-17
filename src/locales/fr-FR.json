@@ -197,5 +197,16 @@
     "formDetailed_helpEnemies": "Y a-t-il des ennemis sur votre position ? Si oui, combien ?",
     "formDetailed_placeholderEnemies": "Combien y a-t-il d'ennemis ?",
     "formDetailed_sendButton": "Envoyer les informations",
-    "formDetailed_skipButton": "Ignorer les informations"
+    "formDetailed_skipButton": "Ignorer les informations",
+    "formDetailed_death": "Combien de temps avant votre mort ?",
+    "formDetailed_helpDeath": "Combien de temps avant votre mort ? Indiquer le nombre d'heures et de minutes restantes.",
+    "formDetailed_hours": "Heures",
+    "formDetailed_minutes": "Minutes",
+    "formDetailed_crimestat": "Avez-vous de la CrimeStat ?",
+    "formDetailed_helpCrimestat": "Avez-vous de la CrimeStat ? Si oui, à quel niveau et pourquoi ?",
+    "formDetailed_level": "Niveau",
+    "formDetailed_placeholderCrimestat": "Pourquoi avez-vous de la CrimeStat ?",
+    "formDetailed_ship": "Quel est le modèle de votre vaisseau ?",
+    "formDetailed_helpShip": "Quel est le modèle du vaisseau que vous avez utilisé pour arriver à votre position ?",
+    "formDetailed_placeholderShip": "Votre modèle de vaisseau..."
 }

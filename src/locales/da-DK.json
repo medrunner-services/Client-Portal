@@ -197,5 +197,16 @@
     "formDetailed_helpEnemies": "Er der fjender på din aktuelle position? Hvis ja, hvor mange?",
     "formDetailed_placeholderEnemies": "Hvor mange fjender er der?",
     "formDetailed_sendButton": "Indsend detaljer",
-    "formDetailed_skipButton": "Undlad detaljer"
+    "formDetailed_skipButton": "Undlad detaljer",
+    "formDetailed_death": null,
+    "formDetailed_helpDeath": null,
+    "formDetailed_hours": null,
+    "formDetailed_minutes": null,
+    "formDetailed_crimestat": null,
+    "formDetailed_helpCrimestat": null,
+    "formDetailed_level": null,
+    "formDetailed_placeholderCrimestat": null,
+    "formDetailed_ship": null,
+    "formDetailed_helpShip": null,
+    "formDetailed_placeholderShip": null
 }

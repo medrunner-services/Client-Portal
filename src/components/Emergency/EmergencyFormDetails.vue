@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import LabelEmergencyForm from "@/components/LabelInput.vue";
@@ -14,14 +14,19 @@ const formErrorMessage = ref("");
 const formSubmittingEmergency = ref(false);
 const formSituation = ref("");
 const formLocation = ref("");
-const formInjuries = ref();
+const formInjuries: Ref<boolean | undefined> = ref();
 const formInjuriesDetails = ref("");
-const formIGBeacon = ref();
-const formTeam = ref();
+const formIGBeacon: Ref<boolean | undefined> = ref();
+const formTeam: Ref<boolean | undefined> = ref();
 const formTeamDetails = ref("");
-const formEnemies = ref();
+const formEnemies: Ref<boolean | undefined> = ref();
 const formEnemiesDetails = ref("");
 const formRemarks = ref("");
+const formTimeDeathHours: Ref<number | undefined> = ref();
+const formTimeDeathMinutes: Ref<number | undefined> = ref();
+const formCrimeStat = ref("");
+const formCrimeStatReason = ref("");
+const formShip = ref("");
 
 async function sendDetails(): Promise<void> {
     try {
@@ -35,6 +40,14 @@ async function sendDetails(): Promise<void> {
             __The client's situation is:__  **${formSituation.value ? formSituation.value : "Unknown"}**
 
             __The client is located:__  **${formLocation.value ? formLocation.value : "Unknown"}**
+
+            __Client ship:__  **${formShip.value ? formShip.value : "Unknown"}**
+
+            __Time until client death:__  **${
+                formTimeDeathHours.value || formTimeDeathMinutes.value
+                    ? `<t:${Math.round(Date.now() / 1000) + (formTimeDeathHours.value ?? 0) * 3600 + (formTimeDeathMinutes.value ?? 0) * 60}:R>`
+                    : "Unknown"
+            }**
 
             __Is the client injured:__  **${formInjuries.value === true ? "Yes" : formInjuries.value === false ? "No" : "Unknown"}**
             ${
@@ -62,6 +75,15 @@ async function sendDetails(): Promise<void> {
             `
                     : ""
             }
+            __Does the client have CrimeStat?__  **${formCrimeStat.value ? formCrimeStat.value : "Unknown"}**
+            ${
+                formCrimeStatReason.value
+                    ? `
+            > ${formCrimeStatReason.value}
+            `
+                    : ""
+            }
+
             __Remarks:__
 
             > ${formRemarks.value ? formRemarks.value : "None"}
@@ -81,6 +103,11 @@ async function sendDetails(): Promise<void> {
         formEnemies.value = false;
         formEnemiesDetails.value = "";
         formRemarks.value = "";
+        formTimeDeathHours.value = undefined;
+        formTimeDeathMinutes.value = undefined;
+        formCrimeStat.value = "";
+        formCrimeStatReason.value = "";
+        formShip.value = "";
 
         emit("close");
     } catch (error: any) {
@@ -217,6 +244,77 @@ async function sendDetails(): Promise<void> {
                         :placeholder="t('formDetailed_placeholderEnemies')"
                     />
                 </div>
+            </div>
+        </div>
+
+        <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
+            <div class="w-full lg:mt-0">
+                <LabelEmergencyForm title-local="formDetailed_death" description-local="formDetailed_helpDeath" />
+                <div class="mt-2 flex w-full items-center">
+                    <input
+                        type="number"
+                        max="24"
+                        min="0"
+                        class="input-text w-20"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :disabled="formSubmittingEmergency"
+                        v-model="formTimeDeathHours"
+                    />
+                    <p class="ml-2 mr-4">{{ t("formDetailed_hours") }}</p>
+
+                    <input
+                        type="number"
+                        max="60"
+                        min="0"
+                        class="input-text w-20"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :disabled="formSubmittingEmergency"
+                        v-model="formTimeDeathMinutes"
+                    />
+                    <p class="ml-2">{{ t("formDetailed_minutes") }}</p>
+                </div>
+            </div>
+
+            <div class="mt-5 w-full lg:mt-0">
+                <LabelEmergencyForm title-local="formDetailed_crimestat" description-local="formDetailed_helpCrimestat" />
+                <div class="mt-2 flex w-full flex-col">
+                    <select
+                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        v-model="formCrimeStat"
+                        :disabled="formSubmittingEmergency"
+                    >
+                        <option value="No">{{ t("formDetailed_no") }}</option>
+                        <option value="Level 1">{{ t("formDetailed_level") }} 1</option>
+                        <option value="Level 2">{{ t("formDetailed_level") }} 2</option>
+                        <option value="Level 3">{{ t("formDetailed_level") }} 3</option>
+                        <option value="Level 4">{{ t("formDetailed_level") }} 4</option>
+                        <option value="Level 5">{{ t("formDetailed_level") }} 5</option>
+                    </select>
+                    <input
+                        type="text"
+                        class="input-text mt-2 w-full flex-grow"
+                        v-if="formCrimeStat && formCrimeStat !== 'No'"
+                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :disabled="formSubmittingEmergency"
+                        v-model="formCrimeStatReason"
+                        :placeholder="t('formDetailed_placeholderCrimestat')"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 w-full lg:mt-10">
+            <LabelEmergencyForm title-local="formDetailed_ship" description-local="formDetailed_helpShip" />
+            <div class="mt-2 flex w-full">
+                <input
+                    type="text"
+                    class="input-text w-full flex-grow"
+                    :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                    :disabled="formSubmittingEmergency"
+                    v-model="formShip"
+                    :placeholder="t('formDetailed_placeholderShip')"
+                />
             </div>
         </div>
 

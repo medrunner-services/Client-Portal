@@ -197,5 +197,16 @@
     "formDetailed_helpEnemies": "Are there enemies at your location? If yes how many?",
     "formDetailed_placeholderEnemies": "How many enemies are there?",
     "formDetailed_sendButton": "Send details",
-    "formDetailed_skipButton": "Skip details"
+    "formDetailed_skipButton": "Skip details",
+    "formDetailed_death": "What is your time until death?",
+    "formDetailed_helpDeath": "What is your time until death? Indicate the number of hours and minutes left.",
+    "formDetailed_hours": "Hours",
+    "formDetailed_minutes": "Minutes",
+    "formDetailed_crimestat": "Do you have CrimeStat?",
+    "formDetailed_helpCrimestat": "Do you have CrimeStat? If yes, which level and why?",
+    "formDetailed_level": "Level",
+    "formDetailed_placeholderCrimestat": "Why do you have CrimeStat?",
+    "formDetailed_ship": "What is the model of your ship?",
+    "formDetailed_helpShip": "What is the model of the ship you used to get to your position?",
+    "formDetailed_placeholderShip": "Your ship model..."
 }

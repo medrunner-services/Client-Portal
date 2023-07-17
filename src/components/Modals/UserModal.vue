@@ -171,6 +171,7 @@ function updateAnalytics(): void {
                 <li>Missing asterisks on required inputs</li>
                 <li>Api token copy icon stays black in dark mode</li>
                 <li>Error messages not displaying on login page</li>
+                <li>Login page was blank on iOS Safari</li>
             </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
