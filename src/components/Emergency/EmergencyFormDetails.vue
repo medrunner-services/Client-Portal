@@ -4,8 +4,10 @@ import { useI18n } from "vue-i18n";
 
 import LabelEmergencyForm from "@/components/LabelInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore";
 
 const emergencyStore = useEmergencyStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const emit = defineEmits(["close"]);
@@ -17,7 +19,7 @@ const formLocation = ref("");
 const formInjuries = ref("");
 const formIGBeacon: Ref<boolean | undefined> = ref();
 const formTeam: Ref<boolean | undefined> = ref();
-const formTeamDetails = ref("");
+const formTeamDetails: Ref<string[]> = ref([""]);
 const formEnemies: Ref<boolean | undefined> = ref();
 const formEnemiesDetails = ref("");
 const formRemarks = ref("");
@@ -54,9 +56,9 @@ async function sendDetails(): Promise<void> {
 
             __Is the client in a team?__  **${formTeam.value === true ? "Yes" : formTeam.value === false ? "No" : "Unknown"}**
             ${
-                formTeamDetails.value
+                formTeam.value === true && formTeamDetails.value
                     ? `
-            > ${formTeamDetails.value}
+            > ${formTeamDetails.value.filter(str => str !== "").join(", ")}
             `
                     : ""
             }
@@ -91,7 +93,7 @@ async function sendDetails(): Promise<void> {
         formInjuries.value = "";
         formIGBeacon.value = false;
         formTeam.value = false;
-        formTeamDetails.value = "";
+        formTeamDetails.value = [""];
         formEnemies.value = false;
         formEnemiesDetails.value = "";
         formRemarks.value = "";
@@ -195,15 +197,32 @@ async function sendDetails(): Promise<void> {
                         <option :value="true">{{ t("formDetailed_yes") }}</option>
                         <option :value="false">{{ t("formDetailed_no") }}</option>
                     </select>
-                    <input
-                        type="text"
-                        class="input-text mt-2 w-full flex-grow"
-                        v-if="formTeam"
-                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
-                        :disabled="formSubmittingEmergency"
-                        v-model="formTeamDetails"
-                        :placeholder="t('formDetailed_placeholderTeam')"
-                    />
+                    <div v-if="formTeam" v-auto-animate>
+                        <div v-for="index in formTeamDetails.length" :key="index" class="mt-2 flex items-center justify-between gap-4">
+                            <input
+                                type="text"
+                                class="input-text w-full flex-grow text-sm"
+                                :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                                :disabled="formSubmittingEmergency"
+                                v-model="formTeamDetails[index - 1]"
+                                :placeholder="t('formDetailed_placeholderTeam')"
+                            />
+                            <img
+                                v-if="formTeamDetails.length === index"
+                                :src="logicStore.darkMode ? '/icons/plus-icon-dark.svg' : '/icons/plus-icon.svg'"
+                                alt="plus icon"
+                                @click="formTeamDetails.push('')"
+                                class="h-6 w-6 cursor-pointer"
+                            />
+                            <img
+                                v-else
+                                :src="logicStore.darkMode ? '/icons/minus-icon-dark.svg' : '/icons/minus-icon.svg'"
+                                alt="minus icon"
+                                @click="formTeamDetails.splice(index - 1, 1)"
+                                class="h-6 w-6 cursor-pointer"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
 
