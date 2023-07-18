@@ -99,6 +99,8 @@ async function updateRsiHandle(): Promise<void> {
                 Added analytics for technical data, no personal or identifiable data is collected (no localisation, no ip adresses...). This can be
                 turned off in the user settings.
             </li>
+            <li>Added a settings menu on the login page to control the animation</li>
+            <li>Added Time until death, Crimestat status and ship type in the details emergency form</li>
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
@@ -107,11 +109,15 @@ async function updateRsiHandle(): Promise<void> {
                 <li>Api token copy icon stays black in dark mode</li>
                 <li>Error messages not displaying on login page</li>
                 <li>Login page was blank on iOS Safari</li>
+                <li>The canceled emergency notification has a incorrect message</li>
             </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
                 <li>API tokens expiration date is now red when reached</li>
                 <li>Added a 404 page so that you know when you are lost</li>
+                <li>You can now change some setting in the login screen</li>
+                <li>Improved field for adding multiple teammates in the details emergency form</li>
+                <li>The injuries field in the details emergency form is now a dropdown</li>
                 <li>Added some missing animations</li>
             </ul>
         </div>
