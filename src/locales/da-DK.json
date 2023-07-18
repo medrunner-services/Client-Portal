@@ -186,7 +186,6 @@
     "formDetailed_placeholderLocation": "Din position...",
     "formDetailed_injury": "Er du såret?",
     "formDetailed_helpInjury": "Er du såret? Hvis ja, hvilket skadeniveau har du?",
-    "formDetailed_placeholderInjury": "Hvilket skadeniveau har du?",
     "formDetailed_beacon": "Har du aktiveret en in-game beacon?",
     "formDetailed_helpBeacon": "Har du aktiveret en in-game beacon? Hvis ja, annuller den venligst, hvis det er muligt!",
     "formDetailed_beaconCancelMessage": "Annuller venligst din beacon hvis du kan!",
@@ -208,5 +207,6 @@
     "formDetailed_placeholderCrimestat": null,
     "formDetailed_ship": null,
     "formDetailed_helpShip": null,
-    "formDetailed_placeholderShip": null
+    "formDetailed_placeholderShip": null,
+    "formDetailed_injuryTier": null
 }

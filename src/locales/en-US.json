@@ -186,7 +186,6 @@
     "formDetailed_placeholderLocation": "Your location...",
     "formDetailed_injury": "Are you injured?",
     "formDetailed_helpInjury": "Are you injured? If yes which Tier of injuries do you have?",
-    "formDetailed_placeholderInjury": "Which Tier of injuries do you have?",
     "formDetailed_beacon": "Have you submitted a in-game beacon?",
     "formDetailed_helpBeacon": "Have you submitted an in-game beacon? If yes please cancel it if you can!",
     "formDetailed_beaconCancelMessage": "Please cancel the beacon if you can!",
@@ -208,5 +207,6 @@
     "formDetailed_placeholderCrimestat": "Why do you have CrimeStat?",
     "formDetailed_ship": "What is the model of your ship?",
     "formDetailed_helpShip": "What is the model of the ship you used to get to your position?",
-    "formDetailed_placeholderShip": "Your ship model..."
+    "formDetailed_placeholderShip": "Your ship model...",
+    "formDetailed_injuryTier": "Tier"
 }

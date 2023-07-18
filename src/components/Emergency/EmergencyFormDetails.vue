@@ -14,8 +14,7 @@ const formErrorMessage = ref("");
 const formSubmittingEmergency = ref(false);
 const formSituation = ref("");
 const formLocation = ref("");
-const formInjuries: Ref<boolean | undefined> = ref();
-const formInjuriesDetails = ref("");
+const formInjuries = ref("");
 const formIGBeacon: Ref<boolean | undefined> = ref();
 const formTeam: Ref<boolean | undefined> = ref();
 const formTeamDetails = ref("");
@@ -49,14 +48,8 @@ async function sendDetails(): Promise<void> {
                     : "Unknown"
             }**
 
-            __Is the client injured:__  **${formInjuries.value === true ? "Yes" : formInjuries.value === false ? "No" : "Unknown"}**
-            ${
-                formInjuriesDetails.value
-                    ? `
-            > ${formInjuriesDetails.value}
-            `
-                    : ""
-            }
+            __Is the client injured:__  **${formInjuries.value ? formInjuries.value : "Unknown"}**
+
             __Has the client sent an IG beacon:__  **${formIGBeacon.value === true ? "Yes" : formIGBeacon.value === false ? "No" : "Unknown"}**
 
             __Is the client in a team?__  **${formTeam.value === true ? "Yes" : formTeam.value === false ? "No" : "Unknown"}**
@@ -95,8 +88,7 @@ async function sendDetails(): Promise<void> {
         formSubmittingEmergency.value = false;
         formSituation.value = "";
         formLocation.value = "";
-        formInjuries.value = false;
-        formInjuriesDetails.value = "";
+        formInjuries.value = "";
         formIGBeacon.value = false;
         formTeam.value = false;
         formTeamDetails.value = "";
@@ -165,18 +157,11 @@ async function sendDetails(): Promise<void> {
                         v-model="formInjuries"
                         :disabled="formSubmittingEmergency"
                     >
-                        <option :value="true">{{ t("formDetailed_yes") }}</option>
-                        <option :value="false">{{ t("formDetailed_no") }}</option>
+                        <option value="No">{{ t("formDetailed_no") }}</option>
+                        <option value="Tier 1">{{ t("formDetailed_injuryTier") }} 1</option>
+                        <option value="Tier 2">{{ t("formDetailed_injuryTier") }} 2</option>
+                        <option value="Tier 3">{{ t("formDetailed_injuryTier") }} 3</option>
                     </select>
-                    <input
-                        type="text"
-                        class="input-text mt-2 w-full flex-grow"
-                        v-if="formInjuries"
-                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
-                        :disabled="formSubmittingEmergency"
-                        v-model="formInjuriesDetails"
-                        :placeholder="t('formDetailed_placeholderInjury')"
-                    />
                 </div>
             </div>
 

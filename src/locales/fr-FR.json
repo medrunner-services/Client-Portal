@@ -186,7 +186,6 @@
     "formDetailed_placeholderLocation": "Votre localisation...",
     "formDetailed_injury": "Êtes-vous blessé(e) ?",
     "formDetailed_helpInjury": "Êtes-vous blessé(e) ? Si oui, de quel tier de blessures souffrez-vous ?",
-    "formDetailed_placeholderInjury": "Quel est le tier de blessures dont vous souffrez ?",
     "formDetailed_beacon": "Avez-vous soumis une balise dans le jeu ?",
     "formDetailed_helpBeacon": "Avez-vous soumis une balise de détresse dans le jeu ? Si oui, veuillez l'annuler si vous le pouvez !",
     "formDetailed_beaconCancelMessage": "Veuillez annuler la balise si vous le pouvez !",
@@ -208,5 +207,6 @@
     "formDetailed_placeholderCrimestat": "Pourquoi avez-vous de la CrimeStat ?",
     "formDetailed_ship": "Quel est le modèle de votre vaisseau ?",
     "formDetailed_helpShip": "Quel est le modèle du vaisseau que vous avez utilisé pour arriver à votre position ?",
-    "formDetailed_placeholderShip": "Votre modèle de vaisseau..."
+    "formDetailed_placeholderShip": "Votre modèle de vaisseau...",
+    "formDetailed_injuryTier": "Niveau"
 }
