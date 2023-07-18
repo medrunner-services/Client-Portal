@@ -59,8 +59,10 @@ function changeLanguage(newLanguage: string): void {
 
 async function disconnect(): Promise<void> {
     await userStore.disconnectUser();
-    ampli.client.setOptOut(true);
-    ampli.client.flush();
+    if (ampli.isLoaded) {
+        ampli.client.setOptOut(true);
+        ampli.client.flush();
+    }
     await router.push("/login");
 }
 

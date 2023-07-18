@@ -2,11 +2,11 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { ampli } from "@/ampli";
+import Settings from "@/components/Settings.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-const { t, te } = useI18n();
+const { t } = useI18n();
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
@@ -16,12 +16,9 @@ const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
-const updateNotificationError = ref("");
 const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
-const notificationCheckbox = ref(logicStore.isNotificationGranted);
-const darkModeCheckbox = ref(logicStore.darkMode);
-const analyticsCheckbox = ref(logicStore.isAnalyticsAllowed);
+
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
 
@@ -49,68 +46,6 @@ async function updateRsiHandle(): Promise<void> {
         else rsiHandleErrorMessage.value = t("error_generic");
 
         rsiHandleUpdating.value = false;
-    }
-}
-
-function updateNotificationPerms(): void {
-    if (logicStore.isNotificationGranted) {
-        notificationCheckbox.value = false;
-        logicStore.isNotificationGranted = false;
-        localStorage.setItem("notificationActivated", "false");
-    } else {
-        if ("Notification" in window && Notification.permission === "granted") {
-            notificationCheckbox.value = true;
-            logicStore.isNotificationGranted = true;
-            localStorage.setItem("notificationActivated", "true");
-        } else if ("Notification" in window) {
-            Notification.requestPermission()
-                .then(permission => {
-                    if (permission === "granted") {
-                        notificationCheckbox.value = true;
-                        updateNotificationError.value = "";
-                        logicStore.isNotificationGranted = true;
-                        localStorage.setItem("notificationActivated", "true");
-                    } else {
-                        notificationCheckbox.value = false;
-                        logicStore.isNotificationGranted = false;
-                        updateNotificationError.value = t("error_notificationPermissions");
-                    }
-                })
-                .catch(() => {
-                    notificationCheckbox.value = false;
-                    logicStore.isNotificationGranted = false;
-                    updateNotificationError.value = t("error_generic");
-                });
-        }
-    }
-}
-
-function updateDarkMode(): void {
-    if (darkModeCheckbox.value) {
-        document.documentElement.classList.remove("dark");
-        darkModeCheckbox.value = false;
-        logicStore.darkMode = false;
-        localStorage.setItem("darkMode", "false");
-    } else {
-        document.documentElement.classList.add("dark");
-        darkModeCheckbox.value = true;
-        logicStore.darkMode = true;
-        localStorage.setItem("darkMode", "true");
-    }
-}
-
-function updateAnalytics(): void {
-    if (analyticsCheckbox.value) {
-        ampli.client.setOptOut(true);
-        ampli.client.flush();
-
-        analyticsCheckbox.value = false;
-        logicStore.isAnalyticsAllowed = false;
-        localStorage.setItem("analyticsActivated", "false");
-    } else {
-        analyticsCheckbox.value = true;
-        logicStore.isAnalyticsAllowed = true;
-        localStorage.setItem("analyticsActivated", "true");
     }
 }
 </script>
@@ -171,6 +106,7 @@ function updateAnalytics(): void {
                 <li>Missing asterisks on required inputs</li>
                 <li>Api token copy icon stays black in dark mode</li>
                 <li>Error messages not displaying on login page</li>
+                <li>Login page was blank on iOS Safari</li>
             </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
@@ -183,35 +119,7 @@ function updateAnalytics(): void {
     </div>
 
     <div class="border-b border-gray-200 py-5 dark:border-stone-700">
-        <div class="flex items-center justify-between">
-            <span class="font-semibold">{{ t("user_notificationSetting") }}</span>
-            <label class="relative mr-5 inline-flex cursor-pointer items-center">
-                <input @click="updateNotificationPerms" type="checkbox" v-model="notificationCheckbox" class="peer sr-only" />
-                <div
-                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30 dark:bg-stone-800"
-                ></div>
-            </label>
-        </div>
-        <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ updateNotificationError }}</p>
-        <div class="mt-2 flex items-center justify-between">
-            <span class="font-semibold">{{ t("user_darkModeSetting") }}</span>
-            <label class="relative mr-5 inline-flex cursor-pointer items-center">
-                <input @click="updateDarkMode" type="checkbox" v-model="darkModeCheckbox" class="peer sr-only" />
-                <div
-                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30 dark:bg-stone-800"
-                ></div>
-            </label>
-        </div>
-        <div class="mt-2 flex items-center justify-between">
-            <span class="font-semibold">{{ t("user_analyticsSetting") }}</span>
-            <label class="relative mr-5 inline-flex cursor-pointer items-center">
-                <input @click="updateAnalytics" type="checkbox" v-model="analyticsCheckbox" class="peer sr-only" />
-                <div
-                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30 dark:bg-stone-700"
-                ></div>
-            </label>
-        </div>
-        <p class="mt-1 text-xs italic">{{ t("user_analyticsDisclaimer") }}</p>
+        <Settings />
     </div>
 
     <div class="border-b border-gray-200 py-5 dark:border-stone-700">

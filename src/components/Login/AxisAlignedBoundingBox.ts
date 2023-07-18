@@ -1,4 +1,4 @@
-import type Vector2 from "@/components/adequateLogInScreen/Vector2";
+import type Vector2 from "@/components/Login/Vector2";
 
 export default class AxisAlignedBoundingBox {
     public constructor(
