@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/vue/24/outline";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -16,7 +17,7 @@ const newTokenExpirationDate = ref("");
 const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const inputExpirationDate: Ref<HTMLInputElement | null> = ref(null);
-const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
+const isCopied = ref(false);
 
 onMounted(() => {
     if (inputExpirationDate.value) {
@@ -47,7 +48,7 @@ async function createToken() {
 
 const copyTokenToClipboard = (): void => {
     navigator.clipboard.writeText(createdToken.value).then(() => {
-        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
+        isCopied.value = true;
     });
 };
 </script>
@@ -61,7 +62,10 @@ const copyTokenToClipboard = (): void => {
                     {{ createdToken }}
                 </p>
             </div>
-            <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyTokenToClipboard()" />
+            <div class="ml-3 flex cursor-pointer items-center xl:ml-6">
+                <CheckIcon v-if="isCopied" class="h-6 w-6" />
+                <DocumentDuplicateIcon v-else @click="copyTokenToClipboard()" class="h-6 w-6" />
+            </div>
         </div>
     </div>
 

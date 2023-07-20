@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -7,12 +8,12 @@ import { useLogicStore } from "@/stores/logicStore";
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
 const userAgent = navigator.userAgent;
+const isCopied = ref(false);
 
 const copyUserAgentToClipboard = (): void => {
     navigator.clipboard.writeText(userAgent).then(() => {
-        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
+        isCopied.value = true;
     });
 };
 </script>
@@ -20,13 +21,16 @@ const copyUserAgentToClipboard = (): void => {
 <template>
     <p class="mb-5 mt-2 font-Mohave text-2xl font-semibold text-primary-900">{{ t("bugReport_title") }}</p>
     <p class="underline">{{ t("bugReport_copyUserAgent") }}</p>
-    <div class="mt-2 flex">
+    <div class="mt-2 flex items-center">
         <div class="w-full bg-neutral-700 text-center font-Inter text-xs text-neutral-50">
             <p class="mx-auto py-3">
                 {{ userAgent }}
             </p>
         </div>
-        <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyUserAgentToClipboard()" />
+        <div class="ml-3 cursor-pointer xl:ml-6">
+            <CheckIcon v-if="isCopied" class="h-6 w-6" />
+            <DocumentDuplicateIcon v-else @click="copyUserAgentToClipboard()" class="h-6 w-6" />
+        </div>
     </div>
 
     <a

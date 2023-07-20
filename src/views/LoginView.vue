@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CheckIcon, Cog6ToothIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
@@ -20,7 +21,7 @@ const formUsername = ref("");
 const waitingForApi = ref(false);
 const formErrorMessage = ref(t("error_generic"));
 const formErrorActive = ref(false);
-const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
+const isCopied = ref(false);
 const routeQueryError = ref(route.query.error);
 const displaySettings = ref(false);
 const loginAnimation = ref(
@@ -51,7 +52,7 @@ const submittingLinkForm = async (): Promise<void> => {
 const copyIdToClipboard = (): void => {
     if (!userStore.user) return;
     navigator.clipboard.writeText(userStore.user.id).then(() => {
-        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
+        isCopied.value = true;
     });
 };
 
@@ -131,15 +132,12 @@ function resetAnimationSettings(): void {
             <p>{{ getErrorText() }}</p>
         </div>
 
-        <div
-            class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-8 dark:bg-stone-900 md:h-[40rem] md:w-[30rem] lg:mr-auto"
-        >
-            <img
-                :src="logicStore.darkMode ? '/icons/cog-wheel-icon-dark.svg' : '/icons/cog-wheel-icon.svg'"
-                alt="Settings"
-                class="hidden h-6 w-6 cursor-pointer self-end md:block"
-                @click="displaySettings = !displaySettings"
-            />
+        <div class="z-10 flex h-full w-full flex-col items-center justify-center bg-white p-5 dark:bg-stone-900 md:h-fit md:w-[30rem] lg:mr-auto">
+            <div class="hidden cursor-pointer self-end md:block" @click="displaySettings = !displaySettings" v-if="route.name === 'login'">
+                <XMarkIcon class="h-6 w-6" v-if="displaySettings" />
+                <Cog6ToothIcon class="h-6 w-6" v-else />
+            </div>
+
             <div class="px-5 py-10 md:h-full md:px-10 md:py-14">
                 <div v-if="displaySettings">
                     <div class="border-b border-gray-200 pb-5 dark:border-stone-700">
@@ -205,7 +203,7 @@ function resetAnimationSettings(): void {
                 <div v-else>
                     <h1 class="text-center font-Mohave text-3xl font-bold uppercase lg:text-4xl" v-html="getColoredTitle()"></h1>
 
-                    <div v-if="route.path === '/login/link'" class="mt-14 flex flex-col lg:mt-28">
+                    <div v-if="route.name === 'loginLink'" class="mt-14 flex flex-col lg:mt-28">
                         <div class="w-full">
                             <p class="font-Inter text-small font-semibold" v-html="getAddToBioText()"></p>
                             <div class="mt-2 flex">
@@ -214,7 +212,10 @@ function resetAnimationSettings(): void {
                                         {{ userStore.user?.id }}
                                     </p>
                                 </div>
-                                <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyIdToClipboard()" />
+                                <div class="ml-3 flex cursor-pointer items-center xl:ml-6">
+                                    <CheckIcon v-if="isCopied" class="h-6 w-6" />
+                                    <DocumentDuplicateIcon v-else @click="copyIdToClipboard()" class="h-6 w-6" />
+                                </div>
                             </div>
                             <p class="mt-5 text-xs italic lg:text-sm">
                                 {{ t("login_warningRSIProfileBug") }}

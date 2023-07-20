@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { TrashIcon } from "@heroicons/vue/24/outline";
 import type { ApiToken } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -50,12 +51,7 @@ async function deleteToken(): Promise<void> {
                 <div v-if="token.lastUsed">{{ timestampToDate(token.lastUsed) }}</div>
                 <div v-else>{{ t("developer_tokenNeverUsed") }}</div>
             </div>
-            <img
-                :src="logicStore.darkMode ? '/icons/trash-icon-dark.svg' : '/icons/trash-icon.svg'"
-                alt="Delete"
-                class="h-5 w-5 cursor-pointer"
-                @click="deleteToken()"
-            />
+            <TrashIcon class="h-5 w-5 cursor-pointer" @click="deleteToken()" />
         </div>
         <p v-if="token.expirationDate" class="mt-4 text-xs font-semibold lg:text-sm" :class="isTokenExpired ? 'text-primary-900' : ''">
             {{ t("developer_tokenExpires", { date: timestampToDate(token.expirationDate) }) }}
