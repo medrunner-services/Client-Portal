@@ -63,7 +63,7 @@ const router = createRouter({
             path: "/login/link",
             name: "loginLink",
             component: () => import("@/views/LoginView.vue"),
-            // beforeEnter: isUserNotLinked,
+            beforeEnter: isUserNotLinked,
         },
         {
             path: "/auth",

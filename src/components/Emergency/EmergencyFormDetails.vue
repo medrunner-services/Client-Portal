@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { MinusIcon, PlusIcon } from "@heroicons/vue/24/outline";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -207,20 +208,8 @@ async function sendDetails(): Promise<void> {
                                 v-model="formTeamDetails[index - 1]"
                                 :placeholder="t('formDetailed_placeholderTeam')"
                             />
-                            <img
-                                v-if="formTeamDetails.length === index"
-                                :src="logicStore.darkMode ? '/icons/plus-icon-dark.svg' : '/icons/plus-icon.svg'"
-                                alt="plus icon"
-                                @click="formTeamDetails.push('')"
-                                class="h-6 w-6 cursor-pointer"
-                            />
-                            <img
-                                v-else
-                                :src="logicStore.darkMode ? '/icons/minus-icon-dark.svg' : '/icons/minus-icon.svg'"
-                                alt="minus icon"
-                                @click="formTeamDetails.splice(index - 1, 1)"
-                                class="h-6 w-6 cursor-pointer"
-                            />
+                            <PlusIcon v-if="formTeamDetails.length === index" class="h-6 w-6 cursor-pointer" @click="formTeamDetails.push('')" />
+                            <MinusIcon v-else class="h-6 w-6 cursor-pointer" @click="formTeamDetails.splice(index - 1, 1)" />
                         </div>
                     </div>
                 </div>

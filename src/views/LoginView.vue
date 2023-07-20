@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { CheckIcon, Cog6ToothIcon, DocumentDuplicateIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
@@ -11,9 +12,6 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
-import { Cog6ToothIcon } from "@heroicons/vue/24/outline";
-import { XMarkIcon } from "@heroicons/vue/24/outline";
-
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 const route = useRoute();
@@ -23,7 +21,7 @@ const formUsername = ref("");
 const waitingForApi = ref(false);
 const formErrorMessage = ref(t("error_generic"));
 const formErrorActive = ref(false);
-const clipboardIcon = ref(logicStore.darkMode ? "/icons/copy-icon-dark.svg" : "/icons/copy-icon.svg");
+const isCopied = ref(false);
 const routeQueryError = ref(route.query.error);
 const displaySettings = ref(false);
 const loginAnimation = ref(
@@ -54,7 +52,7 @@ const submittingLinkForm = async (): Promise<void> => {
 const copyIdToClipboard = (): void => {
     if (!userStore.user) return;
     navigator.clipboard.writeText(userStore.user.id).then(() => {
-        clipboardIcon.value = logicStore.darkMode ? "/icons/check-icon-dark.svg" : "/icons/check-icon.svg";
+        isCopied.value = true;
     });
 };
 
@@ -214,7 +212,10 @@ function resetAnimationSettings(): void {
                                         {{ userStore.user?.id }}
                                     </p>
                                 </div>
-                                <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyIdToClipboard()" />
+                                <div class="ml-3 flex cursor-pointer items-center xl:ml-6">
+                                    <CheckIcon v-if="isCopied" class="h-6 w-6" />
+                                    <DocumentDuplicateIcon v-else @click="copyIdToClipboard()" class="h-6 w-6" />
+                                </div>
                             </div>
                             <p class="mt-5 text-xs italic lg:text-sm">
                                 {{ t("login_warningRSIProfileBug") }}
