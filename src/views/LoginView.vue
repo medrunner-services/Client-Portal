@@ -11,6 +11,9 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { redirectToDiscordLogin } from "@/utils/discordRedirects";
 
+import { Cog6ToothIcon } from "@heroicons/vue/24/outline";
+import { XMarkIcon } from "@heroicons/vue/24/outline";
+
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 const route = useRoute();
@@ -131,15 +134,12 @@ function resetAnimationSettings(): void {
             <p>{{ getErrorText() }}</p>
         </div>
 
-        <div
-            class="z-10 flex h-full w-full flex-col items-center justify-center bg-white px-5 py-8 dark:bg-stone-900 md:h-[40rem] md:w-[30rem] lg:mr-auto"
-        >
-            <img
-                :src="logicStore.darkMode ? '/icons/cog-wheel-icon-dark.svg' : '/icons/cog-wheel-icon.svg'"
-                alt="Settings"
-                class="hidden h-6 w-6 cursor-pointer self-end md:block"
-                @click="displaySettings = !displaySettings"
-            />
+        <div class="z-10 flex h-full w-full flex-col items-center justify-center bg-white p-5 dark:bg-stone-900 md:h-fit md:w-[30rem] lg:mr-auto">
+            <div class="hidden cursor-pointer self-end md:block" @click="displaySettings = !displaySettings" v-if="route.name === 'login'">
+                <XMarkIcon class="h-6 w-6" v-if="displaySettings" />
+                <Cog6ToothIcon class="h-6 w-6" v-else />
+            </div>
+
             <div class="px-5 py-10 md:h-full md:px-10 md:py-14">
                 <div v-if="displaySettings">
                     <div class="border-b border-gray-200 pb-5 dark:border-stone-700">
@@ -205,7 +205,7 @@ function resetAnimationSettings(): void {
                 <div v-else>
                     <h1 class="text-center font-Mohave text-3xl font-bold uppercase lg:text-4xl" v-html="getColoredTitle()"></h1>
 
-                    <div v-if="route.path === '/login/link'" class="mt-14 flex flex-col lg:mt-28">
+                    <div v-if="route.name === 'loginLink'" class="mt-14 flex flex-col lg:mt-28">
                         <div class="w-full">
                             <p class="font-Inter text-small font-semibold" v-html="getAddToBioText()"></p>
                             <div class="mt-2 flex">
