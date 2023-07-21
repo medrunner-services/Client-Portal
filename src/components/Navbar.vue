@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { Bars3Icon, ChevronUpDownIcon, XMarkIcon } from "@heroicons/vue/24/outline";
+import { UserIcon } from "@heroicons/vue/24/solid";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { ampli } from "@/ampli";
 import LanguageSelector from "@/components/LanguageSelector.vue";
 import Modal from "@/components/Modal.vue";
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
@@ -31,6 +34,7 @@ onMounted(() => {
         locale.value = userLanguage;
     } else if (availableLocales.includes(navigator.language)) {
         locale.value = navigator.language;
+        localStorage.setItem("selectedLanguage", navigator.language);
     } else if (availableMainLocales.includes(navigator.language.split("-")[0])) {
         const fallbackLocal = availableLocales.find(item => item.indexOf(navigator.language.split("-")[0]) === 0);
         if (fallbackLocal) {
@@ -57,6 +61,10 @@ function changeLanguage(newLanguage: string): void {
 
 async function disconnect(): Promise<void> {
     await userStore.disconnectUser();
+    if (ampli.isLoaded) {
+        ampli.client.setOptOut(true);
+        ampli.client.flush();
+    }
     await router.push("/login");
 }
 
@@ -96,7 +104,7 @@ async function gotoDevView(): Promise<void> {
                 >
                     {{ t("navbar_reportBug") }}
                 </div>
-                <div class="relative">
+                <div class="relative" v-auto-animate="{ duration: 100 }">
                     <div
                         class="flex cursor-pointer select-none items-center border px-2 py-2 font-Inter text-body text-neutral-900 hover:border-neutral-600 dark:text-slate-50"
                         :class="displayLanguageSelector ? 'border-secondary-600' : 'border-gray-400'"
@@ -105,11 +113,7 @@ async function gotoDevView(): Promise<void> {
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
                         <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
-                        <img
-                            :src="logicStore.darkMode ? '/icons/chevron-up-down-dark.svg' : '/icons/chevron-up-down.svg'"
-                            class="h-6 w-6"
-                            alt="Arrow"
-                        />
+                        <ChevronUpDownIcon class="h-6 w-6" />
                     </div>
 
                     <LanguageSelector
@@ -123,18 +127,14 @@ async function gotoDevView(): Promise<void> {
                 </div>
                 <div v-if="userStore.isAuthenticated">
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
-                        <img :src="logicStore.darkMode ? '/icons/user-profile-dark.svg' : '/icons/user-profile.svg'" alt="User profile" />
+                        <UserIcon class="h-9 w-9" />
                     </div>
                 </div>
             </nav>
 
             <button @click="switchNavMenuSate()" class="ml-auto lg:hidden">
-                <img
-                    v-if="!navMenuCollapsed"
-                    :src="logicStore.darkMode ? '/icons/burger-button-dark.svg' : '/icons/burger-button.svg'"
-                    alt="Open menu"
-                />
-                <img v-else :src="logicStore.darkMode ? '/icons/close-button-dark.svg' : '/icons/close-button.svg'" alt="Close menu" />
+                <Bars3Icon v-if="!navMenuCollapsed" class="h-8 w-8" />
+                <XMarkIcon v-else class="h-8 w-8" />
             </button>
         </div>
 
@@ -144,7 +144,7 @@ async function gotoDevView(): Promise<void> {
             class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-400/50 dark:bg-neutral-700/50"
         >
             <nav
-                class="content-container absolute top-14 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg dark:bg-stone-900"
+                class="content-container absolute top-12 z-10 flex w-full flex-col justify-end bg-white py-4 text-header-2 font-semibold shadow-lg dark:bg-stone-900"
             >
                 <div class="flex flex-col gap-4 font-Mohave">
                     <RouterLink @click="switchNavMenuSate()" to="/">{{ t("navbar_emergency") }}</RouterLink>
@@ -163,14 +163,10 @@ async function gotoDevView(): Promise<void> {
                     >
                         <img :src="`/icons/flags/${locale.split('-')[1].toLowerCase()}.svg`" class="h-4 w-5" alt="flag" />
                         <p class="font text ml-2 mr-4 font-Mohave text-xl">{{ logicStore.getLanguageString(locale) }}</p>
-                        <img
-                            :src="logicStore.darkMode ? '/icons/chevron-up-down-dark.svg' : '/icons/chevron-up-down.svg'"
-                            class="h-6 w-6"
-                            alt="Arrow"
-                        />
+                        <ChevronUpDownIcon class="h-6 w-6" />
                     </div>
                     <div @click="displayUserModal = !displayUserModal" class="cursor-pointer">
-                        <img :src="logicStore.darkMode ? '/icons/user-profile-dark.svg' : '/icons/user-profile.svg'" alt="User profile" />
+                        <UserIcon class="h-9 w-9" />
                     </div>
                 </div>
             </nav>

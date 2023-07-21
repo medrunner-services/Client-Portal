@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/outline";
 import type { ClientHistory, Emergency } from "@medrunner-services/api-client";
 import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
@@ -35,6 +36,7 @@ onMounted(async () => {
     loaded.value = true;
 
     if (
+        "Notification" in window &&
         Notification.permission === "default" &&
         (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
     ) {
@@ -70,7 +72,10 @@ onMounted(async () => {
                     ![1, 10].includes(updatedEmergency.status)
                 ) {
                     new Notification(logicStore.getEmergencyStatusTitle(updatedEmergency.status), {
-                        body: logicStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                        body:
+                            updatedEmergency.status === 6
+                                ? t("tracking_statusTextConfirmedCanceled")
+                                : logicStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                         icon: "/images/medrunner-logo-square.webp",
                     });
                 }
@@ -198,7 +203,7 @@ const isLastPageHistory = computed(() => {
                     class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
                     :class="{ 'opacity-50': page <= 0 }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="h-6 w-6 rotate-90" alt="Dropdown arrow" />
+                    <ChevronLeftIcon class="h-6 w-6 stroke-2 text-gray-50" />
                 </div>
                 <div class="flex w-1/2 items-center justify-center font-Inter font-bold xl:w-2/3">
                     {{ page + 1 }} / {{ Math.ceil(userStore.totalNumberOfEmergencies / pageSize) }}
@@ -208,7 +213,7 @@ const isLastPageHistory = computed(() => {
                     class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
                     :class="{ 'opacity-50': isLastPageHistory }"
                 >
-                    <img src="/icons/arrow-icon.svg" class="h-6 w-6 -rotate-90" alt="Dropdown arrow" />
+                    <ChevronRightIcon class="h-6 w-6 stroke-2 text-gray-50" />
                 </div>
             </div>
         </div>

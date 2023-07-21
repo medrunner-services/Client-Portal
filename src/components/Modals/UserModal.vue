@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import Settings from "@/components/Settings.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-const { t, te } = useI18n();
+const { t } = useI18n();
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
@@ -15,11 +16,9 @@ const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 const isInputtingRsiHandle = ref(false);
 const newRsiHandle = ref(userStore.user.rsiHandle);
 const rsiHandleErrorMessage = ref("");
-const updateNotificationError = ref("");
 const rsiHandleUpdating = ref(false);
 const displayFullUpdateNotes = ref(false);
-const notificationCheckbox = ref(logicStore.isNotificationGranted);
-const darkModeCheckbox = ref(logicStore.darkMode);
+
 // eslint-disable-next-line no-undef
 const appVersion = APP_VERSION;
 
@@ -47,53 +46,6 @@ async function updateRsiHandle(): Promise<void> {
         else rsiHandleErrorMessage.value = t("error_generic");
 
         rsiHandleUpdating.value = false;
-    }
-}
-
-function updateNotificationPerms(): void {
-    if (logicStore.isNotificationGranted) {
-        notificationCheckbox.value = false;
-        logicStore.isNotificationGranted = false;
-        localStorage.setItem("notificationActivated", "false");
-    } else {
-        if (Notification.permission === "granted") {
-            notificationCheckbox.value = true;
-            logicStore.isNotificationGranted = true;
-            localStorage.setItem("notificationActivated", "true");
-        } else {
-            Notification.requestPermission()
-                .then(permission => {
-                    if (permission === "granted") {
-                        notificationCheckbox.value = true;
-                        updateNotificationError.value = "";
-                        logicStore.isNotificationGranted = true;
-                        localStorage.setItem("notificationActivated", "true");
-                    } else {
-                        notificationCheckbox.value = false;
-                        logicStore.isNotificationGranted = false;
-                        updateNotificationError.value = t("error_notificationPermissions");
-                    }
-                })
-                .catch(() => {
-                    notificationCheckbox.value = false;
-                    logicStore.isNotificationGranted = false;
-                    updateNotificationError.value = t("error_generic");
-                });
-        }
-    }
-}
-
-function updateDarkMode(): void {
-    if (darkModeCheckbox.value) {
-        document.documentElement.classList.remove("dark");
-        darkModeCheckbox.value = false;
-        logicStore.darkMode = false;
-        localStorage.setItem("darkMode", "false");
-    } else {
-        document.documentElement.classList.add("dark");
-        darkModeCheckbox.value = true;
-        logicStore.darkMode = true;
-        localStorage.setItem("darkMode", "true");
     }
 }
 </script>
@@ -143,50 +95,37 @@ function updateDarkMode(): void {
         <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
         <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
         <ul class="list-inside list-disc">
-            <li>Added a new form for the client to send additional informational inspired by the dispatcher template message</li>
-            <li>"What's New" section in the user profile</li>
-            <li>Notifications are now sent on supported browsers when an emergency is updated (can be toggled on and off in the user profile).</li>
-            <li>Developer section to create and manage API tokens</li>
-            <li>Dark mode</li>
+            <li>
+                Added analytics for technical data, no personal or identifiable data is collected (no localisation, no ip adresses...). This can be
+                turned off in the user settings.
+            </li>
+            <li>Added a settings menu on the login page to control the animation</li>
+            <li>Added Time until death, Crimestat status and ship type in the details emergency form</li>
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
             <ul class="list-inside list-disc">
-                <li>Only one emergency in the history on each page after completing an emergency</li>
-                <li>Wrong logo showing up in different environments</li>
-                <li>Connection to the server not dropping after the maximum number of tries</li>
+                <li>Missing asterisks on required inputs</li>
+                <li>Api token copy icon stays black in dark mode</li>
+                <li>Error messages not displaying on login page</li>
+                <li>Login page was blank on iOS Safari</li>
+                <li>The canceled emergency notification has a incorrect message</li>
             </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
-                <li>Moved the remarks section to the second form</li>
-                <li>Made the information text on inputs more user-friendly</li>
-                <li>Added team roles in the emergency tracking section</li>
-                <li>Minor UI improvements</li>
+                <li>API tokens expiration date is now red when reached</li>
+                <li>Added a 404 page so that you know when you are lost</li>
+                <li>You can now change some setting in the login screen</li>
+                <li>Improved field for adding multiple teammates in the details emergency form</li>
+                <li>The injuries field in the details emergency form is now a dropdown</li>
+                <li>Added some missing animations</li>
             </ul>
         </div>
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
     </div>
 
     <div class="border-b border-gray-200 py-5 dark:border-stone-700">
-        <div class="flex items-center justify-between">
-            <span class="font-semibold">{{ t("user_notificationSetting") }}</span>
-            <label class="relative mr-5 inline-flex cursor-pointer items-center">
-                <input @click="updateNotificationPerms" type="checkbox" v-model="notificationCheckbox" class="peer sr-only" />
-                <div
-                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30"
-                ></div>
-            </label>
-        </div>
-        <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ updateNotificationError }}</p>
-        <div class="mt-2 flex items-center justify-between">
-            <span class="font-semibold">{{ t("user_darkModeSetting") }}</span>
-            <label class="relative mr-5 inline-flex cursor-pointer items-center">
-                <input @click="updateDarkMode" type="checkbox" v-model="darkModeCheckbox" class="peer sr-only" />
-                <div
-                    class="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-0.5 after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary-900 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:ring-4 peer-focus:ring-primary-900/30"
-                ></div>
-            </label>
-        </div>
+        <Settings />
     </div>
 
     <div class="border-b border-gray-200 py-5 dark:border-stone-700">

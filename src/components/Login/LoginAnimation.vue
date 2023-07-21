@@ -1,15 +1,31 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 
-import AxisAlignedBoundingBox from "@/components/adequateLogInScreen/AxisAlignedBoundingBox";
-import Star from "@/components/adequateLogInScreen/Star";
-import { AdjustShadeRgb, randomStar } from "@/components/adequateLogInScreen/stars/StarClass";
-import Vector2 from "@/components/adequateLogInScreen/Vector2";
+import AxisAlignedBoundingBox from "@/components/Login/AxisAlignedBoundingBox";
+import Star from "@/components/Login/Star";
+import { AdjustShadeRgb, randomStar } from "@/components/Login/stars/StarClass";
+import Vector2 from "@/components/Login/Vector2";
+
+const props = defineProps({
+    animationStatus: {
+        type: Boolean,
+        required: true,
+    },
+    starSize: {
+        type: Number,
+        default: 2,
+    },
+    glowSize: {
+        type: Number,
+        default: 2,
+    },
+    speed: {
+        type: Number,
+        default: 1,
+    },
+});
 
 onMounted(() => {
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const GLOBAL_STAR_SIZE = 2;
-    const GLOBAL_GLOW_SIZE = 2;
     const STAR_MIN_Z = 0.2;
     const OVERFLOW_THRESHOLD = 50;
     let lastFrameTime = Date.now();
@@ -24,11 +40,9 @@ onMounted(() => {
         y: 0,
         tx: 0,
         ty: 0,
-        z: 0.0001,
+        // replaced by props.speed
+        // z: 0.0001,
     };
-    if (reduceMotion) {
-        cameraVelocity.z = 0;
-    }
     resize();
     step();
     window.onresize = resize;
@@ -116,7 +130,9 @@ onMounted(() => {
         lastFrameTime = Date.now();
         context.clearRect(0, 0, width, height);
         update();
-        requestAnimationFrame(step);
+        if (props.animationStatus) {
+            requestAnimationFrame(step);
+        }
     }
 
     function update() {
@@ -130,9 +146,9 @@ onMounted(() => {
             const star = stars[i];
             star.X += cameraVelocity.x * star.Z;
             star.Y += cameraVelocity.y * star.Z;
-            star.X += (star.X - width / 2) * cameraVelocity.z * star.Z;
-            star.Y += (star.Y - height / 2) * cameraVelocity.z * star.Z;
-            star.Z *= 1 + cameraVelocity.z;
+            star.X += (star.X - width / 2) * (props.speed / 10000) * star.Z;
+            star.Y += (star.Y - height / 2) * (props.speed / 10000) * star.Z;
+            star.Z *= 1 + props.speed / 10000;
 
             // recycle when out of bounds
             if (
@@ -162,10 +178,10 @@ onMounted(() => {
     function renderStar(star: Star) {
         const renderSize = star.Properties.radius;
 
-        const radius = renderSize * GLOBAL_STAR_SIZE * star.Z * scale;
+        const radius = renderSize * props.starSize * star.Z * scale;
         // make more luminous stars glow more
         // at worst, ln(luminosity) is -3, so add 3 to compensate
-        const glowSize = radius + GLOBAL_GLOW_SIZE * (Math.log(star.Properties.luminosity) + 3);
+        const glowSize = radius + props.glowSize * (Math.log(star.Properties.luminosity) + 3);
         if (glowSize < 2) {
             // ensure a smooth fade-in
             // todo: seems like this doesn't work? stars still pop in abruptly

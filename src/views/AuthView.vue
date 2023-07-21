@@ -13,7 +13,11 @@ const userStore = useUserStore();
 
 onMounted(async () => {
     if (!route.query.code) {
-        await router.push("/login");
+        if (route.query.error) {
+            await router.push({ name: "login", query: { error: `discord_${route.query.error}` } });
+        } else {
+            await router.push("/login");
+        }
     }
 
     if (route.path === "/auth" && !userStore.isAuthenticated) {
@@ -26,8 +30,9 @@ onMounted(async () => {
             initializeApi(response.data.refreshToken);
 
             await router.push("/");
-        } catch (e) {
-            await router.push("/login?error=true");
+        } catch (error: any) {
+            if (error.statusCode === 401) await router.push("/login?error=accountUnknown");
+            else await router.push("/login?error=generic");
         }
     }
     // TODO: Reactivate with registration
@@ -43,12 +48,13 @@ onMounted(async () => {
     //         initializeApi(response.data.refreshToken);
     //
     //         await router.push("/login/link");
-    //     } catch (e) {
-    //         await router.push("/login?error=true");
+    //     } catch (error: any) {
+    //         if (error.statusCode === 409) await router.push("/login?error=accountKnown");
+    //         else await router.push("/login?error=generic");
     //     }
     // }
     else {
-        await router.push("/login?error=true");
+        await router.push("/login");
     }
 });
 </script>

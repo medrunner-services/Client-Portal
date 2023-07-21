@@ -1,5 +1,8 @@
 export default class Vector2 {
-    public constructor(private readonly x: number, private readonly y: number) {}
+    public constructor(
+        private readonly x: number,
+        private readonly y: number,
+    ) {}
 
     public get X() {
         return this.x;

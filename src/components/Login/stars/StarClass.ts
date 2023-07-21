@@ -1,4 +1,4 @@
-import type StarProperties from "@/components/adequateLogInScreen/stars/StarProperties";
+import type StarProperties from "@/components/Login/stars/StarProperties";
 
 class StarClass {
     constructor(

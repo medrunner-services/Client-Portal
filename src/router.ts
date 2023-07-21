@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import { ampli } from "@/ampli";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
@@ -29,11 +30,11 @@ async function isUserComplete(): Promise<string | boolean> {
             userStore.isAuthenticated = true;
         } catch (error) {
             logicStore.isRouterLoading = false;
-            return "/login";
+            return "/login?error=generic";
         }
     } else if (!userStore.user.active) {
         logicStore.isRouterLoading = false;
-        return "/login";
+        return "/login?error=deactivated";
     } else if (!userStore.user.rsiHandle) {
         logicStore.isRouterLoading = false;
         return "/login/link";
@@ -82,7 +83,40 @@ const router = createRouter({
             component: () => import("@/views/DeveloperView.vue"),
             beforeEnter: isUserComplete,
         },
+        {
+            path: "/:pathMatch(.*)*",
+            name: "404",
+            component: () => import("@/views/404.vue"),
+        },
     ],
+});
+
+router.afterEach(async () => {
+    const userStore = useUserStore();
+    const logicStore = useLogicStore();
+
+    if (userStore.isAuthenticated && !ampli.isLoaded && logicStore.isAnalyticsAllowed) {
+        ampli.load({
+            client: {
+                apiKey: import.meta.env.VITE_AMPLITUDE_KEY,
+                configuration: {
+                    appVersion: APP_VERSION,
+                    identityStorage: "none",
+                    trackingOptions: { ipAddress: false, language: false },
+                    defaultTracking: {
+                        fileDownloads: false,
+                        formInteractions: false,
+                        attribution: false,
+                        pageViews: { trackHistoryChanges: "pathOnly" },
+                    },
+                },
+            },
+        });
+        ampli.identify(userStore.user.id, {
+            Username: userStore.user.rsiHandle,
+            "App Language": localStorage.getItem("selectedLanguage") ?? "en-US",
+        });
+    }
 });
 
 export default router;

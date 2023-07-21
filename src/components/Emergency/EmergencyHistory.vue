@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronDownIcon } from "@heroicons/vue/24/outline";
 import type { Emergency } from "@medrunner-services/api-client";
 import { CancellationReason } from "@medrunner-services/api-client";
 import { ref } from "vue";
@@ -117,7 +118,7 @@ function getResponders(responders: any): string {
                 {{ getStatusString(emergencyInfo.status) }}
             </p>
             <div @click="showCard = !showCard" class="flex cursor-pointer items-center self-stretch bg-primary-900 p-3">
-                <img src="/icons/arrow-icon.svg" class="h-6 w-6 select-none" :class="{ 'rotate-180': showCard }" alt="Dropdown arrow" />
+                <ChevronDownIcon class="h-6 w-6 select-none stroke-2 text-gray-50" :class="{ 'rotate-180': showCard }" />
             </div>
         </div>
         <div v-if="showCard" class="border-t-2 border-t-primary-900 px-2 py-8">

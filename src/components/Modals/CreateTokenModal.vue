@@ -1,20 +1,23 @@
 <script setup lang="ts">
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/vue/24/outline";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 const emit = defineEmits(["tokenCreated"]);
 
 const newTokenName = ref("");
 const createdToken = ref("");
 const newTokenExpirationDate = ref("");
-const errorCreationToken = ref(false);
+const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const inputExpirationDate: Ref<HTMLInputElement | null> = ref(null);
-const clipboardIcon = ref("/icons/copy-icon.svg");
+const isCopied = ref(false);
 
 onMounted(() => {
     if (inputExpirationDate.value) {
@@ -24,7 +27,7 @@ onMounted(() => {
 
 async function createToken() {
     submittingNewToken.value = true;
-    errorCreationToken.value = false;
+    errorCreationToken.value = "";
 
     try {
         if (newTokenExpirationDate.value) {
@@ -34,15 +37,18 @@ async function createToken() {
         }
         submittingNewToken.value = false;
         emit("tokenCreated");
-    } catch (error) {
-        errorCreationToken.value = true;
+    } catch (error: any) {
         submittingNewToken.value = false;
+
+        if (error.statusCode === 403) errorCreationToken.value = t("error_blockedUser");
+        if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
+        else errorCreationToken.value = t("error_generic");
     }
 }
 
 const copyTokenToClipboard = (): void => {
     navigator.clipboard.writeText(createdToken.value).then(() => {
-        clipboardIcon.value = "/icons/check-icon.svg";
+        isCopied.value = true;
     });
 };
 </script>
@@ -56,13 +62,16 @@ const copyTokenToClipboard = (): void => {
                     {{ createdToken }}
                 </p>
             </div>
-            <img :src="clipboardIcon" class="ml-3 cursor-pointer xl:ml-6" alt="copy id" @click="copyTokenToClipboard()" />
+            <div class="ml-3 flex cursor-pointer items-center xl:ml-6">
+                <CheckIcon v-if="isCopied" class="h-6 w-6" />
+                <DocumentDuplicateIcon v-else @click="copyTokenToClipboard()" class="h-6 w-6" />
+            </div>
         </div>
     </div>
 
     <form class="mt-10" @submit.prevent="createToken()" v-else>
         <div>
-            <label>{{ t("developer_createTokenFormName") }}</label>
+            <label>{{ t("developer_createTokenFormName") }} *</label>
             <input
                 type="text"
                 autocomplete="off"
@@ -108,6 +117,8 @@ const copyTokenToClipboard = (): void => {
             </svg>
             <span v-else>{{ t("developer_createTokenFormButton") }}</span>
         </button>
+
+        <p v-if="errorCreationToken" class="mt-2 w-full text-sm text-primary-400">{{ errorCreationToken }}</p>
     </form>
 </template>
 

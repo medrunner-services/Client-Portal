@@ -1,7 +1,12 @@
-import type StarProperties from "@/components/adequateLogInScreen/stars/StarProperties";
+import type StarProperties from "@/components/Login/stars/StarProperties";
 
 export default class Star {
-    public constructor(private x: number, private y: number, private z: number, private readonly properties: StarProperties) {}
+    public constructor(
+        private x: number,
+        private y: number,
+        private z: number,
+        private readonly properties: StarProperties,
+    ) {}
 
     public get X(): number {
         return this.x;
