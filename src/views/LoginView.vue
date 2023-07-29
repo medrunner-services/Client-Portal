@@ -127,7 +127,7 @@ function resetAnimationSettings(): void {
 
         <div
             v-if="routeQueryError"
-            class="absolute top-14 z-20 border-2 border-primary-900 bg-primary-100 px-8 py-4 font-Mohave text-lg font-bold lg:top-14"
+            class="absolute top-14 z-20 border-2 border-primary-900 bg-primary-100 px-8 py-4 font-Mohave text-lg font-bold dark:text-black lg:top-14"
         >
             <p>{{ getErrorText() }}</p>
         </div>
