@@ -119,7 +119,7 @@ async function loadHistory(skipFirst = false) {
     errorLoadingHistory.value = false;
 
     try {
-        const historyResponse = await userStore.fetchUserHistory(fetchAmount, paginationToken.value);
+        const historyResponse = await userStore.fetchUserEmergencyHistory(fetchAmount, paginationToken.value);
 
         if (historyResponse.data.length > 0) {
             paginationToken.value = historyResponse.paginationToken;
