@@ -82,7 +82,7 @@ async function sendNewEmergency(): Promise<void> {
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
                         v-model="formSubSystem"
                         :required="!isFirefoxAndroid"
                         :disabled="formSubmittingEmergency"
@@ -103,7 +103,7 @@ async function sendNewEmergency(): Promise<void> {
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
                         v-model="formSubThreatLevel"
                         :required="!isFirefoxAndroid"
                         :disabled="formSubmittingEmergency"
