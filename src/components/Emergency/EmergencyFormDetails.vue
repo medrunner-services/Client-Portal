@@ -3,12 +3,10 @@ import { MinusIcon, PlusIcon } from "@heroicons/vue/24/outline";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import LabelEmergencyForm from "@/components/LabelInput.vue";
+import LabelInput from "@/components/LabelInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
 
 const emergencyStore = useEmergencyStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const emit = defineEmits(["close"]);
@@ -118,7 +116,7 @@ async function sendDetails(): Promise<void> {
     <form class="mt-10" @submit.prevent="sendDetails()">
         <div class="lg:flex lg:gap-4">
             <div class="w-full">
-                <LabelEmergencyForm title-local="formDetailed_situation" description-local="formDetailed_helpSituation" />
+                <LabelInput title-local="formDetailed_situation" description-local="formDetailed_helpSituation" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -136,7 +134,7 @@ async function sendDetails(): Promise<void> {
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_location" description-local="formDetailed_helpLocation" />
+                <LabelInput title-local="formDetailed_location" description-local="formDetailed_helpLocation" />
                 <div class="mt-2 flex w-full">
                     <input
                         type="text"
@@ -152,7 +150,7 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
             <div class="w-full">
-                <LabelEmergencyForm title-local="formDetailed_injury" description-local="formDetailed_helpInjury" />
+                <LabelInput title-local="formDetailed_injury" description-local="formDetailed_helpInjury" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -169,7 +167,7 @@ async function sendDetails(): Promise<void> {
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_beacon" description-local="formDetailed_helpBeacon" alignment="left" />
+                <LabelInput title-local="formDetailed_beacon" description-local="formDetailed_helpBeacon" alignment="left" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -187,7 +185,7 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
             <div class="w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_team" description-local="formDetailed_helpTeam" />
+                <LabelInput title-local="formDetailed_team" description-local="formDetailed_helpTeam" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -216,7 +214,7 @@ async function sendDetails(): Promise<void> {
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_enemies" description-local="formDetailed_helpEnemies" />
+                <LabelInput title-local="formDetailed_enemies" description-local="formDetailed_helpEnemies" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -242,7 +240,7 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-5 lg:mt-10 lg:flex lg:gap-4">
             <div class="w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_death" description-local="formDetailed_helpDeath" />
+                <LabelInput title-local="formDetailed_death" description-local="formDetailed_helpDeath" />
                 <div class="mt-2 flex w-full items-center">
                     <input
                         type="number"
@@ -269,7 +267,7 @@ async function sendDetails(): Promise<void> {
             </div>
 
             <div class="mt-5 w-full lg:mt-0">
-                <LabelEmergencyForm title-local="formDetailed_crimestat" description-local="formDetailed_helpCrimestat" />
+                <LabelInput title-local="formDetailed_crimestat" description-local="formDetailed_helpCrimestat" />
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -298,7 +296,7 @@ async function sendDetails(): Promise<void> {
         </div>
 
         <div class="mt-5 w-full lg:mt-10">
-            <LabelEmergencyForm title-local="formDetailed_ship" description-local="formDetailed_helpShip" />
+            <LabelInput title-local="formDetailed_ship" description-local="formDetailed_helpShip" />
             <div class="mt-2 flex w-full">
                 <input
                     type="text"
@@ -312,7 +310,7 @@ async function sendDetails(): Promise<void> {
         </div>
 
         <div class="mt-5 w-full lg:mt-10">
-            <LabelEmergencyForm title-local="form_remarks" description-local="form_helpRemarks" />
+            <LabelInput title-local="form_remarks" description-local="form_helpRemarks" />
             <div class="mt-2">
                 <textarea
                     class="w-full focus:border-secondary-500 focus:ring-secondary-500"

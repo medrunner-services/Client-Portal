@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import LabelEmergencyForm from "@/components/LabelInput.vue";
+import LabelInput from "@/components/LabelInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
@@ -60,7 +60,7 @@ async function sendNewEmergency(): Promise<void> {
     <form @submit.prevent="sendNewEmergency()">
         <div class="lg:w-full">
             <div class="lg:w-[48%]">
-                <LabelEmergencyForm title-local="form_SCUsername" description-local="form_helpSCUsername" />
+                <LabelInput title-local="form_SCUsername" description-local="form_helpSCUsername" />
                 <div class="mt-2 flex w-full">
                     <input type="text" class="input-text w-fit flex-grow" :value="userStore.user.rsiHandle" disabled />
                 </div>
@@ -69,7 +69,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <div class="mt-10 lg:flex lg:w-full lg:justify-between">
             <div class="lg:w-[48%]">
-                <LabelEmergencyForm title-local="form_system" description-local="form_helpSystem" :required="true" />
+                <LabelInput title-local="form_system" description-local="form_helpSystem" :required="true" />
                 <div class="mt-2">
                     <select class="w-full" disabled v-model="formSystem" :required="!isFirefoxAndroid">
                         <option value="Stanton">Stanton</option>
@@ -78,7 +78,7 @@ async function sendNewEmergency(): Promise<void> {
             </div>
 
             <div class="mt-5 lg:mt-0 lg:w-[48%]">
-                <LabelEmergencyForm title-local="form_subSystem" description-local="form_helpSubSystem" :required="true" />
+                <LabelInput title-local="form_subSystem" description-local="form_helpSubSystem" :required="true" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
@@ -99,7 +99,7 @@ async function sendNewEmergency(): Promise<void> {
 
         <div class="mt-5 lg:flex lg:w-full lg:justify-between">
             <div class="lg:mt-0 lg:w-[48%]">
-                <LabelEmergencyForm title-local="form_threatLevel" description-local="form_helpThreatLevel" :required="true" />
+                <LabelInput title-local="form_threatLevel" description-local="form_helpThreatLevel" :required="true" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
