@@ -116,7 +116,7 @@ export const useLogicStore = defineStore("logic", () => {
             case "zh-TW":
                 return "台湾普通话";
             default:
-                return "English";
+                return "Unknown";
         }
     }
 

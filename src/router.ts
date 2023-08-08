@@ -32,10 +32,13 @@ async function isUserComplete(): Promise<string | boolean> {
             logicStore.isRouterLoading = false;
             return "/login?error=generic";
         }
-    } else if (!userStore.user.active) {
+    }
+
+    if (!userStore.user.active && userStore.isAuthenticated) {
+        await userStore.disconnectUser();
         logicStore.isRouterLoading = false;
         return "/login?error=deactivated";
-    } else if (!userStore.user.rsiHandle) {
+    } else if (!userStore.user.rsiHandle && userStore.isAuthenticated) {
         logicStore.isRouterLoading = false;
         return "/login/link";
     }

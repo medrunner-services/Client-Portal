@@ -8,7 +8,7 @@ dotenv.config({ path: '.env.development' });
 
 
 const downloadLocals = async () => {
-	const response = await fetch('https://crowdin.com/api/v2/projects/595793/bundles/1/exports', {
+	const response = await fetch('https://crowdin.com/api/v2/projects/595793/bundles/7/exports', {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -20,7 +20,7 @@ const downloadLocals = async () => {
 
 	await new Promise(resolve => setTimeout(resolve, 5000))
 
-	const responseDownload = await fetch(`https://crowdin.com/api/v2/projects/595793/bundles/1/exports/${parsedResponse.data.identifier}/download`, {
+	const responseDownload = await fetch(`https://crowdin.com/api/v2/projects/595793/bundles/7/exports/${parsedResponse.data.identifier}/download`, {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",

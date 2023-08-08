@@ -173,23 +173,15 @@ async function gotoDevView(): Promise<void> {
         </div>
     </div>
 
-    <Modal @close-modal="displayUserModal = !displayUserModal" @click.self="displayUserModal = !displayUserModal" v-if="displayUserModal">
+    <Modal @close-modal="displayUserModal = false" @click.self="displayUserModal = false" v-if="displayUserModal">
         <UserModal @disconnectUser="disconnect()" @gotoDevView="gotoDevView" />
     </Modal>
 
-    <Modal
-        @close-modal="displayBugReportModal = !displayBugReportModal"
-        @click.self="displayBugReportModal = !displayBugReportModal"
-        v-if="displayBugReportModal"
-    >
+    <Modal @close-modal="displayBugReportModal = false" @click.self="displayBugReportModal = false" v-if="displayBugReportModal">
         <BugReportModal />
     </Modal>
 
-    <Modal
-        @close-modal="displayLanguageSelectorModal = !displayLanguageSelectorModal"
-        @click.self="displayLanguageSelectorModal = !displayLanguageSelectorModal"
-        v-if="displayLanguageSelectorModal"
-    >
+    <Modal @close-modal="displayLanguageSelectorModal = false" @click.self="displayLanguageSelectorModal = false" v-if="displayLanguageSelectorModal">
         <LanguageSelectorModal :available-locales="availableLocales" @change-language="language => changeLanguage(language)" />
     </Modal>
 </template>
