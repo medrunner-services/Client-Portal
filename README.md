@@ -16,32 +16,45 @@ npm install
 ```dotenv
 VITE_API_URL
 VITE_CALLBACK_URL
+VITE_DISCORD_CLIENT_ID
 VITE_DISCORD_SERVER_ID
+CROWDIN_TOKEN
+VITE_AMPLITUDE_KEY
 ```
-You can use `.env.development` and `.env.production` for the different Vite modes.
+You can use `.env.development` and `.env.development-network` for different dev Vite modes and `.env.staging` and `.env.production` for different build Vite modes.
 
 ### Compile and Hot-Reload for Development
 
+For local development on your machine
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+For local development exposed on your network
+```sh
+npm run dev-network
+```
 
+### Type-Check, Compile and Minify for production
+
+Building for production deployment
 ```sh
 npm run build
 ```
 
-## Docker
-
-### Build the image
-
+Building for a staging deployment
 ```sh
-docker build . -t client-portal:0.0.0
+npm run build:staging
 ```
 
-### Run the container
+### Useful commands
 
+Updating localizations files from Crowdin
 ```sh
-docker run --name client-portal -p 8080:80 -d client-portal:0.0.0
+npm run update-locals
+```
+
+Run prettier, eslint and typescript checks
+```sh
+npm run prepush
 ```

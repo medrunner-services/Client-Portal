@@ -75,11 +75,7 @@ async function deletedToken(id: string): Promise<void> {
             <div v-if="deleteTokenError" class="mt-2 w-full text-sm text-primary-400">{{ t("error_generic") }}</div>
         </div>
 
-        <Modal
-            @close-modal="displayCreateTokenModal = !displayCreateTokenModal"
-            @click.self="displayCreateTokenModal = !displayCreateTokenModal"
-            v-if="displayCreateTokenModal"
-        >
+        <Modal @close-modal="displayCreateTokenModal = false" @click.self="displayCreateTokenModal = false" v-if="displayCreateTokenModal">
             <CreateTokenModal @token-created="getTokens()" />
         </Modal>
     </div>

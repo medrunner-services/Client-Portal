@@ -3,13 +3,11 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import Settings from "@/components/Settings.vue";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const { t } = useI18n();
 
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 
 const emit = defineEmits(["disconnectUser", "gotoDevView"]);
 
