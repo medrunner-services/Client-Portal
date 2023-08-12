@@ -37,51 +37,26 @@ async function sendDetails(): Promise<void> {
             contents: `
             ## Emergency details from Client
 
-            __The client's situation is:__  **${formSituation.value ? formSituation.value : "Unknown"}**
-
-            __The client is located:__  **${formLocation.value ? formLocation.value : "Unknown"}**
-
-            __Client ship:__  **${formShip.value ? formShip.value : "Unknown"}**
-
+            __The client's situation is:__  **${formSituation.value ? formSituation.value : "Unknown"}**\n
+            __The client is located:__  **${formLocation.value ? formLocation.value : "Unknown"}**\n
+            __Client ship:__  **${formShip.value ? formShip.value : "Unknown"}**\n
             __Time until client death:__  **${
                 formTimeDeathHours.value || formTimeDeathMinutes.value
                     ? `<t:${Math.round(Date.now() / 1000) + (formTimeDeathHours.value ?? 0) * 3600 + (formTimeDeathMinutes.value ?? 0) * 60}:R>`
                     : "Unknown"
-            }**
-
-            __Is the client injured:__  **${formInjuries.value ? formInjuries.value : "Unknown"}**
-
-            __Has the client sent an IG beacon:__  **${formIGBeacon.value === true ? "Yes" : formIGBeacon.value === false ? "No" : "Unknown"}**
-
-            __Is the client in a team?__  **${formTeam.value === true ? "Yes" : formTeam.value === false ? "No" : "Unknown"}**
-            ${
-                formTeam.value === true && formTeamDetails.value
-                    ? `
-            > ${formTeamDetails.value.filter(str => str !== "").join(", ")}
-            `
-                    : ""
-            }
-            __Are there enemies nearby?__  **${formEnemies.value === true ? "Yes" : formEnemies.value === false ? "No" : "Unknown"}**
-            ${
-                formEnemiesDetails.value
-                    ? `
-            > ${formEnemiesDetails.value}
-            `
-                    : ""
-            }
-            __Does the client have CrimeStat?__  **${formCrimeStat.value ? formCrimeStat.value : "Unknown"}**
-            ${
-                formCrimeStatReason.value
-                    ? `
-            > ${formCrimeStatReason.value}
-            `
-                    : ""
-            }
-
-            __Remarks:__
-
-            > ${formRemarks.value ? formRemarks.value : "None"}
-            `,
+            }**\n
+            __Is the client injured:__  **${formInjuries.value ? formInjuries.value : "Unknown"}**\n
+            __Has the client sent an IG beacon:__  **${formIGBeacon.value === true ? "Yes" : formIGBeacon.value === false ? "No" : "Unknown"}**\n
+            __Is the client in a team?__  **${formTeam.value === true ? "Yes" : formTeam.value === false ? "No" : "Unknown"}**\n${
+                formTeam.value === true && formTeamDetails.value ? `\n> ${formTeamDetails.value.filter(str => str !== "").join(", ")}` : ""
+            }\n
+            __Are there enemies nearby?__  **${formEnemies.value === true ? "Yes" : formEnemies.value === false ? "No" : "Unknown"}**\n${
+                formEnemiesDetails.value ? `\n> ${formEnemiesDetails.value}` : ""
+            }\n
+            __Does the client have CrimeStat?__  **${formCrimeStat.value ? formCrimeStat.value : "Unknown"}**\n${
+                formCrimeStatReason.value ? `\n> ${formCrimeStatReason.value}` : ""
+            }\n
+            __Remarks:__\n\n> ${formRemarks.value ? formRemarks.value : "None"}`,
         });
 
         formSubmittingEmergency.value = false;

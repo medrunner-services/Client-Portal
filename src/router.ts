@@ -18,32 +18,25 @@ function isUserNotLinked(): string | boolean {
 
 async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
-    const logicStore = useLogicStore();
-    logicStore.isRouterLoading = true;
 
     if (!localStorage.getItem("refreshToken")) {
-        logicStore.isRouterLoading = false;
         return "/login";
     } else if (!userStore.isAuthenticated) {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
         } catch (error) {
-            logicStore.isRouterLoading = false;
             return "/login?error=generic";
         }
     }
 
     if (!userStore.user.active && userStore.isAuthenticated) {
         await userStore.disconnectUser();
-        logicStore.isRouterLoading = false;
         return "/login?error=deactivated";
     } else if (!userStore.user.rsiHandle && userStore.isAuthenticated) {
-        logicStore.isRouterLoading = false;
         return "/login/link";
     }
 
-    logicStore.isRouterLoading = false;
     return true;
 }
 
@@ -94,6 +87,11 @@ const router = createRouter({
     ],
 });
 
+router.beforeEach(() => {
+    const logicStore = useLogicStore();
+    logicStore.isRouterLoading = true;
+});
+
 router.afterEach(async () => {
     const userStore = useUserStore();
     const logicStore = useLogicStore();
@@ -120,6 +118,8 @@ router.afterEach(async () => {
             "App Language": localStorage.getItem("selectedLanguage") ?? "en-US",
         });
     }
+
+    logicStore.isRouterLoading = false;
 });
 
 export default router;
