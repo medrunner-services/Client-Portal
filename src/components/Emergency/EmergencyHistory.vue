@@ -80,7 +80,6 @@ function getStatusString(id: number): string {
         case 1:
             return t("history_received");
         case 2:
-        case 10:
             return t("history_inProgress");
         case 3:
             return t("history_completed");

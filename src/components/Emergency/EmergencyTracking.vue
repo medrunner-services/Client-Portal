@@ -163,13 +163,13 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
         </div>
 
         <EmergencyFormDetails
-            v-if="!emergencyStore.isTrackedEmergencyCanceled && [1, 2, 10].includes(emergencyStore.trackedEmergency.status) && displayFormDetails"
+            v-if="!emergencyStore.isTrackedEmergencyCanceled && [1, 2].includes(emergencyStore.trackedEmergency.status) && displayFormDetails"
             @close="displayFormDetails = false"
         />
 
         <div
             class="mt-10"
-            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails && [1, 2, 10].includes(emergencyStore.trackedEmergency.status)"
+            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails && [1, 2].includes(emergencyStore.trackedEmergency.status)"
         >
             <div class="lg:flex lg:justify-between">
                 <div class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:w-[30%]">
@@ -233,7 +233,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
         </div>
 
         <p
-            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails && [1, 2, 10].includes(emergencyStore.trackedEmergency.status)"
+            v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails && [1, 2].includes(emergencyStore.trackedEmergency.status)"
             @click="displayFormDetails = true"
             class="mt-10 w-fit cursor-pointer items-center border-b-2 border-primary-900 font-Inter font-semibold text-primary-900"
         >
@@ -250,7 +250,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             </button>
 
             <a
-                v-if="!emergencyStore.isTrackedEmergencyCanceled && [1, 2, 10].includes(emergencyStore.trackedEmergency.status)"
+                v-if="!emergencyStore.isTrackedEmergencyCanceled && [1, 2].includes(emergencyStore.trackedEmergency.status)"
                 :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                 target="_blank"
                 class="mt-5 w-full cursor-pointer border-2 border-primary-900 px-6 py-3 text-center font-medium text-primary-900 dark:text-slate-50 lg:mt-0 lg:w-fit"

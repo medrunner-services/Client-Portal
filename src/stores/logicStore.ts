@@ -54,7 +54,6 @@ export const useLogicStore = defineStore("logic", () => {
             case 1:
                 return "📡 " + t("tracking_messageReceived");
             case 2:
-            case 10:
                 return "🚑 " + t("tracking_helpOnTheWay");
             case 3:
                 return "✅ " + t("tracking_operationSuccessful");
@@ -80,7 +79,6 @@ export const useLogicStore = defineStore("logic", () => {
             case 1:
                 return t("tracking_statusTextReceived");
             case 2:
-            case 10:
                 return t("tracking_statusTextOnTheirWay");
             case 3:
                 return t("tracking_statusTextSuccess");

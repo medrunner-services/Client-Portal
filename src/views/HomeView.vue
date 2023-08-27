@@ -69,7 +69,7 @@ onMounted(async () => {
                 if (
                     logicStore.isNotificationGranted &&
                     updatedEmergency.status !== currentTrackedEmergencyStatus.value &&
-                    ![1, 10].includes(updatedEmergency.status)
+                    updatedEmergency.status !== 1
                 ) {
                     new Notification(logicStore.getEmergencyStatusTitle(updatedEmergency.status), {
                         body:
@@ -227,9 +227,7 @@ const isLastPageHistory = computed(() => {
                         emergencyStore.trackedEmergency.id &&
                         !errorLoadingTrackedEmergency &&
                         !emergencyStore.isTrackedEmergencyCanceled &&
-                        (emergencyStore.trackedEmergency.status === 1 ||
-                            emergencyStore.trackedEmergency.status === 2 ||
-                            emergencyStore.trackedEmergency.status === 10)
+                        (emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2)
                     "
                     class="relative mb-[0.35rem] ml-5 flex h-3 w-3"
                 >
