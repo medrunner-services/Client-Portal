@@ -92,8 +92,10 @@ async function gotoDevView(): Promise<void> {
 
 <template>
     <div class="flex w-full flex-col bg-white shadow-md dark:shadow-stone-800 md:static">
-        <div class="content-container z-10 flex items-center gap-2 bg-white py-2 dark:bg-stone-900 dark:text-white md:py-3">
-            <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
+        <div class="content-container z-10 box-content flex items-center gap-2 bg-white py-2 dark:bg-stone-900 dark:text-white md:py-3">
+            <RouterLink to="/">
+                <img class="h-8 md:h-12" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
+            </RouterLink>
 
             <nav class="ml-auto hidden items-center gap-8 font-Mohave text-header-2 font-semibold lg:flex">
                 <RouterLink to="/">{{ t("navbar_emergency") }}</RouterLink>
