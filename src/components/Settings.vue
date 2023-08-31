@@ -88,7 +88,7 @@ function updateAnalytics(): void {
             ></div>
         </label>
     </div>
-    <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-primary-400">{{ updateNotificationError }}</p>
+    <p v-if="updateNotificationError" class="mt-2 w-full text-xs text-red-500">{{ updateNotificationError }}</p>
     <div class="mt-2 flex items-center justify-between">
         <span class="font-semibold">{{ t("user_darkModeSetting") }}</span>
         <label class="relative mr-5 inline-flex cursor-pointer items-center">

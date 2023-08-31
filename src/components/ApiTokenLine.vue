@@ -46,7 +46,7 @@ async function deleteToken(): Promise<void> {
 <template>
     <div>
         <div class="flex justify-between gap-4">
-            <div class="grid w-full grid-cols-2 gap-x-8 lg:gap-x-0" :class="deleteTokenError ? 'text-primary-400' : ''">
+            <div class="grid w-full grid-cols-2 gap-x-8 lg:gap-x-0" :class="deleteTokenError ? 'text-red-500' : ''">
                 <div>{{ token.name }}</div>
                 <div v-if="token.lastUsed">{{ timestampToDate(token.lastUsed) }}</div>
                 <div v-else>{{ t("developer_tokenNeverUsed") }}</div>

@@ -95,7 +95,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formSituation"
                         :disabled="formSubmittingEmergency"
                     >
@@ -114,7 +114,7 @@ async function sendDetails(): Promise<void> {
                     <input
                         type="text"
                         class="input-text w-full flex-grow"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formLocation"
                         :placeholder="t('formDetailed_placeholderLocation')"
@@ -129,7 +129,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formInjuries"
                         :disabled="formSubmittingEmergency"
                     >
@@ -146,7 +146,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formIGBeacon"
                         :disabled="formSubmittingEmergency"
                     >
@@ -164,7 +164,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formTeam"
                         :disabled="formSubmittingEmergency"
                     >
@@ -176,7 +176,7 @@ async function sendDetails(): Promise<void> {
                             <input
                                 type="text"
                                 class="input-text w-full flex-grow text-sm"
-                                :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                                :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                                 :disabled="formSubmittingEmergency"
                                 v-model="formTeamDetails[index - 1]"
                                 :placeholder="t('formDetailed_placeholderTeam')"
@@ -193,7 +193,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formEnemies"
                         :disabled="formSubmittingEmergency"
                     >
@@ -204,7 +204,7 @@ async function sendDetails(): Promise<void> {
                         type="text"
                         class="input-text mt-2 w-full flex-grow"
                         v-if="formEnemies"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formEnemiesDetails"
                         :placeholder="t('formDetailed_placeholderEnemies')"
@@ -222,7 +222,7 @@ async function sendDetails(): Promise<void> {
                         max="24"
                         min="0"
                         class="input-text w-20"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formTimeDeathHours"
                     />
@@ -233,7 +233,7 @@ async function sendDetails(): Promise<void> {
                         max="60"
                         min="0"
                         class="input-text w-20"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formTimeDeathMinutes"
                     />
@@ -246,7 +246,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-2 flex w-full flex-col">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         v-model="formCrimeStat"
                         :disabled="formSubmittingEmergency"
                     >
@@ -261,7 +261,7 @@ async function sendDetails(): Promise<void> {
                         type="text"
                         class="input-text mt-2 w-full flex-grow"
                         v-if="formCrimeStat && formCrimeStat !== 'No'"
-                        :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                         :disabled="formSubmittingEmergency"
                         v-model="formCrimeStatReason"
                         :placeholder="t('formDetailed_placeholderCrimestat')"
@@ -276,7 +276,7 @@ async function sendDetails(): Promise<void> {
                 <input
                     type="text"
                     class="input-text w-full flex-grow"
-                    :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                    :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                     :disabled="formSubmittingEmergency"
                     v-model="formShip"
                     :placeholder="t('formDetailed_placeholderShip')"
@@ -289,7 +289,7 @@ async function sendDetails(): Promise<void> {
             <div class="mt-2">
                 <textarea
                     class="w-full focus:border-secondary-500 focus:ring-secondary-500"
-                    :class="formErrorMessage ? 'border-primary-400 dark:border-primary-400' : 'border-gray-400'"
+                    :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
                     rows="4"
                     v-model="formRemarks"
                     :disabled="formSubmittingEmergency"
@@ -328,7 +328,7 @@ async function sendDetails(): Promise<void> {
                 {{ t("formDetailed_skipButton") }}
             </button>
         </div>
-        <p v-if="formErrorMessage" class="mt-2 w-full text-sm text-primary-400">
+        <p v-if="formErrorMessage" class="mt-2 w-full text-sm text-red-500">
             {{ formErrorMessage }}
         </p>
     </form>

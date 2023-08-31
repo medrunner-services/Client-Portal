@@ -53,7 +53,7 @@ async function deletedToken(id: string): Promise<void> {
             </div>
 
             <Loader v-if="loadingTokens" class="flex h-80 w-full items-center justify-center" />
-            <p class="text-primary-400" v-if="loadingTokensError">{{ t("error_loadingTokens") }}</p>
+            <p class="text-red-500" v-if="loadingTokensError">{{ t("error_loadingTokens") }}</p>
 
             <div v-auto-animate v-if="!loadingTokens">
                 <div class="mb-4 flex justify-between gap-4">
@@ -72,7 +72,7 @@ async function deletedToken(id: string): Promise<void> {
                     @deleted-token-error="deleteTokenError = true"
                 />
             </div>
-            <div v-if="deleteTokenError" class="mt-2 w-full text-sm text-primary-400">{{ t("error_generic") }}</div>
+            <div v-if="deleteTokenError" class="mt-2 w-full text-sm text-red-500">{{ t("error_generic") }}</div>
         </div>
 
         <Modal @close-modal="displayCreateTokenModal = false" @click.self="displayCreateTokenModal = false" v-if="displayCreateTokenModal">

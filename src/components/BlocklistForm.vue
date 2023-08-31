@@ -90,7 +90,7 @@ function clearForm() {
             <span v-else>{{ t("blocklist_Search") }}</span>
         </button>
     </form>
-    <p v-if="formErrorMessage" class="mt-2 w-full max-w-3xl text-sm text-primary-400 lg:max-w-5xl">
+    <p v-if="formErrorMessage" class="mt-2 w-full max-w-3xl text-sm text-red-500 lg:max-w-5xl">
         {{ formErrorMessage }}
     </p>
 </template>

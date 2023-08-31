@@ -84,7 +84,7 @@ async function updateRsiHandle(): Promise<void> {
                 <span v-else>{{ isInputtingRsiHandle ? t("form_confirm") : t("form_edit") }}</span>
             </button>
         </div>
-        <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-primary-400">
+        <p v-if="rsiHandleErrorMessage" class="mt-2 w-full text-xs text-red-500">
             {{ rsiHandleErrorMessage }}
         </p>
     </div>

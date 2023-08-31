@@ -127,7 +127,7 @@ function resetAnimationSettings(): void {
 
         <div
             v-if="routeQueryError"
-            class="absolute top-14 z-20 border-2 border-primary-900 bg-primary-100 px-8 py-4 font-Mohave text-lg font-bold dark:text-black lg:top-14"
+            class="absolute top-14 z-20 border-2 border-red-500 bg-primary-100 px-8 py-4 font-Mohave text-lg font-bold dark:text-black lg:top-14"
         >
             <p>{{ getErrorText() }}</p>
         </div>
@@ -256,7 +256,7 @@ function resetAnimationSettings(): void {
                                 <span v-else>{{ t("login_continue") }}</span>
                             </button>
                         </form>
-                        <p v-if="formErrorActive" class="mt-2 font-Inter text-sm text-primary-400">
+                        <p v-if="formErrorActive" class="mt-2 font-Inter text-sm text-red-500">
                             {{ formErrorMessage }}
                         </p>
                     </div>
