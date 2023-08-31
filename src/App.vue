@@ -17,6 +17,16 @@ onMounted(() => {
         document.documentElement.classList.add("dark");
         logicStore.darkMode = true;
     }
+
+    if (!document.getElementById("uptime-alerts")) {
+        const scriptTag = document.createElement("script");
+        scriptTag.id = "uptime-alerts";
+        scriptTag.type = "text/javascript";
+        scriptTag.src = "https://uptime.betterstack.com/widgets/announcement.js";
+        scriptTag.async = true;
+        scriptTag.setAttribute("data-id", import.meta.env.VITE_BETTERUPTIME_ID);
+        document.getElementsByTagName("head")[0].appendChild(scriptTag);
+    }
 });
 </script>
 

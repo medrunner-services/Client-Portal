@@ -30,10 +30,10 @@ async function isUserComplete(): Promise<string | boolean> {
         }
     }
 
-    if (!userStore.user.active && userStore.isAuthenticated) {
+    if (!userStore.user.active) {
         await userStore.disconnectUser();
         return "/login?error=deactivated";
-    } else if (!userStore.user.rsiHandle && userStore.isAuthenticated) {
+    } else if (!userStore.user.rsiHandle) {
         return "/login/link";
     }
 
