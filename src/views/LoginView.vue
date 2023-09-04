@@ -221,40 +221,61 @@ function resetAnimationSettings(): void {
                                 {{ t("login_warningRSIProfileBug") }}
                             </p>
                         </div>
-                        <form class="mt-10 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between" @submit.prevent="submittingLinkForm()">
-                            <div class="w-full">
-                                <LabelInput title-local="login_starCitizenUsername" description-local="login_RSIUsername" :required="true" />
-                                <div class="mt-2 flex w-full">
-                                    <input
-                                        id="rsiHandle"
-                                        v-model="formUsername"
-                                        type="text"
-                                        name="rsiHandle"
-                                        class="w-full"
-                                        :class="formErrorActive ? 'input-text-error' : 'input-text'"
-                                        :placeholder="t('login_username') + '...'"
-                                    />
-                                </div>
-                            </div>
-                            <button
-                                :disabled="waitingForApi"
-                                class="button-primary mt-4 px-8 py-[11px] font-Inter text-small font-semibold xl:ml-4 xl:mt-0"
-                            >
-                                <svg
-                                    v-if="waitingForApi"
-                                    class="w-full animate-spin text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
+                        <form class="mt-10" @submit.prevent="submittingLinkForm()">
+                            <div class="flex items-center">
+                                <input
+                                    id="link-checkbox"
+                                    required
+                                    type="checkbox"
+                                    value=""
+                                    class="h-4 w-4 border-gray-300 bg-gray-100 text-primary-900 focus:ring-2 focus:ring-primary-900 dark:border-gray-500 dark:bg-gray-700 dark:text-primary-900"
+                                />
+                                <label for="link-checkbox" class="ml-2 text-sm font-medium"
+                                    >{{ t("login_termsOfService").split("~")[0] }}
+                                    <a
+                                        target="_blank"
+                                        href="https://www.medrunner.space/terms-of-service"
+                                        class="font-semibold text-primary-900 hover:underline"
+                                        >{{ t("login_termsOfService").split("~")[1] }}</a
+                                    >.</label
                                 >
-                                    <path
-                                        fill="currentColor"
-                                        d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
-                                    />
-                                </svg>
-                                <span v-else>{{ t("login_continue") }}</span>
-                            </button>
+                            </div>
+
+                            <div class="mt-5 flex w-full flex-col xl:flex-row xl:items-end xl:justify-between">
+                                <div class="w-full">
+                                    <LabelInput title-local="login_starCitizenUsername" description-local="login_RSIUsername" :required="true" />
+                                    <div class="mt-2 flex w-full">
+                                        <input
+                                            id="rsiHandle"
+                                            v-model="formUsername"
+                                            type="text"
+                                            name="rsiHandle"
+                                            class="w-full"
+                                            :class="formErrorActive ? 'input-text-error' : 'input-text'"
+                                            :placeholder="t('login_username') + '...'"
+                                        />
+                                    </div>
+                                </div>
+                                <button
+                                    :disabled="waitingForApi"
+                                    class="button-primary mt-4 px-8 py-[11px] font-Inter text-small font-semibold xl:ml-4 xl:mt-0"
+                                >
+                                    <svg
+                                        v-if="waitingForApi"
+                                        class="w-full animate-spin text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                                        />
+                                    </svg>
+                                    <span v-else>{{ t("login_continue") }}</span>
+                                </button>
+                            </div>
                         </form>
                         <p v-if="formErrorActive" class="mt-2 font-Inter text-sm text-red-500">
                             {{ formErrorMessage }}
