@@ -205,8 +205,11 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                     {{ t("tracking_responders") }}
                 </p>
 
-                <div v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0" class="lg:mt-5 lg:flex lg:justify-between">
-                    <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
+                <div
+                    v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0"
+                    class="grid grid-cols-1 gap-4 font-medium lg:mt-5 lg:grid-cols-3"
+                >
+                    <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
                         <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
                         <ul class="mt-2 list-none">
                             <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers" :key="dispatcher.discordId">
@@ -217,7 +220,7 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 </div>
 
                 <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
-                    <div class="grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
+                    <div class="mt-5 grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
                         <div
                             v-for="responderClass in ResponderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
                             class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
