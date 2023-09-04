@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { CancellationReason, ResponseRating, type TeamMember } from "@medrunner-services/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { CancellationReason, Level, ResponseRating, type TeamDetailsResponse, type TeamMember } from "@medrunner-services/api-client";
+import { onMounted, type Ref, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
@@ -24,6 +24,7 @@ const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref(false);
 const cancelEmergencyError = ref(false);
 const cancelReason: Ref<CancellationReason | string> = ref("");
+const teamDetails: Ref<TeamDetailsResponse | null> = ref(null);
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
@@ -36,6 +37,7 @@ onMounted(async () => {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
                 if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
+                if (emergencyStore.trackedEmergency.respondingTeam.staff.length > 0) await getResponderStats();
                 emit("updateCurrentEmergencyStatus", emergencyStore.trackedEmergency.status);
             } catch (e) {
                 errorLoadingEmergency.value = true;
@@ -46,6 +48,17 @@ onMounted(async () => {
             loadingEmergency.value = false;
             errorLoadingEmergency.value = true;
         }
+    }
+
+    if (Object.keys(emergencyStore.trackedEmergency).length !== 0) {
+        watch(
+            () => emergencyStore.trackedEmergency.respondingTeam.staff,
+            async newTeam => {
+                if (newTeam.length > 0) await getResponderStats();
+                else teamDetails.value = null;
+            },
+            { deep: true },
+        );
     }
 });
 
@@ -122,7 +135,7 @@ function rejoinEmergency(): void {
     cancelReason.value = "";
 }
 
-function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
+function responderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
     const transformedObj: Record<number, TeamMember[]> = {};
 
     array.forEach(TeamMember => {
@@ -136,6 +149,24 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
     });
 
     return transformedObj;
+}
+
+async function getResponderStats(): Promise<void> {
+    try {
+        teamDetails.value = await emergencyStore.fetchEmergencyTeamDetail(emergencyStore.trackedEmergency.id);
+    } catch (error: any) {
+        console.log("Error fetching responder stats", error);
+    }
+}
+
+function getResponderLevel(id: string): Level {
+    if (teamDetails.value) {
+        const responder = teamDetails.value?.stats.find(responder => responder.id === id);
+        if (responder) return responder.level;
+        else return Level.None;
+    } else {
+        return Level.None;
+    }
 }
 </script>
 
@@ -171,16 +202,16 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             class="mt-10"
             v-if="!emergencyStore.isTrackedEmergencyCanceled && !displayFormDetails && [1, 2].includes(emergencyStore.trackedEmergency.status)"
         >
-            <div class="lg:flex lg:justify-between">
-                <div class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:w-[30%]">
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌌 {{ t("tracking_system") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.system }}</p>
                 </div>
-                <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
+                <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
-                <div class="mt-5 h-fit bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0 lg:w-[30%]">
+                <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
                         {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
@@ -195,21 +226,26 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
             </div>
 
             <div v-auto-animate class="mt-10">
-                <p
+                <div
                     v-if="
                         emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0 ||
                         emergencyStore.trackedEmergency.respondingTeam.staff.length > 0
                     "
-                    class="mb-3 font-Mohave text-2xl font-semibold text-primary-900"
+                    class="flex items-center"
                 >
-                    {{ t("tracking_responders") }}
-                </p>
+                    <p class="font-Mohave text-2xl font-semibold text-primary-900">
+                        {{ t("tracking_responders") }}
+                    </p>
+                    <p v-if="teamDetails" class="ml-2 italic">
+                        - {{ Math.round(teamDetails.aggregatedSuccessRate * 100) }}% {{ t("tracking_responderSuccessRate") }}
+                    </p>
+                </div>
 
                 <div
                     v-if="emergencyStore.trackedEmergency.respondingTeam.dispatchers.length > 0"
                     class="grid grid-cols-1 gap-4 font-medium lg:mt-5 lg:grid-cols-3"
                 >
-                    <div class="mt-5 bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
+                    <div class="mt-5 h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
                         <p class="font-Mohave text-2xl font-semibold lg:text-xl">🎧 {{ t("tracking_classDispatcher") }}</p>
                         <ul class="mt-2 list-none">
                             <li v-for="dispatcher in emergencyStore.trackedEmergency.respondingTeam.dispatchers" :key="dispatcher.discordId">
@@ -222,12 +258,20 @@ function ResponderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
                 <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
                     <div class="mt-5 grid grid-cols-1 gap-4 font-medium lg:grid-cols-3">
                         <div
-                            v-for="responderClass in ResponderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
-                            class="bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
+                            v-for="responderClass in responderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
+                            class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
                         >
                             <p class="font-Mohave text-2xl font-semibold lg:text-xl">{{ getClassString(responderClass[0].class) }}</p>
-                            <ul class="mt-2 list-none">
-                                <li v-for="responder in responderClass" :key="responder.discordId">{{ responder.rsiHandle }}</li>
+                            <ul class="mt-5 list-none">
+                                <li v-for="responder in responderClass" :key="responder.discordId" class="mt-2 flex items-center first:mt-0">
+                                    <img
+                                        v-if="getResponderLevel(responder.id) !== Level.None"
+                                        :src="`images/medals/${getResponderLevel(responder.id)}.png`"
+                                        alt="Success Medal"
+                                        class="mr-2 h-7 w-7"
+                                    />
+                                    <span>{{ responder.rsiHandle }}</span>
+                                </li>
                             </ul>
                         </div>
                     </div>

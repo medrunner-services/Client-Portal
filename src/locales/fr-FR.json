@@ -81,6 +81,7 @@
     "tracking_classOthers": "Autre",
     "tracking_sendDetailedInformationButton": "Ajouter des informations",
     "tracking_statusTextConfirmedCanceled": "Votre demande d'assistance a été annulée",
+    "tracking_responderSuccessRate": "Taux de réussite",
     "error_UnavailableFeatureBeta": "Indisponible durant la beta",
     "error_UnavailableFeatureLaunch": "Indisponible jusqu'au lancement",
     "error_loadingHistory": "Une erreur s'est produite lors du chargement de votre historique",

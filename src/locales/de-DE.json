@@ -81,6 +81,7 @@
     "tracking_classOthers": "Andere",
     "tracking_sendDetailedInformationButton": "Weitere Informationen senden",
     "tracking_statusTextConfirmedCanceled": "Ihr Notruf wurde annulliert",
+    "tracking_responderSuccessRate": null,
     "error_UnavailableFeatureBeta": "Während der Beta nicht verfügbar",
     "error_UnavailableFeatureLaunch": "Bis zur Veröffentlichung nicht verfügbar",
     "error_loadingHistory": "Beim Laden Ihres Verlaufs ist ein Fehler aufgetreten",
@@ -213,5 +214,5 @@
     "formDetailed_ship": "Welches Schiff sind Sie geflogen?",
     "formDetailed_helpShip": "Was ist das Modell Ihres Schiffs, mit dem Sie zu Ihrem Standort gelangt sind?",
     "formDetailed_placeholderShip": "Ihr Schiffsmodell...",
-    "formDetailed_injuryTier": null
+    "formDetailed_injuryTier": "Stufe"
 }
