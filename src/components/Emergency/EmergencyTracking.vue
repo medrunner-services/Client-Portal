@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CancellationReason, Level, ResponseRating, type TeamDetailsResponse, type TeamMember } from "@medrunner-services/api-client";
-import { onMounted, type Ref, ref, watch } from "vue";
+import { onMounted, type Ref, ref, watch, type WatchStopHandle } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
@@ -30,6 +30,8 @@ const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
 const displayFormDetails = ref(false);
 
+let stopWatcherTeamDetails: WatchStopHandle | null;
+
 onMounted(async () => {
     if (Object.keys(emergencyStore.trackedEmergency).length === 0) {
         loadingEmergency.value = true;
@@ -50,8 +52,8 @@ onMounted(async () => {
         }
     }
 
-    if (Object.keys(emergencyStore.trackedEmergency).length !== 0) {
-        watch(
+    if (Object.keys(emergencyStore.trackedEmergency.respondingTeam).length !== 0) {
+        stopWatcherTeamDetails = watch(
             () => emergencyStore.trackedEmergency.respondingTeam.staff,
             async newTeam => {
                 if (newTeam.length > 0) await getResponderStats();
@@ -104,6 +106,7 @@ async function submitCancelEmergency(): Promise<void> {
     } else {
         try {
             await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id, cancelReason.value);
+            if (stopWatcherTeamDetails) stopWatcherTeamDetails();
             cancelReason.value = "";
             emergencyStore.isTrackedEmergencyCanceled = false;
             emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
@@ -118,8 +121,10 @@ async function submitCancelEmergency(): Promise<void> {
 
 async function rateEmergency(rating: ResponseRating): Promise<void> {
     try {
+        if (stopWatcherTeamDetails) stopWatcherTeamDetails();
         await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating);
-    } finally {
+        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
+    } catch (error: any) {
         emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
     }
 }
