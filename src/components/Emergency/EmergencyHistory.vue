@@ -163,8 +163,8 @@ function getResponders(responders: any): string {
                     {{ getCancelReasonString(emergencyInfo.cancellationReason) }}
                 </p>
                 <p class="mt-4" v-if="emergencyInfo.status === 3 || emergencyInfo.status === 4">
-                    ⭐ <span class="font-bold">{{ t("history_rating") }}:</span>
-                    {{ getRatingString(emergencyInfo.rating) }}
+                    ⭐ <span class="font-bold">{{ t("history_rating") }}:</span> {{ getRatingString(emergencyInfo.rating) }}
+                    <span v-if="emergencyInfo.ratingRemarks" class="italic"> - {{ emergencyInfo.ratingRemarks }}</span>
                 </p>
             </div>
         </div>

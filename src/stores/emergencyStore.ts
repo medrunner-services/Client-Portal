@@ -72,8 +72,8 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function rateCompletedEmergency(id: string, rating: ResponseRating): Promise<void> {
-        const response = await api.emergency.rateServices(id, rating);
+    async function rateCompletedEmergency(id: string, rating: ResponseRating, remarks?: string): Promise<void> {
+        const response = await api.emergency.rateServices(id, rating, remarks);
 
         if (!response.success) {
             throw response;
