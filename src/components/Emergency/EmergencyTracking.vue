@@ -216,17 +216,18 @@ function getResponderLevel(id: string): Level {
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
+                <div
+                    v-if="emergencyStore.trackedEmergency.tertiaryLocation"
+                    class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
+                >
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌙 {{ t("form_moon") }}</p>
+                    <p class="mt-2">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
+                </div>
                 <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
                         {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
                     </p>
-                </div>
-            </div>
-            <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:mt-5 lg:flex lg:justify-between">
-                <div class="mt-5 w-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
-                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
-                    <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
 
