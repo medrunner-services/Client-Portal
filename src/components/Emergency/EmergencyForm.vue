@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import type { Location, LocationDetail } from "@medrunner-services/api-client";
+import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import LabelInput from "@/components/LabelInput.vue";
@@ -17,8 +18,14 @@ const formErrorMessage = ref("");
 
 const formSystem = ref("Stanton");
 const formSubSystem = ref("");
+const formTertiaryLocation = ref("");
 const formSubThreatLevel = ref("");
 const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
+const locationsInformation: Ref<LocationDetail[]> = ref([]);
+
+onMounted(async () => {
+    locationsInformation.value = await emergencyStore.fetchMetaLocations();
+});
 
 async function sendNewEmergency(): Promise<void> {
     if (!formSystem.value || !formSubSystem.value || !formSubThreatLevel.value) {
@@ -28,11 +35,15 @@ async function sendNewEmergency(): Promise<void> {
     try {
         formSubmittingEmergency.value = true;
 
+        const formLocation: Location = {
+            system: formSystem.value,
+            subsystem: formSubSystem.value,
+            tertiaryLocation: formTertiaryLocation.value,
+        };
+        if (formLocation.tertiaryLocation === "") delete formLocation.tertiaryLocation;
+
         const response = await emergencyStore.createEmergency({
-            location: {
-                system: formSystem.value,
-                subsystem: formSubSystem.value,
-            },
+            location: formLocation,
             threatLevel: parseInt(formSubThreatLevel.value),
         });
 
@@ -54,10 +65,14 @@ async function sendNewEmergency(): Promise<void> {
         else formErrorMessage.value = t("error_generic");
     }
 }
+
+function getSubSystemIndex(name: string) {
+    return locationsInformation.value[0].children.findIndex(subSystem => subSystem.name === name);
+}
 </script>
 
 <template>
-    <form @submit.prevent="sendNewEmergency()">
+    <form @submit.prevent="sendNewEmergency()" v-if="locationsInformation.length > 0">
         <div class="lg:w-full">
             <div class="lg:w-[48%]">
                 <LabelInput title-local="form_SCUsername" description-local="form_helpSCUsername" />
@@ -88,10 +103,9 @@ async function sendNewEmergency(): Promise<void> {
                         :disabled="formSubmittingEmergency"
                     >
                         <option hidden value>{{ t("form_selectAPlanet") }}</option>
-                        <option value="microTech">microTech</option>
-                        <option value="Hurston">Hurston</option>
-                        <option value="Crusader">Crusader</option>
-                        <option value="ArcCorp">ArcCorp</option>
+                        <option v-for="location in locationsInformation[0].children" :value="location.name">
+                            {{ location.name }}
+                        </option>
                     </select>
                 </div>
             </div>
@@ -99,6 +113,27 @@ async function sendNewEmergency(): Promise<void> {
 
         <div class="mt-5 lg:flex lg:w-full lg:justify-between">
             <div class="lg:mt-0 lg:w-[48%]">
+                <LabelInput title-local="form_location" description-local="form_helpLocation" />
+                <div class="mt-2">
+                    <select
+                        class="w-full focus:border-secondary-500 focus:ring-secondary-500"
+                        :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
+                        v-model="formTertiaryLocation"
+                        :disabled="formSubmittingEmergency || !formSubSystem"
+                    >
+                        <option hidden value>{{ t("form_selectALocation") }}</option>
+                        <option
+                            v-if="formSubSystem && getSubSystemIndex(formSubSystem) !== -1"
+                            v-for="location in locationsInformation[0].children[getSubSystemIndex(formSubSystem)].children"
+                            :value="location.name"
+                        >
+                            {{ location.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-5 lg:mt-0 lg:w-[48%]">
                 <LabelInput title-local="form_threatLevel" description-local="form_helpThreatLevel" :required="true" />
                 <div class="mt-2">
                     <select

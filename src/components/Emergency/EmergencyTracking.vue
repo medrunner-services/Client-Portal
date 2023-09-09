@@ -4,6 +4,7 @@ import { onMounted, type Ref, ref, watch, type WatchStopHandle } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyFormDetails from "@/components/Emergency/EmergencyFormDetails.vue";
+import LabelInput from "@/components/LabelInput.vue";
 import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
@@ -29,6 +30,7 @@ const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 const formCancelingEmergency = ref(false);
 const isCancelConflictError = ref(false);
 const displayFormDetails = ref(false);
+const ratingRemarks = ref("");
 
 let stopWatcherTeamDetails: WatchStopHandle | null;
 
@@ -122,7 +124,7 @@ async function submitCancelEmergency(): Promise<void> {
 async function rateEmergency(rating: ResponseRating): Promise<void> {
     try {
         if (stopWatcherTeamDetails) stopWatcherTeamDetails();
-        await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating);
+        await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating, ratingRemarks.value);
         emit("completeEmergency");
     } catch (error: any) {
         emit("completeEmergency");
@@ -216,17 +218,18 @@ function getResponderLevel(id: string): Level {
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌍 {{ t("tracking_subSystem") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
+                <div
+                    v-if="emergencyStore.trackedEmergency.tertiaryLocation"
+                    class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
+                >
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">📌 {{ t("form_location") }}</p>
+                    <p class="mt-2">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
+                </div>
                 <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
                     <p class="font-Mohave text-2xl font-semibold lg:text-xl">⚔️ {{ t("tracking_threatLevel") }}</p>
                     <p class="mt-2">
                         {{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}
                     </p>
-                </div>
-            </div>
-            <div v-if="emergencyStore.trackedEmergency.remarks" class="lg:mt-5 lg:flex lg:justify-between">
-                <div class="mt-5 w-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800 lg:mt-0">
-                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🗒️ {{ t("tracking_remarks") }}</p>
-                    <p class="mt-2">{{ emergencyStore.trackedEmergency.remarks }}</p>
                 </div>
             </div>
 
@@ -313,6 +316,12 @@ function getResponderLevel(id: string): Level {
 
         <div v-if="emergencyStore.trackedEmergency.status === 3 || emergencyStore.trackedEmergency.status === 4" class="mt-10">
             <p class="font-Mohave text-xl font-semibold">{{ t("tracking_ratingTitle") }}</p>
+            <div class="mt-5 w-full lg:mt-5">
+                <LabelInput title-local="form_remarks" description-local="form_helpRemarks" />
+                <div class="mt-2">
+                    <textarea class="w-full border-gray-400 focus:border-secondary-500 focus:ring-secondary-500" rows="4" v-model="ratingRemarks" />
+                </div>
+            </div>
             <div class="mt-5 flex w-full justify-between">
                 <button class="w-[45%] cursor-pointer border-2 border-primary-900 p-3 font-semibold" @click="rateEmergency(ResponseRating.GOOD)">
                     {{ t("tracking_good") }}

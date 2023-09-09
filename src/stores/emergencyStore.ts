@@ -4,6 +4,7 @@ import type {
     ChatMessageRequest,
     CreateEmergencyRequest,
     Emergency,
+    LocationDetail,
     ResponseRating,
     TeamDetailsResponse,
 } from "@medrunner-services/api-client";
@@ -71,8 +72,8 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function rateCompletedEmergency(id: string, rating: ResponseRating): Promise<void> {
-        const response = await api.emergency.rateServices(id, rating);
+    async function rateCompletedEmergency(id: string, rating: ResponseRating, remarks?: string): Promise<void> {
+        const response = await api.emergency.rateServices(id, rating, remarks);
 
         if (!response.success) {
             throw response;
@@ -97,6 +98,16 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function fetchMetaLocations(): Promise<LocationDetail[]> {
+        const response = await api.emergency.emergencyLocations();
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
     return {
         trackedEmergency,
         isTrackedEmergencyCanceled,
@@ -110,5 +121,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         rateCompletedEmergency,
         sendEmergencyMessage,
         fetchChatHistory,
+        fetchMetaLocations,
     };
 });
