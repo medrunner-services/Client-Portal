@@ -6,7 +6,7 @@ import { createPinia } from "pinia";
 import { createApp } from "vue";
 import { createI18n } from "vue-i18n";
 
-import { initializeApi } from "@/utils/medrunnerClient";
+import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
 import App from "./App.vue";
 import router from "./router";
@@ -20,11 +20,18 @@ const i18n = createI18n({
     messages,
 });
 
-app.use(pinia);
-app.use(router);
-app.use(i18n);
-app.use(autoAnimatePlugin);
+(async () => {
+    try {
+        if (localStorage.getItem("refreshToken")) {
+            await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+            await initializeWebsocket();
+        }
+    } finally {
+        app.use(pinia);
+        app.use(router);
+        app.use(i18n);
+        app.use(autoAnimatePlugin);
 
-app.mount("#app");
-
-initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+        app.mount("#app");
+    }
+})();

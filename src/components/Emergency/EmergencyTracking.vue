@@ -9,7 +9,7 @@ import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-const emit = defineEmits(["completedTrackedEmergency", "completeEmergency", "canceledEmergency", "updateCurrentEmergencyStatus"]);
+const emit = defineEmits(["completeEmergency", "updateCurrentEmergencyStatus"]);
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -109,7 +109,7 @@ async function submitCancelEmergency(): Promise<void> {
             if (stopWatcherTeamDetails) stopWatcherTeamDetails();
             cancelReason.value = "";
             emergencyStore.isTrackedEmergencyCanceled = false;
-            emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
+            emit("completeEmergency");
         } catch (error: any) {
             if (error.statusCode === 409) isCancelConflictError.value = true;
             else cancelEmergencyError.value = true;
@@ -123,9 +123,9 @@ async function rateEmergency(rating: ResponseRating): Promise<void> {
     try {
         if (stopWatcherTeamDetails) stopWatcherTeamDetails();
         await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, rating);
-        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
+        emit("completeEmergency");
     } catch (error: any) {
-        emit("completedTrackedEmergency", emergencyStore.trackedEmergency);
+        emit("completeEmergency");
     }
 }
 

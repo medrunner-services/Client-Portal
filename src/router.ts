@@ -6,9 +6,20 @@ import { useUserStore } from "@/stores/userStore";
 
 import HomeView from "./views/HomeView.vue";
 
-function isUserAuthenticated(): string | boolean {
+async function isUserAuthenticated(): Promise<string | boolean> {
     const userStore = useUserStore();
-    return userStore.isAuthenticated ? "/" : true;
+    if (!localStorage.getItem("refreshToken")) {
+        return true;
+    } else if (!userStore.isAuthenticated) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error: any) {
+            return true;
+        }
+    }
+
+    return "/";
 }
 
 function isUserNotLinked(): string | boolean {

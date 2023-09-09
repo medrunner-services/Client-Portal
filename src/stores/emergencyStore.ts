@@ -1,5 +1,6 @@
 import type {
     CancellationReason,
+    ChatMessage,
     ChatMessageRequest,
     CreateEmergencyRequest,
     Emergency,
@@ -13,7 +14,14 @@ import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
+    const trackedEmergencyMessages: Ref<ChatMessage[]> = ref([]);
     const isTrackedEmergencyCanceled = ref(false);
+
+    function resetTrackedEmergency(): void {
+        trackedEmergency.value.id = "";
+        trackedEmergencyMessages.value = [];
+        isTrackedEmergencyCanceled.value = false;
+    }
 
     async function fetchEmergency(id: string): Promise<Emergency> {
         const response = await api.emergency.getEmergency(id);
@@ -79,9 +87,21 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function fetchChatHistory(id: string): Promise<ChatMessage[]> {
+        const response = await api.chatMessage.getHistory(id, 50);
+
+        if (response.success && response.data) {
+            return response.data.data;
+        } else {
+            throw response;
+        }
+    }
+
     return {
         trackedEmergency,
         isTrackedEmergencyCanceled,
+        trackedEmergencyMessages,
+        resetTrackedEmergency,
         fetchEmergency,
         fetchEmergencies,
         fetchEmergencyTeamDetail,
@@ -89,5 +109,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         cancelEmergency,
         rateCompletedEmergency,
         sendEmergencyMessage,
+        fetchChatHistory,
     };
 });
