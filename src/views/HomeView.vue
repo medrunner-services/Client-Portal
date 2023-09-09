@@ -5,6 +5,7 @@ import type { Ref } from "vue";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import ChatBox from "@/components/ChatBox.vue";
 import EmergencyForm from "@/components/Emergency/EmergencyForm.vue";
 import EmergencyHistory from "@/components/Emergency/EmergencyHistory.vue";
 import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
@@ -12,7 +13,7 @@ import Loader from "@/components/Loader.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { api } from "@/utils/medrunnerClient";
+import { ws } from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -48,18 +49,15 @@ onMounted(async () => {
         });
     }
 
-    const apiWebsocket = await api.websocket.initialize();
-    await apiWebsocket.start();
-
-    apiWebsocket.on("EmergencyCreate", (newEmergency: Emergency) => {
+    ws.on("EmergencyCreate", (newEmergency: Emergency) => {
         if (newEmergency.clientId === userStore.user.id) {
-            userStore.user.activeEmergency = newEmergency.id;
+            emergencyStore.trackedEmergency = newEmergency;
             currentTrackedEmergencyStatus.value = newEmergency.status;
         }
     });
 
-    apiWebsocket.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-        if (updatedEmergency.id === userStore.user.activeEmergency && !loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
+    ws.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
+        if (updatedEmergency.id === emergencyStore.trackedEmergency.id && !loadedHistory.find(emergency => emergency.id === updatedEmergency.id)) {
             if (updatedEmergency.isComplete && updatedEmergency.rating !== 0) {
                 completeEmergency(updatedEmergency);
                 currentTrackedEmergencyStatus.value = undefined;
@@ -69,7 +67,7 @@ onMounted(async () => {
                 if (
                     logicStore.isNotificationGranted &&
                     updatedEmergency.status !== currentTrackedEmergencyStatus.value &&
-                    ![1, 10].includes(updatedEmergency.status)
+                    updatedEmergency.status !== 1
                 ) {
                     new Notification(logicStore.getEmergencyStatusTitle(updatedEmergency.status), {
                         body:
@@ -85,7 +83,7 @@ onMounted(async () => {
         }
     });
 
-    apiWebsocket.onreconnected(async () => {
+    ws.onreconnected(async () => {
         if (userStore.user.activeEmergency) {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
@@ -107,7 +105,8 @@ function setActivePageFromCache(startIndex: number) {
 }
 
 function completeEmergency(emergency: Emergency): void {
-    emergencyStore.trackedEmergency = {} as Emergency;
+    emergencyStore.resetTrackedEmergency();
+
     userStore.user.activeEmergency = "";
     userStore.newlySubmittedEmergencies++;
     loadedHistory.unshift(emergency);
@@ -174,51 +173,57 @@ const isLastPageHistory = computed(() => {
 <template>
     <div class="content-container flex flex-col-reverse lg:flex-row lg:justify-between">
         <div class="mt-10 lg:mt-0 lg:w-[40%] lg:max-w-xl xl:w-[35%]">
-            <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
-                {{ t("home_history") }}
-            </h2>
+            <div class="mb-10">
+                <h2 class="mb-5 font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
+                    {{ emergencyStore.trackedEmergency.id ? t("tracking_chatTitle") : t("home_history") }}
+                </h2>
+            </div>
             <div class="min-h-[22rem]">
-                <div v-auto-animate v-if="loaded && activePage.length > 0">
+                <ChatBox v-if="emergencyStore.trackedEmergency.id" />
+
+                <div v-else v-auto-animate>
                     <EmergencyHistory
+                        v-if="loaded && activePage.length > 0"
                         v-auto-animate="{ duration: 100 }"
                         v-for="emergency in activePage"
                         :key="emergency.id"
                         class="mt-4 first:mt-0"
                         :emergency="emergency"
                     />
-                </div>
-                <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
 
-                <div v-else-if="loaded && errorLoadingHistory">
-                    <p class="text-primary-400">{{ t("error_loadingHistory") }}</p>
-                </div>
-                <div v-else-if="loaded && activePage.length === 0">
-                    <p>{{ t("home_noEmergencies") }}</p>
-                </div>
-            </div>
+                    <Loader v-else-if="!loaded" class="flex h-80 w-full items-center justify-center" />
 
-            <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
-                <div
-                    @click="previousPage()"
-                    class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
-                    :class="{ 'opacity-50': page <= 0 }"
-                >
-                    <ChevronLeftIcon class="h-6 w-6 stroke-2 text-gray-50" />
-                </div>
-                <div class="flex w-1/2 items-center justify-center font-Inter font-bold xl:w-2/3">
-                    {{ page + 1 }} / {{ Math.ceil(userStore.totalNumberOfEmergencies / pageSize) }}
-                </div>
-                <div
-                    @click="nextPage()"
-                    class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
-                    :class="{ 'opacity-50': isLastPageHistory }"
-                >
-                    <ChevronRightIcon class="h-6 w-6 stroke-2 text-gray-50" />
+                    <div v-else-if="loaded && errorLoadingHistory">
+                        <p class="text-primary-400">{{ t("error_loadingHistory") }}</p>
+                    </div>
+                    <div v-else-if="loaded && activePage.length === 0">
+                        <p>{{ t("home_noEmergencies") }}</p>
+                    </div>
+
+                    <div v-if="loadedHistory.length > 0" class="mt-10 flex justify-between">
+                        <div
+                            @click="previousPage()"
+                            class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
+                            :class="{ 'opacity-50': page <= 0 }"
+                        >
+                            <ChevronLeftIcon class="h-6 w-6 stroke-2 text-gray-50" />
+                        </div>
+                        <div class="flex w-1/2 items-center justify-center font-Inter font-bold xl:w-2/3">
+                            {{ page + 1 }} / {{ Math.ceil(userStore.totalNumberOfEmergencies / pageSize) }}
+                        </div>
+                        <div
+                            @click="nextPage()"
+                            class="flex flex-grow cursor-pointer select-none items-center justify-center bg-primary-900 p-3"
+                            :class="{ 'opacity-50': isLastPageHistory }"
+                        >
+                            <ChevronRightIcon class="h-6 w-6 stroke-2 text-gray-50" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="lg:w-1/2 xl:w-1/2">
-            <div class="mb-5 flex items-center">
+            <div class="mb-10 flex items-center">
                 <h2 class="font-Mohave text-3xl font-semibold uppercase lg:text-4xl">
                     {{ t("home_emergency") }}
                 </h2>
@@ -227,9 +232,7 @@ const isLastPageHistory = computed(() => {
                         emergencyStore.trackedEmergency.id &&
                         !errorLoadingTrackedEmergency &&
                         !emergencyStore.isTrackedEmergencyCanceled &&
-                        (emergencyStore.trackedEmergency.status === 1 ||
-                            emergencyStore.trackedEmergency.status === 2 ||
-                            emergencyStore.trackedEmergency.status === 10)
+                        (emergencyStore.trackedEmergency.status === 1 || emergencyStore.trackedEmergency.status === 2)
                     "
                     class="relative mb-[0.35rem] ml-5 flex h-3 w-3"
                 >
@@ -238,8 +241,7 @@ const isLastPageHistory = computed(() => {
                 </span>
             </div>
             <EmergencyTracking
-                v-if="userStore.user.activeEmergency"
-                @completed-tracked-emergency="completeEmergency"
+                v-if="emergencyStore.trackedEmergency.id || userStore.user.activeEmergency"
                 @complete-emergency="completeEmergency(emergencyStore.trackedEmergency)"
                 @update-current-emergency-status="status => (currentTrackedEmergencyStatus = status)"
                 :errorLoadingTrackedEmergency="errorLoadingTrackedEmergency"

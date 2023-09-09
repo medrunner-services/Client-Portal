@@ -116,7 +116,7 @@ const copyTokenToClipboard = (): void => {
             <span v-else>{{ t("developer_createTokenFormButton") }}</span>
         </button>
 
-        <p v-if="errorCreationToken" class="mt-2 w-full text-sm text-primary-400">{{ errorCreationToken }}</p>
+        <p v-if="errorCreationToken" class="mt-2 w-full text-sm text-red-500">{{ errorCreationToken }}</p>
     </form>
 </template>
 
