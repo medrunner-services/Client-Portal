@@ -18,7 +18,7 @@ const formErrorMessage = ref("");
 
 const formSystem = ref("Stanton");
 const formSubSystem = ref("");
-const formMoon = ref("");
+const formTertiaryLocation = ref("");
 const formSubThreatLevel = ref("");
 const isFirefoxAndroid = ref(logicStore.userDevice === "android" && logicStore.userBrowser === "firefox");
 const locationsInformation: Ref<LocationDetail[]> = ref([]);
@@ -38,7 +38,7 @@ async function sendNewEmergency(): Promise<void> {
         const formLocation: Location = {
             system: formSystem.value,
             subsystem: formSubSystem.value,
-            tertiaryLocation: formMoon.value,
+            tertiaryLocation: formTertiaryLocation.value,
         };
         if (formLocation.tertiaryLocation === "") delete formLocation.tertiaryLocation;
 
@@ -113,15 +113,15 @@ function getSubSystemIndex(name: string) {
 
         <div class="mt-5 lg:flex lg:w-full lg:justify-between">
             <div class="lg:mt-0 lg:w-[48%]">
-                <LabelInput title-local="form_moon" description-local="form_helpMoon" />
+                <LabelInput title-local="form_location" description-local="form_helpLocation" />
                 <div class="mt-2">
                     <select
                         class="w-full focus:border-secondary-500 focus:ring-secondary-500"
                         :class="formErrorMessage ? 'border-red-500 dark:border-red-500' : 'border-gray-400'"
-                        v-model="formMoon"
+                        v-model="formTertiaryLocation"
                         :disabled="formSubmittingEmergency || !formSubSystem"
                     >
-                        <option hidden value>{{ t("form_selectAMoon") }}</option>
+                        <option hidden value>{{ t("form_selectALocation") }}</option>
                         <option
                             v-if="formSubSystem && getSubSystemIndex(formSubSystem) !== -1"
                             v-for="location in locationsInformation[0].children[getSubSystemIndex(formSubSystem)].children"

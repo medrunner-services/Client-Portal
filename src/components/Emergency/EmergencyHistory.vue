@@ -142,6 +142,10 @@ function getResponders(responders: any): string {
                     🌍 <span class="font-bold">{{ t("history_nearestPlanet") }}:</span>
                     {{ emergencyInfo.subsystem }}
                 </p>
+                <p v-if="emergencyInfo.tertiaryLocation">
+                    📌 <span class="font-bold">{{ t("form_location") }}:</span>
+                    {{ emergencyInfo.tertiaryLocation }}
+                </p>
                 <p>
                     ⚔️ <span class="font-bold">{{ t("history_threatLevel") }}:</span>
                     {{ getThreatString(emergencyInfo.threatLevel) }}

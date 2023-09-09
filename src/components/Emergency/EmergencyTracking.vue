@@ -220,7 +220,7 @@ function getResponderLevel(id: string): Level {
                     v-if="emergencyStore.trackedEmergency.tertiaryLocation"
                     class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800"
                 >
-                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">🌙 {{ t("form_moon") }}</p>
+                    <p class="font-Mohave text-2xl font-semibold lg:text-xl">📌 {{ t("form_location") }}</p>
                     <p class="mt-2">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
                 </div>
                 <div class="h-full bg-gray-50 p-4 shadow-md dark:bg-stone-800 dark:shadow-stone-800">
