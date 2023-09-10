@@ -45,5 +45,5 @@ input {
     @apply border border-neutral-400 font-Inter text-body text-neutral-900 placeholder:font-Inter placeholder:text-body placeholder:text-neutral-600 hover:border-neutral-600 focus:border-secondary-600;
 }
 .input-text-error {
-    @apply border border-primary-400 font-Inter text-body text-neutral-900 placeholder:font-Inter placeholder:text-body placeholder:text-neutral-600 hover:border-primary-600 focus:border-secondary-600 dark:border-primary-400;
+    @apply border border-red-500 font-Inter text-body text-neutral-900 placeholder:font-Inter placeholder:text-body placeholder:text-neutral-600 hover:border-red-500 focus:border-secondary-600 dark:border-red-500;
 }

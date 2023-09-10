@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 export const useLogicStore = defineStore("logic", () => {
-    const { t } = useI18n();
+    const { t, locale } = useI18n();
     const isRouterLoading = ref(false);
     const isNotificationGranted = ref(
         "Notification" in window ? Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true" : false,
@@ -54,7 +54,6 @@ export const useLogicStore = defineStore("logic", () => {
             case 1:
                 return "📡 " + t("tracking_messageReceived");
             case 2:
-            case 10:
                 return "🚑 " + t("tracking_helpOnTheWay");
             case 3:
                 return "✅ " + t("tracking_operationSuccessful");
@@ -80,7 +79,6 @@ export const useLogicStore = defineStore("logic", () => {
             case 1:
                 return t("tracking_statusTextReceived");
             case 2:
-            case 10:
                 return t("tracking_statusTextOnTheirWay");
             case 3:
                 return t("tracking_statusTextSuccess");
@@ -120,6 +118,21 @@ export const useLogicStore = defineStore("logic", () => {
         }
     }
 
+    function timestampToHours(timestamp: number | string): string {
+        return new Date(timestamp).toLocaleTimeString(locale.value, {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
+    function timestampToDate(timestamp: number | string): string {
+        return new Date(timestamp).toLocaleDateString(locale.value, {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        });
+    }
+
     return {
         isRouterLoading,
         isNotificationGranted,
@@ -132,5 +145,7 @@ export const useLogicStore = defineStore("logic", () => {
         getEmergencyStatusTitle,
         getEmergencyStatusSubtitle,
         getLanguageString,
+        timestampToHours,
+        timestampToDate,
     };
 });

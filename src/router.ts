@@ -6,9 +6,20 @@ import { useUserStore } from "@/stores/userStore";
 
 import HomeView from "./views/HomeView.vue";
 
-function isUserAuthenticated(): string | boolean {
+async function isUserAuthenticated(): Promise<string | boolean> {
     const userStore = useUserStore();
-    return userStore.isAuthenticated ? "/" : true;
+    if (!localStorage.getItem("refreshToken")) {
+        return true;
+    } else if (!userStore.isAuthenticated) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error: any) {
+            return true;
+        }
+    }
+
+    return "/";
 }
 
 function isUserNotLinked(): string | boolean {
@@ -18,32 +29,25 @@ function isUserNotLinked(): string | boolean {
 
 async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
-    const logicStore = useLogicStore();
-    logicStore.isRouterLoading = true;
 
     if (!localStorage.getItem("refreshToken")) {
-        logicStore.isRouterLoading = false;
         return "/login";
     } else if (!userStore.isAuthenticated) {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
         } catch (error) {
-            logicStore.isRouterLoading = false;
             return "/login?error=generic";
         }
     }
 
-    if (!userStore.user.active && userStore.isAuthenticated) {
+    if (!userStore.user.active) {
         await userStore.disconnectUser();
-        logicStore.isRouterLoading = false;
         return "/login?error=deactivated";
-    } else if (!userStore.user.rsiHandle && userStore.isAuthenticated) {
-        logicStore.isRouterLoading = false;
+    } else if (!userStore.user.rsiHandle) {
         return "/login/link";
     }
 
-    logicStore.isRouterLoading = false;
     return true;
 }
 
@@ -94,6 +98,11 @@ const router = createRouter({
     ],
 });
 
+router.beforeEach(() => {
+    const logicStore = useLogicStore();
+    logicStore.isRouterLoading = true;
+});
+
 router.afterEach(async () => {
     const userStore = useUserStore();
     const logicStore = useLogicStore();
@@ -120,6 +129,8 @@ router.afterEach(async () => {
             "App Language": localStorage.getItem("selectedLanguage") ?? "en-US",
         });
     }
+
+    logicStore.isRouterLoading = false;
 });
 
 export default router;

@@ -5,7 +5,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import Loader from "@/components/Loader.vue";
 import { useUserStore } from "@/stores/userStore";
-import { initializeApi } from "@/utils/medrunnerClient";
+import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
 const route = useRoute();
 const router = useRouter();
@@ -27,7 +27,8 @@ onMounted(async () => {
             );
 
             localStorage.setItem("refreshToken", response.data.refreshToken);
-            initializeApi(response.data.refreshToken);
+            await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+            await initializeWebsocket();
 
             await router.push("/");
         } catch (error: any) {
@@ -45,7 +46,8 @@ onMounted(async () => {
     //         );
     //
     //         localStorage.setItem("refreshToken", response.data.refreshToken);
-    //         initializeApi(response.data.refreshToken);
+    //         await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+    //         await initializeWebsocket();
     //
     //         await router.push("/login/link");
     //     } catch (error: any) {
@@ -53,9 +55,9 @@ onMounted(async () => {
     //         else await router.push("/login?error=generic");
     //     }
     // }
-    else {
-        await router.push("/login");
-    }
+    // else {
+    //     await router.push("/login");
+    // }
 });
 </script>
 

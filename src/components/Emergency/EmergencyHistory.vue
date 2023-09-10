@@ -5,27 +5,14 @@ import { CancellationReason } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore";
+
 const props = defineProps(["emergency"]);
-const { t, locale } = useI18n();
+const { t } = useI18n();
+const logicStore = useLogicStore();
 
 const showCard = ref(false);
 let emergencyInfo: Emergency = props.emergency;
-
-function timestampToHours(timestamp: number | undefined): string {
-    if (!timestamp) return "";
-    return new Date(timestamp).toLocaleTimeString(locale.value, {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-}
-
-function timestampToDate(timestamp: number): string {
-    return new Date(timestamp).toLocaleDateString(locale.value, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-    });
-}
 
 function getThreatString(id: number): string {
     switch (id) {
@@ -80,7 +67,6 @@ function getStatusString(id: number): string {
         case 1:
             return t("history_received");
         case 2:
-        case 10:
             return t("history_inProgress");
         case 3:
             return t("history_completed");
@@ -114,7 +100,7 @@ function getResponders(responders: any): string {
     <div class="flex flex-col border-2 border-primary-900">
         <div class="flex items-center">
             <p class="flex-grow px-2 py-1 font-Inter font-semibold">
-                {{ timestampToDate(emergencyInfo.creationTimestamp) }} -
+                {{ logicStore.timestampToDate(emergencyInfo.creationTimestamp) }} -
                 {{ getStatusString(emergencyInfo.status) }}
             </p>
             <div @click="showCard = !showCard" class="flex cursor-pointer items-center self-stretch bg-primary-900 p-3">
@@ -127,7 +113,7 @@ function getResponders(responders: any): string {
                     <p>{{ t("history_created") }}</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>
-                        {{ timestampToHours(emergencyInfo.creationTimestamp) }}
+                        {{ logicStore.timestampToHours(emergencyInfo.creationTimestamp) }}
                     </p>
                 </div>
                 <div v-if="emergencyInfo.acceptedTimestamp !== undefined" class="h-0.5 w-16 border border-primary-900" />
@@ -135,15 +121,15 @@ function getResponders(responders: any): string {
                     <p>{{ t("history_accepted") }}</p>
                     <img src="/icons/circle-icon.svg" alt="Received" class="my-2" />
                     <p>
-                        {{ timestampToHours(emergencyInfo.acceptedTimestamp) }}
+                        {{ logicStore.timestampToHours(emergencyInfo.acceptedTimestamp) }}
                     </p>
                 </div>
-                <div class="h-0.5 w-16 border border-primary-900" />
-                <div class="flex flex-col items-center justify-center">
+                <div v-if="emergencyInfo.completionTimestamp" class="h-0.5 w-16 border border-primary-900" />
+                <div v-if="emergencyInfo.completionTimestamp" class="flex flex-col items-center justify-center">
                     <p>{{ getStatusString(emergencyInfo.status) }}</p>
                     <img src="/icons/circle-icon.svg" alt="Created" class="my-2" />
                     <p>
-                        {{ timestampToHours(emergencyInfo.completionTimestamp) }}
+                        {{ logicStore.timestampToHours(emergencyInfo.completionTimestamp) }}
                     </p>
                 </div>
             </div>
@@ -155,6 +141,10 @@ function getResponders(responders: any): string {
                 <p>
                     🌍 <span class="font-bold">{{ t("history_nearestPlanet") }}:</span>
                     {{ emergencyInfo.subsystem }}
+                </p>
+                <p v-if="emergencyInfo.tertiaryLocation">
+                    📌 <span class="font-bold">{{ t("form_location") }}:</span>
+                    {{ emergencyInfo.tertiaryLocation }}
                 </p>
                 <p>
                     ⚔️ <span class="font-bold">{{ t("history_threatLevel") }}:</span>
@@ -173,8 +163,8 @@ function getResponders(responders: any): string {
                     {{ getCancelReasonString(emergencyInfo.cancellationReason) }}
                 </p>
                 <p class="mt-4" v-if="emergencyInfo.status === 3 || emergencyInfo.status === 4">
-                    ⭐ <span class="font-bold">{{ t("history_rating") }}:</span>
-                    {{ getRatingString(emergencyInfo.rating) }}
+                    ⭐ <span class="font-bold">{{ t("history_rating") }}:</span> {{ getRatingString(emergencyInfo.rating) }}
+                    <span v-if="emergencyInfo.ratingRemarks" class="italic"> - {{ emergencyInfo.ratingRemarks }}</span>
                 </p>
             </div>
         </div>
