@@ -65,8 +65,16 @@ function parseChatMessageString(message: string): string {
 
 function getMessageTitle(message: ChatMessage): string {
     const timestamp = logicStore.timestampToHours(message.messageSentTimestamp);
+    let author;
     const teamMember = emergencyStore.trackedEmergency.respondingTeam.staff.find(staff => staff.id === message.senderId);
-    const author = teamMember ? teamMember.rsiHandle : emergencyStore.trackedEmergency.clientRsiHandle;
+
+    if (message.senderId === emergencyStore.trackedEmergency.clientId) {
+        author = emergencyStore.trackedEmergency.clientRsiHandle;
+    } else if (teamMember) {
+        author = teamMember.rsiHandle;
+    } else {
+        author = "Medrunner Staff";
+    }
 
     return `${author} - ${timestamp}`;
 }
