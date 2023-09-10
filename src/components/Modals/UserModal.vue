@@ -93,30 +93,22 @@ async function updateRsiHandle(): Promise<void> {
         <p class="font-Mohave text-2xl font-semibold text-primary-900">{{ t("user_whatsNew") }}</p>
         <p class="mt-2 font-semibold">{{ t("user_newFeaturesTitle") }} ✨</p>
         <ul class="list-inside list-disc">
-            <li>
-                Added analytics for technical data, no personal or identifiable data is collected (no localisation, no ip adresses...). This can be
-                turned off in the user settings.
-            </li>
-            <li>Added a settings menu on the login page to control the animation</li>
-            <li>Added Time until death, Crimestat status and ship type in the details emergency form</li>
+            <li>Added a text input in the emergency rating to provide more detailed feedback.</li>
+            <li>Added a chat synchronized with the discord thread to chat with the responder team.</li>
+            <li>Added service status alert to display messages when a outage is ongoing</li>
         </ul>
         <div v-if="displayFullUpdateNotes">
             <p class="mt-4 font-semibold">{{ t("user_bugFixesTitle") }} 🐛</p>
             <ul class="list-inside list-disc">
-                <li>Missing asterisks on required inputs</li>
-                <li>Api token copy icon stays black in dark mode</li>
-                <li>Error messages not displaying on login page</li>
-                <li>Login page was blank on iOS Safari</li>
-                <li>The canceled emergency notification has a incorrect message</li>
+                <li>Responder team and dispatch boxes overlapping</li>
+                <li>Navbar not wide enough in dark mode on ultra-wide</li>
             </ul>
             <p class="mt-4 font-semibold">{{ t("user_improvementsTitle") }} 🛠️</p>
             <ul class="list-inside list-disc">
-                <li>API tokens expiration date is now red when reached</li>
-                <li>Added a 404 page so that you know when you are lost</li>
-                <li>You can now change some setting in the login screen</li>
-                <li>Improved field for adding multiple teammates in the details emergency form</li>
-                <li>The injuries field in the details emergency form is now a dropdown</li>
-                <li>Added some missing animations</li>
+                <li>Added a "Nearest location" field in the emergency form to provide a more precise location.</li>
+                <li>Added a checkbox to accept the TOS on signup</li>
+                <li>Added responder team stats and medal in the emergency tracking screen</li>
+                <li>Updated the error text color to be more different from the medrunner red</li>
             </ul>
         </div>
         <p v-else class="mt-2 w-fit cursor-pointer font-semibold" @click="displayFullUpdateNotes = true">[...]</p>
