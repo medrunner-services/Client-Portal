@@ -67,11 +67,14 @@ function getMessageTitle(message: ChatMessage): string {
     const timestamp = logicStore.timestampToHours(message.messageSentTimestamp);
     let author;
     const teamMember = emergencyStore.trackedEmergency.respondingTeam.staff.find(staff => staff.id === message.senderId);
+    const dispatchMember = emergencyStore.trackedEmergency.respondingTeam.dispatchers.find(staff => staff.id === message.senderId);
 
     if (message.senderId === emergencyStore.trackedEmergency.clientId) {
         author = emergencyStore.trackedEmergency.clientRsiHandle;
     } else if (teamMember) {
         author = teamMember.rsiHandle;
+    } else if (dispatchMember) {
+        author = dispatchMember.rsiHandle;
     } else {
         author = "Medrunner Staff";
     }
