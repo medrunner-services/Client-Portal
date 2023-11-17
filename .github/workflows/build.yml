@@ -19,5 +19,4 @@ jobs:
       - run: npm ci # install dependencies
       - run: npm run build # compile typescript
       - run: npm run lint # run eslint
-      - run: npm run prettier  # run prettier
-#      - run: npm test # commented out as tests are not added to the repo yet - tests should be added in the future
+      - run: npm run format  # run prettier

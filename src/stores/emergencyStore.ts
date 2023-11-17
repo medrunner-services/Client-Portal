@@ -10,12 +10,15 @@ import type {
 } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
+    const { t } = useI18n();
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
     const trackedEmergencyMessages: Ref<ChatMessage[]> = ref([]);
+    const trackedEmergencyTeamDetails: Ref<TeamDetailsResponse> = ref({} as TeamDetailsResponse);
     const isTrackedEmergencyCanceled = ref(false);
 
     function resetTrackedEmergency(): void {
@@ -108,10 +111,61 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    function getEmergencyStatusTitle(status: number): string {
+        switch (status) {
+            case 1:
+                return t("tracking_messageReceived");
+            case 2:
+                return t("tracking_helpOnTheWay");
+            case 3:
+                return t("tracking_operationSuccessful");
+            case 4:
+                return t("tracking_operationFailed");
+            case 5:
+                return t("tracking_operationNoContact");
+            case 6:
+                return t("tracking_operationCanceled");
+            case 7:
+                return t("tracking_operationRefused");
+            case 8:
+                return t("tracking_operationAborted");
+            case 9:
+                return t("tracking_serverError");
+            default:
+                return "Unknown";
+        }
+    }
+
+    function getEmergencyStatusSubtitle(status: number): string {
+        switch (status) {
+            case 1:
+                return t("tracking_statusTextReceived");
+            case 2:
+                return t("tracking_statusTextOnTheirWay");
+            case 3:
+                return t("tracking_statusTextSuccess");
+            case 4:
+                return t("tracking_statusTextFailed");
+            case 5:
+                return t("tracking_statusTextNoContact");
+            case 6:
+                return t("tracking_statusTextCanceled");
+            case 7:
+                return t("tracking_statusTextRefused");
+            case 8:
+                return t("tracking_statusTextAborted");
+            case 9:
+                return t("tracking_statusTextServerError");
+            default:
+                return "Unknown";
+        }
+    }
+
     return {
         trackedEmergency,
         isTrackedEmergencyCanceled,
         trackedEmergencyMessages,
+        trackedEmergencyTeamDetails,
         resetTrackedEmergency,
         fetchEmergency,
         fetchEmergencies,
@@ -122,5 +176,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         sendEmergencyMessage,
         fetchChatHistory,
         fetchMetaLocations,
+        getEmergencyStatusTitle,
+        getEmergencyStatusSubtitle,
     };
 });

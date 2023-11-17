@@ -7,11 +7,10 @@ import { api } from "@/utils/medrunnerClient";
 export const useUserStore = defineStore("user", () => {
     const user: Ref<Person> = ref({} as Person);
     const isAuthenticated = ref(false);
-    const newlySubmittedEmergencies = ref(0);
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
-            return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0) + newlySubmittedEmergencies.value;
+            return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0);
         } else {
             return 0;
         }
@@ -87,7 +86,6 @@ export const useUserStore = defineStore("user", () => {
     return {
         user,
         isAuthenticated,
-        newlySubmittedEmergencies,
         totalNumberOfEmergencies,
         disconnectUser,
         linkUser,

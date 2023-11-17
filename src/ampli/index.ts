@@ -21,11 +21,6 @@ import * as amplitude from "@amplitude/analytics-browser";
 
 export type Environment = "production" | "development";
 
-export const ApiKey: Record<Environment, string> = {
-    production: "e57999bfd49edd706aadc5c649a6a211",
-    development: "0c62a7bd11d4d94d192440dcc00cea47",
-};
-
 /**
  * Default Amplitude configuration options. Contains tracking plan information.
  */
