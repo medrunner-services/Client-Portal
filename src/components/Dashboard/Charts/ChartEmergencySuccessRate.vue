@@ -18,7 +18,8 @@ const successRate = computed(() => {
         userStore.user.clientStats.missions.refused;
     const success = userStore.user.clientStats.missions.success;
 
-    return Math.round((success / total) * 1000) / 10;
+    if (total === 0) return 0;
+    else return Math.round((success / total) * 1000) / 10;
 });
 </script>
 
