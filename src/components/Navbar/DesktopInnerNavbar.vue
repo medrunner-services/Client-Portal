@@ -31,7 +31,7 @@ const showBugReportModal = ref(false);
         </ul>
 
         <div class="flex items-center">
-            <p class="cursor-pointer" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
+            <p class="cursor-pointer text-primary-600 dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
             <div class="mx-5 h-4 border border-gray-300" />
             <LanguageDropdown />
             <div class="mx-5 h-4 border border-gray-300" />
