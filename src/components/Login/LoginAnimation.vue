@@ -28,7 +28,6 @@ const props = defineProps({
 onMounted(() => {
     const STAR_MIN_Z = 0.2;
     const OVERFLOW_THRESHOLD = 50;
-    let lastFrameTime = Date.now();
     const canvas = document.querySelector("canvas")!,
         context = canvas.getContext("2d")!;
     let scale = 1,
@@ -102,7 +101,7 @@ onMounted(() => {
 
         const newStarCount = newStars - existingStars;
 
-        const totalArea = boxes.map(b => b.Area).reduce((a, b) => a + b, 0);
+        const totalArea = boxes.map((b) => b.Area).reduce((a, b) => a + b, 0);
 
         for (const box of boxes) {
             const starRatio = box.Area / totalArea;
@@ -127,7 +126,6 @@ onMounted(() => {
     }
 
     function step() {
-        lastFrameTime = Date.now();
         context.clearRect(0, 0, width, height);
         update();
         if (props.animationStatus) {
@@ -216,6 +214,9 @@ onMounted(() => {
 
 <style scoped>
 canvas {
+    background-color: #000000;
+    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+        radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
     position: fixed;
     width: 100%;
     height: 100%;

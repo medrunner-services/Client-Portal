@@ -1,15 +1,24 @@
+import { CancellationReason, MissionStatus } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 export const useLogicStore = defineStore("logic", () => {
-    const { t, locale } = useI18n();
-    const isRouterLoading = ref(false);
+    const { locale, t } = useI18n();
     const isNotificationGranted = ref(
         "Notification" in window ? Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true" : false,
     );
     const darkMode = ref(localStorage.getItem("darkMode") === "true");
     const isAnalyticsAllowed = ref(localStorage.getItem("analyticsActivated") === "true" || localStorage.getItem("analyticsActivated") === null);
+
+    const isLoginAnimationAllowed = ref(
+        localStorage.getItem("loginAnimation")
+            ? localStorage.getItem("loginAnimation") === "true"
+            : !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+    const loginAnimationSpeed = ref(parseInt(localStorage.getItem("loginAnimationSpeed") ?? "1"));
+    const loginAnimationStarSize = ref(parseInt(localStorage.getItem("loginAnimationStarSize") ?? "2"));
+    const loginAnimationGlowSize = ref(parseInt(localStorage.getItem("loginAnimationGlowSize") ?? "2"));
 
     const userDevice = computed(() => {
         if (navigator.userAgent.includes("Android")) {
@@ -20,6 +29,8 @@ export const useLogicStore = defineStore("logic", () => {
             return "ipad";
         } else if (navigator.userAgent.includes("Windows")) {
             return "windows";
+        } else {
+            return "";
         }
     });
 
@@ -30,6 +41,8 @@ export const useLogicStore = defineStore("logic", () => {
             return "chrome";
         } else if (navigator.userAgent.includes("Safari")) {
             return "safari";
+        } else {
+            return "";
         }
     });
 
@@ -49,54 +62,9 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
-    function getEmergencyStatusTitle(status: number): string {
-        switch (status) {
-            case 1:
-                return "📡 " + t("tracking_messageReceived");
-            case 2:
-                return "🚑 " + t("tracking_helpOnTheWay");
-            case 3:
-                return "✅ " + t("tracking_operationSuccessful");
-            case 4:
-                return "❌ " + t("tracking_operationFailed");
-            case 5:
-                return "🚫 " + t("tracking_operationNoContact");
-            case 6:
-                return "🚫 " + t("tracking_operationCanceled");
-            case 7:
-                return "⛔ " + t("tracking_operationRefused");
-            case 8:
-                return "↩️ " + t("tracking_operationAborted");
-            case 9:
-                return "🖥️ " + t("tracking_serverError");
-            default:
-                return "Unknown";
-        }
-    }
-
-    function getEmergencyStatusSubtitle(status: number): string {
-        switch (status) {
-            case 1:
-                return t("tracking_statusTextReceived");
-            case 2:
-                return t("tracking_statusTextOnTheirWay");
-            case 3:
-                return t("tracking_statusTextSuccess");
-            case 4:
-                return t("tracking_statusTextFailed");
-            case 5:
-                return t("tracking_statusTextNoContact");
-            case 6:
-                return t("tracking_statusTextCanceled");
-            case 7:
-                return t("tracking_statusTextRefused");
-            case 8:
-                return t("tracking_statusTextAborted");
-            case 9:
-                return t("tracking_statusTextServerError");
-            default:
-                return "Unknown";
-        }
+    async function addTextToClipboard(text: string): Promise<boolean> {
+        await navigator.clipboard.writeText(text);
+        return true;
     }
 
     function getLanguageString(languageLocal: string): string {
@@ -118,6 +86,79 @@ export const useLogicStore = defineStore("logic", () => {
         }
     }
 
+    function getThreatString(id: number): string {
+        switch (id) {
+            case 0:
+                return t("history_unknown");
+            case 1:
+                return t("history_low");
+            case 2:
+                return t("history_medium");
+            case 3:
+                return t("history_high");
+
+            default:
+                return t("history_unknown");
+        }
+    }
+
+    function getRatingString(rating: number): string {
+        switch (rating) {
+            case 1:
+                return t("history_good");
+            case 2:
+                return t("history_bad");
+
+            default:
+                return t("history_noRating");
+        }
+    }
+
+    function getCancelReasonString(reason: CancellationReason): string {
+        switch (reason) {
+            case CancellationReason.RESCUED:
+                return t("history_rescued");
+            case CancellationReason.SUCCUMBED_TO_WOUNDS:
+                return t("history_bledOut");
+            case CancellationReason.SERVER_ERROR:
+                return t("history_serverIssue");
+            case CancellationReason.RESPAWNED:
+                return t("history_respawned");
+            case CancellationReason.OTHER:
+                return t("history_other");
+
+            default:
+                return t("history_unknown");
+        }
+    }
+
+    function getStatusString(id: MissionStatus): string {
+        switch (id) {
+            case MissionStatus.CREATED:
+                return t("history_created");
+            case MissionStatus.RECEIVED:
+                return t("history_received");
+            case MissionStatus.IN_PROGRESS:
+                return t("history_inProgress");
+            case MissionStatus.SUCCESS:
+                return t("history_completed");
+            case MissionStatus.FAILED:
+                return t("history_failed");
+            case MissionStatus.NO_CONTACT:
+                return t("history_noContact");
+            case MissionStatus.CANCELED:
+                return t("history_canceled");
+            case MissionStatus.REFUSED:
+                return t("history_refused");
+            case MissionStatus.ABORTED:
+                return t("history_aborted");
+            case MissionStatus.SERVER_ERROR:
+                return t("history_serverError");
+            default:
+                return t("tracking_unknown");
+        }
+    }
+
     function timestampToHours(timestamp: number | string): string {
         return new Date(timestamp).toLocaleTimeString(locale.value, {
             hour: "2-digit",
@@ -133,19 +174,52 @@ export const useLogicStore = defineStore("logic", () => {
         });
     }
 
+    function resetAnimationSettings(): void {
+        loginAnimationSpeed.value = 1;
+        loginAnimationStarSize.value = 2;
+        loginAnimationGlowSize.value = 2;
+
+        localStorage.setItem("loginAnimationSpeed", "1");
+        localStorage.setItem("loginAnimationStarSize", "2");
+        localStorage.setItem("loginAnimationGlowSize", "2");
+    }
+
+    function updateLoginAnimation(): void {
+        if (isLoginAnimationAllowed.value) {
+            isLoginAnimationAllowed.value = false;
+            localStorage.setItem("loginAnimation", "false");
+        } else {
+            isLoginAnimationAllowed.value = true;
+            localStorage.setItem("loginAnimation", "true");
+        }
+    }
+
+    function saveAnimationSetting(setting: string, value: number): void {
+        localStorage.setItem(setting, value.toString());
+    }
+
     return {
-        isRouterLoading,
         isNotificationGranted,
         darkMode,
         isAnalyticsAllowed,
+        isLoginAnimationAllowed,
+        loginAnimationSpeed,
+        loginAnimationStarSize,
+        loginAnimationGlowSize,
         userDevice,
         userBrowser,
         discordBaseUrl,
         medrunnerLogoUrl,
-        getEmergencyStatusTitle,
-        getEmergencyStatusSubtitle,
+        addTextToClipboard,
         getLanguageString,
+        getThreatString,
+        getRatingString,
+        getCancelReasonString,
+        getStatusString,
         timestampToHours,
         timestampToDate,
+        resetAnimationSettings,
+        updateLoginAnimation,
+        saveAnimationSetting,
     };
 });

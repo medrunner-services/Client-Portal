@@ -1,2 +1,2 @@
 /// <reference types="vite/client" />
-declare const APP_VERSION: string;
+declare const __APP_VERSION__: string;

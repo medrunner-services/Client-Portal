@@ -1,0 +1,22 @@
+<script setup lang="ts">
+import ChangelogRecap from "@/components/Profile/ChangelogRecap.vue";
+import TokenManagement from "@/components/Profile/TokenManagement.vue";
+import UserAccount from "@/components/Profile/UserAccount.vue";
+import UserSettings from "@/components/Profile/UserSettings.vue";
+</script>
+
+<template>
+    <div class="content-container flex flex-col gap-10 lg:flex-row">
+        <div class="lg:w-1/2">
+            <UserAccount />
+
+            <UserSettings class="mt-10" />
+
+            <TokenManagement class="mt-10" />
+        </div>
+
+        <div class="lg:w-1/2">
+            <ChangelogRecap />
+        </div>
+    </div>
+</template>

@@ -10,7 +10,7 @@ export async function initializeApi(refreshToken: string | undefined) {
             baseUrl: import.meta.env.VITE_API_URL,
             refreshToken,
         },
-        async newTokens => {
+        async (newTokens) => {
             localStorage.setItem("refreshToken", newTokens.refreshToken);
         },
     );

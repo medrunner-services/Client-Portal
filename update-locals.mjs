@@ -1,8 +1,8 @@
-import fs from 'fs';
-import yauzl from 'yauzl';
-import { pipeline } from 'stream';
-import path from "path";
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from "path";
+import { pipeline } from 'stream';
+import yauzl from 'yauzl';
 
 dotenv.config({ path: '.env.development' });
 

@@ -1,5 +1,6 @@
 dist
 node_modules
 .github
+.idea
 public
 src/locales
