@@ -9,6 +9,7 @@ export interface Props {
     size?: "fit" | "full";
     icon?: "link" | "pencil" | "logout" | "plus" | "cross" | "arrowLeft" | "cancel";
     iconPosition?: "left" | "right";
+    disabled?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
     size: "fit",
     iconPosition: "left",
     submit: false,
+    disabled: false,
 });
 
 const { t } = useI18n();
@@ -26,23 +28,28 @@ const { t } = useI18n();
     <div :class="props.size === 'fit' ? 'w-fit' : ''">
         <button
             :type="props.submit ? 'submit' : 'button'"
-            class="flex cursor-pointer items-center justify-center rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none"
+            class="flex cursor-pointer items-center justify-center rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none disabled:cursor-not-allowed disabled:select-none disabled:opacity-50"
             :class="{
-                'border-primary-600 bg-primary-600 text-white hover:bg-primary-600/90': props.type === 'primary',
-                'border-gray-300 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-600 dark:hover:bg-gray-700':
+                'border-primary-600 bg-primary-600 text-white hover:bg-primary-600/90 disabled:hover:bg-primary-600': props.type === 'primary',
+                'border-gray-300 hover:bg-gray-100 disabled:hover:bg-transparent dark:border-gray-600 dark:hover:border-gray-600 dark:hover:bg-gray-700 disabled:hover:dark:hover:bg-transparent':
                     props.type === 'secondary',
-                'border-primary-600 bg-transparent text-primary-600 hover:bg-gray-50 dark:border-red-700 dark:text-red-700  dark:hover:bg-gray-700':
+                'border-primary-600 bg-transparent text-primary-600 hover:bg-gray-50 disabled:hover:bg-transparent dark:border-red-700 dark:text-red-700 dark:hover:bg-gray-700 disabled:hover:dark:hover:bg-transparent':
                     props.type === 'outline',
-                'cursor-progress bg-primary-600': props.loading,
+                'cursor-progress': props.loading,
                 'w-full': props.size === 'full',
             }"
-            :disabled="props.loading"
+            :disabled="props.loading || props.disabled"
         >
             <span v-if="props.loading" class="flex items-center">
                 <svg
                     aria-hidden="true"
                     role="status"
-                    class="mr-3 inline h-4 w-4 animate-spin text-white"
+                    class="mr-3 inline h-4 w-4 animate-spin"
+                    :class="{
+                        'text-white': props.type === 'primary',
+                        'text-primary-600 ': props.type === 'outline',
+                        'text-gray-800 dark:text-white': props.type === 'secondary',
+                    }"
                     viewBox="0 0 100 101"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
