@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import axios from "axios";
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-import Loader from "@/components/Loader.vue";
+import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
@@ -22,45 +21,58 @@ onMounted(async () => {
 
     if (route.path === "/auth" && !userStore.isAuthenticated) {
         try {
-            const response = await axios.get(
+            const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
+            if (response.ok) {
+                const responseBody = await response.json();
 
-            localStorage.setItem("refreshToken", response.data.refreshToken);
-            await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
-            await initializeWebsocket();
+                localStorage.setItem("refreshToken", responseBody.refreshToken);
+                await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+                await initializeWebsocket();
 
-            await router.push("/");
+                await router.push("/");
+            } else {
+                if (response.status === 401) await router.push("/login?error=accountUnknown");
+                else await router.push("/login?error=generic");
+            }
         } catch (error: any) {
-            if (error.statusCode === 401) await router.push("/login?error=accountUnknown");
-            else await router.push("/login?error=generic");
+            await router.push("/login?error=generic");
         }
     }
-    // TODO: Reactivate with registration
     // else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
     //     try {
-    //         const response = await axios.get(
+    //         const response = await fetch(
     //             `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
     //                 import.meta.env.VITE_CALLBACK_URL
     //             }/auth/register`,
     //         );
     //
-    //         localStorage.setItem("refreshToken", response.data.refreshToken);
-    //         await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
-    //         await initializeWebsocket();
+    //         if (response.ok) {
+    //             const responseBody = await response.json();
     //
-    //         await router.push("/login/link");
+    //             console.log("setting refresh token to local storage");
+    //             localStorage.setItem("refreshToken", responseBody.refreshToken);
+    //             await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+    //             await initializeWebsocket();
+    //
+    //             await router.push("/login/link");
+    //         } else {
+    //             if (response.status === 409) await router.push("/login?error=accountKnown");
+    //             else await router.push("/login?error=generic");
+    //         }
     //     } catch (error: any) {
-    //         if (error.statusCode === 409) await router.push("/login?error=accountKnown");
-    //         else await router.push("/login?error=generic");
+    //         await router.push("/login?error=generic");
     //     }
     // }
-    // else {
-    //     await router.push("/login");
-    // }
+    else {
+        await router.push("/login");
+    }
 });
 </script>
 
 <template>
-    <Loader class="flex h-screen w-screen items-center justify-center" />
+    <div class="flex h-screen w-screen items-center justify-center">
+        <GlobalLoader width="w-16" height="h-16" text-size="text-2xl" spacing="mb-10" />
+    </div>
 </template>

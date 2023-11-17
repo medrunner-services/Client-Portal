@@ -1,13 +1,10 @@
 import type { ApiResponse, BlockReport } from "@medrunner-services/api-client";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useBlocklistStore = defineStore("blocklist", () => {
-    const curentQuery = ref([] as BlockReport[]);
-    const isQueryEmpty = ref(false);
-    async function fetchBlocklist(type: string, handle: string): Promise<BlockReport[]> {
+    async function fetchBlocklist(type: "user" | "org", handle: string): Promise<BlockReport[]> {
         let response: ApiResponse<BlockReport[]>;
 
         if (type === "user") {
@@ -24,8 +21,6 @@ export const useBlocklistStore = defineStore("blocklist", () => {
     }
 
     return {
-        curentQuery,
-        isQueryEmpty,
         fetchBlocklist,
     };
 });

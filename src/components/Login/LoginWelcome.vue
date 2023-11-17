@@ -1,0 +1,20 @@
+<script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
+import GlobalButton from "@/components/utils/GlobalButton.vue";
+import { redirectToDiscordLogin } from "@/utils/discordRedirects";
+
+const { t } = useI18n();
+</script>
+
+<template>
+    <div>
+        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_welcomeBack") }}</h1>
+        <p class="mt-2 font-medium text-gray-500">{{ t("login_welcomeBackHelperText") }}</p>
+        <GlobalButton class="mt-8 w-full" size="full" @click="redirectToDiscordLogin()">{{ t("login_logInButton") }} </GlobalButton>
+        <GlobalButton class="mt-4 w-full" type="secondary" size="full" :disabled="true">{{ t("login_registerButton") }} </GlobalButton>
+        <p class="mt-1 text-sm font-medium text-primary-600 dark:text-red-700">{{ t("error_UnavailableFeatureBeta") }}</p>
+    </div>
+</template>
+
+<style scoped></style>

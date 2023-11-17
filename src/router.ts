@@ -4,30 +4,9 @@ import { ampli } from "@/ampli";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
-import HomeView from "./views/HomeView.vue";
+import DashboardView from "./views/DashboardView.vue";
 
 async function isUserAuthenticated(): Promise<string | boolean> {
-    const userStore = useUserStore();
-    if (!localStorage.getItem("refreshToken")) {
-        return true;
-    } else if (!userStore.isAuthenticated) {
-        try {
-            userStore.user = await userStore.fetchUser();
-            userStore.isAuthenticated = true;
-        } catch (error: any) {
-            return true;
-        }
-    }
-
-    return "/";
-}
-
-function isUserNotLinked(): string | boolean {
-    const userStore = useUserStore();
-    return userStore.isAuthenticated && !userStore.user?.rsiHandle ? true : "/";
-}
-
-async function isUserComplete(): Promise<string | boolean> {
     const userStore = useUserStore();
 
     if (!localStorage.getItem("refreshToken")) {
@@ -51,20 +30,70 @@ async function isUserComplete(): Promise<string | boolean> {
     return true;
 }
 
+async function isUserNotAuthenticated(): Promise<string | boolean> {
+    const userStore = useUserStore();
+    if (userStore.isAuthenticated && localStorage.getItem("refreshToken")) {
+        return "/";
+    } else if (localStorage.getItem("refreshToken")) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+            return "/";
+        } catch (error: any) {
+            return true;
+        }
+    }
+
+    return true;
+}
+
+async function isUserNotLinked(): Promise<string | boolean> {
+    const userStore = useUserStore();
+
+    if (!userStore.isAuthenticated && localStorage.getItem("refreshToken")) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error: any) {
+            return "/login";
+        }
+    }
+
+    return userStore.isAuthenticated && !userStore.user?.rsiHandle ? true : "/";
+}
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: "/",
-            name: "home",
-            component: HomeView,
-            beforeEnter: isUserComplete,
+            name: "dashboard",
+            component: DashboardView,
+            beforeEnter: isUserAuthenticated,
+        },
+        {
+            path: "/emergency",
+            name: "emergency",
+            component: () => import("@/views/EmergencyView.vue"),
+            beforeEnter: isUserAuthenticated,
+        },
+        {
+            path: "/blocklist",
+            name: "blocklist",
+            component: () => import("@/views/BlocklistView.vue"),
+            beforeEnter: isUserAuthenticated,
+        },
+        {
+            path: "/profile",
+            name: "profile",
+            component: () => import("@/views/ProfileView.vue"),
+            beforeEnter: isUserAuthenticated,
         },
         {
             path: "/login",
             name: "login",
             component: () => import("@/views/LoginView.vue"),
-            beforeEnter: isUserAuthenticated,
+            beforeEnter: isUserNotAuthenticated,
         },
         {
             path: "/login/link",
@@ -79,28 +108,11 @@ const router = createRouter({
             component: () => import("@/views/AuthView.vue"),
         },
         {
-            path: "/blocklist",
-            name: "blocklist",
-            component: () => import("@/views/BlocklistView.vue"),
-            beforeEnter: isUserComplete,
-        },
-        {
-            path: "/developer",
-            name: "developer",
-            component: () => import("@/views/DeveloperView.vue"),
-            beforeEnter: isUserComplete,
-        },
-        {
             path: "/:pathMatch(.*)*",
             name: "404",
-            component: () => import("@/views/404.vue"),
+            component: () => import("@/views/404View.vue"),
         },
     ],
-});
-
-router.beforeEach(() => {
-    const logicStore = useLogicStore();
-    logicStore.isRouterLoading = true;
 });
 
 router.afterEach(async () => {
@@ -112,7 +124,7 @@ router.afterEach(async () => {
             client: {
                 apiKey: import.meta.env.VITE_AMPLITUDE_KEY,
                 configuration: {
-                    appVersion: APP_VERSION,
+                    appVersion: __APP_VERSION__,
                     identityStorage: "none",
                     trackingOptions: { ipAddress: false, language: false },
                     defaultTracking: {
@@ -129,8 +141,6 @@ router.afterEach(async () => {
             "App Language": localStorage.getItem("selectedLanguage") ?? "en-US",
         });
     }
-
-    logicStore.isRouterLoading = false;
 });
 
 export default router;
