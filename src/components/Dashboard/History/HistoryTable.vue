@@ -183,8 +183,11 @@ const heightLoader = computed(() => {
                     <div class="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400 md:ml-0">
                         <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
                             <span class="font-semibold text-gray-900 dark:text-white"
-                                >{{ page * pageSize + 1 }}-<span v-if="activePage.length === 0">{{ pageSize }}</span
-                                ><span v-else>{{
+                                >{{ page * pageSize + 1 }}-<span v-if="!loaded">{{
+                                    userStore.totalNumberOfEmergencies < pageSize ? userStore.totalNumberOfEmergencies : pageSize
+                                }}</span>
+                                <span v-else-if="activePage.length === 0">0</span>
+                                <span v-else>{{
                                     page * pageSize + activePage.length > userStore.totalNumberOfEmergencies
                                         ? userStore.totalNumberOfEmergencies
                                         : page * pageSize + activePage.length
