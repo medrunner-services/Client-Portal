@@ -13,7 +13,6 @@ const { t } = useI18n();
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("user_settings") }}</h1>
         <UserSettings class="mt-6" />
         <div class="my-6 border border-gray-100"></div>
         <div>
@@ -22,33 +21,33 @@ const { t } = useI18n();
                 v-model="logicStore.isLoginAnimationAllowed"
                 :helper="t('login_helperSettingAnimation')"
                 side="right"
-                >{{ t("login_settingAnimation") }}</GlobalToggle
-            >
+                >{{ t("login_settingAnimation") }}
+            </GlobalToggle>
             <GlobalRangeSlider
                 @input-click="() => logicStore.saveAnimationSetting('loginAnimationSpeed', logicStore.loginAnimationSpeed)"
                 v-model="logicStore.loginAnimationSpeed"
                 class="mt-4"
                 :min="0"
                 :max="100"
-                >{{ t("login_settingAnimationSpeed") }}</GlobalRangeSlider
-            >
+                >{{ t("login_settingAnimationSpeed") }}
+            </GlobalRangeSlider>
             <GlobalRangeSlider
                 @input-click="() => logicStore.saveAnimationSetting('loginAnimationStarSize', logicStore.loginAnimationStarSize)"
                 v-model="logicStore.loginAnimationStarSize"
                 class="mt-4"
                 :min="0"
                 :max="100"
-                >{{ t("login_settingAnimationStarSize") }}</GlobalRangeSlider
-            >
+                >{{ t("login_settingAnimationStarSize") }}
+            </GlobalRangeSlider>
             <GlobalRangeSlider
                 @input-click="() => logicStore.saveAnimationSetting('loginAnimationGlowSize', logicStore.loginAnimationGlowSize)"
                 v-model="logicStore.loginAnimationGlowSize"
                 class="mt-4"
                 :min="0"
                 :max="100"
-                >{{ t("login_settingAnimationStarGlow") }}</GlobalRangeSlider
-            >
-            <GlobalButton class="mt-6" type="outline" @click="logicStore.resetAnimationSettings()">{{ t("login_settingReset") }}</GlobalButton>
+                >{{ t("login_settingAnimationStarGlow") }}
+            </GlobalRangeSlider>
+            <GlobalButton class="mt-6" type="outline" @click="logicStore.resetAnimationSettings()">{{ t("login_settingReset") }} </GlobalButton>
         </div>
     </div>
 </template>
