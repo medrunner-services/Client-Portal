@@ -28,11 +28,7 @@ onMounted(async () => {
 });
 
 const getSystem = computed(() => {
-    const systems: any = [];
-
-    if (locationsInformation.value.length !== 1) {
-        systems.push({ value: "", label: t("form_selectSystem"), hidden: true });
-    }
+    const systems: any = [{ value: "", label: t("form_selectSystem"), hidden: true }];
 
     if (locationsInformation.value.length !== 0) {
         locationsInformation.value.forEach((system) => {
