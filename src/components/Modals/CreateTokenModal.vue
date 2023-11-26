@@ -57,10 +57,9 @@ async function createToken() {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer :title="t('developer_tokenCreateFormTitle')" @close="emit('close')" v-slot="modalContainer">
         <div v-if="createdToken">
-            <p class="text-xl font-semibold">{{ t("developer_tokenCreateFormTitle") }}</p>
-            <p class="mt-1 text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
+            <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
 
             <div class="mt-8 flex items-center">
                 <GlobalTextAreaInput :rows="3" class="flex-grow" :disabled="true" v-model="createdToken" />
