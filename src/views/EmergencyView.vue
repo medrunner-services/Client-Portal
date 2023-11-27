@@ -74,10 +74,14 @@ onMounted(async () => {
             }
 
             if (logicStore.isNotificationGranted && updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status) {
-                new Notification(emergencyStore.getEmergencyStatusTitle(updatedEmergency.status), {
+                const notification = new Notification(emergencyStore.getEmergencyStatusTitle(updatedEmergency.status), {
                     body: emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                     icon: "/images/medrunner-logo-square.webp",
                 });
+
+                notification.onclick = () => {
+                    window.focus();
+                };
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;

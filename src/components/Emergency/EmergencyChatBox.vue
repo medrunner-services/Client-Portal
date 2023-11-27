@@ -37,6 +37,22 @@ onMounted(async () => {
             !emergencyStore.trackedEmergencyMessages.some((message) => message.id === newMessage.id)
         ) {
             emergencyStore.trackedEmergencyMessages.push(newMessage);
+
+            if (
+                logicStore.isNotificationGranted &&
+                newMessage.senderId !== userStore.user.id &&
+                !document.hasFocus() &&
+                (newMessage.contents.includes(`@${userStore.user.rsiHandle}`) || newMessage.contents.includes(`@${userStore.user.discordId}`))
+            ) {
+                const notification = new Notification(t("tracking_newMessage"), {
+                    body: replaceAtMentions(newMessage.contents, newMessage.senderId, false),
+                    icon: "/images/medrunner-logo-square.webp",
+                });
+
+                notification.onclick = () => {
+                    window.focus();
+                };
+            }
         }
     });
     ws.onreconnected(async () => {
@@ -63,19 +79,54 @@ const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
         .sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
 });
 
-function parseChatMessageString(message: string): string {
-    const htmlMessage = toHTML(message);
+function parseChatMessageString(message: ChatMessage): string {
+    const htmlMessage = toHTML(message.contents);
     const timestampDeath = htmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
     let stringTimestampDeath;
     if (timestampDeath && timestampDeath[0]) {
         stringTimestampDeath = logicStore.timestampToHours(parseInt(timestampDeath[0].substring(6)) * 1000);
     }
 
-    return htmlMessage
+    const htmlMessageParsedMentions = replaceAtMentions(htmlMessage, message.senderId, true);
+
+    return htmlMessageParsedMentions
         .replace(/&lt;|&gt;/g, "")
         .replace(/##(.*?)(?=<br>)/g, '<span style="font-weight: bold; font-size: 1.4rem;">\n$1\n</span>')
         .replace(/<u>Time(.*?)(?=<)/g, '<span style="text-decoration: underline">Time of client death:</span>')
         .replace(/&lt;t:(.*?):R&gt;/g, stringTimestampDeath ? `${stringTimestampDeath}` : "");
+}
+
+function replaceAtMentions(message: string, senderId: string, html: boolean): string {
+    const memberIdToNameMap: any = {};
+    emergencyStore.trackedEmergency.respondingTeam.allMembers.forEach((member) => {
+        memberIdToNameMap[member.discordId] = member.rsiHandle;
+    });
+
+    if (html) {
+        return message
+            .replace(
+                new RegExp(`@${userStore.user.rsiHandle}`, "g"),
+                `<span class=" p-1 font-medium ${
+                    senderId === userStore.user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"
+                } rounded-lg">@${userStore.user.rsiHandle}</span>`,
+            )
+            .replace(
+                new RegExp(`@${userStore.user.discordId}`, "g"),
+                `<span class=" p-1 font-medium ${
+                    senderId === userStore.user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"
+                } rounded-lg">@${userStore.user.rsiHandle}</span>`,
+            )
+            .replace(/@\d+/g, (match) => {
+                const memberId = match.substring(1);
+                return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
+            });
+    } else {
+        return message
+            .replace(new RegExp(`<@${userStore.user.discordId}>`, "g"), `@${userStore.user.rsiHandle}`)
+            .replace(/<@(\d+)>/g, (match, memberId) => {
+                return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
+            });
+    }
 }
 
 function getMessageAuthor(message: ChatMessage): string {
@@ -138,7 +189,7 @@ function isMessageAuthor(id: string): boolean {
                         :class="isMessageAuthor(message.senderId) ? 'self-end bg-primary-600 text-white lg:mr-6' : ''"
                     >
                         <p v-if="!isMessageAuthor(message.senderId)" class="text-sm font-bold">{{ getMessageAuthor(message) }}</p>
-                        <p class="mt-1" v-html="parseChatMessageString(message.contents)"></p>
+                        <p class="mt-1" v-html="parseChatMessageString(message)"></p>
                         <p class="mt-1 self-end text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
                     </div>
 

@@ -97,6 +97,7 @@
     "tracking_labelCancelEmergency": "請問您為何要取消?",
     "tracking_levelTier": "等級",
     "tracking_levelSection": "部分",
+    "tracking_newMessage": null,
     "error_UnavailableFeatureBeta": "由於Beta此功能無法使用",
     "error_UnavailableFeatureLaunch": "直到發布之前無法使用",
     "error_loadingHistory": "載入您的歷史紀錄時遇到錯誤",

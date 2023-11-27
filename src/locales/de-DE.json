@@ -97,6 +97,7 @@
     "tracking_labelCancelEmergency": "Warum möchten Sie abbrechen?",
     "tracking_levelTier": "Stufe",
     "tracking_levelSection": "Sektion",
+    "tracking_newMessage": null,
     "error_UnavailableFeatureBeta": "Während der Beta nicht verfügbar",
     "error_UnavailableFeatureLaunch": "Bis zur Veröffentlichung nicht verfügbar",
     "error_loadingHistory": "Beim Laden Ihres Verlaufs ist ein Fehler aufgetreten",

@@ -97,6 +97,7 @@
     "tracking_labelCancelEmergency": "Why do you want to cancel?",
     "tracking_levelTier": "Tier",
     "tracking_levelSection": "Section",
+    "tracking_newMessage": "New message",
     "error_UnavailableFeatureBeta": "Unavailable during beta",
     "error_UnavailableFeatureLaunch": "Unavailable until launch",
     "error_loadingHistory": "An error occurred loading your history",
