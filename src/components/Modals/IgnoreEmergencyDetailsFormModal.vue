@@ -15,10 +15,9 @@ function ignoreDetails() {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer :title="t('formDetailed_ignoreDetailsModalTitle')" @close="emit('close')" v-slot="modalContainer">
         <div>
-            <p class="text-xl font-semibold">{{ t("formDetailed_ignoreDetailsModalTitle") }}</p>
-            <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <p class="text-gray-500 dark:text-gray-400">
                 {{ t("formDetailed_ignoreDetailsModalSubTitle") }}
             </p>
 

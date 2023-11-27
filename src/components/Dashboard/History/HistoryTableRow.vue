@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { type Emergency, MissionStatus } from "@medrunner-services/api-client";
-import { onBeforeUnmount, onMounted, type Ref, ref } from "vue";
+import { Class, type Emergency, MissionStatus } from "@medrunner-services/api-client";
+import { computed, onBeforeUnmount, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useLogicStore } from "@/stores/logicStore";
@@ -41,10 +41,20 @@ const handleClickOutside = (event: MouseEvent) => {
 function getResponders(responders: any): string {
     let responderArray = [];
     for (const responder of responders) {
-        responderArray.push(responder.rsiHandle);
+        if (responder.class !== Class.LEAD) responderArray.push(responder.rsiHandle);
     }
     return responderArray.join(", ");
 }
+
+const teamLeader = computed(() => {
+    if (props.emergency.respondingTeam.staff.length > 0) {
+        const teamLeader = props.emergency.respondingTeam.staff.find((responder) => responder.class === Class.LEAD);
+        if (teamLeader) return teamLeader.rsiHandle;
+        else return "";
+    } else {
+        return "";
+    }
+});
 
 function getStatusColor(id: MissionStatus): string {
     switch (id) {
@@ -236,6 +246,9 @@ function getStatusColor(id: MissionStatus): string {
                     class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
                 >
                     <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_responders") }}</p>
+                    <p class="text mb-2 text-base text-gray-500 dark:text-gray-400" v-if="teamLeader">
+                        {{ teamLeader }} ({{ t("history_TeamLead") }})
+                    </p>
                     <p class="text text-base text-gray-500 dark:text-gray-400">{{ getResponders(props.emergency.respondingTeam.staff) }}</p>
                 </div>
             </div>

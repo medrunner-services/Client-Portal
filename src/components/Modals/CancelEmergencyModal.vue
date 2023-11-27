@@ -39,10 +39,9 @@ async function cancelEmergency() {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')" v-slot="modalContainer">
         <div>
-            <p class="text-xl font-semibold">{{ t("tracking_cancelEmergencyModalTitle") }}</p>
-            <p class="mt-1 text-gray-500 dark:text-gray-400">{{ t("tracking_cancelEmergencyModalSubTitle") }}</p>
+            <p class="text-gray-500 dark:text-gray-400">{{ t("tracking_cancelEmergencyModalSubTitle") }}</p>
 
             <form @submit.prevent="cancelEmergency()">
                 <GlobalSelectInput
@@ -74,7 +73,7 @@ async function cancelEmergency() {
 
                 <div class="mt-8 gap-2 lg:flex">
                     <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" :error-text="errorCancelingEmergency" icon="cancel">{{
-                        t("Cancel Emergency")
+                        t("tracking_cancelButton")
                     }}</GlobalButton>
                     <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">
                         {{ t("tracking_backCancelButton") }}</GlobalButton

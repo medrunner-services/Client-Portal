@@ -73,14 +73,15 @@ onMounted(async () => {
                 respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
             }
 
-            if (logicStore.isNotificationGranted && oldEmergencyStatus.value !== updatedEmergency.status && updatedEmergency.status !== 1) {
-                new Notification(emergencyStore.getEmergencyStatusTitle(updatedEmergency.status), {
-                    body:
-                        updatedEmergency.status === 6
-                            ? t("tracking_statusTextConfirmedCanceled")
-                            : emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+            if (logicStore.isNotificationGranted && updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status) {
+                const notification = new Notification(emergencyStore.getEmergencyStatusTitle(updatedEmergency.status), {
+                    body: emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                     icon: "/images/medrunner-logo-square.webp",
                 });
+
+                notification.onclick = () => {
+                    window.focus();
+                };
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;

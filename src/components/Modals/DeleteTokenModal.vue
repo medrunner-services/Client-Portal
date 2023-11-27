@@ -34,10 +34,9 @@ async function deleteToken(): Promise<void> {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer :title="t('developer_deleteTokenTitle')" @close="emit('close')" v-slot="modalContainer">
         <div>
-            <p class="text-xl font-semibold">{{ t("developer_deleteTokenTitle") }}</p>
-            <p class="mt-1 text-gray-500 dark:text-gray-400">
+            <p class="text-gray-500 dark:text-gray-400">
                 {{ t("developer_deleteTokenSubtitle") }}
             </p>
 

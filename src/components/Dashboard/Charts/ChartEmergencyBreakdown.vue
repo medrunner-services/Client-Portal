@@ -99,7 +99,7 @@ onMounted(() => {
 
     chartOptions.value.colors = chartColors;
     chartOptions.value.labels = chartLabels;
-    chartOptions.value.plotOptions.pie.donut.labels.total.label = t("home_totalMissions");
+    chartOptions.value.plotOptions.pie.donut.labels.total.label = t("home_totalEmergencies");
     chartSeries.value = Object.values(userStore.user.clientStats.missions);
 
     if (logicStore.darkMode) {
@@ -124,7 +124,7 @@ watch(locale, async () => {
                     donut: {
                         labels: {
                             total: {
-                                label: t("home_totalMissions"),
+                                label: t("home_totalEmergencies"),
                             },
                         },
                     },

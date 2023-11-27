@@ -157,7 +157,7 @@ const heightLoader = computed(() => {
                     <div
                         class="grid grid-cols-7 rounded-t-lg bg-gray-50 py-3 font-Mohave font-semibold uppercase text-gray-500 dark:bg-gray-700 dark:text-gray-400 md:grid-cols-10"
                     >
-                        <div class="col-span-4 col-start-2 md:col-span-3 md:col-start-2">{{ t("history_missionName") }}</div>
+                        <div class="col-span-4 col-start-2 md:col-span-3 md:col-start-2">{{ t("history_emergencyName") }}</div>
                         <div class="col-span-2">{{ t("history_date") }}</div>
                         <div class="col-span-2 hidden md:block">{{ t("history_location") }}</div>
                         <div class="col-span-2 hidden md:block">{{ t("history_status") }}</div>

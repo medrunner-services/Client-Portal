@@ -23,9 +23,8 @@ function copyUserAgent() {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" v-slot="modalContainer">
-        <p class="text-xl font-semibold">{{ t("bugReport_title") }}</p>
-        <p class="mt-1 text-gray-500 dark:text-gray-400">
+    <ModalContainer :title="t('bugReport_title')" @close="emit('close')" v-slot="modalContainer">
+        <p class="text-gray-500 dark:text-gray-400">
             {{ t("bugReport_copyUserAgent") }}
         </p>
 

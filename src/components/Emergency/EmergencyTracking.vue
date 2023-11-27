@@ -103,7 +103,7 @@ function getClassString(id: number): string {
 
             <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
                 <p class="mt-8 font-Mohave text-2xl font-bold">{{ t("tracking_responders") }}</p>
-                <p class="mt-1 text-sm font-medium">
+                <p class="mt-1 text-sm font-medium" v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3">
                     {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}% {{ t("tracking_responderSuccessRate") }}
                 </p>
 

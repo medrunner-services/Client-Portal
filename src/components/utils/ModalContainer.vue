@@ -1,5 +1,10 @@
 <script setup lang="ts">
 const emit = defineEmits(["close"]);
+export interface Props {
+    title: string;
+}
+
+const props = defineProps<Props>();
 
 document.body.style.overflow = "hidden";
 
@@ -18,7 +23,8 @@ function closeModal() {
             <div
                 class="content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg bg-white p-4 shadow dark:bg-gray-800 lg:w-1/2 2xl:w-1/3"
             >
-                <div class="w-full">
+                <div class="flex w-full justify-between">
+                    <p class="text-xl font-semibold">{{ props.title }}</p>
                     <svg
                         @click="closeModal()"
                         class="ml-auto h-3 w-3 cursor-pointer text-gray-800 dark:text-white"
@@ -36,7 +42,7 @@ function closeModal() {
                         />
                     </svg>
                 </div>
-                <div class="mt-4">
+                <div class="mt-2">
                     <slot :close="closeModal" />
                 </div>
             </div>
