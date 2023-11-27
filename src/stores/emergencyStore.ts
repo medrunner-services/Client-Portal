@@ -149,7 +149,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
             case 5:
                 return t("tracking_statusTextNoContact");
             case 6:
-                return t("tracking_statusTextCanceled");
+                return t("tracking_statusTextConfirmedCanceled");
             case 7:
                 return t("tracking_statusTextRefused");
             case 8:

@@ -73,7 +73,7 @@ async function cancelEmergency() {
 
                 <div class="mt-8 gap-2 lg:flex">
                     <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" :error-text="errorCancelingEmergency" icon="cancel">{{
-                        t("Cancel Emergency")
+                        t("tracking_cancelButton")
                     }}</GlobalButton>
                     <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
