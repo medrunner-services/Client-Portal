@@ -109,7 +109,7 @@ async function sendDetails(): Promise<void> {
                     class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 dark:text-red-700 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] xl:after:mx-10"
                 >
                     <div
-                        class="flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:block sm:after:hidden"
+                        class="flex items-center text-primary-600 after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:text-red-700 dark:after:text-gray-500 sm:block sm:after:hidden"
                     >
                         <svg
                             class="mr-2 h-4 w-4 sm:mx-auto sm:mb-2 sm:h-6 sm:w-6"
@@ -221,7 +221,7 @@ async function sendDetails(): Promise<void> {
                     ]"
                     v-model="inputCrimestat"
                     :label="t('formDetailed_crimestat')"
-                    :helper="t('Do you have CrimeStat? If yes, which level and why?')"
+                    :helper="t('formDetailed_helpCrimestat')"
                 />
 
                 <GlobalTextInput
@@ -248,7 +248,7 @@ async function sendDetails(): Promise<void> {
                 v-model="inputShip"
                 :label="t('formDetailed_ship')"
                 :placeholder="t('formDetailed_placeholderShip')"
-                :helper="t('What is the model of the ship you used to get to your position?')"
+                :helper="t('formDetailed_helpShip')"
             />
         </div>
 

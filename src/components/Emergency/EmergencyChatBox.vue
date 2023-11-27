@@ -9,10 +9,12 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
+const userStore = useUserStore();
 const logicStore = useLogicStore();
 
 const inputMessage = ref("");
@@ -81,8 +83,8 @@ function getMessageAuthor(message: ChatMessage): string {
     const teamMember = emergencyStore.trackedEmergency.respondingTeam.staff.find((staff) => staff.id === message.senderId);
     const dispatchMember = emergencyStore.trackedEmergency.respondingTeam.dispatchers.find((staff) => staff.id === message.senderId);
 
-    if (message.senderId === emergencyStore.trackedEmergency.clientId) {
-        author = emergencyStore.trackedEmergency.clientRsiHandle;
+    if (message.senderId === userStore.user.id) {
+        author = userStore.user.rsiHandle;
     } else if (teamMember) {
         author = teamMember.rsiHandle;
     } else if (dispatchMember) {
@@ -114,7 +116,7 @@ async function sendMessage() {
 }
 
 function isMessageAuthor(id: string): boolean {
-    return id === emergencyStore.trackedEmergency.clientId;
+    return id === userStore.user.id;
 }
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -54,10 +54,15 @@ async function createToken() {
         else errorCreationToken.value = t("error_generic");
     }
 }
+
+const getModalTitle = computed(() => {
+    if (createdToken.value) return t("developer_tokenCreateFormTitle");
+    else return t("developer_createTokenFormTitle");
+});
 </script>
 
 <template>
-    <ModalContainer :title="t('developer_tokenCreateFormTitle')" @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer @close="emit('close')" :title="getModalTitle" v-slot="modalContainer">
         <div v-if="createdToken">
             <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
 
@@ -95,8 +100,7 @@ async function createToken() {
         </div>
 
         <div v-else>
-            <p class="text-xl font-semibold">{{ t("developer_createTokenFormTitle") }}</p>
-            <p class="mt-1 text-gray-500 dark:text-gray-400">{{ t("developer_createTokenFormSubtitle") }}</p>
+            <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenFormSubtitle") }}</p>
 
             <form @submit.prevent="createToken()">
                 <GlobalTextInput
