@@ -20,39 +20,28 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>New UI! We refreshed the UI for a more modern and slick look.</li>
-                        <li>Added a dashboard with lots of graphs to better understand how your emergencies went.</li>
                         <li>
-                            A Service Status card was added to help you see if our emergency services are operational or not before submitting an
-                            emergency.
+                            You can now get pinged in chat! If a someone pings you with a @ symbole before your name you will see your name
+                            highlighted and receive a browser notification.
                         </li>
+                        <li>Added Chinese Traditional to the list of available languages.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>The User Profile modal was put into a dedicated page with the API Token management.</li>
-                        <li>
-                            Redesign of the emergency section in it's own page. It's is much easier to understand the forms and chat without the
-                            history section in the same page, content shifting has been greatly reduced.
-                        </li>
-                        <li>
-                            The history table was remade from the ground up making it much easier to navigate and understand the information
-                            presented. A selector to choose the number of row per pages was added for those who wants to see them all at once!
-                        </li>
-                        <li>The emergency success rate is now shown to the tenth.</li>
-                        <li>
-                            Changed the animation settings on the login screen to use sliders instead of number fields. Much more fun to play with
-                            sliders!
-                        </li>
+                        <li>Aligned the modal titles with the close icon.</li>
+                        <li>Made the team lead stand out in the emergency history.</li>
+                        <li>Restricted the responder success rate to show only when there is at least 3 responders.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Lots of bugs where corrected while refactoring our codebase for the new UI!</li>
+                        <li>Missing translations in some buttons.</li>
+                        <li>Chat messages of a user showing as "Medrunner staff" in the chat box</li>
                     </ul>
                 </div>
             </div>
