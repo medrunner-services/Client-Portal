@@ -103,11 +103,11 @@ onMounted(async () => {
 <template>
     <div class="content-container flex flex-col gap-10 lg:flex-row">
         <div class="lg:w-1/2">
-            <div v-if="errorLoadingEmergency">
+            <div v-if="errorLoadingEmergency || userStore.isBlocked">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
                 <GlobalCard class="mt-8">
                     <div class="flex w-full items-center justify-center py-24">
-                        <GlobalErrorText :text="errorLoadingEmergency" />
+                        <GlobalErrorText :text="userStore.isBlocked ? t('error_blockedUser') : errorLoadingEmergency" />
                     </div>
                 </GlobalCard>
             </div>
@@ -124,7 +124,7 @@ onMounted(async () => {
         </div>
 
         <div class="lg:w-1/2">
-            <EmergencyChatBox v-if="emergencyStore.trackedEmergency.id" />
+            <EmergencyChatBox v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked" />
             <ServiceStatus v-else />
         </div>
     </div>

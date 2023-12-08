@@ -7,6 +7,7 @@ import { api } from "@/utils/medrunnerClient";
 export const useUserStore = defineStore("user", () => {
     const user: Ref<Person> = ref({} as Person);
     const isAuthenticated = ref(false);
+    const isBlocked = ref(false);
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
@@ -86,6 +87,7 @@ export const useUserStore = defineStore("user", () => {
     return {
         user,
         isAuthenticated,
+        isBlocked,
         totalNumberOfEmergencies,
         disconnectUser,
         linkUser,

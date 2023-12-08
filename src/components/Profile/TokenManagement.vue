@@ -4,8 +4,10 @@ import { useI18n } from "vue-i18n";
 
 import TokenTable from "@/components/Profile/Token/TokenTable.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import { useUserStore } from "@/stores/userStore";
 
 const { t } = useI18n();
+const userStore = useUserStore();
 
 const displayCreateTokenModal = ref(false);
 </script>
@@ -14,7 +16,9 @@ const displayCreateTokenModal = ref(false);
     <div class="mt-10">
         <div class="flex items-center justify-between">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("developer_apiTokensTitle") }}</h2>
-            <GlobalButton icon="plus" @click="displayCreateTokenModal = true">{{ t("developer_createTokenButton") }}</GlobalButton>
+            <GlobalButton :disabled="userStore.isBlocked" icon="plus" @click="displayCreateTokenModal = true">{{
+                t("developer_createTokenButton")
+            }}</GlobalButton>
         </div>
 
         <div class="mt-4">

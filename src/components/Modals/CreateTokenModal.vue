@@ -50,7 +50,7 @@ async function createToken() {
         submittingNewToken.value = false;
 
         if (error.statusCode === 403) errorCreationToken.value = t("error_blockedUser");
-        if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
+        else if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
         else errorCreationToken.value = t("error_generic");
     }
 }

@@ -3,6 +3,7 @@ import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
@@ -21,10 +22,13 @@ function getButtonText() {
 
 <template>
     <GlobalCard>
-        <h2 class="mb-4 font-Mohave text-2xl font-semibold">{{ getTitle() }}</h2>
-        <RouterLink class="block w-full lg:w-fit" to="/emergency">
-            <GlobalButton size="full" class="w-full lg:w-fit">{{ getButtonText() }}</GlobalButton>
-        </RouterLink>
+        <GlobalErrorText v-if="userStore.isBlocked" :text="t('error_blockedUser')" />
+        <div v-else>
+            <h2 class="mb-4 font-Mohave text-2xl font-semibold">{{ getTitle() }}</h2>
+            <RouterLink class="block w-full lg:w-fit" to="/emergency">
+                <GlobalButton size="full" class="w-full lg:w-fit">{{ getButtonText() }}</GlobalButton>
+            </RouterLink>
+        </div>
     </GlobalCard>
 </template>
 

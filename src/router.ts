@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { ampli } from "@/ampli";
+import { useBlocklistStore } from "@/stores/blocklistStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
@@ -8,6 +9,7 @@ import DashboardView from "./views/DashboardView.vue";
 
 async function isUserAuthenticated(): Promise<string | boolean> {
     const userStore = useUserStore();
+    const blocklistStore = useBlocklistStore();
 
     if (!localStorage.getItem("refreshToken")) {
         return "/login";
@@ -15,6 +17,11 @@ async function isUserAuthenticated(): Promise<string | boolean> {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
+
+            if (userStore.user.rsiHandle) {
+                const blockCheck = await blocklistStore.fetchBlocklist("user", userStore.user.rsiHandle);
+                if (blockCheck.length > 0) userStore.isBlocked = true;
+            }
         } catch (error) {
             return "/login?error=generic";
         }

@@ -115,7 +115,7 @@ async function submitEmergency() {
     } catch (error: any) {
         formSubmittingEmergency.value = false;
         if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
-        if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
+        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
         else formErrorMessage.value = t("error_generic");
     }
 }

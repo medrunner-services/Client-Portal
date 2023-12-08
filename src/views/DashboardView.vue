@@ -9,13 +9,12 @@ import HistoryTable from "@/components/Dashboard/History/HistoryTable.vue";
 <template>
     <div class="content-container flex flex-col gap-10 lg:flex-row">
         <div class="lg:w-1/2">
-            <CTAEmergency class="lg:hidden" />
-            <HistoryTable class="mt-8 lg:mt-0" />
+            <CTAEmergency />
+            <HistoryTable class="mt-4" />
         </div>
 
         <div class="lg:w-1/2">
-            <CTAEmergency class="hidden lg:block" />
-            <ChartEmergencyBreakdown class="lg:mt-4" />
+            <ChartEmergencyBreakdown />
             <ChartEmergencySuccessRate class="mt-4" />
             <ChartEmergencyNumberPerWeek class="mt-4" />
         </div>

@@ -34,6 +34,7 @@ const appVersion = __APP_VERSION__;
                         <li>Aligned the modal titles with the close icon.</li>
                         <li>Made the team lead stand out in the emergency history.</li>
                         <li>Restricted the responder success rate to show only when there is at least 3 responders.</li>
+                        <li>Blocked user clearly see what they can and cannot do in the portal and have a warning message in their dashboard.</li>
                     </ul>
                 </div>
 
@@ -41,7 +42,8 @@ const appVersion = __APP_VERSION__;
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
                         <li>Missing translations in some buttons.</li>
-                        <li>Chat messages of a user showing as "Medrunner staff" in the chat box</li>
+                        <li>Chat messages of a user showing as "Medrunner staff" in the chat box.</li>
+                        <li>Duplication of emergencies in history table when changing the lines per row.</li>
                     </ul>
                 </div>
             </div>

@@ -69,8 +69,8 @@ onMounted(async () => {
     });
 });
 
-watch(pageSize, async (newPageSize) => {
-    if (loadedHistory.value.length < pageSize.value) {
+watch(pageSize, async (newPageSize, oldPageSize) => {
+    if (loadedHistory.value.length < newPageSize && loadedHistory.value.length >= oldPageSize) {
         loaded.value = false;
         await loadHistory();
     } else {
