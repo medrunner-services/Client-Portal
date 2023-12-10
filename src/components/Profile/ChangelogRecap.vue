@@ -44,6 +44,8 @@ const appVersion = __APP_VERSION__;
                         <li>Missing translations in some buttons.</li>
                         <li>Chat messages of a user showing as "Medrunner staff" in the chat box.</li>
                         <li>Duplication of emergencies in history table when changing the lines per row.</li>
+                        <li>very long words in chat messages did not break correctly.</li>
+                        <li>Time until death of client in chat message did not parse correctly.</li>
                     </ul>
                 </div>
             </div>
