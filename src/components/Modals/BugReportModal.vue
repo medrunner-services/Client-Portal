@@ -5,9 +5,7 @@ import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
-import { useLogicStore } from "@/stores/logicStore";
 
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const emit = defineEmits(["close"]);
@@ -57,12 +55,8 @@ function copyUserAgent() {
         </div>
 
         <div class="mt-8 flex flex-col items-center lg:flex-row">
-            <a
-                class="w-full lg:w-fit"
-                :href="`${logicStore.discordBaseUrl}discord.com/channels/730982567972700281/1117565276804874360`"
-                target="_blank"
-            >
-                <GlobalButton icon="link" size="full">{{ t("bugReport_goToForum") }}</GlobalButton>
+            <a class="w-full lg:w-fit" href="https://youtrack.medrunner.dev/form/338413ce-0ad3-4399-a84c-1cc299fad5d8" target="_blank">
+                <GlobalButton icon="link" size="full">{{ t("bugReport_goToBugForm") }}</GlobalButton>
             </a>
 
             <GlobalButton type="secondary" size="full" class="mt-4 w-full lg:ml-4 lg:mt-0 lg:w-fit" @click="modalContainer.close()">

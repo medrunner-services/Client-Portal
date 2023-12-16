@@ -20,31 +20,22 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>
-                            You can now get pinged in chat! If a someone pings you with a @ symbole before your name you will see your name
-                            highlighted and receive a browser notification.
-                        </li>
-                        <li>Added Chinese Traditional to the list of available languages.</li>
+                        <li>Enabled registrations! Anyone can now sign up with a discord account and link it to their RSI account.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Aligned the modal titles with the close icon.</li>
-                        <li>Made the team lead stand out in the emergency history.</li>
-                        <li>Restricted the responder success rate to show only when there is at least 3 responders.</li>
-                        <li>Blocked user clearly see what they can and cannot do in the portal and have a warning message in their dashboard.</li>
+                        <li>Added a text in the history table when a user has no past emergencies.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Missing translations in some buttons.</li>
-                        <li>Chat messages of a user showing as "Medrunner staff" in the chat box.</li>
                         <li>Duplication of emergencies in history table when changing the lines per row.</li>
-                        <li>very long words in chat messages did not break correctly.</li>
+                        <li>Very long words in chat messages did not break correctly.</li>
                         <li>Time until death of client in chat message did not parse correctly.</li>
                     </ul>
                 </div>

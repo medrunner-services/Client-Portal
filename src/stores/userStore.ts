@@ -27,11 +27,14 @@ export const useUserStore = defineStore("user", () => {
     }
 
     async function linkUser(username: string): Promise<void> {
-        const response = await api.client.linkClient(username);
+        let linkUsername = username;
+        if (username.includes("https://robertsspaceindustries.com/citizens/")) {
+            linkUsername = username.replace(/.*\/citizens\/([^/]+)\/?.*/, "$1");
+        }
 
-        if (response.success && response.data) {
-            user.value.rsiHandle = response.data?.rsiHandle;
-        } else {
+        const response = await api.client.linkClient(linkUsername);
+
+        if (!response.success) {
             throw response;
         }
     }

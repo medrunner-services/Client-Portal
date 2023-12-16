@@ -165,8 +165,11 @@ const heightLoader = computed(() => {
                     <div v-if="errorLoadingHistory" class="flex h-[14.063rem] w-full items-center justify-center">
                         <GlobalErrorText :text="errorLoadingHistory" />
                     </div>
-                    <div v-else-if="loaded" ref="parentRowsDiv">
+                    <div v-else-if="loaded && activePage.length > 0" ref="parentRowsDiv">
                         <HistoryTableRow v-for="emergency in activePage" :emergency="emergency" :key="emergency.id" :parent-div="parentRowsDiv" />
+                    </div>
+                    <div v-else-if="loaded && activePage.length === 0" class="flex h-[14.063rem] w-full items-center justify-center">
+                        <p>{{ t("home_noEmergencies") }}</p>
                     </div>
                     <div v-else class="flex w-full items-center justify-center" :style="{ height: heightLoader }">
                         <GlobalLoader width="w-8" height="h-8" text-size="text-md" spacing="mb-4" />

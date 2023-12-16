@@ -28,6 +28,7 @@ async function updateUsername() {
         try {
             if (inputUsername.value) {
                 await userStore.linkUser(inputUsername.value);
+                userStore.user.rsiHandle = inputUsername.value;
             }
 
             isEditingUsername.value = false;

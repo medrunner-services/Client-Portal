@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import router from "@/router";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
+const router = useRouter();
 const isIdCopied = ref(false);
 const waitingForApi = ref(false);
 const formUsername = ref("");
@@ -36,15 +37,19 @@ const submittingLinkForm = async (): Promise<void> => {
 
     try {
         await userStore.linkUser(formUsername.value);
+        userStore.user.rsiHandle = formUsername.value;
         await router.push("/");
     } catch (error: any) {
         if (error.statusCode === 451) formErrorMessage.value = t("error_blockedUser");
         else if (error.statusCode === 403) formErrorMessage.value = t("error_noIdRsiBio");
         else if (error.statusCode === 404) formErrorMessage.value = t("error_unknownRsiAccount");
+        else if (error.statusCode === 409) formErrorMessage.value = t("error_rsiAccountLinked");
+        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
+        else if (error.statusCode === 503) formErrorMessage.value = t("error_externalAuthServiceDown");
         else formErrorMessage.value = t("error_generic");
-
-        waitingForApi.value = false;
     }
+
+    waitingForApi.value = false;
 };
 </script>
 

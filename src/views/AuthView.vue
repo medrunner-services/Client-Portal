@@ -39,33 +39,31 @@ onMounted(async () => {
         } catch (error: any) {
             await router.push("/login?error=generic");
         }
-    }
-    // else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
-    //     try {
-    //         const response = await fetch(
-    //             `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
-    //                 import.meta.env.VITE_CALLBACK_URL
-    //             }/auth/register`,
-    //         );
-    //
-    //         if (response.ok) {
-    //             const responseBody = await response.json();
-    //
-    //             console.log("setting refresh token to local storage");
-    //             localStorage.setItem("refreshToken", responseBody.refreshToken);
-    //             await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
-    //             await initializeWebsocket();
-    //
-    //             await router.push("/login/link");
-    //         } else {
-    //             if (response.status === 409) await router.push("/login?error=accountKnown");
-    //             else await router.push("/login?error=generic");
-    //         }
-    //     } catch (error: any) {
-    //         await router.push("/login?error=generic");
-    //     }
-    // }
-    else {
+    } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
+                    import.meta.env.VITE_CALLBACK_URL
+                }/auth/register`,
+            );
+
+            if (response.ok) {
+                const responseBody = await response.json();
+
+                console.log("setting refresh token to local storage");
+                localStorage.setItem("refreshToken", responseBody.refreshToken);
+                await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+                await initializeWebsocket();
+
+                await router.push("/login/link");
+            } else {
+                if (response.status === 409) await router.push("/login?error=accountKnown");
+                else await router.push("/login?error=generic");
+            }
+        } catch (error: any) {
+            await router.push("/login?error=generic");
+        }
+    } else {
         await router.push("/login");
     }
 });
