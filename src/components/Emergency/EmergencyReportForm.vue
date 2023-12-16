@@ -179,6 +179,16 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 />
             </div>
 
+            <p class="mt-6 rounded-lg bg-gray-100 p-4 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                {{ t("emergency_termsOfService").split("~")[0] }}
+                <a
+                    class="text-gray-900 underline underline-offset-2 dark:text-gray-100"
+                    href="https://www.medrunner.space/terms-of-service"
+                    target="_blank"
+                    >{{ t("login_termsOfService").split("~")[1] }}.</a
+                >
+            </p>
+
             <GlobalButton class="mt-8" :submit="true" :error-text="formErrorMessage" :loading="formSubmittingEmergency">{{
                 t("form_reportEmergency")
             }}</GlobalButton>

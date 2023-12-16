@@ -31,6 +31,7 @@
     "form_helpLocation": "The nearest location to where you are stranded",
     "form_selectALocation": "Select a location",
     "form_selectSystem": "Select a system",
+    "emergency_termsOfService": "By submitting an emergency you agree with the~Terms of Service",
     "tracking_messageReceived": "Message received",
     "tracking_helpOnTheWay": "Help is on the way",
     "tracking_operationSuccessful": "Operation successful",

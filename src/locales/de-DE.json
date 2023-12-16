@@ -31,6 +31,7 @@
     "form_helpLocation": "Der nächstgelegene Ort, an dem Sie gestrandet sind",
     "form_selectALocation": "Standort auswählen",
     "form_selectSystem": "System auswählen",
+    "emergency_termsOfService": null,
     "tracking_messageReceived": "Nachricht erhalten",
     "tracking_helpOnTheWay": "Hilfe ist unterwegs",
     "tracking_operationSuccessful": "Einsatz erfolgreich",
