@@ -189,7 +189,7 @@ function isMessageAuthor(id: string): boolean {
                         :class="isMessageAuthor(message.senderId) ? 'self-end bg-primary-600 text-white lg:mr-6' : ''"
                     >
                         <p v-if="!isMessageAuthor(message.senderId)" class="text-sm font-bold">{{ getMessageAuthor(message) }}</p>
-                        <p class="mt-1 break-all" v-html="parseChatMessageString(message)"></p>
+                        <p class="mt-1 break-words" v-html="parseChatMessageString(message)"></p>
                         <p class="mt-1 self-end text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
                     </div>
 

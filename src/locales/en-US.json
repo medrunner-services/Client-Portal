@@ -204,7 +204,7 @@
     "navbar_home": "Home",
     "navbar_profile": "My Profile",
     "bugReport_title": "Found a bug?",
-    "bugReport_copyUserAgent": "If you’ve noticed a bug, please report it threw this form, and add the text below to give us more context.",
+    "bugReport_copyUserAgent": "If you’ve noticed a bug, please report it through this form, and add the text below to give us more context.",
     "bugReport_goToBugForm": "Fill out the form",
     "developer_apiTokensTitle": "API Tokens",
     "developer_createTokenButton": "Create Token",
