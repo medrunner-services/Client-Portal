@@ -50,7 +50,6 @@ onMounted(async () => {
             if (response.ok) {
                 const responseBody = await response.json();
 
-                console.log("setting refresh token to local storage");
                 localStorage.setItem("refreshToken", responseBody.refreshToken);
                 await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
                 await initializeWebsocket();

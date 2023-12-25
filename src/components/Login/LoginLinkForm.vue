@@ -7,6 +7,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
@@ -37,7 +38,10 @@ const submittingLinkForm = async (): Promise<void> => {
 
     try {
         await userStore.linkUser(formUsername.value);
-        userStore.user.rsiHandle = formUsername.value;
+
+        await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+        await initializeWebsocket();
+
         await router.push("/");
     } catch (error: any) {
         if (error.statusCode === 451) formErrorMessage.value = t("error_blockedUser");
@@ -85,7 +89,7 @@ const submittingLinkForm = async (): Promise<void> => {
             </svg>
         </div>
 
-        <form class="mt-10" @submit.prevent="submittingLinkForm()">
+        <form class="mt-10" @submit.prevent="submittingLinkForm()" autocomplete="off">
             <GlobalTextInput
                 v-model="formUsername"
                 :label="t('login_starCitizenUsername')"

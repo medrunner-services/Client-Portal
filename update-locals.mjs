@@ -8,33 +8,49 @@ dotenv.config({ path: '.env.development' });
 
 
 const downloadLocals = async () => {
-	const response = await fetch('https://crowdin.com/api/v2/projects/595793/bundles/7/exports', {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
-		}
-	});
+    console.log('📦 Generating bundle...');
+    let responseBundle;
+    let responseDownload;
+    try {
+        responseBundle = await fetch('https://crowdin.com/api/v2/projects/595793/bundles/7/exports', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
+            }
+        });
+    } catch (e) {
+        console.log('❌ Error generating bundle');
+        throw new Error(e);
+    }
 
-	const parsedResponse = await response.json();
+	const parsedResponse = await responseBundle.json();
 
 	await new Promise(resolve => setTimeout(resolve, 5000))
 
-	const responseDownload = await fetch(`https://crowdin.com/api/v2/projects/595793/bundles/7/exports/${parsedResponse.data.identifier}/download`, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-			"Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
-		}
-	});
+    try {
+        console.log('🛜 Downloading translations...');
+        responseDownload = await fetch(`https://crowdin.com/api/v2/projects/595793/bundles/7/exports/${parsedResponse.data.identifier}/download`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
+            }
+        });
+    } catch (e) {
+        console.log('❌ Error downloading translations');
+        throw new Error(e);
+    }
+
 
 	const parsedResponseDownload = await responseDownload.json();
 	const responseFile = await fetch(parsedResponseDownload.data.url)
 
 	await new Promise((resolve, reject) => {
+        console.log('💾 Saving translations...');
 		pipeline(responseFile.body, fs.createWriteStream('src/locales/newLocales.zip'), (err) => {
 			if (err) {
-				console.log('Error saving: ' + err)
+                console.log('❌ Error saving');
 				reject(err);
 			} else {
 				resolve();
@@ -43,9 +59,10 @@ const downloadLocals = async () => {
 	});
 
 	await new Promise((resolve, reject) => {
+        console.log('⛏️ Extracting translations...');
 		yauzl.open('src/locales/newLocales.zip', {lazyEntries: true}, (err, zipfile) => {
 			if (err) {
-				console.log('Error extracting: ' + err)
+                console.log('❌ Error extracting');
 				reject(err);
 				return;
 			}
@@ -73,7 +90,7 @@ const downloadLocals = async () => {
 			});
 
 			zipfile.on('error', (err) => {
-				console.log('Error extracting: ' + err)
+                console.log('❌ Error extracting');
 				reject(err);
 			});
 		});
@@ -82,4 +99,4 @@ const downloadLocals = async () => {
 	await fs.unlinkSync('src/locales/newLocales.zip')
 }
 
-downloadLocals().then(() => console.log('🚀 Done'))
+downloadLocals().then(() => console.log('🚀 Done!'))

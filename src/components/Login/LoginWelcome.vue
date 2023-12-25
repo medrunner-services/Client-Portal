@@ -15,7 +15,6 @@ const { t } = useI18n();
         <GlobalButton class="mt-4 w-full" type="secondary" size="full" @click="redirectToDiscordRegister()"
             >{{ t("login_registerButton") }}
         </GlobalButton>
-        <!--        <p class="mt-1 text-sm font-medium text-primary-600 dark:text-red-700">{{ t("error_UnavailableFeatureBeta") }}</p>-->
     </div>
 </template>
 

@@ -31,7 +31,7 @@
     "form_helpLocation": "您所被困最近的星球",
     "form_selectALocation": "請選擇地點",
     "form_selectSystem": "選擇星系",
-    "emergency_termsOfService": null,
+    "emergency_termsOfService": "發送後就會代表您已同意~服務條款。",
     "tracking_messageReceived": "收到訊息",
     "tracking_helpOnTheWay": "救援已在路上",
     "tracking_operationSuccessful": "行動成功",

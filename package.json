@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepush": "run-p lint format type-check",
-    "update-locals": "node update-locals.mjs"
+    "update-locals": "node --env-file=.env update-locals.mjs"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.3.3",
