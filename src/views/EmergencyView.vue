@@ -106,7 +106,7 @@ onMounted(async () => {
             <div v-if="errorLoadingEmergency || userStore.isBlocked">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
                 <GlobalCard class="mt-8">
-                    <div class="flex w-full items-center justify-center py-24">
+                    <div class="flex w-full items-center justify-center py-[4.65rem]">
                         <GlobalErrorText :text="userStore.isBlocked ? t('error_blockedUser') : errorLoadingEmergency" />
                     </div>
                 </GlobalCard>

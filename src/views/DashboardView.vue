@@ -1,15 +1,20 @@
 <script setup lang="ts">
+import BlockedUserCTA from "@/components/Dashboard/BlockedUserCTA.vue";
 import ChartEmergencyBreakdown from "@/components/Dashboard/Charts/ChartEmergencyBreakdown.vue";
 import ChartEmergencyNumberPerWeek from "@/components/Dashboard/Charts/ChartEmergencyNumberPerWeek.vue";
 import ChartEmergencySuccessRate from "@/components/Dashboard/Charts/ChartEmergencySuccessRate.vue";
 import CTAEmergency from "@/components/Dashboard/CTAEmergency.vue";
 import HistoryTable from "@/components/Dashboard/History/HistoryTable.vue";
+import { useUserStore } from "@/stores/userStore";
+
+const userStore = useUserStore();
 </script>
 
 <template>
     <div class="content-container flex flex-col gap-10 lg:flex-row">
         <div class="lg:w-1/2">
-            <CTAEmergency />
+            <BlockedUserCTA v-if="userStore.isBlocked" />
+            <CTAEmergency v-else />
             <HistoryTable class="mt-4" />
         </div>
 

@@ -47,7 +47,7 @@ const submittingLinkForm = async (): Promise<void> => {
         if (error.statusCode === 451) formErrorMessage.value = t("error_blockedUser");
         else if (error.statusCode === 403) formErrorMessage.value = t("error_noIdRsiBio");
         else if (error.statusCode === 404) formErrorMessage.value = t("error_unknownRsiAccount");
-        else if (error.statusCode === 409) formErrorMessage.value = t("error_rsiAccountLinked");
+        else if (error.statusCode === 409) formErrorMessage.value = t("error_rsiNewAccountLinked");
         else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
         else if (error.statusCode === 503) formErrorMessage.value = t("error_externalAuthServiceDown");
         else formErrorMessage.value = t("error_generic");
