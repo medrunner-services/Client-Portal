@@ -186,6 +186,8 @@
     "home_blockedText": "To appeal this decision, please join our official discord server and open a Moderation support ticket. If you have been banned from our discord server and are unable to join, you may submit an appeal in our ban appeal discord server.",
     "home_medrunnerDiscord": "Medrunner Discord",
     "home_banAppealDiscord": "Ban appeal Discord",
+    "home_statusDisrupted": "Services are degraded",
+    "home_statusDown": "Services are down",
     "login_logInButton": "Log in with Discord",
     "login_registerButton": "Register with Discord",
     "login_welcomeBack": "Welcome back",

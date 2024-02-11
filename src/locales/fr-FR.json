@@ -186,6 +186,8 @@
     "home_blockedText": "Pour faire appel de cette décision, veuillez rejoindre notre serveur discord officiel et ouvrir un ticket d'assistance à la modération. Si vous avez été banni de notre serveur discord et que vous ne pouvez pas le rejoindre, vous pouvez faire appel sur notre serveur discord d'appel de bannissement.",
     "home_medrunnerDiscord": "Discord Medrunner",
     "home_banAppealDiscord": "Discord d'appel de bannissement",
+    "home_statusDisrupted": "Les services sont dégradés",
+    "home_statusDown": "Les services sont en panne",
     "login_logInButton": "Connexion avec Discord",
     "login_registerButton": "S'inscrire avec Discord",
     "login_welcomeBack": "Bienvenue",

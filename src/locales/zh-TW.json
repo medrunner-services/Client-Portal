@@ -186,6 +186,8 @@
     "home_blockedText": null,
     "home_medrunnerDiscord": null,
     "home_banAppealDiscord": null,
+    "home_statusDisrupted": null,
+    "home_statusDown": null,
     "login_logInButton": "使用Discord登入",
     "login_registerButton": "使用Discord註冊",
     "login_welcomeBack": "歡迎回來",
