@@ -12,7 +12,7 @@ enum Status {
     Down = "DOWN",
 }
 
-const status: Ref<Status> = ref(Status.Operational);
+const status: Ref<Status> = ref(Status.Degraded);
 </script>
 
 <template>
