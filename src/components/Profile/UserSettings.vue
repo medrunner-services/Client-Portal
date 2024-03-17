@@ -82,7 +82,10 @@ function updateAnalytics(): void {
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_settings") }}</h2>
+        <div class="min-h-11">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_settings") }}</h2>
+        </div>
+
         <GlobalCard class="mt-4 flex flex-col items-center justify-center">
             <div class="w-full">
                 <GlobalToggle

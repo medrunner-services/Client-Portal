@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ResponseRating } from "@medrunner-services/api-client";
+import { MissionStatus, ResponseRating } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -35,7 +35,9 @@ async function rateEmergency(): Promise<void> {
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
+        <div class="min-h-11">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
+        </div>
 
         <GlobalCard class="mt-8">
             <p class="font-Mohave text-3xl font-bold">
@@ -43,7 +45,11 @@ async function rateEmergency(): Promise<void> {
             </p>
             <p class="mt-1 font-medium">{{ emergencyStore.getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
 
-            <form v-if="[3, 4].includes(emergencyStore.trackedEmergency.status)" @submit.prevent="rateEmergency" class="mt-10">
+            <form
+                v-if="[MissionStatus.SUCCESS, MissionStatus.FAILED].includes(emergencyStore.trackedEmergency.status)"
+                @submit.prevent="rateEmergency"
+                class="mt-10"
+            >
                 <GlobalSelectInput
                     :options="[
                         { value: undefined, label: t('tracking_selectRating'), hidden: true },

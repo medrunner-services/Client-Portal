@@ -1,23 +1,34 @@
 <script setup lang="ts">
 import type { ChatMessage, Person, TeamMember } from "@medrunner-services/api-client";
 import { toHTML } from "discord-markdown";
+import DOMPurify from "dompurify";
 import { computed, type ComputedRef, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { replaceAtMentions } from "@/utils/stringUtils";
 
 export interface Props {
     messages: ChatMessage[];
     emergencyMembers: TeamMember[];
+    errorLoadingAdditionalMessages?: string;
+    keepScrollPosition?: boolean;
     user: Person;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    keepScrollPosition: false,
+});
+const emit = defineEmits<{
+    loadNewMessages: [];
+}>();
+
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const chatBox: Ref<HTMLDivElement | null> = ref(null);
+const distanceFromBottom = ref(0);
 
 onMounted(async () => {
     if (chatBox.value) {
@@ -25,11 +36,22 @@ onMounted(async () => {
 
         const observer = new MutationObserver(() => {
             if (chatBox.value) {
-                chatBox.value.scrollTop = chatBox.value.scrollHeight;
+                if (props.keepScrollPosition) {
+                    chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
+                } else {
+                    chatBox.value.scrollTop = chatBox.value.scrollHeight;
+                }
             }
         });
 
         observer.observe(chatBox.value, { childList: true, subtree: true });
+
+        chatBox.value.addEventListener("scroll", function () {
+            if (chatBox.value?.scrollTop === 0) {
+                distanceFromBottom.value = chatBox.value.scrollHeight - chatBox.value.scrollTop;
+                emit("loadNewMessages");
+            }
+        });
     }
 });
 
@@ -39,13 +61,14 @@ const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
 
 function parseChatMessageString(message: ChatMessage): string {
     const htmlMessage = toHTML(message.contents);
-    const timestampDeath = htmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
+    let sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
+    const timestampDeath = sanitizedHtmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
     let stringTimestampDeath;
     if (timestampDeath && timestampDeath[0]) {
         stringTimestampDeath = logicStore.timestampToHours(parseInt(timestampDeath[0].substring(6)) * 1000);
     }
 
-    const htmlMessageParsedMentions = replaceAtMentions(htmlMessage, message.senderId, true, props.emergencyMembers, props.user);
+    const htmlMessageParsedMentions = replaceAtMentions(sanitizedHtmlMessage, message.senderId, true, props.emergencyMembers, props.user);
 
     return htmlMessageParsedMentions
         .replace(/&lt;|&gt;/g, "")
@@ -72,17 +95,71 @@ function getMessageAuthor(message: ChatMessage): string {
 function isMessageAuthor(id: string): boolean {
     return id === props.user.id;
 }
+
+function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
+    if (sortedMessages.value.length <= 1) return false;
+    else {
+        const prevMessage = sortedMessages.value[index - 1];
+        const nextMessage = sortedMessages.value[index + 1];
+        const currentMessage = sortedMessages.value[index];
+
+        if (index === 0) {
+            if (nextMessage && currentMessage.senderId === nextMessage.senderId) return "top";
+            else return false;
+        } else {
+            if (prevMessage && nextMessage && currentMessage.senderId !== prevMessage.senderId && currentMessage.senderId === nextMessage.senderId)
+                return "top";
+
+            if (prevMessage && nextMessage && currentMessage.senderId === prevMessage.senderId && currentMessage.senderId === nextMessage.senderId)
+                return "middle";
+
+            if (prevMessage && currentMessage.senderId === prevMessage.senderId && (!nextMessage || currentMessage.senderId !== nextMessage.senderId))
+                return "bottom";
+            else return false;
+        }
+    }
+}
+
+function messageClasses(messageIndex: number, senderId: string): string {
+    let classes: string[] = [];
+
+    if (isMessageAuthor(senderId)) {
+        classes.push("self-end bg-primary-600 text-white lg:mr-6");
+
+        if (isMessageChain(messageIndex) === "top") classes.push("mt-4 pt-1 rounded-br");
+        else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
+        else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-0 pt-1 rounded-tr");
+        else classes.push("mt-4 pt-2");
+    } else {
+        if (isMessageChain(messageIndex) === "top") classes.push("mt-4 pt-2 rounded-bl");
+        else if (isMessageChain(messageIndex) === "middle") classes.push("mt-1 pt-1 rounded-l");
+        else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-1 pt-1 rounded-tl");
+        else classes.push("mt-4 pt-2");
+    }
+
+    return classes.join(" ");
+}
 </script>
 
 <template>
     <div id="chatBox" ref="chatBox" class="flex h-[45vh] flex-col overflow-y-scroll">
+        <GlobalErrorText class="flex justify-center py-4" v-if="props.errorLoadingAdditionalMessages" :text="props.errorLoadingAdditionalMessages" />
+        <div class="relative top-1/2" v-if="messages.length === 0">
+            <p class="text-center">{{ t("history_chatTranscriptEmpty") }}</p>
+        </div>
         <div
-            v-for="message in sortedMessages"
+            v-else
+            v-for="(message, index) in sortedMessages"
             :key="message.id"
-            class="mt-4 flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 pt-2 first:mt-0 dark:border-gray-700 lg:px-4"
-            :class="isMessageAuthor(message.senderId) ? 'self-end bg-primary-600 text-white lg:mr-6' : ''"
+            class="flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
+            :class="messageClasses(index, message.senderId)"
         >
-            <p v-if="!isMessageAuthor(message.senderId)" class="text-sm font-bold">{{ getMessageAuthor(message) }}</p>
+            <p
+                v-if="!isMessageAuthor(message.senderId) && (!isMessageChain(index) || isMessageChain(index) === 'top')"
+                class="text-sm font-bold text-gray-900 dark:text-gray-50"
+            >
+                {{ getMessageAuthor(message) }}
+            </p>
             <p class="mt-1 break-words" v-html="parseChatMessageString(message)"></p>
             <p class="mt-1 self-end text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
         </div>

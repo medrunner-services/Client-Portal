@@ -80,7 +80,7 @@ const selectInputClasses = computed(() => {
             :disabled="props.disabled"
             :required="props.required"
             v-model="value"
-            class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            class="block w-full cursor-pointer border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
         >
             <option

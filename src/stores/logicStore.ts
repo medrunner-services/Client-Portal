@@ -22,9 +22,9 @@ export const useLogicStore = defineStore("logic", () => {
 
     const medrunnerLogoUrl = computed(() => {
         if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
-            return "/images/medrunner-logo-dev.webp";
+            return "/images/medrunner-logo-dev.svg";
         } else {
-            return "/images/medrunner-logo-beta.webp";
+            return "/images/medrunner-logo-beta.svg";
         }
     });
 
@@ -126,10 +126,36 @@ export const useLogicStore = defineStore("logic", () => {
     }
 
     function timestampToHours(timestamp: number | string): string {
-        return new Date(timestamp).toLocaleTimeString(locale.value, {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+        const now = new Date();
+        const date = new Date(timestamp);
+
+        if (now.getFullYear() === date.getFullYear()) {
+            if (now.getMonth() === date.getMonth() && now.getDate() === date.getDate()) {
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                });
+            } else {
+                return date
+                    .toLocaleDateString(locale.value, {
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                    })
+                    .replace(",", "");
+            }
+        } else {
+            return date
+                .toLocaleDateString(locale.value, {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })
+                .replace(",", "");
+        }
     }
 
     function timestampToDate(timestamp: number | string): string {

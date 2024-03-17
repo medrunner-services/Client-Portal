@@ -187,17 +187,22 @@ const heightLoader = computed(() => {
                         <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
                             <span class="font-semibold text-gray-900 dark:text-white"
                                 >{{ activePage.length === 0 ? 0 : page * pageSize + 1 }}-<span v-if="!loaded">{{
-                                    userStore.totalNumberOfEmergencies < pageSize ? userStore.totalNumberOfEmergencies : pageSize
+                                    userStore.totalNumberOfEmergencies < pageSize
+                                        ? userStore.totalNumberOfEmergencies
+                                        : page * pageSize + activePage.length
                                 }}</span>
                                 <span v-else-if="activePage.length === 0">0</span>
-                                <span v-else>{{
+                                <span v-else-if="userStore.totalNumberOfEmergencies >= loadedHistory.length">{{
                                     page * pageSize + activePage.length > userStore.totalNumberOfEmergencies
                                         ? userStore.totalNumberOfEmergencies
                                         : page * pageSize + activePage.length
-                                }}</span></span
+                                }}</span
+                                ><span v-else>{{ page * pageSize + activePage.length }}</span></span
                             >
                             {{ t("history_of") }}
-                            <span class="font-semibold text-gray-900 dark:text-white">{{ userStore.totalNumberOfEmergencies }}</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">{{
+                                userStore.totalNumberOfEmergencies >= loadedHistory.length ? userStore.totalNumberOfEmergencies : loadedHistory.length
+                            }}</span>
                         </p>
                     </div>
                 </div>

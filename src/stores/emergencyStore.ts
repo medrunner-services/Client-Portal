@@ -5,6 +5,7 @@ import type {
     CreateEmergencyRequest,
     Emergency,
     LocationDetail,
+    PaginatedResponse,
     ResponseRating,
     TeamDetailsResponse,
 } from "@medrunner-services/api-client";
@@ -91,11 +92,11 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function fetchChatHistory(id: string): Promise<ChatMessage[]> {
-        const response = await api.chatMessage.getHistory(id, 50);
+    async function fetchChatHistory(id: string, token?: string): Promise<PaginatedResponse<ChatMessage>> {
+        const response = await api.chatMessage.getHistory(id, 50, token);
 
         if (response.success && response.data) {
-            return response.data.data;
+            return response.data;
         } else {
             throw response;
         }

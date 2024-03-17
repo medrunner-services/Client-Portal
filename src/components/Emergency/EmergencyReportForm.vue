@@ -102,11 +102,6 @@ async function submitEmergency() {
 
         userStore.user.activeEmergency = response.id;
 
-        await emergencyStore.sendEmergencyMessage({
-            emergencyId: response.id,
-            contents: "This emergency was submitted via the __**Client Portal**__",
-        });
-
         formSubmittingEmergency.value = false;
         inputSystem.value = "Stanton";
         inputPlanet.value = "";
@@ -128,7 +123,9 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_emergency") }}</h2>
+        <div class="min-h-11">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_emergency") }}</h2>
+        </div>
 
         <form class="mt-8" @submit.prevent="submitEmergency()">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">

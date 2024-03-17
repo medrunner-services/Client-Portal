@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TeamMember } from "@medrunner-services/api-client";
+import { Class, type TeamMember } from "@medrunner-services/api-client";
 import { Level } from "@medrunner-services/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -17,6 +17,8 @@ const { t } = useI18n();
 
 const emit = defineEmits(["sendNewDetails"]);
 const displayCancelEmergencyModal = ref(false);
+const showMissionDebugInfo = ref(false);
+const isEmergencyIDCopied = ref(false);
 
 function responderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
     const transformedObj: Record<number, TeamMember[]> = {};
@@ -42,29 +44,37 @@ function getResponderLevel(id: string): Level | undefined {
     }
 }
 
-function getClassString(id: number): string {
-    switch (id) {
-        case 1:
+function getClassString(userClass: Class): string {
+    switch (userClass) {
+        case Class.MEDIC:
             return t("tracking_classMedic");
-        case 2:
+        case Class.SECURITY:
             return t("tracking_classSecurity");
-        case 3:
+        case Class.PILOT:
             return t("tracking_classPilot");
-        case 4:
+        case Class.LEAD:
             return t("tracking_classLead");
-        case 9:
+        case Class.QRF:
             return t("tracking_classQRF");
 
         default:
             return t("tracking_classOthers");
     }
 }
+
+async function addTextToClipboard(text: string) {
+    await navigator.clipboard.writeText(text);
+    isEmergencyIDCopied.value = true;
+    setTimeout(() => {
+        isEmergencyIDCopied.value = false;
+    }, 2000);
+}
 </script>
 
 <template>
     <div>
         <div>
-            <div class="flex items-center">
+            <div class="flex min-h-11 items-center">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
                 <span class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
                     <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
@@ -90,7 +100,7 @@ function getClassString(id: number): string {
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
 
-                <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
+                <div v-if="emergencyStore.trackedEmergency.tertiaryLocation" class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("form_location") }}</p>
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
                 </div>
@@ -114,15 +124,60 @@ function getClassString(id: number): string {
                         :key="responderClass[0].class"
                     >
                         <div class="flex gap-2">
-                            <img :src="`/icons/classIcon_${responderClass[0].class}.png`" alt="Class icon" class="h-7 w-7" />
+                            <img :src="`/icons/classIcon_${responderClass[0].class}.svg`" alt="Class icon" class="h-7 w-7" />
                             <p class="text-lg font-semibold">{{ getClassString(responderClass[0].class) }}</p>
                         </div>
 
                         <ul class="mt-2 list-none">
-                            <li v-for="responder in responderClass" :key="responder.discordId" class="mt-1">
+                            <li v-for="responder in responderClass" :key="responder.id" class="mt-1">
                                 <EmergencyResponderStaffName :name="responder.rsiHandle" :level="getResponderLevel(responder.id)" />
                             </li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <p class="cursor-pointer text-sm text-gray-500 underline dark:text-gray-400" @click="showMissionDebugInfo = !showMissionDebugInfo">
+                    {{ showMissionDebugInfo ? t("history_lessInfo") : t("history_moreInfo") }}
+                </p>
+
+                <div v-if="showMissionDebugInfo" class="mt-2 h-fit rounded-lg border border-gray-200 px-4 py-2.5 dark:border-gray-700">
+                    <div class="flex gap-1 text-xs text-gray-500 dark:text-gray-400">
+                        <p class="font-medium">{{ t("tracking_emergencyID") }}</p>
+
+                        <div
+                            class="flex cursor-pointer gap-1"
+                            @click="addTextToClipboard(emergencyStore.trackedEmergency.id)"
+                            :title="t('tracking_ClickToCopy')"
+                        >
+                            <p>
+                                {{ emergencyStore.trackedEmergency.id }}
+                            </p>
+
+                            <svg
+                                v-if="!isEmergencyIDCopied"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                class="h-4 w-4"
+                            >
+                                <path
+                                    d="M5.5 3.5A1.5 1.5 0 0 1 7 2h2.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 1 .439 1.061V9.5A1.5 1.5 0 0 1 12 11V8.621a3 3 0 0 0-.879-2.121L9 4.379A3 3 0 0 0 6.879 3.5H5.5Z"
+                                />
+                                <path
+                                    d="M4 5a1.5 1.5 0 0 0-1.5 1.5v6A1.5 1.5 0 0 0 4 14h5a1.5 1.5 0 0 0 1.5-1.5V8.621a1.5 1.5 0 0 0-.44-1.06L7.94 5.439A1.5 1.5 0 0 0 6.878 5H4Z"
+                                />
+                            </svg>
+
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
+                                <path
+                                    fill-rule="evenodd"
+                                    d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                    clip-rule="evenodd"
+                                />
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>

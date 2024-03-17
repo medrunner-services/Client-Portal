@@ -31,7 +31,8 @@ onMounted(async () => {
                 await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
                 await initializeWebsocket();
 
-                await router.push("/");
+                if (route.query.state) await router.push(decodeURIComponent(route.query.state as string));
+                else await router.push("/");
             } else {
                 if (response.status === 401) await router.push("/login?error=accountUnknown");
                 else await router.push("/login?error=generic");

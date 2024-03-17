@@ -25,9 +25,6 @@ const showBugReportModal = ref(false);
             <li class="ml-5">
                 <RouterLink to="/emergency">{{ t("navbar_emergency") }}</RouterLink>
             </li>
-            <li class="ml-5">
-                <RouterLink to="/blocklist">{{ t("navbar_blocklist") }}</RouterLink>
-            </li>
         </ul>
 
         <div class="flex items-center">

@@ -8,15 +8,14 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
+import { sendBrowserNotification } from "@/utils/notificationFunctions";
 import { replaceAtMentions } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 
 const inputMessage = ref("");
 const sendingMessage = ref(false);
@@ -25,7 +24,7 @@ const errorLoadingMessages = ref("");
 
 onMounted(async () => {
     try {
-        emergencyStore.trackedEmergencyMessages = await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id);
+        emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
     } catch (error) {
         errorLoadingMessages.value = t("error_generic");
     }
@@ -38,30 +37,23 @@ onMounted(async () => {
             emergencyStore.trackedEmergencyMessages.push(newMessage);
 
             if (
-                logicStore.isNotificationGranted &&
                 newMessage.senderId !== userStore.user.id &&
-                !document.hasFocus() &&
                 (newMessage.contents.includes(`@${userStore.user.rsiHandle}`) || newMessage.contents.includes(`@${userStore.user.discordId}`))
             ) {
-                const notification = new Notification(t("tracking_newMessage"), {
-                    body: replaceAtMentions(
-                        newMessage.contents,
-                        newMessage.senderId,
-                        false,
-                        emergencyStore.trackedEmergency.respondingTeam.allMembers,
-                        userStore.user,
-                    ),
-                    icon: "/images/medrunner-logo-square.webp",
-                });
+                const bodyNotification = replaceAtMentions(
+                    newMessage.contents,
+                    newMessage.senderId,
+                    false,
+                    emergencyStore.trackedEmergency.respondingTeam.allMembers,
+                    userStore.user,
+                );
 
-                notification.onclick = () => {
-                    window.focus();
-                };
+                sendBrowserNotification(t("tracking_newMessage"), bodyNotification);
             }
         }
     });
     ws.onreconnected(async () => {
-        emergencyStore.trackedEmergencyMessages = await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id);
+        emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
     });
 });
 
@@ -87,9 +79,7 @@ async function sendMessage() {
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
-
-        <GlobalCard class="mt-8 !p-3 lg:!p-6">
+        <GlobalCard class="!p-3 lg:!p-6">
             <div v-if="errorLoadingMessages" class="flex w-full items-center justify-center">
                 <GlobalErrorText :text="errorLoadingMessages" />
             </div>

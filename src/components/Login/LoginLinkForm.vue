@@ -51,9 +51,9 @@ const submittingLinkForm = async (): Promise<void> => {
         else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
         else if (error.statusCode === 503) formErrorMessage.value = t("error_externalAuthServiceDown");
         else formErrorMessage.value = t("error_generic");
+    } finally {
+        waitingForApi.value = false;
     }
-
-    waitingForApi.value = false;
 };
 </script>
 

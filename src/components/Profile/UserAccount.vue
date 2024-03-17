@@ -66,7 +66,11 @@ function closeEditingUsername() {
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_account") }}</h2>
+        <div class="flex min-h-11 items-center justify-between">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_account") }}</h2>
+            <GlobalButton size="full" icon="logout" :loading="isLoggingOut" @click="disconnectUser()">{{ t("navbar_disconnect") }}</GlobalButton>
+        </div>
+
         <GlobalCard class="mt-4 flex flex-col items-center justify-center">
             <div class="w-full">
                 <div class="flex w-full flex-col gap-2 lg:flex-row lg:items-end">
@@ -98,12 +102,6 @@ function closeEditingUsername() {
                     </div>
                 </div>
                 <p v-if="errorUpdatingUsername" class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ errorUpdatingUsername }}</p>
-
-                <div class="w-full lg:w-fit">
-                    <GlobalButton class="mt-8" size="full" icon="logout" :loading="isLoggingOut" @click="disconnectUser()">{{
-                        t("navbar_disconnect")
-                    }}</GlobalButton>
-                </div>
             </div>
         </GlobalCard>
     </div>

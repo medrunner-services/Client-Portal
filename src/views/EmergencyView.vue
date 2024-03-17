@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Emergency, MissionStatus } from "@medrunner-services/api-client";
+import { type Emergency, type MissionStatus, SubmissionSource } from "@medrunner-services/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -9,17 +9,21 @@ import EmergencyDetailsForm from "@/components/Emergency/EmergencyDetailsForm.vu
 import EmergencyReportForm from "@/components/Emergency/EmergencyReportForm.vue";
 import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
 import ServiceStatus from "@/components/Emergency/ServiceStatus.vue";
+import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
+import { sendBrowserNotification } from "@/utils/notificationFunctions";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
+
+const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 
 const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
@@ -73,15 +77,11 @@ onMounted(async () => {
                 respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
             }
 
-            if (logicStore.isNotificationGranted && updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status) {
-                const notification = new Notification(emergencyStore.getEmergencyStatusTitle(updatedEmergency.status), {
-                    body: emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
-                    icon: "/images/medrunner-logo-square.webp",
-                });
-
-                notification.onclick = () => {
-                    window.focus();
-                };
+            if (updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status) {
+                sendBrowserNotification(
+                    emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
+                    emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                );
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;
@@ -104,7 +104,10 @@ onMounted(async () => {
     <div class="content-container flex flex-col gap-10 lg:flex-row">
         <div class="lg:w-1/2">
             <div v-if="errorLoadingEmergency || userStore.isBlocked">
-                <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
+                <div class="min-h-11">
+                    <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
+                </div>
+
                 <GlobalCard class="mt-8">
                     <div class="flex w-full items-center justify-center py-[4.65rem]">
                         <GlobalErrorText :text="userStore.isBlocked ? t('error_blockedUser') : errorLoadingEmergency" />
@@ -113,10 +116,7 @@ onMounted(async () => {
             </div>
             <div v-else-if="emergencyStore.trackedEmergency.id">
                 <EmergencyDetailsForm v-if="displayFormDetails" @submitted-details="displayFormDetails = false" />
-                <EmergencyTracking
-                    @send-new-details="displayFormDetails = true"
-                    v-else-if="[0, 1, 2].includes(emergencyStore.trackedEmergency.status)"
-                />
+                <EmergencyTracking @send-new-details="displayFormDetails = true" v-else-if="!emergencyStore.trackedEmergency.isComplete" />
                 <EmergencyCompletion @rated-emergency="emergencyStore.resetTrackedEmergency()" v-else />
             </div>
 
@@ -124,7 +124,37 @@ onMounted(async () => {
         </div>
 
         <div class="lg:w-1/2">
-            <EmergencyChatBox v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked" />
+            <div v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked">
+                <div class="min-h-11">
+                    <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
+                </div>
+
+                <EmergencyChatBox
+                    v-if="
+                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.API ||
+                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.UNKNOWN
+                    "
+                    class="mt-8"
+                />
+
+                <div v-else class="mt-8">
+                    <div class="min-h-11">
+                        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
+                    </div>
+
+                    <GlobalCard class="mt-4 flex flex-col items-center justify-center text-center">
+                        <p>{{ t("tracking_textDiscordThread") }}</p>
+                        <a
+                            :href="`https://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                            target="_blank"
+                            class="mt-8"
+                        >
+                            <GlobalButton icon="link">{{ t("tracking_buttonDiscordThread") }}</GlobalButton>
+                        </a>
+                    </GlobalCard>
+                </div>
+            </div>
+
             <ServiceStatus v-else />
         </div>
     </div>

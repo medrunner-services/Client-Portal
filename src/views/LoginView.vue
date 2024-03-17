@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
@@ -11,11 +11,22 @@ import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import { useLogicStore } from "@/stores/logicStore";
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const logicStore = useLogicStore();
 
 const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
+
+onMounted(async () => {
+    if (routeQueryError.value) {
+        await router.replace({
+            name: route.name as string,
+            params: router.currentRoute.value.params,
+            query: {},
+        });
+    }
+});
 
 function getErrorText(): string {
     switch (routeQueryError.value) {

@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { type ChatMessage, Class, type Emergency, MissionStatus } from "@medrunner-services/api-client";
+import { Class, type Emergency, MissionStatus } from "@medrunner-services/api-client";
 import { computed, onBeforeUnmount, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 
 const logicStore = useLogicStore();
-const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -18,15 +16,14 @@ const props = defineProps<{
 }>();
 
 const showDetails = ref(false);
-const chatHistoryMessages: Ref<ChatMessage[]> = ref([]);
 const detailsDiv: Ref<HTMLDivElement | null> = ref(null);
 const rowParent: Ref<HTMLDivElement | null> = ref(null);
 const showChatTranscriptModal = ref(false);
+const isEmergencyIDCopied = ref(false);
+const showMissionDebugInfo = ref(false);
 
 onMounted(async () => {
     document.addEventListener("click", handleClickOutside);
-
-    chatHistoryMessages.value = await emergencyStore.fetchChatHistory(props.emergency.id);
 });
 
 onBeforeUnmount(() => {
@@ -85,6 +82,14 @@ function getStatusColor(id: MissionStatus): string {
         default:
             return "bg-gray-100 text-gray-800";
     }
+}
+
+async function addTextToClipboard(text: string) {
+    await navigator.clipboard.writeText(text);
+    isEmergencyIDCopied.value = true;
+    setTimeout(() => {
+        isEmergencyIDCopied.value = false;
+    }, 2000);
 }
 </script>
 
@@ -274,15 +279,53 @@ function getStatusColor(id: MissionStatus): string {
                     <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_remarks") }}</p>
                     <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.remarks }}</p>
                 </div>
+                <div class="mt-4">
+                    <p
+                        class="cursor-pointer text-sm text-gray-500 underline dark:text-gray-400"
+                        @click="showMissionDebugInfo = !showMissionDebugInfo"
+                    >
+                        {{ showMissionDebugInfo ? t("history_lessInfo") : t("history_moreInfo") }}
+                    </p>
 
-                <GlobalButton
-                    v-if="chatHistoryMessages.length > 0"
-                    size="full"
-                    type="outline"
-                    class="mt-4 lg:w-fit"
-                    @click="showChatTranscriptModal = true"
-                    >{{ t("button_seeMessagesTranscript") }}</GlobalButton
-                >
+                    <div v-if="showMissionDebugInfo" class="mt-2 h-fit rounded-lg border border-gray-200 px-4 py-2.5 dark:border-gray-700">
+                        <div class="flex gap-1 text-xs text-gray-500 dark:text-gray-400">
+                            <p class="font-medium">{{ t("tracking_emergencyID") }}</p>
+
+                            <div class="flex cursor-pointer gap-1" @click="addTextToClipboard(props.emergency.id)" :title="t('tracking_ClickToCopy')">
+                                <p>
+                                    {{ props.emergency.id }}
+                                </p>
+
+                                <svg
+                                    v-if="!isEmergencyIDCopied"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 16 16"
+                                    fill="currentColor"
+                                    class="h-4 w-4"
+                                >
+                                    <path
+                                        d="M5.5 3.5A1.5 1.5 0 0 1 7 2h2.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 1 .439 1.061V9.5A1.5 1.5 0 0 1 12 11V8.621a3 3 0 0 0-.879-2.121L9 4.379A3 3 0 0 0 6.879 3.5H5.5Z"
+                                    />
+                                    <path
+                                        d="M4 5a1.5 1.5 0 0 0-1.5 1.5v6A1.5 1.5 0 0 0 4 14h5a1.5 1.5 0 0 0 1.5-1.5V8.621a1.5 1.5 0 0 0-.44-1.06L7.94 5.439A1.5 1.5 0 0 0 6.878 5H4Z"
+                                    />
+                                </svg>
+
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <GlobalButton size="full" type="outline" class="mt-4 lg:w-fit" @click="showChatTranscriptModal = true">{{
+                    t("button_seeMessagesTranscript")
+                }}</GlobalButton>
             </div>
         </div>
 

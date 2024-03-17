@@ -93,9 +93,6 @@ function changeLanguage(newLocal: string): void {
                         <li class="mt-4">
                             <RouterLink @click="switchNavMenuSate()" to="/emergency" class="block w-full">{{ t("navbar_emergency") }}</RouterLink>
                         </li>
-                        <li class="mt-4">
-                            <RouterLink @click="switchNavMenuSate()" to="/blocklist" class="block w-full">{{ t("navbar_blocklist") }}</RouterLink>
-                        </li>
                     </ul>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
                     <p class="cursor-pointer p-4 text-primary-600 dark:text-red-700" @click="showBugReportModal = true">

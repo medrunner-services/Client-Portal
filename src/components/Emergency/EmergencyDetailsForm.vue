@@ -95,7 +95,7 @@ async function sendDetails(): Promise<void> {
 
 <template>
     <div>
-        <div class="flex items-center">
+        <div class="min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
             <span class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>

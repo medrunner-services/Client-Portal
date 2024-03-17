@@ -14,7 +14,7 @@ const displayCreateTokenModal = ref(false);
 
 <template>
     <div class="mt-10">
-        <div class="flex items-center justify-between">
+        <div class="flex min-h-11 items-center justify-between">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("developer_apiTokensTitle") }}</h2>
             <GlobalButton :disabled="userStore.isBlocked" icon="plus" @click="displayCreateTokenModal = true">{{
                 t("developer_createTokenButton")

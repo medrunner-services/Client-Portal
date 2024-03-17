@@ -17,7 +17,9 @@ const status: Ref<Status> = ref(Status.Operational);
 
 <template>
     <div>
-        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_serviceStatus") }}</h2>
+        <div class="min-h-11">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_serviceStatus") }}</h2>
+        </div>
 
         <GlobalCard v-if="status === Status.Operational" class="mt-8 flex flex-col items-center justify-center gap-8">
             <img src="/images/StatusShield_green.svg" class="h-28" alt="Status shield" />

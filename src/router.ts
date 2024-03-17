@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
 import { ampli } from "@/ampli";
 import { useBlocklistStore } from "@/stores/blocklistStore";
@@ -7,12 +7,13 @@ import { useUserStore } from "@/stores/userStore";
 
 import DashboardView from "./views/DashboardView.vue";
 
-async function isUserAuthenticated(): Promise<string | boolean> {
+async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
     const blocklistStore = useBlocklistStore();
 
     if (!localStorage.getItem("refreshToken")) {
-        return "/login";
+        if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
+        else return "/login";
     } else if (!userStore.isAuthenticated) {
         try {
             userStore.user = await userStore.fetchUser();
@@ -22,8 +23,10 @@ async function isUserAuthenticated(): Promise<string | boolean> {
                 const blockCheck = await blocklistStore.fetchBlocklist("user", userStore.user.rsiHandle);
                 if (blockCheck.length > 0) userStore.isBlocked = true;
             }
-        } catch (error) {
-            return "/login?error=generic";
+        } catch (error: any) {
+            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
+            if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
+            else return "/login";
         }
     }
 
@@ -47,6 +50,7 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
             userStore.isAuthenticated = true;
             return "/";
         } catch (error: any) {
+            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
             return true;
         }
     }
@@ -82,12 +86,6 @@ const router = createRouter({
             path: "/emergency",
             name: "emergency",
             component: () => import("@/views/EmergencyView.vue"),
-            beforeEnter: isUserAuthenticated,
-        },
-        {
-            path: "/blocklist",
-            name: "blocklist",
-            component: () => import("@/views/BlocklistView.vue"),
             beforeEnter: isUserAuthenticated,
         },
         {
