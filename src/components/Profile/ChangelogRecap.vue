@@ -49,6 +49,7 @@ const appVersion = __APP_VERSION__;
                         <li>The user is now disconnected on multiple failed automatic logins.</li>
                         <li>Fixed date format not displaying correctly.</li>
                         <li>Fixed a few styling issues and visual bugs.</li>
+                        <li>User was not correctly redirected after linking account in some specific cases.</li>
                     </ul>
                 </div>
             </div>

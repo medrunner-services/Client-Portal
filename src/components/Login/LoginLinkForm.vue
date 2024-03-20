@@ -38,6 +38,7 @@ const submittingLinkForm = async (): Promise<void> => {
 
     try {
         await userStore.linkUser(formUsername.value);
+        userStore.user.rsiHandle = formUsername.value;
 
         await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
         await initializeWebsocket();

@@ -1,6 +1,6 @@
 {
   "name": "client-portal",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -54,6 +54,6 @@
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
     "vue-tsc": "^1.8.27",
-    "yauzl": "^3.1.0"
+    "yauzl": "^3.1.2"
   }
 }
