@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { ampli } from "@/ampli";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
@@ -15,6 +16,7 @@ const userStore = useUserStore();
 const router = useRouter();
 const isIdCopied = ref(false);
 const waitingForApi = ref(false);
+const isLoggingOut = ref(false);
 const formUsername = ref("");
 const formErrorMessage = ref("");
 const userId = userStore.user.id;
@@ -56,6 +58,16 @@ const submittingLinkForm = async (): Promise<void> => {
         waitingForApi.value = false;
     }
 };
+
+async function disconnectUser(): Promise<void> {
+    isLoggingOut.value = true;
+    await userStore.disconnectUser();
+    if (ampli.isLoaded) {
+        ampli.client.setOptOut(true);
+        ampli.client.flush();
+    }
+    await router.push("/login");
+}
 </script>
 
 <template>
@@ -110,6 +122,10 @@ const submittingLinkForm = async (): Promise<void> => {
             <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full" :error-text="formErrorMessage">
                 {{ t("login_verify") }}</GlobalButton
             >
+
+            <GlobalButton size="full" class="mt-4" icon="logout" type="secondary" :loading="isLoggingOut" @click="disconnectUser()">{{
+                t("navbar_disconnect")
+            }}</GlobalButton>
         </form>
     </div>
 </template>

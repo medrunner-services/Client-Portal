@@ -39,6 +39,7 @@ const appVersion = __APP_VERSION__;
                         <li>Improved error handling when the app failed after being brought back from sleep.</li>
                         <li>The url is now cleaned after the message has been read in the url.</li>
                         <li>Optimized images.</li>
+                        <li>Added a log out button in the linking form.</li>
                     </ul>
                 </div>
 
