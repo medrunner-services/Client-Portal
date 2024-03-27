@@ -20,7 +20,7 @@
   "dependencies": {
     "@amplitude/analytics-browser": "^2.4.1",
     "@intlify/unplugin-vue-i18n": "^2.0.0",
-    "@medrunner-services/api-client": "^0.18.1",
+    "@medrunner-services/api-client": "^0.19.1",
     "apexcharts": "^3.46.0",
     "discord-markdown": "^2.5.1",
     "dompurify": "^3.0.9",

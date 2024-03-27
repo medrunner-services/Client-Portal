@@ -87,6 +87,16 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function setSettings(settings: Record<string, unknown>): Promise<Record<string, unknown>> {
+        const response = await api.client.setSettings(settings);
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
@@ -99,5 +109,6 @@ export const useUserStore = defineStore("user", () => {
         fetchUserApiTokens,
         createApiToken,
         deleteApiToken,
+        setSettings,
     };
 });
