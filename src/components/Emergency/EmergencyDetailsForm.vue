@@ -95,7 +95,7 @@ async function sendDetails(): Promise<void> {
 
 <template>
     <div>
-        <div class="min-h-11 items-center">
+        <div class="flex min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
             <span class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
@@ -104,7 +104,7 @@ async function sendDetails(): Promise<void> {
         </div>
 
         <div class="mt-8">
-            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base lg:mb-12">
+            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base lg:mb-8">
                 <li
                     class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 dark:text-red-700 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] xl:after:mx-10"
                 >
@@ -168,6 +168,10 @@ async function sendDetails(): Promise<void> {
                     {{ t("formDetailed_remarks") }}
                 </li>
             </ol>
+        </div>
+
+        <div class="w-fit rounded-lg border border-gray-200 p-2.5 dark:border-gray-700">
+            <p class="text-xs md:text-sm">{{ t("formDetailed_infoSpeakEnglish") }}</p>
         </div>
 
         <div v-if="currentFormPart === 1" class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">

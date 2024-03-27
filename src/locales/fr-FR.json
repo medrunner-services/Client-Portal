@@ -307,6 +307,7 @@
     "button_ignore": "Ignorer",
     "formDetailed_ignoreDetailsModalTitle": "Ignorer le formulaire de détails ?",
     "formDetailed_ignoreDetailsModalSubTitle": "Êtes-vous sûr de ne pas vouloir envoyer plus de détails ? Ces informations sont très utiles pour l'équipe de secours.",
+    "formDetailed_infoSpeakEnglish": "N'oubliez pas d'écrire en anglais, car nos secouristes ne parlent pas forcément d'autres langues.",
     "404_somethingMissing": "Il manque quelque chose.",
     "404_helperText": "Désolé, nous ne trouvons pas cette page. Vous trouverez beaucoup de choses à explorer sur la page d'accueil.",
     "404_backToHomepage": "Retour à la page d'accueil"

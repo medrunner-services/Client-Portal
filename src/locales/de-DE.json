@@ -307,6 +307,7 @@
     "button_ignore": "Überspringen",
     "formDetailed_ignoreDetailsModalTitle": "Detailformular überspringen?",
     "formDetailed_ignoreDetailsModalSubTitle": "Sind Sie sicher, dass Sie keine weiteren Details übermitteln möchten? Diese Informationen sind für das Rettungsteam sehr hilfreich.",
+    "formDetailed_infoSpeakEnglish": null,
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"
