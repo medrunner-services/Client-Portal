@@ -8,7 +8,7 @@ const { t } = useI18n();
         <div class="px-4 lg:flex lg:justify-between">
             <div class="lg:flex">
                 <div class="text-sm text-gray-500">
-                    <p>© {{ new Date().getFullYear() }} Medrunner. {{ t("footer_AllRightsReserved") }}</p>
+                    <p>© {{ new Date().getFullYear() + 930 }} Medrunner Services. {{ t("footer_AllRightsReserved") }}</p>
                 </div>
                 <div class="mt-3 cursor-pointer text-sm text-gray-900 underline underline-offset-2 dark:text-gray-50 lg:ml-4 lg:mt-0">
                     <a href="https://www.medrunner.space/legal-information" target="_blank">{{ t("user_privacyPolicyLink") }}</a>
