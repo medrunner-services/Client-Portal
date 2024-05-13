@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Class, type Emergency, MissionStatus } from "@medrunner-services/api-client";
+import { Class, type Emergency, MissionStatus } from "@medrunner/api-client";
 import { computed, onBeforeUnmount, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -237,7 +237,7 @@ async function addTextToClipboard(text: string) {
                         v-if="props.emergency.tertiaryLocation"
                         class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
                     >
-                        <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("form_location") }}</p>
+                        <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("form_moon") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.tertiaryLocation }}</p>
                     </div>
                 </div>

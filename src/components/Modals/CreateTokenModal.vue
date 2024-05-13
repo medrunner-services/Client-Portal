@@ -45,6 +45,7 @@ async function createToken() {
             createdToken.value = await userStore.createApiToken(inputName.value);
         }
         submittingNewToken.value = false;
+        document.body.style.overflow = "auto";
         emit("tokenCreated");
     } catch (error: any) {
         submittingNewToken.value = false;

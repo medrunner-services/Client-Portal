@@ -1,4 +1,4 @@
-import { MedrunnerApiClient } from "@medrunner-services/api-client";
+import { MedrunnerApiClient } from "@medrunner/api-client";
 import { HubConnection } from "@microsoft/signalr";
 
 export let api: MedrunnerApiClient;

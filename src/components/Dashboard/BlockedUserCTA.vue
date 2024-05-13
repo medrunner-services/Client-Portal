@@ -3,8 +3,10 @@ import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import { useLogicStore } from "@/stores/logicStore";
 
 const { t } = useI18n();
+const logicStore = useLogicStore();
 </script>
 
 <template>
@@ -31,7 +33,7 @@ const { t } = useI18n();
                     </p>
 
                     <div class="mt-8 flex flex-col gap-4 md:flex-row">
-                        <a class="w-full lg:w-fit" href="https://discord.com/invite/medrunner" target="_blank">
+                        <a class="w-full lg:w-fit" :href="`${logicStore.discordBaseUrl}discord.com/invite/medrunner`" target="_blank">
                             <GlobalButton icon="link" size="full">{{ t("home_medrunnerDiscord") }}</GlobalButton>
                         </a>
 

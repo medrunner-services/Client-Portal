@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ApiToken } from "@medrunner-services/api-client";
+import type { ApiToken } from "@medrunner/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 

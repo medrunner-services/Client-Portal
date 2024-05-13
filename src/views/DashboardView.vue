@@ -11,14 +11,14 @@ const userStore = useUserStore();
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 lg:flex-row">
-        <div class="lg:w-1/2">
+    <div class="content-container flex flex-col gap-10 xl:flex-row">
+        <div class="xl:w-1/2">
             <BlockedUserCTA v-if="userStore.isBlocked" />
             <CTAEmergency v-else />
             <HistoryTable class="mt-4" />
         </div>
 
-        <div class="lg:w-1/2">
+        <div class="xl:w-1/2">
             <ChartEmergencyBreakdown />
             <ChartEmergencySuccessRate class="mt-4" />
             <ChartEmergencyNumberPerWeek class="mt-4" />

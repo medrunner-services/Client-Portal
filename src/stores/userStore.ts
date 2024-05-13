@@ -1,4 +1,4 @@
-import type { ApiToken, ClientHistory, PaginatedResponse, Person } from "@medrunner-services/api-client";
+import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, type Ref, ref } from "vue";
 
@@ -41,6 +41,16 @@ export const useUserStore = defineStore("user", () => {
 
     async function fetchUser(): Promise<Person> {
         const response = await api.client.get();
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
+    async function fetchUserBlocklistStatus(): Promise<BlockedStatus> {
+        const response = await api.client.getBlockedStatus();
 
         if (response.success && response.data) {
             return response.data;
@@ -97,6 +107,14 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function deleteAccount(): Promise<void> {
+        const response = await api.client.deactivate();
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
@@ -105,10 +123,12 @@ export const useUserStore = defineStore("user", () => {
         disconnectUser,
         linkUser,
         fetchUser,
+        fetchUserBlocklistStatus,
         fetchUserEmergencyHistory,
         fetchUserApiTokens,
         createApiToken,
         deleteApiToken,
         setSettings,
+        deleteAccount,
     };
 });

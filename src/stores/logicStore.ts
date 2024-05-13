@@ -1,15 +1,19 @@
-import { CancellationReason, MissionStatus } from "@medrunner-services/api-client";
+import { CancellationReason, MissionStatus } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { useI18n } from "vue-i18n";
+
+import { i18n } from "@/i18n";
+import { MessageNotification } from "@/types";
 
 export const useLogicStore = defineStore("logic", () => {
-    const { locale, t } = useI18n();
-    const isNotificationGranted = ref(
-        "Notification" in window ? Notification.permission === "granted" && localStorage.getItem("notificationActivated") === "true" : false,
-    );
-    const darkMode = ref(localStorage.getItem("darkMode") === "true");
-    const isAnalyticsAllowed = ref(localStorage.getItem("analyticsActivated") === "true" || localStorage.getItem("analyticsActivated") === null);
+    const { t, locale } = i18n.global;
+    const isNotificationGranted = ref(false);
+    const customSoundNotification = ref(true);
+    const emergencyUpdateNotification = ref(true);
+    const chatMessageNotification = ref(MessageNotification.ALL);
+    const isAnalyticsAllowed = ref(true);
+    const darkMode = ref(false);
+    const isDiscordOpenWeb = ref(false);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -28,6 +32,30 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    const userDevice = computed(() => {
+        if (navigator.userAgent.includes("Android")) {
+            return "android";
+        } else if (navigator.userAgent.includes("iPhone")) {
+            return "iphone";
+        } else if (navigator.userAgent.includes("iPad")) {
+            return "ipad";
+        } else if (navigator.userAgent.includes("Windows")) {
+            return "windows";
+        } else if (navigator.userAgent.includes("Macintosh")) {
+            return "macintosh";
+        } else return "unknown";
+    });
+
+    const discordBaseUrl = computed(() => {
+        if (!isDiscordOpenWeb.value) {
+            if (userDevice.value === "android") {
+                return "https://";
+            } else {
+                return "discord://";
+            }
+        } else return "https://";
+    });
+
     async function addTextToClipboard(text: string): Promise<boolean> {
         await navigator.clipboard.writeText(text);
         return true;
@@ -41,8 +69,8 @@ export const useLogicStore = defineStore("logic", () => {
                 return "Français";
             case "de-DE":
                 return "Deutsch";
-            case "it-IT":
-                return "Italiano";
+            case "es-MX":
+                return "Español (México)";
             case "da-DK":
                 return "Dansk";
             case "zh-TW":
@@ -192,13 +220,19 @@ export const useLogicStore = defineStore("logic", () => {
 
     return {
         isNotificationGranted,
+        customSoundNotification,
+        emergencyUpdateNotification,
+        chatMessageNotification,
         darkMode,
+        isDiscordOpenWeb,
         isAnalyticsAllowed,
         isLoginAnimationAllowed,
         loginAnimationSpeed,
         loginAnimationStarSize,
         loginAnimationGlowSize,
         medrunnerLogoUrl,
+        userDevice,
+        discordBaseUrl,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

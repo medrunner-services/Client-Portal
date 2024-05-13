@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Location, LocationDetail } from "@medrunner-services/api-client";
+import type { Location, LocationDetail } from "@medrunner/api-client";
 import { computed, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -60,7 +60,7 @@ const getPlanets = computed(() => {
 });
 
 const getLocations = computed(() => {
-    const locations: any = [{ value: "", label: t("form_selectALocation") }];
+    const locations: any = [{ value: "", label: t("form_selectAMoon") }];
 
     if (inputPlanet.value && inputSystem.value) {
         const indexSystem = locationsInformation.value.findIndex((system) => system.name === inputSystem.value);
@@ -156,8 +156,8 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                     :options="getLocations"
                     v-model="inputLocation"
                     :disabled="!inputPlanet || getLocations.length === 1"
-                    :label="t('form_location')"
-                    :helper="t('form_helpLocation')"
+                    :label="t('form_moon')"
+                    :helper="t('form_helpMoon')"
                 />
 
                 <GlobalSelectInput

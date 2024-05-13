@@ -3,9 +3,11 @@ import { onBeforeUnmount, onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useLogicStore } from "@/stores/logicStore";
+import { useUserStore } from "@/stores/userStore";
 
 const { locale, availableLocales } = useI18n({ useScope: "global" });
 const logicStore = useLogicStore();
+const userStore = useUserStore();
 
 const showDropdown = ref(false);
 const selectorDiv: Ref<HTMLDivElement | null> = ref(null);
@@ -30,10 +32,15 @@ const handleClickOutside = (event: MouseEvent) => {
     }
 };
 
-function changeLanguage(newLocal: string): void {
+async function changeLanguage(newLocal: string): Promise<void> {
     locale.value = newLocal;
-    localStorage.setItem("selectedLanguage", newLocal);
     showDropdown.value = false;
+
+    try {
+        await userStore.setSettings({ selectedLanguage: newLocal });
+    } catch (e) {
+        return;
+    }
 }
 </script>
 

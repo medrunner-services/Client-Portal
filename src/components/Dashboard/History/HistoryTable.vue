@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import type { ClientHistory, Emergency } from "@medrunner-services/api-client";
+import { type ClientHistory, type Emergency, MissionStatus } from "@medrunner/api-client";
 import { computed, onMounted, type Ref, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
+import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
@@ -27,23 +26,24 @@ const paginationToken: Ref<string | undefined> = ref();
 const loadedHistory: Ref<Emergency[]> = ref([]);
 const errorLoadingHistory = ref("");
 const loaded = ref(false);
+const displayWarningNoContactModal = ref(false);
 
 onMounted(async () => {
     await loadHistory();
     activePage.value = [...loadedHistory.value];
     loaded.value = true;
 
+    const lastConfirmedEmergencyWarning =
+        "lastConfirmedWarningId" in userStore.user.clientPortalPreferences
+            ? (userStore.user.clientPortalPreferences.lastConfirmedWarningId as string)
+            : null;
+
     if (
-        "Notification" in window &&
-        Notification.permission === "default" &&
-        (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
+        loadedHistory.value.length > 0 &&
+        loadedHistory.value[0].status === MissionStatus.NO_CONTACT &&
+        loadedHistory.value[0].id !== lastConfirmedEmergencyWarning
     ) {
-        Notification.requestPermission().then((permission) => {
-            if (permission == "granted") {
-                logicStore.isNotificationGranted = true;
-                localStorage.setItem("notificationActivated", "true");
-            }
-        });
+        displayWarningNoContactModal.value = true;
     }
 
     ws.on("EmergencyCreate", (newEmergency: Emergency) => {
@@ -228,5 +228,11 @@ const heightLoader = computed(() => {
                 </div>
             </div>
         </div>
+
+        <WarningNoContactModal
+            v-if="displayWarningNoContactModal"
+            @close="displayWarningNoContactModal = false"
+            :emergency-id="loadedHistory[0].id"
+        />
     </div>
 </template>

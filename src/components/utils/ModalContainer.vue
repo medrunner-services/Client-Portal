@@ -2,9 +2,12 @@
 const emit = defineEmits(["close"]);
 export interface Props {
     title: string;
+    userCloseModal?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    userCloseModal: true,
+});
 
 document.body.style.overflow = "hidden";
 
@@ -17,7 +20,7 @@ function closeModal() {
 <template>
     <teleport to="#modals">
         <div
-            @click.self="closeModal()"
+            @click.self="props.userCloseModal ? closeModal() : null"
             class="fixed left-0 right-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
         >
             <div
@@ -26,7 +29,7 @@ function closeModal() {
                 <div class="flex w-full justify-between">
                     <p class="text-xl font-semibold">{{ props.title }}</p>
                     <svg
-                        @click="closeModal()"
+                        @click="props.userCloseModal ? closeModal() : null"
                         class="ml-auto h-3 w-3 cursor-pointer text-gray-800 dark:text-white"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"

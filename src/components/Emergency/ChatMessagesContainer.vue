@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChatMessage, Person, TeamMember } from "@medrunner-services/api-client";
+import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
 import { toHTML } from "discord-markdown";
 import DOMPurify from "dompurify";
 import { computed, type ComputedRef, onMounted, type Ref, ref } from "vue";
@@ -29,6 +29,8 @@ const { t } = useI18n();
 
 const chatBox: Ref<HTMLDivElement | null> = ref(null);
 const distanceFromBottom = ref(0);
+const showFullMessage: Ref<Record<string, boolean>> = ref({});
+const readMoreClicked: Ref<boolean> = ref(false);
 
 onMounted(async () => {
     if (chatBox.value) {
@@ -36,10 +38,14 @@ onMounted(async () => {
 
         const observer = new MutationObserver(() => {
             if (chatBox.value) {
-                if (props.keepScrollPosition) {
-                    chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
+                if (!readMoreClicked.value) {
+                    if (props.keepScrollPosition) {
+                        chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
+                    } else {
+                        chatBox.value.scrollTop = chatBox.value.scrollHeight;
+                    }
                 } else {
-                    chatBox.value.scrollTop = chatBox.value.scrollHeight;
+                    readMoreClicked.value = false;
                 }
             }
         });
@@ -74,7 +80,8 @@ function parseChatMessageString(message: ChatMessage): string {
         .replace(/&lt;|&gt;/g, "")
         .replace(/##(.*?)(?=<br>)/g, '<span style="font-weight: bold; font-size: 1.4rem;">\n$1\n</span>')
         .replace(/<u>Time(.*?)(?=<)/g, '<span style="text-decoration: underline">Time of client death:</span>')
-        .replace(/t:(.*?):R/g, stringTimestampDeath ? `${stringTimestampDeath}` : "");
+        .replace(/t:(.*?):R/g, stringTimestampDeath ? `${stringTimestampDeath}` : "")
+        .replace(/\\n/g, "<br>");
 }
 
 function getMessageAuthor(message: ChatMessage): string {
@@ -120,6 +127,11 @@ function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
     }
 }
 
+function truncatedMessage(message: ChatMessage): string {
+    const parsedMessage = parseChatMessageString(message);
+    return message.contents.length > 500 ? `${parsedMessage.substring(0, 500)}...` : parsedMessage;
+}
+
 function messageClasses(messageIndex: number, senderId: string): string {
     let classes: string[] = [];
 
@@ -160,8 +172,20 @@ function messageClasses(messageIndex: number, senderId: string): string {
             >
                 {{ getMessageAuthor(message) }}
             </p>
-            <p class="mt-1 break-words" v-html="parseChatMessageString(message)"></p>
-            <p class="mt-1 self-end text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
+            <p class="mt-1 break-words" v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"></p>
+            <div class="flex items-center justify-between">
+                <p
+                    v-if="message.contents.length > 500 && !showFullMessage[message.id]"
+                    @click="
+                        showFullMessage[message.id] = !showFullMessage[message.id];
+                        readMoreClicked = true;
+                    "
+                    class="mt-1 cursor-pointer text-sm font-semibold underline"
+                >
+                    {{ t("tracking_readMore") }}
+                </p>
+                <p class="ml-auto mt-1 text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
+            </div>
         </div>
 
         <div id="anchor"></div>

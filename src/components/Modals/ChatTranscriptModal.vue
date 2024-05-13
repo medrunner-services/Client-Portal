@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChatMessage, TeamMember } from "@medrunner-services/api-client";
+import type { ChatMessage, TeamMember } from "@medrunner/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 

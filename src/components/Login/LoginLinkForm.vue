@@ -3,8 +3,8 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { ampli } from "@/ampli";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
@@ -19,6 +19,7 @@ const waitingForApi = ref(false);
 const isLoggingOut = ref(false);
 const formUsername = ref("");
 const formErrorMessage = ref("");
+const formErrorHelper = ref("");
 const userId = userStore.user.id;
 
 async function copyId(): Promise<void> {
@@ -37,6 +38,7 @@ function getAddToBioText(): string {
 const submittingLinkForm = async (): Promise<void> => {
     waitingForApi.value = true;
     formErrorMessage.value = "";
+    formErrorHelper.value = "";
 
     try {
         await userStore.linkUser(formUsername.value);
@@ -47,13 +49,22 @@ const submittingLinkForm = async (): Promise<void> => {
 
         await router.push("/");
     } catch (error: any) {
-        if (error.statusCode === 451) formErrorMessage.value = t("error_blockedUser");
-        else if (error.statusCode === 403) formErrorMessage.value = t("error_noIdRsiBio");
-        else if (error.statusCode === 404) formErrorMessage.value = t("error_unknownRsiAccount");
-        else if (error.statusCode === 409) formErrorMessage.value = t("error_rsiNewAccountLinked");
-        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
-        else if (error.statusCode === 503) formErrorMessage.value = t("error_externalAuthServiceDown");
-        else formErrorMessage.value = t("error_generic");
+        if (error.statusCode === 451) {
+            formErrorMessage.value = t("error_blockedUser");
+        } else if (error.statusCode === 403) {
+            formErrorMessage.value = t("error_noIdRsiBio");
+            formErrorHelper.value = t("error_noIdRsiBioHelper");
+        } else if (error.statusCode === 404) {
+            formErrorMessage.value = t("error_unknownRsiAccount");
+            formErrorMessage.value = t("error_unknownRsiAccountHelper");
+        } else if (error.statusCode === 409) {
+            formErrorMessage.value = t("error_rsiNewAccountLinked");
+            formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
+        } else if (error.statusCode === 429) {
+            formErrorMessage.value = t("error_rateLimit");
+        } else if (error.statusCode === 503) {
+            formErrorMessage.value = t("error_externalAuthServiceDown");
+        } else formErrorMessage.value = t("error_generic");
     } finally {
         waitingForApi.value = false;
     }
@@ -62,10 +73,6 @@ const submittingLinkForm = async (): Promise<void> => {
 async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
     await userStore.disconnectUser();
-    if (ampli.isLoaded) {
-        ampli.client.setOptOut(true);
-        ampli.client.flush();
-    }
     await router.push("/login");
 }
 </script>
@@ -101,6 +108,11 @@ async function disconnectUser(): Promise<void> {
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5.917 5.724 10.5 15 1.5" />
             </svg>
         </div>
+
+        <GlobalTextBox v-if="formErrorHelper" class="mt-4" color="yellow">
+            <p>{{ t("login_linkHelperTitle") }}</p>
+            <p class="mt-2 font-normal">{{ formErrorHelper }}</p>
+        </GlobalTextBox>
 
         <form class="mt-10" @submit.prevent="submittingLinkForm()" autocomplete="off">
             <GlobalTextInput

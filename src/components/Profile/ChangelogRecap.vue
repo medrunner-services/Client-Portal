@@ -20,37 +20,38 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Added debug info to the current ongoing emergency and the history emergencies.</li>
-                        <li>The page the user landed on is now saved throughout the login process.</li>
-                        <li>Removed access to the Medrunner blocklist.</li>
+                        <li>Warning on the dashboard after a no-contact emergency.</li>
+                        <li>Emergency rules popup for new users when reporting an emergency.</li>
+                        <li>A reset default button in settings to clear the synced settings.</li>
+                        <li>You can now delete your medrunner account in your profile.</li>
+                        <li>Setting to open discord links in native app or web.</li>
+                        <li>Some settings are now synced to your account across your devices.</li>
+                        <li>Added a new notification system that bypass the 'Do not Disturb' in windows. Can be toggled in the settings.</li>
+                        <li>The emergency graph can now be toggled to display a week, a month, two moth or 90 days.</li>
+                        <li>Added more settings for notifications. You can now toggle on or off each notification independently.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>The chat box will now be hidden when the mission was submitted on discord.</li>
-                        <li>Chat messages will now load all the way up and be loaded only a few at a time.</li>
-                        <li>The chat box messages styling has been improved.</li>
-                        <li>Improved performance in the dashboard.</li>
-                        <li>Their will no longer be an automatic message sent at the beginning of each emergency.</li>
-                        <li>The disconnect button was moved and renamed to log out to improve clarity.</li>
-                        <li>Improved loading screen.</li>
-                        <li>Improved error handling when the app failed after being brought back from sleep.</li>
-                        <li>The url is now cleaned after the message has been read in the url.</li>
-                        <li>Optimized images.</li>
-                        <li>Added a log out button in the linking form.</li>
+                        <li>Messages now support new lines with '\n'.</li>
+                        <li>Improved the linking account procedure with more information.</li>
+                        <li>More details in the "In game beacon" question in the emergency details form.</li>
+                        <li>Type of location in emergency details form.</li>
+                        <li>Added more explanation after submitting emergencies.</li>
+                        <li>Added a link to the new API documentation.</li>
+                        <li>Long chat messages are now truncated with a 'Read more' button to show them in full.</li>
+                        <li>Changed 'Nearest location' to 'Nearest moon' in emergency form.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>The nearest location card in the emergency tracking was shown even when the user did not select one in the form.</li>
-                        <li>The user is now disconnected on multiple failed automatic logins.</li>
-                        <li>Fixed date format not displaying correctly.</li>
-                        <li>Fixed a few styling issues and visual bugs.</li>
-                        <li>User was not correctly redirected after linking account in some specific cases.</li>
+                        <li>Clicking on notifications now redirects you to the correct page.</li>
+                        <li>Fixed issue where scroll was blocked when clicking out of certain modals.</li>
+                        <li>You will now see the emergency completion message even if you where on the details form page.</li>
                     </ul>
                 </div>
             </div>

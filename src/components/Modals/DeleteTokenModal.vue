@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ApiToken } from "@medrunner-services/api-client";
+import type { ApiToken } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -24,6 +24,7 @@ async function deleteToken(): Promise<void> {
 
     try {
         await userStore.deleteApiToken(props.token.id);
+        document.body.style.overflow = "auto";
         emit("tokenDeleted", props.token.id);
     } catch (e) {
         errorDeletingToken.value = t("error_generic");

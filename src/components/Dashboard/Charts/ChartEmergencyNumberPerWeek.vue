@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 const { t, locale } = useI18n();
@@ -11,6 +12,7 @@ const { t, locale } = useI18n();
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 
+const daySelect = ref(7);
 const chartOptions: Ref<any> = ref({
     chart: {
         height: "100%",
@@ -96,7 +98,7 @@ const totalNumberOfEmergencies = computed(() => {
 });
 
 onMounted(() => {
-    fetchEmergenciesForWeek();
+    fetchMissionsForPeriod();
     generateDateLabels();
 
     chartSeries.value[0].name = t("home_emergencies");
@@ -122,23 +124,26 @@ watch(locale, async () => {
     };
 });
 
-const isWithinLastWeek = (timestamp: string) => {
+const isWithinLastPeriod = (timestamp: string) => {
     const date = new Date(timestamp);
     return date >= oldestDateNeeded.value;
 };
 
 const initializeEmergenciesPerDay = () => {
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < daySelect.value; i++) {
         emergenciesPerDay.value.push(0);
     }
 };
 
 const incrementDayCount = (timestamp: string) => {
     const emergencyDate = new Date(timestamp);
-    const today = new Date();
+    emergencyDate.setHours(0, 0, 0, 0);
 
-    const dayDifference = Math.floor((today.getTime() - emergencyDate.getTime()) / (1000 * 3600 * 24));
-    if (dayDifference < 7) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dayDifference = Math.ceil(Math.abs(today.getTime() - emergencyDate.getTime()) / (1000 * 3600 * 24));
+    if (dayDifference < daySelect.value) {
         emergenciesPerDay.value[dayDifference]++;
     }
 };
@@ -147,40 +152,50 @@ const generateDateLabels = () => {
     const labels = [];
     const today = new Date();
 
-    for (let i = 6; i >= 0; i--) {
+    for (let i = daySelect.value - 1; i >= 0; i--) {
         const date = new Date(today);
         date.setDate(date.getDate() - i);
 
-        labels.push(
-            date.toLocaleDateString(locale.value, {
-                month: "2-digit",
-                day: "2-digit",
-            }),
-        );
+        if (daySelect.value < 360) {
+            labels.push(
+                date.toLocaleDateString(locale.value, {
+                    month: "2-digit",
+                    day: "2-digit",
+                }),
+            );
+        } else {
+            labels.push(
+                date.toLocaleDateString(locale.value, {
+                    month: "2-digit",
+                    day: "2-digit",
+                    year: "numeric",
+                }),
+            );
+        }
     }
 
     dateLabels.value = labels;
 };
 
-async function fetchEmergenciesForWeek() {
+async function fetchMissionsForPeriod() {
     errorLoading.value = "";
 
     let paginationToken = undefined;
     const limit = 50;
 
-    oldestDateNeeded.value.setDate(oldestDateNeeded.value.getDate() - 7);
+    oldestDateNeeded.value.setDate(oldestDateNeeded.value.getDate() - daySelect.value);
     initializeEmergenciesPerDay();
 
     try {
         do {
             const response = await userStore.fetchUserEmergencyHistory(limit, paginationToken);
-            const recentEmergencies = response.data.filter((emergency) => isWithinLastWeek(emergency.emergencyCreationTimestamp));
+            const recentEmergencies = response.data.filter((emergency) => isWithinLastPeriod(emergency.emergencyCreationTimestamp));
 
             recentEmergencies.forEach((emergency) => incrementDayCount(emergency.emergencyCreationTimestamp));
 
             if (recentEmergencies.length > 0) {
                 const oldestFetchedEmergencyTimestamp = response.data[response.data.length - 1].emergencyCreationTimestamp;
-                paginationToken = isWithinLastWeek(oldestFetchedEmergencyTimestamp) ? response.paginationToken : undefined;
+                paginationToken = isWithinLastPeriod(oldestFetchedEmergencyTimestamp) ? response.paginationToken : undefined;
             } else {
                 paginationToken = undefined;
             }
@@ -191,6 +206,26 @@ async function fetchEmergenciesForWeek() {
         errorLoading.value = t("error_loadingData");
     }
 }
+
+function changePeriod() {
+    emergenciesPerDay.value = [];
+    oldestDateNeeded.value = new Date();
+    dateLabels.value = [];
+
+    fetchMissionsForPeriod();
+    generateDateLabels();
+
+    chartSeries.value[0].data = emergenciesPerDay.value;
+
+    chartOptions.value = {
+        ...chartOptions.value,
+        ...{
+            xaxis: {
+                categories: dateLabels.value,
+            },
+        },
+    };
+}
 </script>
 
 <template>
@@ -200,9 +235,23 @@ async function fetchEmergenciesForWeek() {
         </div>
 
         <div v-else>
-            <div>
+            <div class="flex items-center justify-between">
+                <p class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_emergencies") }}</p>
+                <GlobalSelectInput
+                    :options="[
+                        { value: 7, label: t('home_7days') },
+                        { value: 30, label: t('home_30days') },
+                        { value: 60, label: t('home_60days') },
+                        { value: 90, label: t('home_90days') },
+                    ]"
+                    v-model="daySelect"
+                    @change="changePeriod()"
+                />
+            </div>
+
+            <div class="mt-8">
                 <p class="font-Mohave text-4xl font-bold text-gray-900 dark:text-white">{{ totalNumberOfEmergencies }}</p>
-                <p class="font-Mohave text-lg text-gray-500 dark:text-gray-400">{{ t("home_emergenciesThisWeek") }}</p>
+                <p class="font-Mohave text-lg text-gray-500 dark:text-gray-400">{{ t("home_emergencies") }}</p>
             </div>
 
             <div class="mt-4 w-full justify-center">

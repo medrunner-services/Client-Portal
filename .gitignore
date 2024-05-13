@@ -28,3 +28,4 @@ coverage
 *.sw?
 
 .env.development
+update-locals.mjs

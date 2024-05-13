@@ -1,4 +1,4 @@
-import type { Person, TeamMember } from "@medrunner-services/api-client";
+import type { Person, TeamMember } from "@medrunner/api-client";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
     const memberIdToNameMap: any = {};

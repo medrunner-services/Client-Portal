@@ -1,15 +1,11 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
-import { ampli } from "@/ampli";
-import { useBlocklistStore } from "@/stores/blocklistStore";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 import DashboardView from "./views/DashboardView.vue";
 
 async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
-    const blocklistStore = useBlocklistStore();
 
     if (!localStorage.getItem("refreshToken")) {
         if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
@@ -20,8 +16,8 @@ async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string 
             userStore.isAuthenticated = true;
 
             if (userStore.user.rsiHandle) {
-                const blockCheck = await blocklistStore.fetchBlocklist("user", userStore.user.rsiHandle);
-                if (blockCheck.length > 0) userStore.isBlocked = true;
+                const blockCheck = await userStore.fetchUserBlocklistStatus();
+                if (blockCheck.blocked) userStore.isBlocked = true;
             }
         } catch (error: any) {
             if (error.statusCode === 403) localStorage.removeItem("refreshToken");
@@ -30,10 +26,7 @@ async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string 
         }
     }
 
-    if (!userStore.user.active) {
-        await userStore.disconnectUser();
-        return "/login?error=deactivated";
-    } else if (!userStore.user.rsiHandle) {
+    if (!userStore.user.rsiHandle) {
         return "/login/link";
     }
 
@@ -73,7 +66,7 @@ async function isUserNotLinked(): Promise<string | boolean> {
     return userStore.isAuthenticated && !userStore.user?.rsiHandle ? true : "/";
 }
 
-const router = createRouter({
+export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
@@ -118,34 +111,6 @@ const router = createRouter({
             component: () => import("@/views/404View.vue"),
         },
     ],
-});
-
-router.afterEach(async () => {
-    const userStore = useUserStore();
-    const logicStore = useLogicStore();
-
-    if (userStore.isAuthenticated && !ampli.isLoaded && logicStore.isAnalyticsAllowed) {
-        ampli.load({
-            client: {
-                apiKey: import.meta.env.VITE_AMPLITUDE_KEY,
-                configuration: {
-                    appVersion: __APP_VERSION__,
-                    identityStorage: "none",
-                    trackingOptions: { ipAddress: false, language: false },
-                    defaultTracking: {
-                        fileDownloads: false,
-                        formInteractions: false,
-                        attribution: false,
-                        pageViews: { trackHistoryChanges: "pathOnly" },
-                    },
-                },
-            },
-        });
-        ampli.identify(userStore.user.id, {
-            Username: userStore.user.rsiHandle,
-            "App Language": localStorage.getItem("selectedLanguage") ?? "en-US",
-        });
-    }
 });
 
 export default router;

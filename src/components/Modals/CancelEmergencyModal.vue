@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CancellationReason } from "@medrunner-services/api-client";
+import { CancellationReason } from "@medrunner/api-client";
 import { type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 

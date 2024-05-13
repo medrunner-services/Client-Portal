@@ -8,15 +8,15 @@ import type {
     PaginatedResponse,
     ResponseRating,
     TeamDetailsResponse,
-} from "@medrunner-services/api-client";
+} from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { type Ref, ref } from "vue";
-import { useI18n } from "vue-i18n";
 
+import { i18n } from "@/i18n";
 import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
-    const { t } = useI18n();
+    const { t } = i18n.global;
     const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
     const trackedEmergencyMessages: Ref<ChatMessage[]> = ref([]);
     const trackedEmergencyTeamDetails: Ref<TeamDetailsResponse> = ref({} as TeamDetailsResponse);

@@ -30,8 +30,6 @@ onMounted(async () => {
 
 function getErrorText(): string {
     switch (routeQueryError.value) {
-        case "deactivated":
-            return t("error_loginAccountDeactivated");
         case "discord_access_denied":
             return t("error_loginDiscordDenied");
         case "accountUnknown":

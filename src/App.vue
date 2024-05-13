@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Person } from "@medrunner-services/api-client";
-import { HubConnectionState } from "@microsoft/signalr";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
@@ -9,12 +7,8 @@ import GlobalFooter from "@/components/GlobalFooter.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
-import { useLogicStore } from "@/stores/logicStore";
-import { useUserStore } from "@/stores/userStore";
-import { ws } from "@/utils/medrunnerClient";
+import { initializeApp } from "@/utils/initializeApp";
 
-const logicStore = useLogicStore();
-const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
@@ -25,14 +19,6 @@ const errorLoadingPage = ref(false);
 onMounted(async () => {
     isLoadingPage.value = true;
 
-    if (
-        (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem("darkMode") == null) ||
-        localStorage.getItem("darkMode") === "true"
-    ) {
-        document.documentElement.classList.add("dark");
-        logicStore.darkMode = true;
-    }
-
     try {
         await router.isReady();
     } catch (e) {
@@ -41,15 +27,7 @@ onMounted(async () => {
         isLoadingPage.value = false;
     }
 
-    if (ws && ws.state === HubConnectionState.Connected) {
-        ws.on("PersonUpdate", (newUser: Person) => {
-            userStore.user = newUser;
-        });
-
-        ws.onreconnected(async () => {
-            userStore.user = await userStore.fetchUser();
-        });
-    }
+    await initializeApp();
 });
 </script>
 

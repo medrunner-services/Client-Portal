@@ -6,8 +6,8 @@ import UserSettings from "@/components/Profile/UserSettings.vue";
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 lg:flex-row">
-        <div class="lg:w-1/2">
+    <div class="content-container flex flex-col gap-10 xl:flex-row">
+        <div class="xl:w-1/2">
             <UserAccount />
 
             <UserSettings class="mt-10" />
@@ -15,7 +15,7 @@ import UserSettings from "@/components/Profile/UserSettings.vue";
             <TokenManagement class="mt-10" />
         </div>
 
-        <div class="lg:w-1/2">
+        <div class="xl:w-1/2">
             <ChangelogRecap />
         </div>
     </div>

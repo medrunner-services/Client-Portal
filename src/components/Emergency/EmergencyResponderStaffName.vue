@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Level } from "@medrunner-services/api-client";
+import { Level } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 

@@ -5,7 +5,9 @@ import { RouterLink } from "vue-router";
 
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
+import { useUserStore } from "@/stores/userStore";
 const logicStore = useLogicStore();
+const userStore = useUserStore();
 const { t, locale, availableLocales } = useI18n();
 
 const showMenu = ref(false);
@@ -33,10 +35,15 @@ function switchNavMenuSate(): void {
     scrollEnabled.value ? disableScrolling() : enableScrolling();
 }
 
-function changeLanguage(newLocal: string): void {
+async function changeLanguage(newLocal: string): Promise<void> {
     locale.value = newLocal;
-    localStorage.setItem("selectedLanguage", newLocal);
     showLanguageMenu.value = false;
+
+    try {
+        await userStore.setSettings({ selectedLanguage: newLocal });
+    } catch (e) {
+        return;
+    }
 }
 </script>
 

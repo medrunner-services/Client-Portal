@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MissionStatus, ResponseRating } from "@medrunner-services/api-client";
+import { MissionStatus, ResponseRating } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 

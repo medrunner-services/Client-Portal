@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { PersonType } from "@medrunner-services/api-client";
+import { PersonType } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { ampli } from "@/ampli";
+import DeleteAccountModal from "@/components/Modals/DeleteAccountModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 const router = useRouter();
 
@@ -19,6 +21,7 @@ const isEditingUsername = ref(false);
 const isUpdatingUsername = ref(false);
 const isLoggingOut = ref(false);
 const errorUpdatingUsername = ref("");
+const displayDeleteAccountModal = ref(false);
 
 async function updateUsername() {
     if (isEditingUsername.value) {
@@ -50,10 +53,6 @@ async function updateUsername() {
 async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
     await userStore.disconnectUser();
-    if (ampli.isLoaded) {
-        ampli.client.setOptOut(true);
-        ampli.client.flush();
-    }
     await router.push("/login");
 }
 
@@ -97,13 +96,47 @@ function closeEditingUsername() {
                             size="full"
                             class="mt-2 lg:ml-2 lg:mt-0"
                             @click="closeEditingUsername()"
-                            >Cancel</GlobalButton
+                            >{{ t("user_cancel") }}</GlobalButton
                         >
                     </div>
                 </div>
                 <p v-if="errorUpdatingUsername" class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ errorUpdatingUsername }}</p>
             </div>
+
+            <div class="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:flex-row">
+                <div>
+                    <p class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">{{ t("user_userID") }}</p>
+                    <div
+                        class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    >
+                        <p>{{ userStore.user.id }}</p>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">{{ t("user_joiningDate") }}</p>
+                    <div
+                        class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    >
+                        <p>{{ logicStore.timestampToDate(userStore.user.created) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex w-full">
+                <GlobalButton
+                    type="outline"
+                    class="ml-auto w-full lg:w-fit"
+                    :disabled="userStore.user.personType !== PersonType.CLIENT"
+                    :title="userStore.user.personType ? t('user_deleteAccountButtonTitle') : null"
+                    size="full"
+                    @click="displayDeleteAccountModal = true"
+                    >{{ t("user_deleteAccount") }}</GlobalButton
+                >
+            </div>
         </GlobalCard>
+
+        <DeleteAccountModal v-if="displayDeleteAccountModal" @close="displayDeleteAccountModal = false" />
     </div>
 </template>
 

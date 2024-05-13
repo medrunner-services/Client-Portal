@@ -1,31 +1,40 @@
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
+import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
 import IgnoreEmergencyDetailsFormModal from "@/components/Modals/IgnoreEmergencyDetailsFormModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
+import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useUserStore } from "@/stores/userStore";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
+const userStore = useUserStore();
 
 const emit = defineEmits(["submittedDetails"]);
 
 const currentFormPart = ref(1);
 const displayIgnoreModal = ref(false);
+const displayRulesModal = ref(false);
 
 const inputSituation = ref("");
 const inputExactLocation = ref("");
 const inputInjury = ref("");
 const inputCrimestat = ref("");
+const inputLocationType = ref("");
 const inputCrimestatDetails = ref("");
 const inputDeathHours: Ref<number | undefined> = ref(undefined);
 const inputDeathMinutes: Ref<number | undefined> = ref(undefined);
 const inputShip = ref("");
 const inputBeacon: Ref<boolean | undefined> = ref(undefined);
+const inputBeaconPlayer = ref("");
+const inputBeaconDistance = ref("");
 const inputEnemies: Ref<boolean | undefined> = ref(undefined);
 const inputEnemiesDetails = ref("");
 const inputParty: Ref<boolean | undefined> = ref(undefined);
@@ -33,6 +42,19 @@ const inputPartyDetails = ref([""]);
 const inputRemarks = ref("");
 const formErrorMessage = ref("");
 const submittingDetails = ref(false);
+
+onMounted(() => {
+    const modalVisibilityPreference =
+        "hideEmergencyRulesModal" in userStore.user.clientPortalPreferences
+            ? (userStore.user.clientPortalPreferences.hideEmergencyRulesModal as boolean)
+            : false;
+
+    if (!modalVisibilityPreference) displayRulesModal.value = true;
+});
+
+function confirmedRules(): void {
+    displayRulesModal.value = false;
+}
 
 async function sendDetails(): Promise<void> {
     try {
@@ -43,7 +65,8 @@ async function sendDetails(): Promise<void> {
             ## Emergency details from Client
 
             __The client's situation is:__  **${inputSituation.value ? inputSituation.value : "Unknown"}**\n
-            __The client is located:__  **${inputExactLocation.value ? inputExactLocation.value : "Unknown"}**\n
+            __The client type of location is:__  **${inputLocationType.value ? inputLocationType.value : "Unknown"}**\n
+            __The client exact location is:__  **${inputExactLocation.value ? inputExactLocation.value : "Unknown"}**\n
             __Client ship:__  **${inputShip.value ? inputShip.value : "Unknown"}**\n
             __Time until client death:__  **${
                 inputDeathHours.value || inputDeathMinutes.value
@@ -51,7 +74,9 @@ async function sendDetails(): Promise<void> {
                     : "Unknown"
             }**\n
             __Is the client injured:__  **${inputInjury.value ? inputInjury.value : "Unknown"}**\n
-            __Has the client sent an IG beacon:__  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**\n
+            __Has the client sent an IG beacon?__  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**${
+                inputBeaconPlayer.value ? `\n\n> Name: ${inputBeaconPlayer.value}` : ""
+            }\n${inputBeaconDistance.value ? `> Distance: ${inputBeaconDistance.value}` : ""}\n
             __Is the client in a team?__  **${inputParty.value === true ? "Yes" : inputParty.value === false ? "No" : "Unknown"}**${
                 inputParty.value === true && inputPartyDetails.value ? `\n\n> ${inputPartyDetails.value.filter((str) => str !== "").join(", ")}` : ""
             }\n
@@ -71,6 +96,8 @@ async function sendDetails(): Promise<void> {
         inputExactLocation.value = "";
         inputInjury.value = "";
         inputBeacon.value = false;
+        inputBeaconPlayer.value = "";
+        inputBeaconDistance.value = "";
         inputParty.value = false;
         inputPartyDetails.value = [""];
         inputEnemies.value = false;
@@ -81,6 +108,7 @@ async function sendDetails(): Promise<void> {
         inputCrimestat.value = "";
         inputCrimestatDetails.value = "";
         inputShip.value = "";
+        inputLocationType.value = "";
 
         emit("submittedDetails");
     } catch (error: any) {
@@ -102,6 +130,16 @@ async function sendDetails(): Promise<void> {
                 <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
             </span>
         </div>
+
+        <GlobalCard class="mt-8">
+            <p class="font-Mohave text-3xl font-bold text-primary-600 dark:text-red-700">
+                {{ t("formDetailed_infoCardTitle") }}
+            </p>
+
+            <p class="mt-1 font-medium">
+                {{ t("formDetailed_infoCardDescription") }}
+            </p>
+        </GlobalCard>
 
         <div class="mt-8">
             <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base lg:mb-8">
@@ -170,9 +208,7 @@ async function sendDetails(): Promise<void> {
             </ol>
         </div>
 
-        <div class="w-fit rounded-lg border border-gray-200 p-2.5 dark:border-gray-700">
-            <p class="text-xs md:text-sm">{{ t("formDetailed_infoSpeakEnglish") }}</p>
-        </div>
+        <GlobalTextBox>{{ t("formDetailed_infoSpeakEnglish") }}</GlobalTextBox>
 
         <div v-if="currentFormPart === 1" class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
             <GlobalSelectInput
@@ -189,14 +225,6 @@ async function sendDetails(): Promise<void> {
                 :helper="t('formDetailed_helpSituation')"
             />
 
-            <GlobalTextInput
-                class="w-full"
-                v-model="inputExactLocation"
-                :label="t('formDetailed_location')"
-                :placeholder="t('formDetailed_placeholderLocation')"
-                :helper="t('formDetailed_helpLocation')"
-            />
-
             <GlobalSelectInput
                 class="w-full"
                 :options="[
@@ -209,6 +237,29 @@ async function sendDetails(): Promise<void> {
                 v-model="inputInjury"
                 :label="t('formDetailed_injury')"
                 :helper="t('formDetailed_helpInjury')"
+            />
+
+            <GlobalSelectInput
+                class="w-full"
+                :options="[
+                    { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
+                    { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
+                    { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
+                    { value: 'Space', label: t('formDetailed_locationTypeSpace') },
+                    { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
+                    { value: 'Other', label: t('formDetailed_locationTypeOther') },
+                ]"
+                v-model="inputLocationType"
+                :label="t('formDetailed_locationType')"
+                :helper="t('formDetailed_helpLocationType')"
+            />
+
+            <GlobalTextInput
+                class="w-full"
+                v-model="inputExactLocation"
+                :label="t('formDetailed_location')"
+                :placeholder="t('formDetailed_placeholderLocation')"
+                :helper="t('formDetailed_helpLocation')"
             />
 
             <div>
@@ -236,6 +287,14 @@ async function sendDetails(): Promise<void> {
                 />
             </div>
 
+            <GlobalTextInput
+                class="w-full"
+                v-model="inputShip"
+                :label="t('formDetailed_ship')"
+                :placeholder="t('formDetailed_placeholderShip')"
+                :helper="t('formDetailed_helpShip')"
+            />
+
             <div>
                 <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">{{ t("formDetailed_death") }}</label>
 
@@ -246,14 +305,6 @@ async function sendDetails(): Promise<void> {
                     <p class="mx-4">{{ t("formDetailed_minutes") }}</p>
                 </div>
             </div>
-
-            <GlobalTextInput
-                class="w-full"
-                v-model="inputShip"
-                :label="t('formDetailed_ship')"
-                :placeholder="t('formDetailed_placeholderShip')"
-                :helper="t('formDetailed_helpShip')"
-            />
         </div>
 
         <div v-if="currentFormPart === 2" class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
@@ -269,7 +320,19 @@ async function sendDetails(): Promise<void> {
                     :label="t('formDetailed_beacon')"
                     :helper="t('formDetailed_helpBeacon')"
                 />
-                <p v-if="inputBeacon" class="mt-2 font-medium text-primary-600 dark:text-red-700">
+                <GlobalTextInput
+                    v-if="inputBeacon"
+                    class="mt-2 w-full"
+                    v-model="inputBeaconPlayer"
+                    :placeholder="t('formDetailed_placeholderBeaconPlayer')"
+                />
+                <GlobalTextInput
+                    v-if="inputBeacon"
+                    class="mt-2 w-full"
+                    v-model="inputBeaconDistance"
+                    :placeholder="t('formDetailed_placeholderBeaconDistance')"
+                />
+                <p v-if="inputBeacon" class="mt-2 text-sm font-medium text-primary-600 dark:text-red-700">
                     {{ t("formDetailed_beaconCancelMessage") }}
                 </p>
             </div>
@@ -383,6 +446,7 @@ async function sendDetails(): Promise<void> {
             </div>
         </div>
 
+        <EmergencyRulesModal v-if="displayRulesModal" @close="displayRulesModal = false" @confirmed="confirmedRules()" />
         <IgnoreEmergencyDetailsFormModal v-if="displayIgnoreModal" @ignoreDetails="$emit('submittedDetails')" @close="displayIgnoreModal = false" />
     </div>
 </template>

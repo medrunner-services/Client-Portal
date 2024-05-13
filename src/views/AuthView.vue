@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
+import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
 const route = useRoute();
@@ -27,9 +28,18 @@ onMounted(async () => {
             if (response.ok) {
                 const responseBody = await response.json();
 
-                localStorage.setItem("refreshToken", responseBody.refreshToken);
-                await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+                await initializeApi(responseBody.refreshToken);
                 await initializeWebsocket();
+
+                try {
+                    userStore.user = await userStore.fetchUser();
+                    userStore.isAuthenticated = true;
+                } catch (e) {
+                    localStorage.removeItem("refreshToken");
+                    await router.push("/login?error=generic");
+                }
+
+                await initializeApp();
 
                 if (route.query.state) await router.push(decodeURIComponent(route.query.state as string));
                 else await router.push("/");
@@ -54,6 +64,15 @@ onMounted(async () => {
                 localStorage.setItem("refreshToken", responseBody.refreshToken);
                 await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
                 await initializeWebsocket();
+
+                try {
+                    userStore.user = await userStore.fetchUser();
+                    userStore.isAuthenticated = true;
+                } catch (e) {
+                    await router.push("/login?error=generic");
+                }
+
+                await initializeApp();
 
                 await router.push("/login/link");
             } else {

@@ -18,7 +18,6 @@ VITE_API_URL
 VITE_CALLBACK_URL
 VITE_DISCORD_CLIENT_ID
 CROWDIN_TOKEN
-VITE_AMPLITUDE_KEY
 ```
 You can use `.env.development` and `.env.development-network` for different dev Vite modes and `.env.staging` and `.env.production` for different build Vite modes.
 

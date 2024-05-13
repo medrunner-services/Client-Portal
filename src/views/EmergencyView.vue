@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { type Emergency, type MissionStatus, SubmissionSource } from "@medrunner-services/api-client";
+import { type Emergency, type MissionStatus, SubmissionSource } from "@medrunner/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import EmergencyChatBox from "@/components/Emergency/EmergencyChatBox.vue";
 import EmergencyCompletion from "@/components/Emergency/EmergencyCompletion.vue";
@@ -22,6 +23,7 @@ const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
+const router = useRouter();
 
 const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 
@@ -47,21 +49,8 @@ onMounted(async () => {
         loadingEmergency.value = false;
     }
 
-    if (
-        "Notification" in window &&
-        Notification.permission === "default" &&
-        (localStorage.getItem("notificationActivated") == null || localStorage.getItem("notificationActivated") === "true")
-    ) {
-        Notification.requestPermission().then((permission) => {
-            if (permission == "granted") {
-                logicStore.isNotificationGranted = true;
-                localStorage.setItem("notificationActivated", "true");
-            }
-        });
-    }
-
     ws.on("EmergencyCreate", (newEmergency: Emergency) => {
-        if (newEmergency.clientId === userStore.user.id) {
+        if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
             emergencyStore.trackedEmergency = newEmergency;
             oldEmergencyStatus.value = newEmergency.status;
             displayFormDetails.value = true;
@@ -77,10 +66,14 @@ onMounted(async () => {
                 respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
             }
 
-            if (updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status) {
-                sendBrowserNotification(
+            if (updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status && logicStore.emergencyUpdateNotification) {
+                await sendBrowserNotification(
                     emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
                     emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                    () => {
+                        window.focus();
+                        router.push({ name: "emergency" });
+                    },
                 );
             }
 
@@ -101,8 +94,8 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 lg:flex-row">
-        <div class="lg:w-1/2">
+    <div class="content-container flex flex-col gap-10 xl:flex-row">
+        <div class="xl:w-1/2">
             <div v-if="errorLoadingEmergency || userStore.isBlocked">
                 <div class="min-h-11">
                     <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
@@ -115,7 +108,10 @@ onMounted(async () => {
                 </GlobalCard>
             </div>
             <div v-else-if="emergencyStore.trackedEmergency.id">
-                <EmergencyDetailsForm v-if="displayFormDetails" @submitted-details="displayFormDetails = false" />
+                <EmergencyDetailsForm
+                    v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
+                    @submitted-details="displayFormDetails = false"
+                />
                 <EmergencyTracking @send-new-details="displayFormDetails = true" v-else-if="!emergencyStore.trackedEmergency.isComplete" />
                 <EmergencyCompletion @rated-emergency="emergencyStore.resetTrackedEmergency()" v-else />
             </div>
@@ -123,7 +119,7 @@ onMounted(async () => {
             <EmergencyReportForm v-else />
         </div>
 
-        <div class="lg:w-1/2">
+        <div class="xl:w-1/2">
             <div v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked">
                 <div class="min-h-11">
                     <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
@@ -145,7 +141,7 @@ onMounted(async () => {
                     <GlobalCard class="mt-4 flex flex-col items-center justify-center text-center">
                         <p>{{ t("tracking_textDiscordThread") }}</p>
                         <a
-                            :href="`https://discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
+                            :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
                             target="_blank"
                             class="mt-8"
                         >

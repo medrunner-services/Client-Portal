@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Class, type TeamMember } from "@medrunner-services/api-client";
-import { Level } from "@medrunner-services/api-client";
+import { Class, type TeamMember } from "@medrunner/api-client";
+import { Level } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -101,7 +101,7 @@ async function addTextToClipboard(text: string) {
                 </div>
 
                 <div v-if="emergencyStore.trackedEmergency.tertiaryLocation" class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
-                    <p class="text-lg font-semibold">{{ t("form_location") }}</p>
+                    <p class="text-lg font-semibold">{{ t("form_moon") }}</p>
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
                 </div>
 

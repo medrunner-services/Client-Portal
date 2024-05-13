@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import type { ChatMessage } from "@medrunner-services/api-client";
+import type { ChatMessage } from "@medrunner/api-client";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { MessageNotification } from "@/types";
 import { ws } from "@/utils/medrunnerClient";
 import { sendBrowserNotification } from "@/utils/notificationFunctions";
 import { replaceAtMentions } from "@/utils/stringUtils";
@@ -16,6 +19,8 @@ import { replaceAtMentions } from "@/utils/stringUtils";
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
+const logicStore = useLogicStore();
+const router = useRouter();
 
 const inputMessage = ref("");
 const sendingMessage = ref(false);
@@ -36,19 +41,31 @@ onMounted(async () => {
         ) {
             emergencyStore.trackedEmergencyMessages.push(newMessage);
 
-            if (
-                newMessage.senderId !== userStore.user.id &&
-                (newMessage.contents.includes(`@${userStore.user.rsiHandle}`) || newMessage.contents.includes(`@${userStore.user.discordId}`))
-            ) {
-                const bodyNotification = replaceAtMentions(
-                    newMessage.contents,
-                    newMessage.senderId,
-                    false,
-                    emergencyStore.trackedEmergency.respondingTeam.allMembers,
-                    userStore.user,
-                );
+            const bodyNotification = replaceAtMentions(
+                newMessage.contents,
+                newMessage.senderId,
+                false,
+                emergencyStore.trackedEmergency.respondingTeam.allMembers,
+                userStore.user,
+            );
 
-                sendBrowserNotification(t("tracking_newMessage"), bodyNotification);
+            if (newMessage.senderId !== userStore.user.id) {
+                if (logicStore.chatMessageNotification === MessageNotification.ALL) {
+                    await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                        window.focus();
+                        router.push({ name: "emergency" });
+                    });
+                } else if (logicStore.chatMessageNotification === MessageNotification.PING) {
+                    if (
+                        newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
+                        newMessage.contents.includes(`@${userStore.user.discordId}`)
+                    ) {
+                        await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                            window.focus();
+                            router.push({ name: "emergency" });
+                        });
+                    }
+                }
             }
         }
     });
