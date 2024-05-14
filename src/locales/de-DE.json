@@ -345,6 +345,7 @@
     "formDetailed_locationTypeSpace": "Weltraum",
     "formDetailed_locationTypeSurface": "Planetenoberfläche",
     "formDetailed_locationTypeOther": "Andere",
+    "formDetailed_placeholderBeaconPlayer": null,
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"

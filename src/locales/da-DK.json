@@ -345,6 +345,7 @@
     "formDetailed_locationTypeSpace": "Rummet",
     "formDetailed_locationTypeSurface": "Planetoverflade",
     "formDetailed_locationTypeOther": "Andet",
+    "formDetailed_placeholderBeaconPlayer": null,
     "404_somethingMissing": "Noget mangler.",
     "404_helperText": "Beklager, vi kan ikke finde siden. Der er masser at udforske på hovedsiden.",
     "404_backToHomepage": "Tilbage til Hovedsiden"
