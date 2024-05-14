@@ -345,6 +345,7 @@
     "formDetailed_locationTypeSpace": "Espacio",
     "formDetailed_locationTypeSurface": "Firme",
     "formDetailed_locationTypeOther": "Otro",
+    "formDetailed_placeholderBeaconPlayer": null,
     "404_somethingMissing": "Algo falta.",
     "404_helperText": "Lo sentimos, no podemos encontrar esa página. Encontrarás mucho para explorar en la página de inicio.",
     "404_backToHomepage": "Volver a la página de inicio"
