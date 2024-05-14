@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
@@ -7,7 +7,6 @@ import GlobalFooter from "@/components/GlobalFooter.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
-import { initializeApp } from "@/utils/initializeApp";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,10 +14,6 @@ const { t } = useI18n();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
-
-onBeforeMount(async () => {
-    await initializeApp();
-});
 
 onMounted(async () => {
     isLoadingPage.value = true;

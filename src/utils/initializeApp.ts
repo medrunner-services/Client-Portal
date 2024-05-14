@@ -21,7 +21,8 @@ export async function initializeApp(): Promise<void> {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
         } catch (error: any) {
-            return;
+            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
+            else return;
         }
     }
 

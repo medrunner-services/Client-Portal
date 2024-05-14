@@ -5,6 +5,7 @@ import { createApp } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 
 import { i18n } from "@/i18n";
+import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
 import App from "./App.vue";
@@ -20,6 +21,9 @@ const app = createApp(App);
         }
     } finally {
         app.use(createPinia());
+
+        await initializeApp();
+
         app.use(router);
         app.use(i18n);
         app.use(VueApexCharts);

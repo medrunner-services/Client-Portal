@@ -7,27 +7,20 @@ import DashboardView from "./views/DashboardView.vue";
 async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
 
-    if (!localStorage.getItem("refreshToken")) {
+    if (!userStore.isAuthenticated) {
         if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
         else return "/login";
-    } else if (!userStore.isAuthenticated) {
-        try {
-            userStore.user = await userStore.fetchUser();
-            userStore.isAuthenticated = true;
-
-            if (userStore.user.rsiHandle) {
-                const blockCheck = await userStore.fetchUserBlocklistStatus();
-                if (blockCheck.blocked) userStore.isBlocked = true;
-            }
-        } catch (error: any) {
-            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
-            if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
-            else return "/login";
-        }
     }
 
     if (!userStore.user.rsiHandle) {
         return "/login/link";
+    }
+
+    try {
+        const blockCheck = await userStore.fetchUserBlocklistStatus();
+        if (blockCheck.blocked) userStore.isBlocked = true;
+    } catch (e) {
+        return "/login?error=generic";
     }
 
     return true;
@@ -35,17 +28,9 @@ async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string 
 
 async function isUserNotAuthenticated(): Promise<string | boolean> {
     const userStore = useUserStore();
-    if (userStore.isAuthenticated && localStorage.getItem("refreshToken")) {
+
+    if (userStore.isAuthenticated) {
         return "/";
-    } else if (localStorage.getItem("refreshToken")) {
-        try {
-            userStore.user = await userStore.fetchUser();
-            userStore.isAuthenticated = true;
-            return "/";
-        } catch (error: any) {
-            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
-            return true;
-        }
     }
 
     return true;
@@ -54,16 +39,15 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
 async function isUserNotLinked(): Promise<string | boolean> {
     const userStore = useUserStore();
 
-    if (!userStore.isAuthenticated && localStorage.getItem("refreshToken")) {
-        try {
-            userStore.user = await userStore.fetchUser();
-            userStore.isAuthenticated = true;
-        } catch (error: any) {
-            return "/login";
-        }
+    if (!userStore.isAuthenticated) {
+        return "/login";
     }
 
-    return userStore.isAuthenticated && !userStore.user?.rsiHandle ? true : "/";
+    if (userStore.user?.rsiHandle) {
+        return "/";
+    }
+
+    return true;
 }
 
 export const router = createRouter({
