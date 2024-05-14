@@ -16,6 +16,15 @@ export async function initializeApp(): Promise<void> {
     const userStore = useUserStore();
     const { availableLocales, locale } = i18n.global;
 
+    if (localStorage.getItem("refreshToken")) {
+        try {
+            userStore.user = await userStore.fetchUser();
+            userStore.isAuthenticated = true;
+        } catch (error: any) {
+            return;
+        }
+    }
+
     initializeSettingDarkMode();
     initializeSettingDiscordLinks();
     await initializeSettingNotifications();

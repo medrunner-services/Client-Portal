@@ -1,6 +1,6 @@
 {
   "name": "client-portal",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,7 +15,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepush": "run-p lint format type-check",
-    "update-locals": "node --env-file=.env.development update-locals.mjs"
+    "update-locals": "node --env-file=.env.development update-locals.js"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^4.0.0",

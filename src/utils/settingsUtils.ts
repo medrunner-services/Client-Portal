@@ -74,8 +74,8 @@ export function initializeSettingAnalytics() {
         const defaultAnalyticsSetting =
             "globalAnalytics" in userStore.user.clientPortalPreferences ? (userStore.user.clientPortalPreferences.globalAnalytics as boolean) : true;
 
-        if (defaultAnalyticsSetting) {
-            logicStore.isAnalyticsAllowed = true;
+        if (!defaultAnalyticsSetting) {
+            logicStore.isAnalyticsAllowed = false;
         }
     }
 }
