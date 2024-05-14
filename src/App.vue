@@ -7,7 +7,6 @@ import GlobalFooter from "@/components/GlobalFooter.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
-import { initializeApp } from "@/utils/initializeApp";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,8 +25,6 @@ onMounted(async () => {
     } finally {
         isLoadingPage.value = false;
     }
-
-    await initializeApp();
 });
 </script>
 

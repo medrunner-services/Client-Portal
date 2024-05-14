@@ -30,16 +30,12 @@ onMounted(async () => {
 
                 await initializeApi(responseBody.refreshToken);
                 await initializeWebsocket();
+                await initializeApp();
 
-                try {
-                    userStore.user = await userStore.fetchUser();
-                    userStore.isAuthenticated = true;
-                } catch (e) {
+                if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
                 }
-
-                await initializeApp();
 
                 if (route.query.state) await router.push(decodeURIComponent(route.query.state as string));
                 else await router.push("/");
@@ -61,18 +57,14 @@ onMounted(async () => {
             if (response.ok) {
                 const responseBody = await response.json();
 
-                localStorage.setItem("refreshToken", responseBody.refreshToken);
-                await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+                await initializeApi(responseBody.refreshToken);
                 await initializeWebsocket();
+                await initializeApp();
 
-                try {
-                    userStore.user = await userStore.fetchUser();
-                    userStore.isAuthenticated = true;
-                } catch (e) {
+                if (!userStore.isAuthenticated) {
+                    localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
                 }
-
-                await initializeApp();
 
                 await router.push("/login/link");
             } else {

@@ -52,6 +52,7 @@ const appVersion = __APP_VERSION__;
                         <li>Clicking on notifications now redirects you to the correct page.</li>
                         <li>Fixed issue where scroll was blocked when clicking out of certain modals.</li>
                         <li>You will now see the emergency completion message even if you where on the details form page.</li>
+                        <li>The total number of emergencies in the breakdown graph did not respect the theme.</li>
                     </ul>
                 </div>
             </div>
