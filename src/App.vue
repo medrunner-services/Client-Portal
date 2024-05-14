@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onBeforeMount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
@@ -16,6 +16,10 @@ const { t } = useI18n();
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
 
+onBeforeMount(async () => {
+    await initializeApp();
+});
+
 onMounted(async () => {
     isLoadingPage.value = true;
 
@@ -26,8 +30,6 @@ onMounted(async () => {
     } finally {
         isLoadingPage.value = false;
     }
-
-    await initializeApp();
 });
 </script>
 
