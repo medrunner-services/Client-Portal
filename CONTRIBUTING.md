@@ -53,6 +53,7 @@ VITE_CALLBACK_URL # The URL of your the app
 VITE_DISCORD_CLIENT_ID # Used to authenticate users with Discord OAuth
 VITE_DISCORD_SERVER_ID # Used in links across the app
 VITE_FEATURE_REGISTRATION_ENABLED # Can be set to true or false to enable or disable the registration feature
+VITE_FEATURE_ACCOUNT_DELETION_ENABLED # Can be set to true or false to enable or disable the account deletion feature
 ```
 
 Run the development server to see your local changes at [localhost:5173](http://localhost:5173/):
