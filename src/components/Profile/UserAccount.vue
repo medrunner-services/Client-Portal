@@ -23,6 +23,10 @@ const isLoggingOut = ref(false);
 const errorUpdatingUsername = ref("");
 const displayDeleteAccountModal = ref(false);
 
+const isAccountDeletionEnabled = !!(
+    import.meta.env.VITE_FEATURE_ACCOUNT_DELETION_ENABLED && import.meta.env.VITE_FEATURE_ACCOUNT_DELETION_ENABLED === "true"
+);
+
 async function updateUsername() {
     if (isEditingUsername.value) {
         isUpdatingUsername.value = true;
@@ -125,6 +129,7 @@ function closeEditingUsername() {
 
             <div class="mt-8 flex w-full">
                 <GlobalButton
+                    v-if="isAccountDeletionEnabled"
                     type="outline"
                     class="ml-auto w-full lg:w-fit"
                     :disabled="userStore.user.personType !== PersonType.CLIENT"

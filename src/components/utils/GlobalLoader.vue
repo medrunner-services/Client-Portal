@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<Props>(), {
                     fill="currentFill"
                 />
             </svg>
-            <span class="font-Mohave font-semibold" :class="props.textSize">{{ t("home_loading") }}</span>
+            <span class="font-semibold" :class="props.textSize">{{ t("home_loading") }}</span>
         </div>
     </div>
 </template>

@@ -12,6 +12,7 @@ import App from "./App.vue";
 import router from "./router";
 
 const app = createApp(App);
+const loader = document.getElementById("loader");
 
 (async () => {
     try {
@@ -29,5 +30,9 @@ const app = createApp(App);
         app.use(VueApexCharts);
 
         app.mount("#app");
+
+        if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+        }
     }
 })();
