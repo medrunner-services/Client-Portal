@@ -196,30 +196,6 @@ export const useLogicStore = defineStore("logic", () => {
         });
     }
 
-    function resetAnimationSettings(): void {
-        loginAnimationSpeed.value = 1;
-        loginAnimationStarSize.value = 2;
-        loginAnimationGlowSize.value = 2;
-
-        localStorage.setItem("loginAnimationSpeed", "1");
-        localStorage.setItem("loginAnimationStarSize", "2");
-        localStorage.setItem("loginAnimationGlowSize", "2");
-    }
-
-    function updateLoginAnimation(): void {
-        if (isLoginAnimationAllowed.value) {
-            isLoginAnimationAllowed.value = false;
-            localStorage.setItem("loginAnimation", "false");
-        } else {
-            isLoginAnimationAllowed.value = true;
-            localStorage.setItem("loginAnimation", "true");
-        }
-    }
-
-    function saveAnimationSetting(setting: string, value: number): void {
-        localStorage.setItem(setting, value.toString());
-    }
-
     return {
         isNotificationGranted,
         customSoundNotification,
@@ -243,8 +219,5 @@ export const useLogicStore = defineStore("logic", () => {
         getStatusString,
         timestampToHours,
         timestampToDate,
-        resetAnimationSettings,
-        updateLoginAnimation,
-        saveAnimationSetting,
     };
 });

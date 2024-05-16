@@ -56,7 +56,7 @@ const submittingLinkForm = async (): Promise<void> => {
             formErrorHelper.value = t("error_noIdRsiBioHelper");
         } else if (error.statusCode === 404) {
             formErrorMessage.value = t("error_unknownRsiAccount");
-            formErrorMessage.value = t("error_unknownRsiAccountHelper");
+            formErrorHelper.value = t("error_unknownRsiAccountHelper");
         } else if (error.statusCode === 409) {
             formErrorMessage.value = t("error_rsiNewAccountLinked");
             formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
