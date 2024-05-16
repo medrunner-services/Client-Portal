@@ -345,7 +345,7 @@
     "formDetailed_locationTypeSpace": "太空",
     "formDetailed_locationTypeSurface": "地表",
     "formDetailed_locationTypeOther": "其他",
-    "formDetailed_placeholderBeaconPlayer": null,
+    "formDetailed_placeholderBeaconPlayer": "玩家的名字是什麼？",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
     "404_backToHomepage": "回到首頁"
