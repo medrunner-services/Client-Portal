@@ -67,7 +67,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         <div
             ref="selectorDiv"
             v-if="showDropdown"
-            class="absolute z-10 mt-7 -translate-x-5 rounded-lg bg-white font-normal shadow-lg dark:bg-gray-700 dark:shadow-gray-900"
+            class="absolute z-10 mt-7 -translate-x-11 rounded-lg bg-white font-normal shadow-lg dark:bg-gray-700 dark:shadow-gray-900"
         >
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400">
                 <li
