@@ -114,7 +114,7 @@
     "error_notificationPermissions": "您必須允許瀏覽器的通知來使用此功能",
     "error_loginAccountDeactivated": "此帳號已被停用",
     "error_loginDiscordDenied": "您已取消Discord登入，請您重試",
-    "error_loginAccountUnknown": "未知帳號，請先註冊",
+    "error_loginAccountUnknown": null,
     "error_loginAccountKnown": "帳號已被創建，請登入",
     "error_pageNotFound": "未找到頁面",
     "error_noIdRsiBio": "在此RSI帳戶當中查無此 Medrunner ID",

@@ -114,7 +114,7 @@
     "error_notificationPermissions": "Debes permitir las notificaciones del navegador para utilizar esta función",
     "error_loginAccountDeactivated": "Esta cuenta ha sido desactivada",
     "error_loginDiscordDenied": "Has cancelado el proceso de inicio de sesión de Discord; por favor intenta iniciar sesión nuevamente",
-    "error_loginAccountUnknown": "Cuenta desconocida, por favor regístrate",
+    "error_loginAccountUnknown": null,
     "error_loginAccountKnown": "Cuenta ya creada, por favor inicia sesión",
     "error_pageNotFound": "Página no encontrada",
     "error_noIdRsiBio": "El ID de Medrunner no se encontró en la biografía de esta cuenta",
