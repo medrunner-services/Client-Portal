@@ -114,7 +114,7 @@
     "error_notificationPermissions": "Sie müssen Browser-Benachrichtigungen zulassen, um diese Funktion nutzen zu können",
     "error_loginAccountDeactivated": "Dieser Account wurde deaktiviert",
     "error_loginDiscordDenied": "Sie haben den Discord-Loginprozess abgebrochen, bitte versuchen Sie erneut sich mit Discord einzuloggen",
-    "error_loginAccountUnknown": "Unbekannter Account, bitte registrieren Sie sich",
+    "error_loginAccountUnknown": null,
     "error_loginAccountKnown": "Dieser Account existiert bereits, bitte loggen Sie sich ein",
     "error_pageNotFound": "Seite nicht gefunden",
     "error_noIdRsiBio": "Die Medrunner-ID wurde in der Biografie dieses Accounts nicht gefunden",

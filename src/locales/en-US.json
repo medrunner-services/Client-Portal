@@ -114,7 +114,7 @@
     "error_notificationPermissions": "You must allow browser notifications to use this feature",
     "error_loginAccountDeactivated": "This account has been deactivated",
     "error_loginDiscordDenied": "You have canceled the Discord log-in process; please try to log in again",
-    "error_loginAccountUnknown": "Unknown account, please sign up",
+    "error_loginAccountUnknown": "Unknown account, please register",
     "error_loginAccountKnown": "Account already created, please sign in",
     "error_pageNotFound": "Page not found",
     "error_noIdRsiBio": "Your Medrunner ID was not found in this account bio",

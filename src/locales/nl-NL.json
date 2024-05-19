@@ -114,7 +114,7 @@
     "error_notificationPermissions": "U moet browser notificaties toestaan om deze feature te gebruiken",
     "error_loginAccountDeactivated": "Deze account is gedeactiveerd",
     "error_loginDiscordDenied": "U heeft het Discord login proces geannuleerd; probeer alstublieft nog een keer in te loggen",
-    "error_loginAccountUnknown": "Onbekend account, maak er één aan",
+    "error_loginAccountUnknown": null,
     "error_loginAccountKnown": "Account bestaat al, log alstublieft in",
     "error_pageNotFound": "Pagina niet gevonden",
     "error_noIdRsiBio": "Het Medrunner ID was niet gevonden in de bio van deze account",
