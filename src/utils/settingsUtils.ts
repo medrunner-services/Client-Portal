@@ -22,7 +22,7 @@ export function initializeSettingDiscordLinks() {
     }
 }
 
-export async function initializeSettingNotifications() {
+export function initializeSettingNotifications() {
     const logicStore = useLogicStore();
     const userStore = useUserStore();
 
@@ -32,22 +32,7 @@ export async function initializeSettingNotifications() {
                 ? (userStore.user.clientPortalPreferences.globalNotifications as boolean)
                 : null;
 
-        if (
-            "Notification" in window &&
-            Notification.permission === "default" &&
-            (defaultNotificationSetting === null || defaultNotificationSetting)
-        ) {
-            const permission = await Notification.requestPermission();
-
-            if (permission === "granted") {
-                try {
-                    await userStore.setSettings({ globalNotifications: true });
-                    logicStore.isNotificationGranted = true;
-                } catch (e) {
-                    logicStore.isNotificationGranted = false;
-                }
-            }
-        } else if ("Notification" in window && Notification.permission === "granted" && defaultNotificationSetting !== false) {
+        if ("Notification" in window && Notification.permission === "granted" && defaultNotificationSetting !== false) {
             logicStore.isNotificationGranted = true;
         }
 
@@ -63,6 +48,25 @@ export async function initializeSettingNotifications() {
             "chatMessageNotification" in userStore.user.clientPortalPreferences
                 ? (userStore.user.clientPortalPreferences.chatMessageNotification as MessageNotification)
                 : MessageNotification.ALL;
+    }
+}
+
+export function askNotificationPermission() {
+    const logicStore = useLogicStore();
+    const userStore = useUserStore();
+
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission().then((permission) => {
+            if (permission === "granted") {
+                try {
+                    userStore.setSettings({ globalNotifications: true }).then(() => {
+                        logicStore.isNotificationGranted = true;
+                    });
+                } catch (e) {
+                    logicStore.isNotificationGranted = false;
+                }
+            }
+        });
     }
 }
 
