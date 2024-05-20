@@ -268,11 +268,11 @@ async function sendDetails(): Promise<void> {
                     :options="[
                         { value: '', label: t('formDetailed_selectSituation'), hidden: true },
                         { value: 'No', label: t('formDetailed_no') },
-                        { value: 'Level 1', label: `${t('formDetailed_level')} 1` },
-                        { value: 'Level 2', label: `${t('formDetailed_level')} 2` },
-                        { value: 'Level 3', label: `${t('formDetailed_level')} 3` },
-                        { value: 'Level 4', label: `${t('formDetailed_level')} 4` },
-                        { value: 'Level 5', label: `${t('formDetailed_level')} 5` },
+                        { value: 'Level 1', label: `${t('formDetailed_level', { number: '1' })}` },
+                        { value: 'Level 2', label: `${t('formDetailed_level', { number: '2' })}` },
+                        { value: 'Level 3', label: `${t('formDetailed_level', { number: '3' })}` },
+                        { value: 'Level 4', label: `${t('formDetailed_level', { number: '4' })}` },
+                        { value: 'Level 5', label: `${t('formDetailed_level', { number: '5' })}` },
                     ]"
                     v-model="inputCrimestat"
                     :label="t('formDetailed_crimestat')"
