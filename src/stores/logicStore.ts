@@ -74,7 +74,7 @@ export const useLogicStore = defineStore("logic", () => {
             case "da-DK":
                 return "Dansk";
             case "zh-TW":
-                return "台湾普通话";
+                return "繁体中文";
             case "nl-NL":
                 return "Nederlands";
             case "pt-BR":
