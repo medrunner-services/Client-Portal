@@ -324,7 +324,7 @@
     "formDetailed_ship": "Quel est le modèle de votre vaisseau ?",
     "formDetailed_helpShip": "Quel est le modèle du vaisseau que vous avez utilisé pour arriver à votre position ?",
     "formDetailed_placeholderShip": "Votre modèle de vaisseau...",
-    "formDetailed_injuryTier": "Niveau",
+    "formDetailed_injuryTier": "Niveau {number}",
     "formDetailed_players": "Joueurs",
     "formDetailed_remarks": "Remarques",
     "formDetailed_placeholderRemarks": "Si vous avez des remarques supplémentaires, écrivez-les ici...",

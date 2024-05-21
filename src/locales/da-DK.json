@@ -324,7 +324,7 @@
     "formDetailed_ship": "Hvad er modellen af dit skib?",
     "formDetailed_helpShip": "Hvad er modellen af det skib, du brugte for at komme til din position?",
     "formDetailed_placeholderShip": "Din skibsmodel...",
-    "formDetailed_injuryTier": "Skadeniveau",
+    "formDetailed_injuryTier": null,
     "formDetailed_players": "Spillere",
     "formDetailed_remarks": "Kommentarer",
     "formDetailed_placeholderRemarks": "Hvis du har yderligere kommentarer, kan du skrive dem her...",

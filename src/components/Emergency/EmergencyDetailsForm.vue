@@ -230,9 +230,9 @@ async function sendDetails(): Promise<void> {
                 :options="[
                     { value: '', label: t('formDetailed_selectSituation'), hidden: true },
                     { value: 'No', label: t('formDetailed_no') },
-                    { value: 'Tier 1', label: `${t('formDetailed_injuryTier')} 1` },
-                    { value: 'Tier 2', label: `${t('formDetailed_injuryTier')} 2` },
-                    { value: 'Tier 3', label: `${t('formDetailed_injuryTier')} 3` },
+                    { value: 'Tier 1', label: `${t('formDetailed_injuryTier', { number: '1' })}` },
+                    { value: 'Tier 2', label: `${t('formDetailed_injuryTier', { number: '2' })}` },
+                    { value: 'Tier 3', label: `${t('formDetailed_injuryTier', { number: '3' })}` },
                 ]"
                 v-model="inputInjury"
                 :label="t('formDetailed_injury')"

@@ -324,7 +324,7 @@
     "formDetailed_ship": "What is the model of your ship?",
     "formDetailed_helpShip": "What is the model of the ship you used to get to your position?",
     "formDetailed_placeholderShip": "Your ship model...",
-    "formDetailed_injuryTier": "Tier",
+    "formDetailed_injuryTier": "Tier {number}",
     "formDetailed_players": "Players",
     "formDetailed_remarks": "Remarks",
     "formDetailed_placeholderRemarks": "If you have any additional remarks, write them here...",

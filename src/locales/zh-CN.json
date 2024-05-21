@@ -324,7 +324,7 @@
     "formDetailed_ship": "您的飞船型号是什么？",
     "formDetailed_helpShip": "您抵达您现在的位置用了什么型号的飞船？",
     "formDetailed_placeholderShip": "您的飞船型号……",
-    "formDetailed_injuryTier": "等级",
+    "formDetailed_injuryTier": null,
     "formDetailed_players": "玩家",
     "formDetailed_remarks": "备注",
     "formDetailed_placeholderRemarks": "如果您有其他注意事项的话，请在这里注明……",

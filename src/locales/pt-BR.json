@@ -324,7 +324,7 @@
     "formDetailed_ship": "Qual é o modelo da sua nave?",
     "formDetailed_helpShip": "Qual é o modelo da nave que você usou para chegar à sua posição?",
     "formDetailed_placeholderShip": "O modelo da sua nave...",
-    "formDetailed_injuryTier": "Nível",
+    "formDetailed_injuryTier": null,
     "formDetailed_players": "Jogadores",
     "formDetailed_remarks": "Observações",
     "formDetailed_placeholderRemarks": "Se você tiver quaisquer observações adicionais, escreva-as aqui...",

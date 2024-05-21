@@ -324,7 +324,7 @@
     "formDetailed_ship": "Cuál es el modelo de su vehiculo?",
     "formDetailed_helpShip": "Cuál es el modelo del vehículo que utilizó para llegar a su posición?",
     "formDetailed_placeholderShip": "El modelo de su vehiculo...",
-    "formDetailed_injuryTier": "Nivel",
+    "formDetailed_injuryTier": null,
     "formDetailed_players": "Jugadores",
     "formDetailed_remarks": "Comentarios",
     "formDetailed_placeholderRemarks": "Si tienes algún comentario adicional, escríbelo aquí...",

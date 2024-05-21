@@ -324,7 +324,7 @@
     "formDetailed_ship": "Какой модели ваш космический корабль?",
     "formDetailed_helpShip": "Какую модель корабля вы использовали, чтобы добраться до своей позиции?",
     "formDetailed_placeholderShip": "Модель вашего корабля...",
-    "formDetailed_injuryTier": "Уровень",
+    "formDetailed_injuryTier": null,
     "formDetailed_players": "Игроки",
     "formDetailed_remarks": "Замечания",
     "formDetailed_placeholderRemarks": "Если у вас есть дополнительные замечания, напишите их здесь...",
