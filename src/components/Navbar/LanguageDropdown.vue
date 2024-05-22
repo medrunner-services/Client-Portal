@@ -45,7 +45,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 </script>
 
 <template>
-    <div>
+    <div class="relative">
         <button
             ref="selectorParent"
             @click="showDropdown = !showDropdown"
@@ -67,7 +67,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         <div
             ref="selectorDiv"
             v-if="showDropdown"
-            class="absolute z-10 mt-7 -translate-x-11 rounded-lg bg-white font-normal shadow-lg dark:bg-gray-700 dark:shadow-gray-900"
+            class="absolute left-1/2 top-14 z-10 w-44 -translate-x-1/2 transform rounded-lg border border-gray-200 bg-white font-normal shadow-lg dark:border-gray-700 dark:bg-gray-700 dark:shadow-gray-900"
         >
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400">
                 <li
