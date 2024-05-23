@@ -11,7 +11,7 @@ const downloadLocals = async () => {
     let responseBundle;
     let responseDownload;
     try {
-        responseBundle = await fetch("https://crowdin.com/api/v2/projects/595793/bundles/7/exports", {
+        responseBundle = await fetch("https://medrunner.crowdin.com/api/v2/projects/2/bundles/6/exports", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -29,13 +29,16 @@ const downloadLocals = async () => {
 
     try {
         console.log("🛜 Downloading translations...");
-        responseDownload = await fetch(`https://crowdin.com/api/v2/projects/595793/bundles/7/exports/${parsedResponse.data.identifier}/download`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.CROWDIN_TOKEN}`,
+        responseDownload = await fetch(
+            `https://medrunner.crowdin.com/api/v2/projects/2/bundles/6/exports/${parsedResponse.data.identifier}/download`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.CROWDIN_TOKEN}`,
+                },
             },
-        });
+        );
     } catch (e) {
         console.log("❌ Error downloading translations");
         throw new Error(e);
