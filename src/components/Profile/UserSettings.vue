@@ -77,6 +77,7 @@ async function updateMessageNotification() {
         await userStore.setSettings({ chatMessageNotification: logicStore.chatMessageNotification });
     } catch (e) {
         updateNotificationError.value = t("error_generic");
+        logicStore.chatMessageNotification = userStore.user.clientPortalPreferences.chatMessageNotification as MessageNotification;
     }
 }
 
