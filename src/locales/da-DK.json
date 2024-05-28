@@ -102,6 +102,7 @@
     "formDetailed_locationTypeSurface": "Planetoverflade",
     "formDetailed_locationTypeOther": "Andet",
     "formDetailed_placeholderBeaconPlayer": "What is the player’s name?",
+    "formDetailed_locationTypeDistributionCenter": "Distribution Center",
     "tracking_messageReceived": "Meddelelsen er modtaget",
     "tracking_helpOnTheWay": "Hjælpen er på vej",
     "tracking_operationSuccessful": "Operationen lykkedes",

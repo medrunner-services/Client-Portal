@@ -102,6 +102,7 @@
     "formDetailed_locationTypeSurface": "Surface",
     "formDetailed_locationTypeOther": "Autre",
     "formDetailed_placeholderBeaconPlayer": "Quel est le nom du joueur ?",
+    "formDetailed_locationTypeDistributionCenter": "Centre de distribution",
     "tracking_messageReceived": "Message reçu",
     "tracking_helpOnTheWay": "L'aide est en chemin",
     "tracking_operationSuccessful": "Opération réussie",

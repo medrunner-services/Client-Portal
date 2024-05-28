@@ -245,6 +245,7 @@ async function sendDetails(): Promise<void> {
                     { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
                     { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
                     { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
+                    { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
                     { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },

@@ -102,6 +102,7 @@
     "formDetailed_locationTypeSurface": "Oppervlakte",
     "formDetailed_locationTypeOther": "Anders",
     "formDetailed_placeholderBeaconPlayer": "What is the player’s name?",
+    "formDetailed_locationTypeDistributionCenter": "Distribution Center",
     "tracking_messageReceived": "Bericht ontvangen",
     "tracking_helpOnTheWay": "Hulp is onderweg",
     "tracking_operationSuccessful": "Operatie succesvol",

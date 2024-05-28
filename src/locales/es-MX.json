@@ -102,6 +102,7 @@
     "formDetailed_locationTypeSurface": "Firme",
     "formDetailed_locationTypeOther": "Otro",
     "formDetailed_placeholderBeaconPlayer": "What is the player’s name?",
+    "formDetailed_locationTypeDistributionCenter": "Distribution Center",
     "tracking_messageReceived": "Mensaje recibido",
     "tracking_helpOnTheWay": "La ayuda está en camino",
     "tracking_operationSuccessful": "Operación exitosa",
