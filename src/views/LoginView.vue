@@ -7,19 +7,22 @@ import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
 import LoginSettings from "@/components/Login/LoginSettings.vue";
 import LoginWelcome from "@/components/Login/LoginWelcome.vue";
-import GlobalAlert from "@/components/utils/GlobalAlert.vue";
+import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { AlertColors } from "@/types";
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const logicStore = useLogicStore();
+const alertStore = useAlertStore();
 
 const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
 
 onMounted(async () => {
     if (routeQueryError.value) {
+        alertStore.newAlert(AlertColors.RED, getErrorText());
         await router.replace({
             name: route.name as string,
             params: router.currentRoute.value.params,
@@ -51,8 +54,6 @@ function getErrorText(): string {
             :glow-size="logicStore.loginAnimationGlowSize"
             :star-size="logicStore.loginAnimationStarSize"
         />
-
-        <GlobalAlert v-if="routeQueryError" @close="routeQueryError = ''">{{ getErrorText() }}</GlobalAlert>
 
         <div class="content-container flex h-full w-full items-center">
             <div class="z-10 w-full rounded-lg bg-white dark:bg-gray-800 dark:text-white md:p-10 lg:mx-14 lg:w-1/2 2xl:w-1/3">
