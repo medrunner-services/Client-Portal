@@ -72,6 +72,8 @@ onMounted(async () => {
 watch(pageSize, async (newPageSize, oldPageSize) => {
     if (loadedHistory.value.length < newPageSize && loadedHistory.value.length >= oldPageSize) {
         loaded.value = false;
+        loadedHistory.value = [];
+        paginationToken.value = undefined;
         await loadHistory();
     } else {
         setActivePageFromCache(0);
@@ -210,16 +212,22 @@ const heightLoader = computed(() => {
                     <div class="flex items-stretch">
                         <button @click="previousPage()" :disabled="!loaded">
                             <span
-                                class="ml-0 flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:w-24"
-                                :class="{ 'opacity-50 hover:bg-white dark:hover:bg-gray-800 dark:hover:text-gray-400': page <= 0 }"
+                                class="ml-0 flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 md:w-24"
+                                :class="
+                                    page <= 0 ? 'opacity-50 hover:bg-white dark:hover:bg-gray-800 dark:hover:text-gray-400' : 'dark:hover:text-white'
+                                "
                             >
                                 {{ t("history_previous") }}
                             </span>
                         </button>
                         <button @click="nextPage()" :disabled="!loaded">
                             <span
-                                class="flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm leading-tight text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:w-24"
-                                :class="{ 'opacity-50 hover:bg-white dark:hover:bg-gray-800 dark:hover:text-gray-400': isLastPageHistory }"
+                                class="flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm leading-tight text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 md:w-24"
+                                :class="
+                                    isLastPageHistory
+                                        ? 'opacity-50 hover:bg-white dark:hover:bg-gray-800 dark:hover:text-gray-400'
+                                        : 'dark:hover:text-white'
+                                "
                             >
                                 {{ t("history_next") }}
                             </span>
