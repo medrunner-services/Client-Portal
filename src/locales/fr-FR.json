@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "Vous n'avez pas répondu à l'équipe Medrunner lors de votre dernière urgence. Si vous ne pensez pas avoir besoin de nos services après avoir soumis une urgence, vous pouvez annuler l'urgence directement dans le portail en cliquant sur le bouton « Annuler l'urgence ».",
     "home_warningNoContactModalWarning": "Des alertes répétées entraînant la perte de contact avec l'équipe peuvent donner lieu à des amendes en UEC ou à un refus de service.",
     "home_day": "{number} jour|{number} jours",
+    "home_emergencyCTAButton": "Signaler une urgence",
     "login_logInButton": "Connexion avec Discord",
     "login_registerButton": "S'inscrire avec Discord",
     "login_welcomeBack": "Bienvenue",

@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "Du svarede ikke Medrunner-teamet under dit sidste nødopkald. Hvis du ikke føler behov for vores tjenester efter at have indsendt et nødopkald, kan du annullere nødopkaldet direkte i portalen ved at klikke på 'Annuller Nødopkald'-knappen.",
     "home_warningNoContactModalWarning": "Gentagne nødopkald, som resulterer i, at teamet mister kontakten, kan medføre bøder i UEC eller afvisning af service.",
     "home_day": "{number} day|{number} days",
+    "home_emergencyCTAButton": "Report an emergency",
     "login_logInButton": "Log ind med Discord",
     "login_registerButton": "Registrer med din Discord-konto",
     "login_welcomeBack": "Velkommen",

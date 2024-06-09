@@ -20,6 +20,7 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
+                        <li>Added the "Distribution Center" as a location in the emergency form.</li>
                         <li>Warning on the dashboard after a no-contact emergency.</li>
                         <li>Emergency rules popup for new users when reporting an emergency.</li>
                         <li>A reset default button in settings to clear the synced settings.</li>
@@ -35,6 +36,7 @@ const appVersion = __APP_VERSION__;
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
+                        <li>Improved the alert messages.</li>
                         <li>Messages now support new lines with '\n'.</li>
                         <li>Improved the linking account procedure with more information.</li>
                         <li>More details in the "In game beacon" question in the emergency details form.</li>
@@ -49,6 +51,7 @@ const appVersion = __APP_VERSION__;
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
+                        <li>Fixed a duplication bug in the history section.</li>
                         <li>Clicking on notifications now redirects you to the correct page.</li>
                         <li>Fixed issue where scroll was blocked when clicking out of certain modals.</li>
                         <li>You will now see the emergency completion message even if you where on the details form page.</li>

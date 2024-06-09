@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "Вы не ответили команде Medrunner в своей последней чрезвычайной ситуации. Если после подачи заявки на чрезвычайную ситуацию вы не чувствуете необходимости в наших услугах, вы можете отменить ее прямо на портале, нажав кнопку \"Отменить чрезвычайную ситуацию\".",
     "home_warningNoContactModalWarning": "Повторные вызовы, в результате которых команда теряет связь, могут привести к штрафам UEC или отказу в обслуживании.",
     "home_day": "{number} day|{number} days|{number} days|{number} days",
+    "home_emergencyCTAButton": "Report an emergency",
     "login_logInButton": "Войти через Discord",
     "login_registerButton": "Зарегистрируйтесь c помощью Discord",
     "login_welcomeBack": "Добро пожаловать",

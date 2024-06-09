@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "Sie haben dem Medrunner Team bei Ihrem letzten Notruf nicht geantwortet. Wenn Sie unseren Service nach dem Absetzen eines Notrufs nicht mehr zu benötigen, können Sie den Notruf jederzeit stornieren, indem Sie den Knopf \"Notruf abbrechen\" klicken.",
     "home_warningNoContactModalWarning": "Wiederholte Notrufe, bei denen das Team keinen Kontakt herstellen kann, können zu einem UEC-Bußgeld oder zur Verweigerung des Services führen.",
     "home_day": "{number} day|{number} days",
+    "home_emergencyCTAButton": "Report an emergency",
     "login_logInButton": "Login mit Discord",
     "login_registerButton": "Mit Discord registrieren",
     "login_welcomeBack": "Willkommen",

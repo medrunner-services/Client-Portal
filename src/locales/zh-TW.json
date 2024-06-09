@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "您沒有對於您上次的救援行動做出答覆。若是您在提交急救聲請過後覺得沒有必要繼續使用這樣服務，那您可以在傳送口處點選取消救援按鈕。",
     "home_warningNoContactModalWarning": "若是導致團隊多次失去聯繫可能會導致 UEC 罰款或謝絕服務。",
     "home_day": "{number} days",
+    "home_emergencyCTAButton": "Report an emergency",
     "login_logInButton": "使用Discord登入",
     "login_registerButton": "使用Discord註冊",
     "login_welcomeBack": "歡迎",

@@ -250,6 +250,7 @@
     "home_warningNoContactModalDescription": "No respondió al equipo de Medrunner en su última emergencia. Si no siente la necesidad de nuestros servicios después de enviar una emergencia, puede cancelar la emergencia directamente en el portal haciendo clic en el botón \"Cancelar emergencia\".",
     "home_warningNoContactModalWarning": "Las alertas repetidas que provocan que el equipo pierda el contacto pueden dar lugar a multas de UEC o a la denegación del servicio.",
     "home_day": "{number} day|{number} days",
+    "home_emergencyCTAButton": "Report an emergency",
     "login_logInButton": "Iniciar sesión con Discord",
     "login_registerButton": "Registrar con Discord",
     "login_welcomeBack": "Bienvenido",
