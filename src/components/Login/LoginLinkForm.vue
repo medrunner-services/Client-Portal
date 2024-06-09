@@ -49,9 +49,7 @@ const submittingLinkForm = async (): Promise<void> => {
 
         await router.push("/");
     } catch (error: any) {
-        if (error.statusCode === 451) {
-            formErrorMessage.value = t("error_blockedUser");
-        } else if (error.statusCode === 403) {
+        if (error.statusCode === 403) {
             formErrorMessage.value = t("error_noIdRsiBio");
             formErrorHelper.value = t("error_noIdRsiBioHelper");
         } else if (error.statusCode === 404) {

@@ -5,12 +5,15 @@ import { RouterView, useRoute, useRouter } from "vue-router";
 
 import GlobalFooter from "@/components/GlobalFooter.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
+import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
+import { useAlertStore } from "@/stores/alertStore";
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
+const alertStore = useAlertStore();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
@@ -29,22 +32,26 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
-        <NavbarContainer v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== '404'" />
+    <div>
+        <GlobalAlert v-if="alertStore.showAlert" />
 
-        <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
-            <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
+        <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
+            <NavbarContainer v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== '404'" />
+
+            <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
+                <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
+            </div>
+
+            <div v-else-if="errorLoadingPage" class="flex w-full flex-grow items-center justify-center">
+                <GlobalErrorText :text="t('error_globalLoading')" />
+            </div>
+
+            <RouterView
+                class="w-full flex-grow"
+                :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' ? 'my-0' : 'my-14'"
+            />
+            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth'" />
         </div>
-
-        <div v-else-if="errorLoadingPage" class="flex w-full flex-grow items-center justify-center">
-            <GlobalErrorText :text="t('error_globalLoading')" />
-        </div>
-
-        <RouterView
-            class="w-full flex-grow"
-            :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' ? 'my-0' : 'my-14'"
-        />
-        <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth'" />
     </div>
 </template>
 

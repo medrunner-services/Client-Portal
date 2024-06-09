@@ -230,9 +230,9 @@ async function sendDetails(): Promise<void> {
                 :options="[
                     { value: '', label: t('formDetailed_selectSituation'), hidden: true },
                     { value: 'No', label: t('formDetailed_no') },
-                    { value: 'Tier 1', label: `${t('formDetailed_injuryTier')} 1` },
-                    { value: 'Tier 2', label: `${t('formDetailed_injuryTier')} 2` },
-                    { value: 'Tier 3', label: `${t('formDetailed_injuryTier')} 3` },
+                    { value: 'Tier 1', label: `${t('formDetailed_injuryTier', { number: '1' })}` },
+                    { value: 'Tier 2', label: `${t('formDetailed_injuryTier', { number: '2' })}` },
+                    { value: 'Tier 3', label: `${t('formDetailed_injuryTier', { number: '3' })}` },
                 ]"
                 v-model="inputInjury"
                 :label="t('formDetailed_injury')"
@@ -245,6 +245,7 @@ async function sendDetails(): Promise<void> {
                     { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
                     { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
                     { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
+                    { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
                     { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },
@@ -268,11 +269,11 @@ async function sendDetails(): Promise<void> {
                     :options="[
                         { value: '', label: t('formDetailed_selectSituation'), hidden: true },
                         { value: 'No', label: t('formDetailed_no') },
-                        { value: 'Level 1', label: `${t('formDetailed_level')} 1` },
-                        { value: 'Level 2', label: `${t('formDetailed_level')} 2` },
-                        { value: 'Level 3', label: `${t('formDetailed_level')} 3` },
-                        { value: 'Level 4', label: `${t('formDetailed_level')} 4` },
-                        { value: 'Level 5', label: `${t('formDetailed_level')} 5` },
+                        { value: 'Level 1', label: `${t('formDetailed_level', { number: '1' })}` },
+                        { value: 'Level 2', label: `${t('formDetailed_level', { number: '2' })}` },
+                        { value: 'Level 3', label: `${t('formDetailed_level', { number: '3' })}` },
+                        { value: 'Level 4', label: `${t('formDetailed_level', { number: '4' })}` },
+                        { value: 'Level 5', label: `${t('formDetailed_level', { number: '5' })}` },
                     ]"
                     v-model="inputCrimestat"
                     :label="t('formDetailed_crimestat')"

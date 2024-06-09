@@ -31,8 +31,12 @@ function splitOnLastZero(str: string): string[] {
             <div v-if="props.level" class="flex items-center p-2">
                 <img :src="`/icons/medals/${level}.svg`" alt="Success Medal" class="mr-2 h-5 w-5" />
                 <p>
-                    {{ t("tracking_level") }} {{ splitOnLastZero(props.level.toString())[0] }} {{ t("tracking_levelSection") }}
-                    {{ splitOnLastZero(props.level.toString())[1] }}
+                    {{
+                        t("tracking_levelSection", {
+                            levelNumber: splitOnLastZero(props.level.toString())[0],
+                            sectionNumber: splitOnLastZero(props.level.toString())[1],
+                        })
+                    }}
                 </p>
             </div>
         </div>
