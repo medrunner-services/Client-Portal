@@ -21,6 +21,7 @@
     "error_loadingData": "载入此数据时出现了一个错误",
     "error_externalAuthServiceDown": "被用于验证您RSI账户的服务目前不在运作。请稍后重试。",
     "error_rsiNewAccountLinked": "该RSI账户已经绑定了另一个Medrunner账户，请确认您登录了正确的RSI账号。",
+    "error_globalLoading": "An error occurred, please refresh the page",
     "form_SCUsername": "星际公民用户名",
     "form_helpSCUsername": "您RSI账号的用户名",
     "form_confirm": "确认",

@@ -21,6 +21,7 @@
     "error_loadingData": "An error occurred loading this data",
     "error_externalAuthServiceDown": "The service we use to verify your RSI account is currently down. Please try again later.",
     "error_rsiNewAccountLinked": "This RSI account is already linked to another Medrunner account. Are you sure you are logged in with the correct account?",
+    "error_globalLoading": "An error occurred, please refresh the page",
     "form_SCUsername": "Star Citizen Username",
     "form_helpSCUsername": "The username of your RSI account",
     "form_confirm": "Confirm",

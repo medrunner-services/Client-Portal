@@ -21,6 +21,7 @@
     "error_loadingData": "Se produjo un error al cargar estos datos",
     "error_externalAuthServiceDown": "El servicio que utilizamos para verificar su cuenta RSI no está conectado. Por favor, inténtelo de nuevo más tarde.",
     "error_rsiNewAccountLinked": "Esta cuenta RSI ya está vinculada a otra cuenta Medrunner. ¿Está seguro de haber iniciado sesión con la cuenta correcta?",
+    "error_globalLoading": "An error occurred, please refresh the page",
     "form_SCUsername": "Nombre de usuario de Star Citizen",
     "form_helpSCUsername": "El nombre de usuario de su cuenta RSI",
     "form_confirm": "Confirmar",

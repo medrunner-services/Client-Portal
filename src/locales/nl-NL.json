@@ -21,6 +21,7 @@
     "error_loadingData": "Er is een fout opgetreden tijdens het laden van deze data",
     "error_externalAuthServiceDown": "De dienst die we gebruiken om je RSI-account te verifiëren is op het moment niet beschikbaar. Probeer het alstublieft later nog een keer.",
     "error_rsiNewAccountLinked": "Dit RSI account is al gelinkt met een ander Medrunner account. Weet je zeker dat je ingelogd hebt met het correcte account?",
+    "error_globalLoading": "An error occurred, please refresh the page",
     "form_SCUsername": "Star Citizen Gebruikersnaam",
     "form_helpSCUsername": "De gebruikersnaam van uw RSI-account",
     "form_confirm": "Bevestig",
