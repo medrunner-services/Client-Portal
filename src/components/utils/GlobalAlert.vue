@@ -7,7 +7,7 @@ const alertStore = useAlertStore();
 
 <template>
     <div
-        class="fixed left-1/2 top-6 z-50 -translate-x-1/2 transform rounded-lg dark:bg-gray-900"
+        class="fixed left-1/2 top-6 z-50 w-full -translate-x-1/2 transform rounded-lg dark:bg-gray-900 md:w-fit"
         :class="{
             'bg-red-50 text-red-800 dark:text-red-400': alertStore.color === AlertColors.RED,
             'bg-green-50 text-green-800 dark:text-green-400': alertStore.color === AlertColors.GREEN,
