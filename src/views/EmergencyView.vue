@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Emergency, type MissionStatus, SubmissionSource } from "@medrunner/api-client";
+import { type Emergency, type MissionStatus, Origin, SubmissionSource } from "@medrunner/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -127,17 +127,13 @@ onMounted(async () => {
 
                 <EmergencyChatBox
                     v-if="
-                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.API ||
-                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.UNKNOWN
+                        emergencyStore.trackedEmergency.submissionSource !== SubmissionSource.BOT ||
+                        emergencyStore.trackedEmergency.origin === Origin.EVALUATION
                     "
                     class="mt-8"
                 />
 
                 <div v-else class="mt-8">
-                    <div class="min-h-11">
-                        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
-                    </div>
-
                     <GlobalCard class="mt-4 flex flex-col items-center justify-center text-center">
                         <p>{{ t("tracking_textDiscordThread") }}</p>
                         <a
