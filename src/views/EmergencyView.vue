@@ -58,7 +58,7 @@ onMounted(async () => {
     });
 
     ws.on("EmergencyUpdate", async (updatedEmergency: Emergency) => {
-        if (updatedEmergency.id === emergencyStore.trackedEmergency.id) {
+        if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
             emergencyStore.trackedEmergency = updatedEmergency;
 
             if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
@@ -107,7 +107,7 @@ onMounted(async () => {
                     </div>
                 </GlobalCard>
             </div>
-            <div v-else-if="emergencyStore.trackedEmergency.id">
+            <div v-else-if="emergencyStore.trackedEmergency">
                 <EmergencyDetailsForm
                     v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
                     @submitted-details="displayFormDetails = false"
@@ -120,7 +120,7 @@ onMounted(async () => {
         </div>
 
         <div class="xl:w-1/2">
-            <div v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked">
+            <div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
                 <div class="min-h-11">
                     <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
                 </div>

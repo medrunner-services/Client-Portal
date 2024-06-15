@@ -22,8 +22,8 @@ async function rateEmergency(): Promise<void> {
     try {
         sendingRating.value = true;
         if (inputRemarks.value && inputRating.value)
-            await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, inputRating.value, inputRemarks.value);
-        else if (inputRating.value) await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency.id, inputRating.value);
+            await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency!.id, inputRating.value, inputRemarks.value);
+        else if (inputRating.value) await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency!.id, inputRating.value);
         emit("ratedEmergency");
     } catch (error: any) {
         emit("ratedEmergency");
@@ -34,7 +34,7 @@ async function rateEmergency(): Promise<void> {
 </script>
 
 <template>
-    <div>
+    <div v-if="emergencyStore.trackedEmergency">
         <div class="min-h-11">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
         </div>

@@ -60,7 +60,7 @@ async function sendDetails(): Promise<void> {
     try {
         submittingDetails.value = true;
         await emergencyStore.sendEmergencyMessage({
-            emergencyId: emergencyStore.trackedEmergency.id,
+            emergencyId: emergencyStore.trackedEmergency!.id,
             contents: `
             ## Emergency details from Client
 

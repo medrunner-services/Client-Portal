@@ -38,7 +38,7 @@ const value = computed({
                         class="peer h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:border-gray-600 dark:peer-checked:bg-primary-600 dark:peer-focus:ring-primary-300"
                         :class="
                             props.disabled
-                                ? 'bg-gray-100 after:border-gray-200 after:bg-gray-50 peer-checked:bg-opacity-75 dark:bg-gray-600 dark:peer-checked:bg-opacity-50 '
+                                ? 'bg-gray-100 after:border-gray-200 after:bg-gray-50 peer-checked:bg-opacity-75 dark:bg-gray-600 dark:peer-checked:bg-opacity-50'
                                 : 'bg-gray-200 after:border-gray-300 after:bg-white peer-checked:bg-opacity-100 dark:bg-gray-700'
                         "
                     ></div>

@@ -10,20 +10,20 @@ import type {
     TeamDetailsResponse,
 } from "@medrunner/api-client";
 import { defineStore } from "pinia";
-import { type Ref, ref } from "vue";
+import { ref } from "vue";
 
 import { i18n } from "@/i18n";
 import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
     const { t } = i18n.global;
-    const trackedEmergency: Ref<Emergency> = ref({} as Emergency);
-    const trackedEmergencyMessages: Ref<ChatMessage[]> = ref([]);
-    const trackedEmergencyTeamDetails: Ref<TeamDetailsResponse> = ref({} as TeamDetailsResponse);
+    const trackedEmergency = ref<Emergency>();
+    const trackedEmergencyMessages = ref<ChatMessage[]>([]);
+    const trackedEmergencyTeamDetails = ref<TeamDetailsResponse>();
     const isTrackedEmergencyCanceled = ref(false);
 
     function resetTrackedEmergency(): void {
-        trackedEmergency.value.id = "";
+        trackedEmergency.value = undefined;
         trackedEmergencyMessages.value = [];
         isTrackedEmergencyCanceled.value = false;
     }

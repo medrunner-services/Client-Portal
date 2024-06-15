@@ -24,10 +24,12 @@ function resetAnimationSettings(): void {
     logicStore.loginAnimationSpeed = 1;
     logicStore.loginAnimationStarSize = 2;
     logicStore.loginAnimationGlowSize = 2;
+    logicStore.isLoginAnimationAllowed = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    localStorage.setItem("loginAnimationSpeed", "1");
-    localStorage.setItem("loginAnimationStarSize", "2");
-    localStorage.setItem("loginAnimationGlowSize", "2");
+    localStorage.removeItem("loginAnimationSpeed");
+    localStorage.removeItem("loginAnimationStarSize");
+    localStorage.removeItem("loginAnimationGlowSize");
+    localStorage.removeItem("loginAnimation");
 }
 
 function saveAnimationSetting(setting: string, value: number): void {

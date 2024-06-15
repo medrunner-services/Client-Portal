@@ -29,13 +29,14 @@ const errorLoadingMessages = ref("");
 
 onMounted(async () => {
     try {
-        emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
+        emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency!.id)).data;
     } catch (error) {
         errorLoadingMessages.value = t("error_generic");
     }
 
     ws.on("ChatMessageCreate", async (newMessage: ChatMessage) => {
         if (
+            emergencyStore.trackedEmergency &&
             newMessage.emergencyId === emergencyStore.trackedEmergency.id &&
             !emergencyStore.trackedEmergencyMessages.some((message) => message.id === newMessage.id)
         ) {
@@ -70,7 +71,8 @@ onMounted(async () => {
         }
     });
     ws.onreconnected(async () => {
-        emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
+        if (emergencyStore.trackedEmergency)
+            emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
     });
 });
 
@@ -80,7 +82,7 @@ async function sendMessage() {
     try {
         sendingMessage.value = true;
         await emergencyStore.sendEmergencyMessage({
-            emergencyId: emergencyStore.trackedEmergency.id,
+            emergencyId: emergencyStore.trackedEmergency!.id,
             contents: inputMessage.value,
         });
 
@@ -101,7 +103,7 @@ async function sendMessage() {
                 <GlobalErrorText :text="errorLoadingMessages" />
             </div>
 
-            <div v-else>
+            <div v-else-if="emergencyStore.trackedEmergency">
                 <ChatMessagesContainer
                     :messages="emergencyStore.trackedEmergencyMessages"
                     :emergency-members="emergencyStore.trackedEmergency.respondingTeam.allMembers"

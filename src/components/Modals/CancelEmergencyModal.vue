@@ -24,7 +24,7 @@ async function cancelEmergency() {
 
     try {
         if (inputCancelReason.value) {
-            await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency.id, inputCancelReason.value);
+            await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
         } else {
             new Error();
         }

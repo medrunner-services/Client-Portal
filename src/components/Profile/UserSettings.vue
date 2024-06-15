@@ -119,16 +119,21 @@ async function updateAnalytics(): Promise<void> {
 }
 
 async function resetSettings() {
-    try {
-        isResettingSettings.value = true;
-        await userStore.setSettings({
-            globalNotifications: null,
-            customSoundNotification: null,
-            emergencyUpdateNotification: null,
-            chatMessageNotification: null,
-            globalAnalytics: null,
-        });
+    isResettingSettings.value = true;
 
+    try {
+        if (userStore.isAuthenticated) {
+            await userStore.setSettings({
+                globalNotifications: null,
+                customSoundNotification: null,
+                emergencyUpdateNotification: null,
+                chatMessageNotification: null,
+                globalAnalytics: null,
+            });
+        }
+    } catch (e) {
+        resetSettingsError.value = t("error_generic");
+    } finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";
         logicStore.customSoundNotification = true;
         logicStore.emergencyUpdateNotification = true;
@@ -137,14 +142,15 @@ async function resetSettings() {
         logicStore.isAnalyticsAllowed = true;
         logicStore.isDiscordOpenWeb = false;
 
+        localStorage.removeItem("darkMode");
+        localStorage.removeItem("isDiscordOpenWeb");
+
         if (logicStore.darkMode) {
             document.documentElement.classList.add("dark");
         } else {
             document.documentElement.classList.remove("dark");
         }
-    } catch (e) {
-        resetSettingsError.value = t("error_generic");
-    } finally {
+
         isResettingSettings.value = false;
     }
 }

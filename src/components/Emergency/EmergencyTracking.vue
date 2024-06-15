@@ -37,7 +37,7 @@ function responderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
 }
 
 function getResponderLevel(id: string): Level | undefined {
-    if (emergencyStore.trackedEmergencyTeamDetails.stats) {
+    if (emergencyStore.trackedEmergencyTeamDetails) {
         const responder = emergencyStore.trackedEmergencyTeamDetails.stats.find((responder) => responder.id === id);
         if (responder) return responder.level;
         else return undefined;
@@ -72,7 +72,7 @@ async function addTextToClipboard(text: string) {
 </script>
 
 <template>
-    <div>
+    <div v-if="emergencyStore.trackedEmergency">
         <div>
             <div class="flex min-h-11 items-center">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
@@ -111,7 +111,7 @@ async function addTextToClipboard(text: string) {
                 </div>
             </div>
 
-            <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
+            <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0 && emergencyStore.trackedEmergencyTeamDetails">
                 <p class="mt-8 font-Mohave text-2xl font-bold">{{ t("tracking_responders") }}</p>
                 <p class="mt-1 text-sm font-medium" v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3">
                     {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}% {{ t("tracking_responderSuccessRate") }}

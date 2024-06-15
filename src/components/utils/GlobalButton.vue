@@ -47,7 +47,7 @@ const { t } = useI18n();
                     class="mr-3 inline h-4 w-4 animate-spin"
                     :class="{
                         'text-white': props.type === 'primary',
-                        'text-primary-600 ': props.type === 'outline',
+                        'text-primary-600': props.type === 'outline',
                         'text-gray-800 dark:text-white': props.type === 'secondary',
                     }"
                     viewBox="0 0 100 101"
@@ -72,7 +72,7 @@ const { t } = useI18n();
                         class="h-3.5 w-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -94,7 +94,7 @@ const { t } = useI18n();
                         class="h-3.5 w-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +111,7 @@ const { t } = useI18n();
                         class="h-5 w-5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +130,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -146,7 +146,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -168,7 +168,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -184,7 +184,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 ': props.type === 'outline',
+                            'text-primary-600': props.type === 'outline',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
