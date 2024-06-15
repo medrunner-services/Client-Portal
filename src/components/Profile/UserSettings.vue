@@ -236,9 +236,15 @@ async function resetSettings() {
             </div>
 
             <div class="mt-8 flex w-full">
-                <GlobalButton type="outline" class="ml-auto w-full lg:w-fit" @click="resetSettings()" size="full">{{
-                    t("user_resetSettings")
-                }}</GlobalButton>
+                <GlobalButton
+                    type="outline"
+                    class="ml-auto w-full lg:w-fit"
+                    @click="resetSettings()"
+                    :error-text="resetSettingsError"
+                    :disabled="isResettingSettings"
+                    size="full"
+                    >{{ t("user_resetSettings") }}</GlobalButton
+                >
             </div>
         </GlobalCard>
     </div>
