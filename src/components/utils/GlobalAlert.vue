@@ -31,7 +31,6 @@ const alertStore = useAlertStore();
             <p class="mx-3 font-medium" v-html="alertStore.message" />
             <button
                 v-if="alertStore.isCloseable"
-                @click="alertStore.closeAlert()"
                 type="button"
                 class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg p-1.5 focus:ring-2 dark:bg-gray-900 dark:hover:bg-gray-700"
                 :class="{
@@ -41,6 +40,7 @@ const alertStore = useAlertStore();
                     'bg-yellow-50 text-yellow-500 hover:bg-yellow-200 focus:ring-yellow-400 dark:text-yellow-400':
                         alertStore.color === AlertColors.YELLOW,
                 }"
+                @click="alertStore.closeAlert()"
             >
                 <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path

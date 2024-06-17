@@ -238,13 +238,13 @@ function changePeriod() {
             <div class="flex items-center justify-between">
                 <p class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_emergencies") }}</p>
                 <GlobalSelectInput
+                    v-model="daySelect"
                     :options="[
                         { value: 7, label: t('home_day', { number: 7 }, 7) },
                         { value: 30, label: t('home_day', { number: 30 }, 30) },
                         { value: 60, label: t('home_day', { number: 60 }, 60) },
                         { value: 90, label: t('home_day', { number: 90 }, 90) },
                     ]"
-                    v-model="daySelect"
                     @change="changePeriod()"
                 />
             </div>

@@ -42,13 +42,13 @@ const showHelper = ref(false);
             <div class="relative">
                 <svg
                     v-if="helper"
-                    @mouseenter="showHelper = true"
-                    @mouseleave="showHelper = false"
                     class="ml-2 h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-500"
                     aria-hidden="true"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
+                    @mouseenter="showHelper = true"
+                    @mouseleave="showHelper = false"
                 >
                     <path
                         fill-rule="evenodd"
@@ -71,6 +71,7 @@ const showHelper = ref(false);
 
         <div class="relative">
             <input
+                v-model="value"
                 type="date"
                 :min="props.min"
                 :max="props.max"
@@ -78,7 +79,6 @@ const showHelper = ref(false);
                 :placeholder="props.placeholder"
                 :disabled="props.disabled"
                 :required="props.required"
-                v-model="value"
             />
         </div>
     </div>

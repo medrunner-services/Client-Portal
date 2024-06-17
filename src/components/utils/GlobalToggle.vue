@@ -33,7 +33,7 @@ const value = computed({
         <div class="flex flex-row" :class="props.side === 'right' ? 'flex-row-reverse justify-between' : ''">
             <label class="relative" :class="[props.side === 'right' ? 'ml-4' : '', props.disabled ? 'cursor-not-allowed' : 'cursor-pointer']">
                 <span>
-                    <input @click="$emit('inputClick')" :disabled="props.disabled" type="checkbox" v-model="value" class="peer sr-only" />
+                    <input v-model="value" :disabled="props.disabled" type="checkbox" class="peer sr-only" @click="$emit('inputClick')" />
                     <div
                         class="peer h-6 w-11 rounded-full after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:transition-all after:content-[''] peer-checked:bg-primary-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:border-gray-600 dark:peer-checked:bg-primary-600 dark:peer-focus:ring-primary-300"
                         :class="
@@ -48,7 +48,7 @@ const value = computed({
                 <p class="font-medium text-gray-900 dark:text-white" :class="props.size === 'small' ? 'text-sm' : ''">
                     <slot />
                 </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400" v-if="props.helper">{{ props.helper }}</p>
+                <p v-if="props.helper" class="text-xs text-gray-500 dark:text-gray-400">{{ props.helper }}</p>
             </div>
         </div>
         <p class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ props.errorText }}</p>

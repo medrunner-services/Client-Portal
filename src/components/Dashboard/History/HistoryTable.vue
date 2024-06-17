@@ -168,7 +168,7 @@ const heightLoader = computed(() => {
                         <GlobalErrorText :text="errorLoadingHistory" />
                     </div>
                     <div v-else-if="loaded && activePage.length > 0" ref="parentRowsDiv">
-                        <HistoryTableRow v-for="emergency in activePage" :emergency="emergency" :key="emergency.id" :parent-div="parentRowsDiv" />
+                        <HistoryTableRow v-for="emergency in activePage" :key="emergency.id" :emergency="emergency" :parent-div="parentRowsDiv" />
                     </div>
                     <div v-else-if="loaded && activePage.length === 0" class="flex h-[14.063rem] w-full items-center justify-center">
                         <p>{{ t("home_noEmergencies") }}</p>
@@ -182,8 +182,8 @@ const heightLoader = computed(() => {
                 <div class="flex items-center text-xs md:space-x-3">
                     <p class="hidden text-sm font-normal text-gray-500 dark:text-gray-400 md:block">{{ t("history_rowsPerPage") }}</p>
                     <GlobalSelectInput
-                        :options="[{ value: 5 }, { value: 10 }, { value: 20 }, { value: 30 }, { value: 50 }, { value: 75 }, { value: 100 }]"
                         v-model="pageSize"
+                        :options="[{ value: 5 }, { value: 10 }, { value: 20 }, { value: 30 }, { value: 50 }, { value: 75 }, { value: 100 }]"
                     />
                     <div class="ml-2 text-xs font-normal text-gray-500 dark:text-gray-400 md:ml-0">
                         <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
@@ -210,7 +210,7 @@ const heightLoader = computed(() => {
                 </div>
                 <div class="flex items-center">
                     <div class="flex items-stretch">
-                        <button @click="previousPage()" :disabled="!loaded">
+                        <button :disabled="!loaded" @click="previousPage()">
                             <span
                                 class="ml-0 flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 md:w-24"
                                 :class="
@@ -220,7 +220,7 @@ const heightLoader = computed(() => {
                                 {{ t("history_previous") }}
                             </span>
                         </button>
-                        <button @click="nextPage()" :disabled="!loaded">
+                        <button :disabled="!loaded" @click="nextPage()">
                             <span
                                 class="flex h-full w-20 cursor-pointer select-none items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm leading-tight text-gray-500 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 md:w-24"
                                 :class="
@@ -239,8 +239,8 @@ const heightLoader = computed(() => {
 
         <WarningNoContactModal
             v-if="displayWarningNoContactModal"
-            @close="displayWarningNoContactModal = false"
             :emergency-id="loadedHistory[0].id"
+            @close="displayWarningNoContactModal = false"
         />
     </div>
 </template>

@@ -112,8 +112,8 @@ onMounted(async () => {
                     v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
                     @submitted-details="displayFormDetails = false"
                 />
-                <EmergencyTracking @send-new-details="displayFormDetails = true" v-else-if="!emergencyStore.trackedEmergency.isComplete" />
-                <EmergencyCompletion @rated-emergency="emergencyStore.resetTrackedEmergency()" v-else />
+                <EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
+                <EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
             </div>
 
             <EmergencyReportForm v-else />

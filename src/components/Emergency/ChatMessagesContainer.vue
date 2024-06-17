@@ -155,13 +155,13 @@ function messageClasses(messageIndex: number, senderId: string): string {
 
 <template>
     <div id="chatBox" ref="chatBox" class="flex h-[45vh] flex-col overflow-y-scroll">
-        <GlobalErrorText class="flex justify-center py-4" v-if="props.errorLoadingAdditionalMessages" :text="props.errorLoadingAdditionalMessages" />
-        <div class="relative top-1/2" v-if="messages.length === 0">
+        <GlobalErrorText v-if="props.errorLoadingAdditionalMessages" class="flex justify-center py-4" :text="props.errorLoadingAdditionalMessages" />
+        <div v-if="messages.length === 0" class="relative top-1/2">
             <p class="text-center">{{ t("history_chatTranscriptEmpty") }}</p>
         </div>
         <div
-            v-else
             v-for="(message, index) in sortedMessages"
+            v-else
             :key="message.id"
             class="flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
             :class="messageClasses(index, message.senderId)"
@@ -176,11 +176,11 @@ function messageClasses(messageIndex: number, senderId: string): string {
             <div class="flex items-center justify-between">
                 <p
                     v-if="message.contents.length > 500 && !showFullMessage[message.id]"
+                    class="mt-1 cursor-pointer text-sm font-semibold underline"
                     @click="
                         showFullMessage[message.id] = !showFullMessage[message.id];
                         readMoreClicked = true;
                     "
-                    class="mt-1 cursor-pointer text-sm font-semibold underline"
                 >
                     {{ t("tracking_readMore") }}
                 </p>

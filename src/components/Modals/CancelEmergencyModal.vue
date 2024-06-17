@@ -39,12 +39,13 @@ async function cancelEmergency() {
 </script>
 
 <template>
-    <ModalContainer :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer v-slot="modalContainer" :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')">
         <div>
             <p class="text-gray-500 dark:text-gray-400">{{ t("tracking_cancelEmergencyModalSubTitle") }}</p>
 
             <form @submit.prevent="cancelEmergency()">
                 <GlobalSelectInput
+                    v-model="inputCancelReason"
                     class="mt-4"
                     :options="[
                         { value: '', label: t('tracking_selectAReason'), hidden: true },
@@ -67,7 +68,6 @@ async function cancelEmergency() {
                         },
                     ]"
                     :label="t('tracking_labelCancelEmergency')"
-                    v-model="inputCancelReason"
                     :required="true"
                 />
 
@@ -75,7 +75,7 @@ async function cancelEmergency() {
                     <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" :error-text="errorCancelingEmergency" icon="cancel">{{
                         t("tracking_cancelButton")
                     }}</GlobalButton>
-                    <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">
+                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
                     >
                 </div>

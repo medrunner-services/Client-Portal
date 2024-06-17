@@ -30,11 +30,11 @@ const value = computed({
         <div class="flex flex-row">
             <div class="mb-4 flex items-center">
                 <input
-                    @click="$emit('inputClick')"
+                    v-model="value"
                     type="checkbox"
                     :disabled="props.disabled"
-                    v-model="value"
                     class="h-4 w-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-400"
+                    @click="$emit('inputClick')"
                 />
                 <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"><slot /></label>
             </div>

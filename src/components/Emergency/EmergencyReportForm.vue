@@ -130,37 +130,38 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
         <form class="mt-8" @submit.prevent="submitEmergency()">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
                 <GlobalSelectInput
+                    v-model="inputSystem"
                     class="w-full"
                     :options="getSystem"
                     :required="true"
                     :disabled="getSystem.length <= 2"
-                    v-model="inputSystem"
-                    @change="clearPlanetsLocations(true, true)"
                     :label="t('form_system')"
                     :helper="t('form_helpSystem')"
+                    @change="clearPlanetsLocations(true, true)"
                 />
 
                 <GlobalSelectInput
+                    v-model="inputPlanet"
                     class="w-full"
                     :options="getPlanets"
                     :required="true"
-                    v-model="inputPlanet"
-                    @change="clearPlanetsLocations(false, true)"
                     :disabled="!inputSystem || getPlanets.length <= 2"
                     :label="t('form_subSystem')"
                     :helper="t('form_helpSubSystem')"
+                    @change="clearPlanetsLocations(false, true)"
                 />
 
                 <GlobalSelectInput
+                    v-model="inputLocation"
                     class="w-full"
                     :options="getLocations"
-                    v-model="inputLocation"
                     :disabled="!inputPlanet || getLocations.length === 1"
                     :label="t('form_moon')"
                     :helper="t('form_helpMoon')"
                 />
 
                 <GlobalSelectInput
+                    v-model="inputThreatLevel"
                     class="w-full"
                     :options="[
                         { value: '', label: t('form_assessTheThreat'), hidden: true },
@@ -170,7 +171,6 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                         { value: '3', label: t('form_highThreat') },
                     ]"
                     :required="true"
-                    v-model="inputThreatLevel"
                     :label="t('form_threatLevel')"
                     :helper="t('form_helpThreatLevel')"
                 />

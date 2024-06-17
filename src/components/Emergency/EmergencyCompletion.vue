@@ -47,10 +47,11 @@ async function rateEmergency(): Promise<void> {
 
             <form
                 v-if="[MissionStatus.SUCCESS, MissionStatus.FAILED].includes(emergencyStore.trackedEmergency.status)"
-                @submit.prevent="rateEmergency"
                 class="mt-10"
+                @submit.prevent="rateEmergency"
             >
                 <GlobalSelectInput
+                    v-model="inputRating"
                     :options="[
                         { value: undefined, label: t('tracking_selectRating'), hidden: true },
                         { value: ResponseRating.GOOD, label: t('tracking_good') },
@@ -58,10 +59,9 @@ async function rateEmergency(): Promise<void> {
                     ]"
                     :required="true"
                     :label="t('tracking_ratingTitle')"
-                    v-model="inputRating"
                 />
 
-                <GlobalTextAreaInput :label="t('tracking_remarks')" :helper="t('tracking_helperRemarks')" v-model="inputRemarks" class="mt-4" />
+                <GlobalTextAreaInput v-model="inputRemarks" :label="t('tracking_remarks')" :helper="t('tracking_helperRemarks')" class="mt-4" />
 
                 <GlobalButton :submit="true" :loading="sendingRating" class="mt-4 lg:w-fit" size="full">{{ t("tracking_sendRating") }}</GlobalButton>
             </form>

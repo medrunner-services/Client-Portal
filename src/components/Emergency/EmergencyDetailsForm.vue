@@ -172,11 +172,11 @@ async function sendDetails(): Promise<void> {
                         :class="currentFormPart >= 2 ? 'text-primary-600 dark:text-red-700' : ''"
                     >
                         <svg
+                            v-if="currentFormPart >= 2"
                             class="mr-2 h-4 w-4 sm:mx-auto sm:mb-2 sm:h-6 sm:w-6"
                             fill="currentColor"
                             viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg"
-                            v-if="currentFormPart >= 2"
                         >
                             <path
                                 fill-rule="evenodd"
@@ -190,11 +190,11 @@ async function sendDetails(): Promise<void> {
                 </li>
                 <li class="flex items-center sm:block" :class="currentFormPart >= 3 ? 'text-primary-600 dark:text-red-700' : ''">
                     <svg
+                        v-if="currentFormPart >= 3"
                         class="mr-2 h-4 w-4 sm:mx-auto sm:mb-2 sm:h-6 sm:w-6"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg"
-                        v-if="currentFormPart >= 3"
                     >
                         <path
                             fill-rule="evenodd"
@@ -212,6 +212,7 @@ async function sendDetails(): Promise<void> {
 
         <div v-if="currentFormPart === 1" class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
             <GlobalSelectInput
+                v-model="inputSituation"
                 class="w-full"
                 :options="[
                     { value: '', label: t('formDetailed_selectSituation'), hidden: true },
@@ -220,12 +221,12 @@ async function sendDetails(): Promise<void> {
                     { value: 'Stranded', label: t('formDetailed_situationStranded') },
                     { value: 'Other', label: t('formDetailed_situationOther') },
                 ]"
-                v-model="inputSituation"
                 :label="t('formDetailed_situation')"
                 :helper="t('formDetailed_helpSituation')"
             />
 
             <GlobalSelectInput
+                v-model="inputInjury"
                 class="w-full"
                 :options="[
                     { value: '', label: t('formDetailed_selectSituation'), hidden: true },
@@ -234,12 +235,12 @@ async function sendDetails(): Promise<void> {
                     { value: 'Tier 2', label: `${t('formDetailed_injuryTier', { number: '2' })}` },
                     { value: 'Tier 3', label: `${t('formDetailed_injuryTier', { number: '3' })}` },
                 ]"
-                v-model="inputInjury"
                 :label="t('formDetailed_injury')"
                 :helper="t('formDetailed_helpInjury')"
             />
 
             <GlobalSelectInput
+                v-model="inputLocationType"
                 class="w-full"
                 :options="[
                     { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
@@ -250,14 +251,13 @@ async function sendDetails(): Promise<void> {
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },
                 ]"
-                v-model="inputLocationType"
                 :label="t('formDetailed_locationType')"
                 :helper="t('formDetailed_helpLocationType')"
             />
 
             <GlobalTextInput
-                class="w-full"
                 v-model="inputExactLocation"
+                class="w-full"
                 :label="t('formDetailed_location')"
                 :placeholder="t('formDetailed_placeholderLocation')"
                 :helper="t('formDetailed_helpLocation')"
@@ -265,6 +265,7 @@ async function sendDetails(): Promise<void> {
 
             <div>
                 <GlobalSelectInput
+                    v-model="inputCrimestat"
                     class="w-full"
                     :options="[
                         { value: '', label: t('formDetailed_selectSituation'), hidden: true },
@@ -275,22 +276,21 @@ async function sendDetails(): Promise<void> {
                         { value: 'Level 4', label: `${t('formDetailed_level', { number: '4' })}` },
                         { value: 'Level 5', label: `${t('formDetailed_level', { number: '5' })}` },
                     ]"
-                    v-model="inputCrimestat"
                     :label="t('formDetailed_crimestat')"
                     :helper="t('formDetailed_helpCrimestat')"
                 />
 
                 <GlobalTextInput
                     v-if="inputCrimestat && inputCrimestat !== 'No'"
-                    class="mt-2 w-full"
                     v-model="inputCrimestatDetails"
+                    class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderCrimestat')"
                 />
             </div>
 
             <GlobalTextInput
-                class="w-full"
                 v-model="inputShip"
+                class="w-full"
                 :label="t('formDetailed_ship')"
                 :placeholder="t('formDetailed_placeholderShip')"
                 :helper="t('formDetailed_helpShip')"
@@ -300,9 +300,9 @@ async function sendDetails(): Promise<void> {
                 <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">{{ t("formDetailed_death") }}</label>
 
                 <div class="flex items-center justify-between">
-                    <GlobalTextInput class="w-full" type="number" v-model="inputDeathHours" />
+                    <GlobalTextInput v-model="inputDeathHours" class="w-full" type="number" />
                     <p class="mx-4">{{ t("formDetailed_hours") }}</p>
-                    <GlobalTextInput class="w-full" type="number" v-model="inputDeathMinutes" />
+                    <GlobalTextInput v-model="inputDeathMinutes" class="w-full" type="number" />
                     <p class="mx-4">{{ t("formDetailed_minutes") }}</p>
                 </div>
             </div>
@@ -311,26 +311,26 @@ async function sendDetails(): Promise<void> {
         <div v-if="currentFormPart === 2" class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
             <div>
                 <GlobalSelectInput
+                    v-model="inputBeacon"
                     class="w-full"
                     :options="[
                         { value: undefined, label: t('formDetailed_selectSituation'), hidden: true },
                         { value: true, label: t('formDetailed_yes') },
                         { value: false, label: t('formDetailed_no') },
                     ]"
-                    v-model="inputBeacon"
                     :label="t('formDetailed_beacon')"
                     :helper="t('formDetailed_helpBeacon')"
                 />
                 <GlobalTextInput
                     v-if="inputBeacon"
-                    class="mt-2 w-full"
                     v-model="inputBeaconPlayer"
+                    class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderBeaconPlayer')"
                 />
                 <GlobalTextInput
                     v-if="inputBeacon"
-                    class="mt-2 w-full"
                     v-model="inputBeaconDistance"
+                    class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderBeaconDistance')"
                 />
                 <p v-if="inputBeacon" class="mt-2 text-sm font-medium text-primary-600 dark:text-red-700">
@@ -340,32 +340,32 @@ async function sendDetails(): Promise<void> {
 
             <div>
                 <GlobalSelectInput
+                    v-model="inputEnemies"
                     class="w-full"
                     :options="[
                         { value: undefined, label: t('formDetailed_selectSituation'), hidden: true },
                         { value: true, label: t('formDetailed_yes') },
                         { value: false, label: t('formDetailed_no') },
                     ]"
-                    v-model="inputEnemies"
                     :label="t('formDetailed_enemies')"
                     :helper="t('formDetailed_helpEnemies')"
                 />
                 <GlobalTextInput
                     v-if="inputEnemies"
-                    class="mt-2 w-full"
                     v-model="inputEnemiesDetails"
+                    class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderEnemies')"
                 />
             </div>
 
             <GlobalSelectInput
+                v-model="inputParty"
                 class="w-full"
                 :options="[
                     { value: undefined, label: t('formDetailed_selectSituation'), hidden: true },
                     { value: true, label: t('formDetailed_yes') },
                     { value: false, label: t('formDetailed_no') },
                 ]"
-                v-model="inputParty"
                 :label="t('formDetailed_team')"
                 :helper="t('formDetailed_helpTeam')"
             />
@@ -374,23 +374,23 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-1 flex justify-end">
                     <svg
                         class="h-4 w-4 cursor-pointer text-gray-800 dark:text-white"
-                        @click="inputPartyDetails.push('')"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 18 18"
+                        @click="inputPartyDetails.push('')"
                     >
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 1v16M1 9h16" />
                     </svg>
 
                     <svg
                         v-if="inputPartyDetails.length > 1"
-                        @click="inputPartyDetails.pop()"
                         class="ml-4 h-4 w-4 cursor-pointer text-gray-800 dark:text-white"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 18 2"
+                        @click="inputPartyDetails.pop()"
                     >
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h16" />
                     </svg>
@@ -398,8 +398,8 @@ async function sendDetails(): Promise<void> {
                 <GlobalTextInput
                     v-for="index in inputPartyDetails.length"
                     :key="index"
-                    class="mt-2 w-full"
                     v-model="inputPartyDetails[index - 1]"
+                    class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderTeam')"
                 />
             </div>
@@ -407,8 +407,8 @@ async function sendDetails(): Promise<void> {
 
         <div v-if="currentFormPart === 3" class="mt-4 grid grid-cols-1 gap-4 lg:gap-8">
             <GlobalTextAreaInput
-                class="w-full"
                 v-model="inputRemarks"
+                class="w-full"
                 :label="t('formDetailed_remarks')"
                 :placeholder="t('formDetailed_placeholderRemarks')"
                 :helper="t('formDetailed_helperRemarks')"
@@ -420,11 +420,11 @@ async function sendDetails(): Promise<void> {
             <div>
                 <GlobalButton
                     v-if="currentFormPart === 3"
-                    @click="sendDetails()"
                     :error-text="formErrorMessage"
                     :loading="submittingDetails"
                     class="w-full lg:w-fit"
                     size="full"
+                    @click="sendDetails()"
                     >{{ t("formDetailed_sendButton") }}</GlobalButton
                 >
                 <GlobalButton v-else class="w-full lg:w-fit" size="full" @click="currentFormPart++">{{ t("login_continue") }}</GlobalButton>
@@ -433,11 +433,11 @@ async function sendDetails(): Promise<void> {
             <div>
                 <GlobalButton
                     v-if="currentFormPart === 1"
-                    @click="displayIgnoreModal = true"
                     class="w-full lg:w-fit"
                     size="full"
                     type="secondary"
                     icon="cross"
+                    @click="displayIgnoreModal = true"
                     >{{ t("button_ignore") }}</GlobalButton
                 >
 
@@ -448,7 +448,7 @@ async function sendDetails(): Promise<void> {
         </div>
 
         <EmergencyRulesModal v-if="displayRulesModal" @close="displayRulesModal = false" @confirmed="confirmedRules()" />
-        <IgnoreEmergencyDetailsFormModal v-if="displayIgnoreModal" @ignoreDetails="$emit('submittedDetails')" @close="displayIgnoreModal = false" />
+        <IgnoreEmergencyDetailsFormModal v-if="displayIgnoreModal" @ignore-details="$emit('submittedDetails')" @close="displayIgnoreModal = false" />
     </div>
 </template>
 

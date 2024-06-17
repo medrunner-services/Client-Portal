@@ -80,15 +80,15 @@ async function disconnectUser(): Promise<void> {
         <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_verifyRSIAccount") }}</h1>
         <p class="mt-2 font-medium text-gray-500 dark:text-gray-400" v-html="getAddToBioText()" />
         <div class="mt-5 flex items-center">
-            <GlobalTextInput class="flex-grow" :disabled="true" v-model="userId" />
+            <GlobalTextInput v-model="userId" class="flex-grow" :disabled="true" />
             <svg
                 v-if="!isIdCopied"
-                @click="copyId()"
                 class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 18 20"
+                @click="copyId()"
             >
                 <path
                     d="M5 9V4.13a2.96 2.96 0 0 0-1.293.749L.879 7.707A2.96 2.96 0 0 0 .13 9H5Zm11.066-9H9.829a2.98 2.98 0 0 0-2.122.879L7 1.584A.987.987 0 0 0 6.766 2h4.3A3.972 3.972 0 0 1 15 6v10h1.066A1.97 1.97 0 0 0 18 14V2a1.97 1.97 0 0 0-1.934-2Z"
@@ -112,7 +112,7 @@ async function disconnectUser(): Promise<void> {
             <p class="mt-2 font-normal">{{ formErrorHelper }}</p>
         </GlobalTextBox>
 
-        <form class="mt-10" @submit.prevent="submittingLinkForm()" autocomplete="off">
+        <form class="mt-10" autocomplete="off" @submit.prevent="submittingLinkForm()">
             <GlobalTextInput
                 v-model="formUsername"
                 :label="t('login_starCitizenUsername')"

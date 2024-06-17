@@ -36,15 +36,15 @@ async function deleteAccount(): Promise<void> {
 </script>
 
 <template>
-    <ModalContainer :title="t('user_deleteAccountModalTitle')" @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer v-slot="modalContainer" :title="t('user_deleteAccountModalTitle')" @close="emit('close')">
         <div>
             <p class="text-gray-500 dark:text-gray-400">{{ t("user_deleteAccountModalDescription") }}</p>
 
             <div class="mt-8 gap-2 lg:flex">
-                <GlobalButton @click="deleteAccount()" :loading="deletingAccount" size="full" :error-text="errorDeletingAccount">{{
+                <GlobalButton :loading="deletingAccount" size="full" :error-text="errorDeletingAccount" @click="deleteAccount()">{{
                     t("user_deleteAccountModalConfirm")
                 }}</GlobalButton>
-                <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">{{
+                <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">{{
                     t("tracking_backCancelButton")
                 }}</GlobalButton>
             </div>

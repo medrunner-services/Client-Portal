@@ -62,13 +62,13 @@ const selectInputClasses = computed(() => {
             <div v-if="props.helperType === 'icon'" class="relative">
                 <svg
                     v-if="helper"
-                    @mouseenter="showHelper = true"
-                    @mouseleave="showHelper = false"
                     class="ml-2 h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-500"
                     aria-hidden="true"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
+                    @mouseenter="showHelper = true"
+                    @mouseleave="showHelper = false"
                 >
                     <path
                         fill-rule="evenodd"
@@ -92,12 +92,12 @@ const selectInputClasses = computed(() => {
             </p>
         </div>
         <select
-            @change="$emit('change')"
+            v-model="value"
             :disabled="props.disabled"
             :required="props.required"
-            v-model="value"
             class="block cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
+            @change="$emit('change')"
         >
             <option v-for="(option, index) in props.options" :key="index" :value="option.value" :hidden="option.hidden">
                 {{ option.label ?? option.value }}

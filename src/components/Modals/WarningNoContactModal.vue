@@ -45,7 +45,7 @@ async function confirmWarning() {
             </p>
 
             <div class="mt-8 gap-2 lg:flex">
-                <GlobalButton @click="confirmWarning()" :loading="isConfirming" size="full">{{ t("form_confirm") }}</GlobalButton>
+                <GlobalButton :loading="isConfirming" size="full" @click="confirmWarning()">{{ t("form_confirm") }}</GlobalButton>
             </div>
         </div>
     </ModalContainer>

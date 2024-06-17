@@ -113,8 +113,8 @@ async function sendMessage() {
                 <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900">
                     <form class="flex items-center dark:bg-gray-900" @submit.prevent="sendMessage()">
                         <GlobalTextInput
-                            :required="true"
                             v-model="inputMessage"
+                            :required="true"
                             class="mr-4 w-full"
                             :placeholder="t('tracking_placeholderMessageInput')"
                         />

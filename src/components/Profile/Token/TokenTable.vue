@@ -64,13 +64,13 @@ async function deletedToken(id: string): Promise<void> {
                     <div v-else-if="userTokens.length > 0">
                         <TokenTableRow
                             v-for="token in userTokens"
+                            :key="token.id"
+                            :token="token"
                             @token-deleted="
                                 (id) => {
                                     deletedToken(id);
                                 }
                             "
-                            :key="token.id"
-                            :token="token"
                         />
                     </div>
                     <div v-else class="flex h-56 w-full items-center justify-center">
