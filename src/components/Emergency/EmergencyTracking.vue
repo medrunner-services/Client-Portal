@@ -37,7 +37,7 @@ function responderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMembe
 }
 
 function getResponderLevel(id: string): Level | undefined {
-    if (emergencyStore.trackedEmergencyTeamDetails.stats) {
+    if (emergencyStore.trackedEmergencyTeamDetails) {
         const responder = emergencyStore.trackedEmergencyTeamDetails.stats.find((responder) => responder.id === id);
         if (responder) return responder.level;
         else return undefined;
@@ -72,7 +72,7 @@ async function addTextToClipboard(text: string) {
 </script>
 
 <template>
-    <div>
+    <div v-if="emergencyStore.trackedEmergency">
         <div>
             <div class="flex min-h-11 items-center">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
@@ -111,17 +111,17 @@ async function addTextToClipboard(text: string) {
                 </div>
             </div>
 
-            <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0">
+            <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0 && emergencyStore.trackedEmergencyTeamDetails">
                 <p class="mt-8 font-Mohave text-2xl font-bold">{{ t("tracking_responders") }}</p>
-                <p class="mt-1 text-sm font-medium" v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3">
+                <p v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3" class="mt-1 text-sm font-medium">
                     {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}% {{ t("tracking_responderSuccessRate") }}
                 </p>
 
                 <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <div
                         v-for="responderClass in responderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
-                        class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700"
                         :key="responderClass[0].class"
+                        class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700"
                     >
                         <div class="flex gap-2">
                             <img :src="`/icons/classIcon_${responderClass[0].class}.svg`" alt="Class icon" class="h-7 w-7" />
@@ -148,8 +148,8 @@ async function addTextToClipboard(text: string) {
 
                         <div
                             class="flex cursor-pointer gap-1"
-                            @click="addTextToClipboard(emergencyStore.trackedEmergency.id)"
                             :title="t('tracking_ClickToCopy')"
+                            @click="addTextToClipboard(emergencyStore.trackedEmergency.id)"
                         >
                             <p>
                                 {{ emergencyStore.trackedEmergency.id }}
@@ -190,14 +190,14 @@ async function addTextToClipboard(text: string) {
                     @click="displayCancelEmergencyModal = true"
                     >{{ t("tracking_cancelButton") }}</GlobalButton
                 >
-                <GlobalButton @click="emit('sendNewDetails')" type="secondary" size="full">{{ t("tracking_sendNewDetails") }}</GlobalButton>
+                <GlobalButton type="secondary" size="full" @click="emit('sendNewDetails')">{{ t("tracking_sendNewDetails") }}</GlobalButton>
             </div>
         </GlobalCard>
 
         <CancelEmergencyModal
+            v-if="displayCancelEmergencyModal"
             @close="displayCancelEmergencyModal = false"
             @emergency-canceled="emergencyStore.resetTrackedEmergency()"
-            v-if="displayCancelEmergencyModal"
         />
     </div>
 </template>

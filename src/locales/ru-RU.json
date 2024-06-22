@@ -21,6 +21,7 @@
     "error_loadingData": "При загрузке этих данных произошла ошибка",
     "error_externalAuthServiceDown": "Служба, которую мы используем для проверки вашего аккаунта RSI, в настоящее время не работает. Пожалуйста, повторите попытку позже.",
     "error_rsiNewAccountLinked": "Этот аккаунт RSI уже связан с другим аккаунтом Medrunner. Вы уверены, что вошли в систему с правильным аккаунтом?",
+    "error_globalLoading": "An error occurred, please refresh the page",
     "form_SCUsername": "Имя пользователя в Star Citizen",
     "form_helpSCUsername": "Имя пользователя вашего аккаунта RSI",
     "form_confirm": "Подтвердить",

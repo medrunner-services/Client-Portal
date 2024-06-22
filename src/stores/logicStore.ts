@@ -25,7 +25,7 @@ export const useLogicStore = defineStore("logic", () => {
     const loginAnimationGlowSize = ref(parseInt(localStorage.getItem("loginAnimationGlowSize") ?? "2"));
 
     const medrunnerLogoUrl = computed(() => {
-        if (import.meta.env.VITE_BUILD_MODE === "development" || import.meta.env.VITE_BUILD_MODE === "staging") {
+        if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
             return "/images/medrunner-logo-dev.svg";
         } else {
             return "/images/medrunner-logo-beta.svg";

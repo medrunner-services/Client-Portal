@@ -78,9 +78,9 @@ function closeEditingUsername() {
             <div class="w-full">
                 <div class="flex w-full flex-col gap-2 lg:flex-row lg:items-end">
                     <GlobalTextInput
+                        v-model="inputUsername"
                         class="flex-grow"
                         :label="t('user_RSIHandle')"
-                        v-model="inputUsername"
                         :disabled="!isEditingUsername"
                         :placeholder="userStore.user.rsiHandle"
                         :helper="t('user_rsiHandleHelper')"
@@ -95,8 +95,8 @@ function closeEditingUsername() {
                             >{{ isEditingUsername ? t("form_confirm") : t("form_edit") }}</GlobalButton
                         >
                         <GlobalButton
-                            type="secondary"
                             v-if="isEditingUsername"
+                            type="secondary"
                             size="full"
                             class="mt-2 lg:ml-2 lg:mt-0"
                             @click="closeEditingUsername()"

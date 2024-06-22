@@ -57,7 +57,7 @@ async function loadAdditionalMessages(): Promise<void> {
 </script>
 
 <template>
-    <ModalContainer :title="t('history_messagesTranscript')" @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer v-slot="modalContainer" :title="t('history_messagesTranscript')" @close="emit('close')">
         <div v-if="loadingChatMessages" class="flex h-[45vh] w-full items-center justify-center">
             <GlobalLoader width="w-8" height="h-8" text-size="text-md" spacing="mb-4" />
         </div>
@@ -69,10 +69,10 @@ async function loadAdditionalMessages(): Promise<void> {
             :messages="chatMessages"
             :emergency-members="props.respondingTeam"
             :user="userStore.user"
-            :errorLoadingAdditionalMessages
+            :error-loading-additional-messages
             :keep-scroll-position="true"
             class="mt-4"
-            @loadNewMessages="loadAdditionalMessages()"
+            @load-new-messages="loadAdditionalMessages()"
         />
         <GlobalButton type="secondary" size="full" class="mt-4 w-full lg:w-fit" @click="modalContainer.close()">{{ t("button_close") }}</GlobalButton>
     </ModalContainer>

@@ -97,9 +97,9 @@ async function addTextToClipboard(text: string) {
     <div>
         <div
             ref="rowParent"
-            @click="showDetails = !showDetails"
             class="grid cursor-pointer grid-cols-7 items-center border-b py-3 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 md:grid-cols-10"
             :class="showDetails ? 'bg-gray-200 dark:bg-gray-700' : ''"
+            @click="showDetails = !showDetails"
         >
             <div class="px-3">
                 <svg
@@ -209,7 +209,7 @@ async function addTextToClipboard(text: string) {
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_created") }}</p>
                             <p class="mt-1 text-xs text-gray-400">{{ logicStore.timestampToHours(props.emergency.creationTimestamp) }}</p>
                         </div>
-                        <div class="mt-2 text-center" v-if="props.emergency.acceptedTimestamp">
+                        <div v-if="props.emergency.acceptedTimestamp" class="mt-2 text-center">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_accepted") }}</p>
                             <p class="mt-1 text-xs text-gray-400">{{ logicStore.timestampToHours(props.emergency.acceptedTimestamp) }}</p>
                         </div>
@@ -269,7 +269,7 @@ async function addTextToClipboard(text: string) {
                         class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_responders") }}</p>
-                        <p class="text mb-2 text-base text-gray-500 dark:text-gray-400" v-if="teamLeader">
+                        <p v-if="teamLeader" class="text mb-2 text-base text-gray-500 dark:text-gray-400">
                             {{ teamLeader }} ({{ t("history_TeamLead") }})
                         </p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ getResponders(props.emergency.respondingTeam.staff) }}</p>
@@ -291,7 +291,7 @@ async function addTextToClipboard(text: string) {
                         <div class="flex gap-1 text-xs text-gray-500 dark:text-gray-400">
                             <p class="font-medium">{{ t("tracking_emergencyID") }}</p>
 
-                            <div class="flex cursor-pointer gap-1" @click="addTextToClipboard(props.emergency.id)" :title="t('tracking_ClickToCopy')">
+                            <div class="flex cursor-pointer gap-1" :title="t('tracking_ClickToCopy')" @click="addTextToClipboard(props.emergency.id)">
                                 <p>
                                     {{ props.emergency.id }}
                                 </p>
@@ -331,9 +331,9 @@ async function addTextToClipboard(text: string) {
 
         <ChatTranscriptModal
             v-if="showChatTranscriptModal"
-            @close="showChatTranscriptModal = false"
             :emergency-id="props.emergency.id"
             :responding-team="props.emergency.respondingTeam.allMembers"
+            @close="showChatTranscriptModal = false"
         />
     </div>
 </template>

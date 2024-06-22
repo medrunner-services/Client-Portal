@@ -24,10 +24,12 @@ function resetAnimationSettings(): void {
     logicStore.loginAnimationSpeed = 1;
     logicStore.loginAnimationStarSize = 2;
     logicStore.loginAnimationGlowSize = 2;
+    logicStore.isLoginAnimationAllowed = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    localStorage.setItem("loginAnimationSpeed", "1");
-    localStorage.setItem("loginAnimationStarSize", "2");
-    localStorage.setItem("loginAnimationGlowSize", "2");
+    localStorage.removeItem("loginAnimationSpeed");
+    localStorage.removeItem("loginAnimationStarSize");
+    localStorage.removeItem("loginAnimationGlowSize");
+    localStorage.removeItem("loginAnimation");
 }
 
 function saveAnimationSetting(setting: string, value: number): void {
@@ -41,34 +43,34 @@ function saveAnimationSetting(setting: string, value: number): void {
         <div class="my-6 border border-gray-100"></div>
         <div>
             <GlobalToggle
-                @input-click="updateAnimationState()"
                 v-model="logicStore.isLoginAnimationAllowed"
                 :helper="t('login_helperSettingAnimation')"
                 side="right"
+                @input-click="updateAnimationState()"
                 >{{ t("login_settingAnimation") }}
             </GlobalToggle>
             <GlobalRangeSlider
-                @input-click="() => saveAnimationSetting('loginAnimationSpeed', logicStore.loginAnimationSpeed)"
                 v-model="logicStore.loginAnimationSpeed"
                 class="mt-4"
                 :min="0"
                 :max="100"
+                @input-click="() => saveAnimationSetting('loginAnimationSpeed', logicStore.loginAnimationSpeed)"
                 >{{ t("login_settingAnimationSpeed") }}
             </GlobalRangeSlider>
             <GlobalRangeSlider
-                @input-click="() => saveAnimationSetting('loginAnimationStarSize', logicStore.loginAnimationStarSize)"
                 v-model="logicStore.loginAnimationStarSize"
                 class="mt-4"
                 :min="0"
                 :max="100"
+                @input-click="() => saveAnimationSetting('loginAnimationStarSize', logicStore.loginAnimationStarSize)"
                 >{{ t("login_settingAnimationStarSize") }}
             </GlobalRangeSlider>
             <GlobalRangeSlider
-                @input-click="() => saveAnimationSetting('loginAnimationGlowSize', logicStore.loginAnimationGlowSize)"
                 v-model="logicStore.loginAnimationGlowSize"
                 class="mt-4"
                 :min="0"
                 :max="100"
+                @input-click="() => saveAnimationSetting('loginAnimationGlowSize', logicStore.loginAnimationGlowSize)"
                 >{{ t("login_settingAnimationStarGlow") }}
             </GlobalRangeSlider>
             <GlobalButton class="mt-6" type="outline" @click="resetAnimationSettings()">{{ t("login_settingReset") }} </GlobalButton>

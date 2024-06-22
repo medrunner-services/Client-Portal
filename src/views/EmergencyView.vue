@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Emergency, type MissionStatus, SubmissionSource } from "@medrunner/api-client";
+import { type Emergency, type MissionStatus, Origin, SubmissionSource } from "@medrunner/api-client";
 import { onMounted, type Ref, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -58,7 +58,7 @@ onMounted(async () => {
     });
 
     ws.on("EmergencyUpdate", async (updatedEmergency: Emergency) => {
-        if (updatedEmergency.id === emergencyStore.trackedEmergency.id) {
+        if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
             emergencyStore.trackedEmergency = updatedEmergency;
 
             if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
@@ -107,37 +107,33 @@ onMounted(async () => {
                     </div>
                 </GlobalCard>
             </div>
-            <div v-else-if="emergencyStore.trackedEmergency.id">
+            <div v-else-if="emergencyStore.trackedEmergency">
                 <EmergencyDetailsForm
                     v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
                     @submitted-details="displayFormDetails = false"
                 />
-                <EmergencyTracking @send-new-details="displayFormDetails = true" v-else-if="!emergencyStore.trackedEmergency.isComplete" />
-                <EmergencyCompletion @rated-emergency="emergencyStore.resetTrackedEmergency()" v-else />
+                <EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
+                <EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
             </div>
 
             <EmergencyReportForm v-else />
         </div>
 
         <div class="xl:w-1/2">
-            <div v-if="emergencyStore.trackedEmergency.id && !userStore.isBlocked">
+            <div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
                 <div class="min-h-11">
                     <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
                 </div>
 
                 <EmergencyChatBox
                     v-if="
-                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.API ||
-                        emergencyStore.trackedEmergency.submissionSource === SubmissionSource.UNKNOWN
+                        emergencyStore.trackedEmergency.submissionSource !== SubmissionSource.BOT ||
+                        emergencyStore.trackedEmergency.origin === Origin.EVALUATION
                     "
                     class="mt-8"
                 />
 
                 <div v-else class="mt-8">
-                    <div class="min-h-11">
-                        <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
-                    </div>
-
                     <GlobalCard class="mt-4 flex flex-col items-center justify-center text-center">
                         <p>{{ t("tracking_textDiscordThread") }}</p>
                         <a

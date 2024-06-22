@@ -63,20 +63,20 @@ const getModalTitle = computed(() => {
 </script>
 
 <template>
-    <ModalContainer @close="emit('close')" :title="getModalTitle" v-slot="modalContainer">
+    <ModalContainer v-slot="modalContainer" :title="getModalTitle" @close="emit('close')">
         <div v-if="createdToken">
             <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
 
             <div class="mt-8 flex items-center">
-                <GlobalTextAreaInput :rows="3" class="flex-grow" :disabled="true" v-model="createdToken" />
+                <GlobalTextAreaInput v-model="createdToken" :rows="3" class="flex-grow" :disabled="true" />
                 <svg
                     v-if="!isCopied"
-                    @click="copyToken()"
                     class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
                     viewBox="0 0 18 20"
+                    @click="copyToken()"
                 >
                     <path
                         d="M5 9V4.13a2.96 2.96 0 0 0-1.293.749L.879 7.707A2.96 2.96 0 0 0 .13 9H5Zm11.066-9H9.829a2.98 2.98 0 0 0-2.122.879L7 1.584A.987.987 0 0 0 6.766 2h4.3A3.972 3.972 0 0 1 15 6v10h1.066A1.97 1.97 0 0 0 18 14V2a1.97 1.97 0 0 0-1.934-2Z"
@@ -95,7 +95,7 @@ const getModalTitle = computed(() => {
                 </svg>
             </div>
 
-            <GlobalButton @click="copyAndClose()" type="secondary" size="full" class="mt-8 lg:mt-8 lg:w-fit">{{
+            <GlobalButton type="secondary" size="full" class="mt-8 lg:mt-8 lg:w-fit" @click="copyAndClose()">{{
                 t("developer_createTokenCopyAndClose")
             }}</GlobalButton>
         </div>
@@ -105,25 +105,25 @@ const getModalTitle = computed(() => {
 
             <form @submit.prevent="createToken()">
                 <GlobalTextInput
+                    v-model="inputName"
                     class="mt-4"
                     :label="t('developer_createTokenFormName')"
-                    v-model="inputName"
                     :required="true"
                     :placeholder="t('developer_createTokenFormPlaceholderName')"
                 />
                 <GlobalDateInput
+                    v-model="inputDate"
                     class="mt-4"
                     :label="t('developer_createTokenFormExpirationDate')"
                     :min="new Date().toISOString().split('T')[0]"
                     :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
-                    v-model="inputDate"
                 />
 
                 <div class="mt-8 gap-2 lg:flex">
                     <GlobalButton :loading="submittingNewToken" :submit="true" size="full" :error-text="errorCreationToken">{{
                         t("developer_createTokenButton")
                     }}</GlobalButton>
-                    <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">
+                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
                     >
                 </div>

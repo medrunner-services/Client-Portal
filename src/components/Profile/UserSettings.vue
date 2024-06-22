@@ -119,16 +119,21 @@ async function updateAnalytics(): Promise<void> {
 }
 
 async function resetSettings() {
-    try {
-        isResettingSettings.value = true;
-        await userStore.setSettings({
-            globalNotifications: null,
-            customSoundNotification: null,
-            emergencyUpdateNotification: null,
-            chatMessageNotification: null,
-            globalAnalytics: null,
-        });
+    isResettingSettings.value = true;
 
+    try {
+        if (userStore.isAuthenticated) {
+            await userStore.setSettings({
+                globalNotifications: null,
+                customSoundNotification: null,
+                emergencyUpdateNotification: null,
+                chatMessageNotification: null,
+                globalAnalytics: null,
+            });
+        }
+    } catch (e) {
+        resetSettingsError.value = t("error_generic");
+    } finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";
         logicStore.customSoundNotification = true;
         logicStore.emergencyUpdateNotification = true;
@@ -137,14 +142,15 @@ async function resetSettings() {
         logicStore.isAnalyticsAllowed = true;
         logicStore.isDiscordOpenWeb = false;
 
+        localStorage.removeItem("darkMode");
+        localStorage.removeItem("isDiscordOpenWeb");
+
         if (logicStore.darkMode) {
             document.documentElement.classList.add("dark");
         } else {
             document.documentElement.classList.remove("dark");
         }
-    } catch (e) {
-        resetSettingsError.value = t("error_generic");
-    } finally {
+
         isResettingSettings.value = false;
     }
 }
@@ -160,11 +166,11 @@ async function resetSettings() {
             <div class="w-full">
                 <div v-if="route.name !== 'login'">
                     <GlobalToggle
-                        @input-click="updateGlobalNotificationPerms()"
                         v-model="logicStore.isNotificationGranted"
                         :helper="t('user_helperNotificationSetting')"
                         side="right"
                         :error-text="updateNotificationError"
+                        @input-click="updateGlobalNotificationPerms()"
                         >{{ t("user_notificationSetting") }}
                     </GlobalToggle>
 
@@ -172,15 +178,14 @@ async function resetSettings() {
                         <GlobalToggle
                             v-model="logicStore.emergencyUpdateNotification"
                             :disabled="!logicStore.isNotificationGranted"
-                            @input-click="updateEmergencyUpdateNotification()"
                             size="small"
                             :helper="t('user_helperNotificationEmergencyUpdateSetting')"
+                            @input-click="updateEmergencyUpdateNotification()"
                             >{{ t("user_notificationEmergencyUpdateSetting") }}
                         </GlobalToggle>
                         <GlobalSelectInput
                             v-model="logicStore.chatMessageNotification"
                             :disabled="!logicStore.isNotificationGranted"
-                            @change="updateMessageNotification()"
                             :label="t('user_notificationChatMessageSetting')"
                             :helper="t('user_helperNotificationChatMessageSetting')"
                             helper-type="text"
@@ -191,48 +196,55 @@ async function resetSettings() {
                                 { value: MessageNotification.PING, label: t('user_notificationChatMessageSettingPing') },
                                 { value: MessageNotification.OFF, label: t('user_notificationChatMessageSettingOff') },
                             ]"
+                            @change="updateMessageNotification()"
                         />
                         <GlobalToggle
                             v-model="logicStore.customSoundNotification"
                             :disabled="!logicStore.isNotificationGranted"
-                            @input-click="updateCustomSoundNotification()"
                             size="small"
                             :helper="t('user_helperNotificationCustomSoundSetting')"
+                            @input-click="updateCustomSoundNotification()"
                             >{{ t("user_notificationCustomSoundSetting") }}
                         </GlobalToggle>
                     </div>
                 </div>
 
                 <GlobalToggle
-                    @input-click="updateDarkMode()"
                     v-model="logicStore.darkMode"
                     :helper="t('user_helperDarkModeSetting')"
                     side="right"
                     class="mt-4"
+                    @input-click="updateDarkMode()"
                     >{{ t("user_darkModeSetting") }}</GlobalToggle
                 >
                 <GlobalToggle
-                    @input-click="updateAnalytics()"
                     v-model="logicStore.isAnalyticsAllowed"
                     :helper="t('user_analyticsDisclaimer')"
                     side="right"
                     class="mt-4"
+                    @input-click="updateAnalytics()"
                     >{{ t("user_analyticsSetting") }}</GlobalToggle
                 >
                 <GlobalToggle
-                    @input-click="updateDiscordOpen()"
                     v-model="logicStore.isDiscordOpenWeb"
                     :helper="t('user_helperDiscordLinkSetting')"
                     side="right"
                     class="mt-4"
+                    @input-click="updateDiscordOpen()"
                     >{{ t("user_discordLinkSetting") }}</GlobalToggle
                 >
             </div>
 
             <div class="mt-8 flex w-full">
-                <GlobalButton type="outline" class="ml-auto w-full lg:w-fit" @click="resetSettings()" size="full">{{
-                    t("user_resetSettings")
-                }}</GlobalButton>
+                <GlobalButton
+                    type="outline"
+                    class="ml-auto w-full lg:w-fit"
+                    :error-text="resetSettingsError"
+                    :disabled="isResettingSettings"
+                    size="full"
+                    @click="resetSettings()"
+                    >{{ t("user_resetSettings") }}</GlobalButton
+                >
             </div>
         </GlobalCard>
     </div>

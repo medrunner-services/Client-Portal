@@ -49,14 +49,14 @@ const isTokenExpired = computed(() => {
         </div>
 
         <DeleteTokenModal
+            v-if="displayDeleteTokenModal"
+            :token="props.token"
             @close="displayDeleteTokenModal = false"
             @token-deleted="
                 (id) => {
                     emit('tokenDeleted', id);
                 }
             "
-            :token="props.token"
-            v-if="displayDeleteTokenModal"
         />
     </div>
 </template>

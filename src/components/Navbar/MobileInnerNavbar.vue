@@ -86,19 +86,19 @@ async function changeLanguage(newLocal: string): Promise<void> {
         </div>
 
         <div
-            @click.self="switchNavMenuSate()"
             v-if="showMenu"
             class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-600/75 pt-4 dark:bg-gray-700/75"
+            @click.self="switchNavMenuSate()"
         >
             <div class="absolute top-[72px] z-10 w-full bg-white dark:bg-gray-800">
                 <div v-if="!showLanguageMenu">
                     <div class="border border-gray-100 dark:border-gray-700"></div>
                     <ul class="p-4">
                         <li>
-                            <RouterLink @click="switchNavMenuSate()" to="/" class="block w-full">{{ t("navbar_home") }}</RouterLink>
+                            <RouterLink to="/" class="block w-full" @click="switchNavMenuSate()">{{ t("navbar_home") }}</RouterLink>
                         </li>
                         <li class="mt-4">
-                            <RouterLink @click="switchNavMenuSate()" to="/emergency" class="block w-full">{{ t("navbar_emergency") }}</RouterLink>
+                            <RouterLink to="/emergency" class="block w-full" @click="switchNavMenuSate()">{{ t("navbar_emergency") }}</RouterLink>
                         </li>
                     </ul>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
@@ -106,7 +106,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         {{ t("navbar_reportBug") }}
                     </p>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
-                    <div @click="showLanguageMenu = !showLanguageMenu" class="flex cursor-pointer items-center justify-between rounded p-4">
+                    <div class="flex cursor-pointer items-center justify-between rounded p-4" @click="showLanguageMenu = !showLanguageMenu">
                         <div class="flex">
                             <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-4 h-6 w-6" />
                             {{ logicStore.getLanguageString(locale) }}
@@ -124,7 +124,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         </svg>
                     </div>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
-                    <RouterLink @click="switchNavMenuSate()" to="/profile" class="flex cursor-pointer items-center p-4">
+                    <RouterLink to="/profile" class="flex cursor-pointer items-center p-4" @click="switchNavMenuSate()">
                         <svg
                             class="h-5 w-5 text-gray-800 dark:text-gray-50"
                             aria-hidden="true"
@@ -146,8 +146,8 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         <li
                             v-for="language in availableLocales"
                             :key="language"
-                            @click="changeLanguage(language)"
                             class="flex cursor-pointer items-center rounded-lg px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            @click="changeLanguage(language)"
                         >
                             <img :src="`/icons/flags/${language}.svg`" alt="Flag" class="mr-6 h-6 w-6" />
                             <p>{{ logicStore.getLanguageString(language) }}</p>

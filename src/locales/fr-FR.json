@@ -21,6 +21,7 @@
     "error_loadingData": "Une erreur s'est produite lors du chargement des données",
     "error_externalAuthServiceDown": "Le service que nous utilisons pour vérifier votre compte RSI est actuellement indisponible. Veuillez réessayer plus tard.",
     "error_rsiNewAccountLinked": "Ce compte RSI est déjà lié à un autre compte Medrunner. Êtes-vous sûr d'être connecté avec le bon compte ?",
+    "error_globalLoading": "Une erreur s'est produite, veuillez réactualiser la page",
     "form_SCUsername": "Nom d'utilisateur Star Citizen",
     "form_helpSCUsername": "Le nom d'utilisateur de votre compte RSI",
     "form_confirm": "Confirmer",

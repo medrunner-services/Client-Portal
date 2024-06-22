@@ -35,17 +35,17 @@ async function deleteToken(): Promise<void> {
 </script>
 
 <template>
-    <ModalContainer :title="t('developer_deleteTokenTitle')" @close="emit('close')" v-slot="modalContainer">
+    <ModalContainer v-slot="modalContainer" :title="t('developer_deleteTokenTitle')" @close="emit('close')">
         <div>
             <p class="text-gray-500 dark:text-gray-400">
                 {{ t("developer_deleteTokenSubtitle") }}
             </p>
 
             <div class="mt-8 gap-2 lg:flex">
-                <GlobalButton @click="deleteToken()" :loading="deletingToken" size="full" :error-text="errorDeletingToken">
+                <GlobalButton :loading="deletingToken" size="full" :error-text="errorDeletingToken" @click="deleteToken()">
                     {{ t("developer_deleteTokenButton") }}</GlobalButton
                 >
-                <GlobalButton @click="modalContainer.close()" type="secondary" size="full" class="mt-2 lg:mt-0">{{
+                <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">{{
                     t("tracking_backCancelButton")
                 }}</GlobalButton>
             </div>
