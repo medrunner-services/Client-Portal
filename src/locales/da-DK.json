@@ -14,7 +14,7 @@
     "error_notificationPermissions": "Du skal tillade browsernotifikationer for at bruge denne funktion",
     "error_loginAccountDeactivated": "Denne konto er blevet deaktiveret",
     "error_loginDiscordDenied": "Du har annulleret Discord login-processen, prøv venligst igen at logge ind med Discord",
-    "error_loginAccountUnknown": "Unknown account. Please register.",
+    "error_loginAccountUnknown": "Ukendt konto, venligst tilmeld dig.",
     "error_loginAccountKnown": "Konto allerede oprettet, venligst log ind",
     "error_pageNotFound": "Siden blev ikke fundet",
     "error_noIdRsiBio": "Medrunner ID'et blev ikke fundet i denne kontos bio",
