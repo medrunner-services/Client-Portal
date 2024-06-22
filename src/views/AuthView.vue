@@ -37,7 +37,7 @@ onMounted(async () => {
                     await router.push("/login?error=generic");
                 }
 
-                if (route.query.state) await router.push(decodeURIComponent(route.query.state as string));
+                if (route.query.state && route.query.state !== "undefined") await router.push(decodeURIComponent(route.query.state as string));
                 else await router.push("/");
             } else {
                 if (response.status === 401) await router.push("/login?error=accountUnknown");
