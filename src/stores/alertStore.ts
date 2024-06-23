@@ -10,6 +10,7 @@ export const useAlertStore = defineStore("alert", () => {
     const icon = ref("");
     const isCloseable = ref(true);
     const speed = ref(3500);
+    const currentTimeoutId = ref<NodeJS.Timeout>();
 
     function newAlert(type: AlertColors = AlertColors.RED, content: string, closeable = true, alertIcon?: "info", duration = 3500) {
         message.value = content;
@@ -21,7 +22,11 @@ export const useAlertStore = defineStore("alert", () => {
         else icon.value = "";
 
         showAlert.value = true;
-        setTimeout(closeAlert, duration);
+
+        if (currentTimeoutId.value) {
+            clearTimeout(currentTimeoutId.value);
+        }
+        currentTimeoutId.value = setTimeout(closeAlert, duration);
     }
 
     function closeAlert() {
@@ -30,6 +35,10 @@ export const useAlertStore = defineStore("alert", () => {
         color.value = AlertColors.RED;
         icon.value = "";
         isCloseable.value = true;
+
+        if (currentTimeoutId.value) {
+            clearTimeout(currentTimeoutId.value);
+        }
     }
 
     return {

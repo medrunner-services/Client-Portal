@@ -1,8 +1,21 @@
 <script setup lang="ts">
+import { ref, watchEffect } from "vue";
+
 import { useAlertStore } from "@/stores/alertStore";
 import { AlertColors } from "@/types";
 
 const alertStore = useAlertStore();
+
+const animatedElement = ref<HTMLDivElement | null>(null);
+
+watchEffect(() => {
+    if (animatedElement.value && alertStore.message) {
+        console.log();
+        animatedElement.value.classList.remove("animate-width");
+        void animatedElement.value.offsetWidth;
+        animatedElement.value.classList.add("animate-width");
+    }
+});
 </script>
 
 <template>
@@ -55,6 +68,7 @@ const alertStore = useAlertStore();
         </div>
 
         <div
+            ref="animatedElement"
             class="animate-width h-1 w-full rounded-lg"
             :class="{
                 'bg-red-900': alertStore.color === AlertColors.RED,
