@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -12,7 +12,7 @@ enum Status {
     Down = "DOWN",
 }
 
-const status: Ref<Status> = ref(Status.Operational);
+const status = ref(Status.Operational);
 </script>
 
 <template>

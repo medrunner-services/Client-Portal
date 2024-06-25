@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ApiToken } from "@medrunner/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CreateTokenModal from "@/components/Modals/CreateTokenModal.vue";
@@ -20,7 +20,7 @@ const emit = defineEmits(["closeCreateTokenModal"]);
 
 const loadingTokens = ref(false);
 const loadingTokensError = ref("");
-const userTokens: Ref<ApiToken[]> = ref([]);
+const userTokens = ref<ApiToken[]>([]);
 
 onMounted(async () => {
     await getTokens();

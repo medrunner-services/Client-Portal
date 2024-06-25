@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
@@ -29,15 +29,15 @@ const inputInjury = ref("");
 const inputCrimestat = ref("");
 const inputLocationType = ref("");
 const inputCrimestatDetails = ref("");
-const inputDeathHours: Ref<number | undefined> = ref(undefined);
-const inputDeathMinutes: Ref<number | undefined> = ref(undefined);
+const inputDeathHours = ref<number | undefined>(undefined);
+const inputDeathMinutes = ref<number | undefined>(undefined);
 const inputShip = ref("");
-const inputBeacon: Ref<boolean | undefined> = ref(undefined);
+const inputBeacon = ref<boolean | undefined>(undefined);
 const inputBeaconPlayer = ref("");
 const inputBeaconDistance = ref("");
-const inputEnemies: Ref<boolean | undefined> = ref(undefined);
+const inputEnemies = ref<boolean | undefined>(undefined);
 const inputEnemiesDetails = ref("");
-const inputParty: Ref<boolean | undefined> = ref(undefined);
+const inputParty = ref<boolean | undefined>(undefined);
 const inputPartyDetails = ref([""]);
 const inputRemarks = ref("");
 const formErrorMessage = ref("");

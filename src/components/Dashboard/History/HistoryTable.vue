@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type ClientHistory, type Emergency, MissionStatus } from "@medrunner/api-client";
-import { computed, onMounted, type Ref, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
@@ -16,14 +16,14 @@ const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
-const parentRowsDiv: Ref<HTMLDivElement | null> = ref(null);
+const parentRowsDiv = ref<HTMLDivElement | null>(null);
 
-const activePage: Ref<Emergency[]> = ref([]);
+const activePage = ref<Emergency[]>([]);
 const pageSize = ref(parseInt(localStorage.getItem("selectedPageSize") ?? "10") ?? 10);
 const page = ref(0);
-const paginationToken: Ref<string | undefined> = ref();
+const paginationToken = ref<string | undefined>();
 
-const loadedHistory: Ref<Emergency[]> = ref([]);
+const loadedHistory = ref<Emergency[]>([]);
 const errorLoadingHistory = ref("");
 const loaded = ref(false);
 const displayWarningNoContactModal = ref(false);

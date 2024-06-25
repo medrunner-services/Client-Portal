@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Class, type Emergency, MissionStatus } from "@medrunner/api-client";
-import { computed, onBeforeUnmount, onMounted, type Ref, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
@@ -16,8 +16,8 @@ const props = defineProps<{
 }>();
 
 const showDetails = ref(false);
-const detailsDiv: Ref<HTMLDivElement | null> = ref(null);
-const rowParent: Ref<HTMLDivElement | null> = ref(null);
+const detailsDiv = ref<HTMLDivElement | null>(null);
+const rowParent = ref<HTMLDivElement | null>(null);
 const showChatTranscriptModal = ref(false);
 const isEmergencyIDCopied = ref(false);
 const showMissionDebugInfo = ref(false);

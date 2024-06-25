@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CancellationReason } from "@medrunner/api-client";
-import { type Ref, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -14,7 +14,7 @@ const emergencyStore = useEmergencyStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const inputCancelReason: Ref<CancellationReason | ""> = ref("");
+const inputCancelReason = ref<CancellationReason | "">("");
 const cancelingEmergency = ref(false);
 const errorCancelingEmergency = ref("");
 

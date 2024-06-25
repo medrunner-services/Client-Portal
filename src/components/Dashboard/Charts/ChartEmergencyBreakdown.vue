@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, type Ref, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -10,7 +10,7 @@ const userStore = useUserStore();
 const logicStore = useLogicStore();
 const { t, locale } = useI18n();
 
-const chartOptions: Ref<any> = ref({
+const chartOptions = ref<any>({
     labels: [""],
     colors: [""],
     chart: {

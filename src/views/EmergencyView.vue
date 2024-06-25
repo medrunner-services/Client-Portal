@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Emergency, type MissionStatus, Origin, SubmissionSource } from "@medrunner/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -31,7 +31,7 @@ const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const respondingTeamNumber = ref(0);
-const oldEmergencyStatus: Ref<MissionStatus | undefined> = ref(undefined);
+const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
 
 onMounted(async () => {
     if (userStore.user.activeEmergency) {

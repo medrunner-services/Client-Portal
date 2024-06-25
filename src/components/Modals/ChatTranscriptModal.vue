@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatMessage, TeamMember } from "@medrunner/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
@@ -23,7 +23,7 @@ export interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["close"]);
 
-const chatMessages: Ref<ChatMessage[]> = ref([]);
+const chatMessages = ref<ChatMessage[]>([]);
 const loadingChatMessages = ref(false);
 const errorLoadingMessages = ref();
 const errorLoadingAdditionalMessages = ref("");

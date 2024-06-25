@@ -1,11 +1,11 @@
 import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person } from "@medrunner/api-client";
 import { defineStore } from "pinia";
-import { computed, type Ref, ref } from "vue";
+import { computed, ref } from "vue";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
-    const user: Ref<Person> = ref({} as Person);
+    const user = ref<Person>({} as Person);
     const isAuthenticated = ref(false);
     const isBlocked = ref(false);
 

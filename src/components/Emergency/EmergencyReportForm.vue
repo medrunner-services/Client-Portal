@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Location, LocationDetail } from "@medrunner/api-client";
-import { computed, onMounted, type Ref, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -18,7 +18,7 @@ const inputSystem = ref("");
 const inputPlanet = ref("");
 const inputLocation = ref("");
 const inputThreatLevel = ref("");
-const locationsInformation: Ref<LocationDetail[]> = ref([]);
+const locationsInformation = ref<LocationDetail[]>([]);
 
 onMounted(async () => {
     locationsInformation.value = await emergencyStore.fetchMetaLocations();
