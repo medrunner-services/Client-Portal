@@ -179,6 +179,7 @@
     "tracking_emergencyRulesModalTitle": "Reglas de emergencia",
     "tracking_emergencyRulesModalDescription": "Un equipo de Medrunner se pondrá en contacto con usted a través de la casilla de chat. Por favor, preste atención a los mensajes entrantes y asegúrese de tener las notificaciones habilitadas en la configuración. Por favor, recuerde que es posible su equipo de respuesta solo puede hablar inglés.",
     "tracking_emergencyRulesModalHideLater": "No volver a mostrar",
+    "tracking_titleNoCancel": "A Medrunner team is on the way, you cannot cancel your emergency.",
     "history_unknown": "Desconocido",
     "history_low": "No hay amenaza",
     "history_medium": "PvE",

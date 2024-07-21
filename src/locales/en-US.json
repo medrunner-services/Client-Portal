@@ -179,6 +179,7 @@
     "tracking_emergencyRulesModalTitle": "Emergency rules",
     "tracking_emergencyRulesModalDescription": "A Medrunner team will contact you via the chat box. Please pay attention to incoming messages and ensure you have notifications enabled in the settings. Please remember that your responding team may only speak English.",
     "tracking_emergencyRulesModalHideLater": "Don't show again",
+    "tracking_titleNoCancel": "A Medrunner team is on the way, you cannot cancel your emergency.",
     "history_unknown": "Unknown",
     "history_low": "No threat",
     "history_medium": "PvE",

@@ -179,6 +179,7 @@
     "tracking_emergencyRulesModalTitle": "求救信号须知",
     "tracking_emergencyRulesModalDescription": "一支Medrunner小队将会在对话框里联系您。请注意查收信息并确保你在设置里已打开消息提醒。请记住你的小队可能只会说英语。",
     "tracking_emergencyRulesModalHideLater": "不再显示",
+    "tracking_titleNoCancel": "A Medrunner team is on the way, you cannot cancel your emergency.",
     "history_unknown": "未知",
     "history_low": "无威胁",
     "history_medium": "非真人威胁",

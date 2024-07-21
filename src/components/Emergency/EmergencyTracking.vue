@@ -184,7 +184,8 @@ async function addTextToClipboard(text: string) {
 
             <div class="mt-6 flex flex-col gap-4 lg:flex-row">
                 <GlobalButton
-                    v-if="emergencyStore.trackedEmergency.status === 1"
+                    :disabled="emergencyStore.trackedEmergency.status !== 1"
+                    :title="emergencyStore.trackedEmergency.status !== 1 ? t('tracking_titleNoCancel') : null"
                     icon="cancel"
                     size="full"
                     @click="displayCancelEmergencyModal = true"
