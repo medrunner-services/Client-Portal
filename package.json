@@ -15,11 +15,14 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
     "prepush": "run-p lint format type-check",
-    "update-locals": "node --env-file=.env.development update-locals.js"
+    "update-locals": "node --env-file=.env.development update-locals.js",
+	"update-packages": "ncu -i -u --format group"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^4.0.0",
-    "@medrunner/api-client": "^0.1.2",
+    "@medrunner/api-client": "^0.1.1",
+    "@volar/language-server": "2.4.0-alpha.18",
+    "@vue/language-server": "2.0.28",
     "apexcharts": "^3.49.1",
     "discord-markdown": "^2.5.1",
     "dompurify": "^3.1.5",
