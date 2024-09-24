@@ -10,6 +10,7 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -35,8 +36,8 @@ onMounted(async () => {
         const response = await emergencyStore.fetchChatHistory(props.emergencyId);
         chatMessages.value = response.data;
         paginationToken.value = response.paginationToken;
-    } catch (error) {
-        errorLoadingMessages.value = t("error_generic");
+    } catch (error: any) {
+        errorLoadingMessages.value = errorString(error.statusCode);
     } finally {
         loadingChatMessages.value = false;
     }
@@ -49,8 +50,8 @@ async function loadAdditionalMessages(): Promise<void> {
             chatMessages.value = chatMessages.value.concat(response.data);
             if (paginationToken.value !== response.paginationToken) paginationToken.value = response.paginationToken;
             else paginationToken.value = undefined;
-        } catch (e) {
-            errorLoadingAdditionalMessages.value = t("error_generic");
+        } catch (error: any) {
+            errorLoadingAdditionalMessages.value = errorString(error.statusCode);
         }
     } else return;
 }

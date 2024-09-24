@@ -1,5 +1,7 @@
 import type { Person, TeamMember } from "@medrunner/api-client";
 
+import { i18n } from "@/i18n";
+
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
     const memberIdToNameMap: any = {};
     members.forEach((member) => {
@@ -28,5 +30,25 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
         return message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`).replace(/<@(\d+)>/g, (match, memberId) => {
             return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
         });
+    }
+}
+
+export function errorString(errorCode: number, customMessage?: string): string {
+    const { t } = i18n.global;
+
+    if (customMessage) return `${customMessage} (${errorCode})`;
+    else {
+        let defaultMessage = t("error_generic");
+
+        switch (errorCode) {
+            case 429:
+                defaultMessage = t("error_rateLimit");
+                break;
+            case 403:
+                defaultMessage = t("error_blockedUser");
+                break;
+        }
+
+        return `${defaultMessage} (${errorCode})`;
     }
 }

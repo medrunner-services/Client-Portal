@@ -10,6 +10,7 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
@@ -40,12 +41,11 @@ async function updateUsername() {
 
             isEditingUsername.value = false;
         } catch (error: any) {
-            if (error.statusCode === 451) errorUpdatingUsername.value = t("error_blockedUser");
-            else if (error.statusCode === 403) errorUpdatingUsername.value = t("error_noIdRsiBio");
-            else if (error.statusCode === 404) errorUpdatingUsername.value = t("error_unknownRsiAccount");
-            else if (error.statusCode === 409) errorUpdatingUsername.value = t("error_rsiAccountLinked");
-            else if (error.statusCode === 429) errorUpdatingUsername.value = t("error_rateLimit");
-            else errorUpdatingUsername.value = t("error_generic");
+            if (error.statusCode === 451) errorUpdatingUsername.value = errorString(error.statusCode, t("error_blockedUser"));
+            else if (error.statusCode === 403) errorUpdatingUsername.value = errorString(error.statusCode, t("error_noIdRsiBio"));
+            else if (error.statusCode === 404) errorUpdatingUsername.value = errorString(error.statusCode, t("error_unknownRsiAccount"));
+            else if (error.statusCode === 409) errorUpdatingUsername.value = errorString(error.statusCode, t("error_rsiAccountLinked"));
+            else errorUpdatingUsername.value = errorString(error.statusCode);
         }
 
         isUpdatingUsername.value = false;

@@ -7,6 +7,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -109,9 +110,7 @@ async function submitEmergency() {
         inputThreatLevel.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
-        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
-        else formErrorMessage.value = t("error_generic");
+        formErrorMessage.value = errorString(error.statusCode);
     }
 }
 

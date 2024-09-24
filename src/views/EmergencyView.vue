@@ -18,6 +18,7 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
 import { sendBrowserNotification } from "@/utils/notificationFunctions";
+import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -42,8 +43,8 @@ onMounted(async () => {
             emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
             respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
             if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
-        } catch (error) {
-            errorLoadingEmergency.value = t("error_loadingTrackedEmergency");
+        } catch (error: any) {
+            errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
         }
 
         loadingEmergency.value = false;
@@ -85,8 +86,8 @@ onMounted(async () => {
         if (userStore.user.activeEmergency) {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-            } catch (e) {
-                errorLoadingEmergency.value = t("error_loadingTrackedEmergency");
+            } catch (error: any) {
+                errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
             }
         }
     });

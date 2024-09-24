@@ -10,6 +10,7 @@ import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
@@ -37,9 +38,9 @@ async function updateGlobalNotificationPerms(): Promise<void> {
                     logicStore.isNotificationGranted = false;
                     updateNotificationError.value = t("error_notificationPermissions");
                 }
-            } catch (e) {
+            } catch (error: any) {
                 logicStore.isNotificationGranted = false;
-                updateNotificationError.value = t("error_generic");
+                updateNotificationError.value = errorString(error.statusCode);
             }
         }
     }
@@ -47,9 +48,9 @@ async function updateGlobalNotificationPerms(): Promise<void> {
     if (!updateNotificationError.value) {
         try {
             await userStore.setSettings({ globalNotifications: newNotificationState });
-        } catch (e) {
+        } catch (error: any) {
             logicStore.isNotificationGranted = !newNotificationState;
-            updateNotificationError.value = t("error_generic");
+            updateNotificationError.value = errorString(error.statusCode);
         }
     }
 }
@@ -57,26 +58,26 @@ async function updateGlobalNotificationPerms(): Promise<void> {
 async function updateCustomSoundNotification() {
     try {
         await userStore.setSettings({ customSoundNotification: !logicStore.customSoundNotification });
-    } catch (e) {
+    } catch (error: any) {
         logicStore.customSoundNotification = !logicStore.customSoundNotification;
-        updateNotificationError.value = t("error_generic");
+        updateNotificationError.value = errorString(error.statusCode);
     }
 }
 
 async function updateEmergencyUpdateNotification() {
     try {
         await userStore.setSettings({ emergencyUpdateNotification: !logicStore.emergencyUpdateNotification });
-    } catch (e) {
+    } catch (error: any) {
         logicStore.emergencyUpdateNotification = !logicStore.emergencyUpdateNotification;
-        updateNotificationError.value = t("error_generic");
+        updateNotificationError.value = errorString(error.statusCode);
     }
 }
 
 async function updateMessageNotification() {
     try {
         await userStore.setSettings({ chatMessageNotification: logicStore.chatMessageNotification });
-    } catch (e) {
-        updateNotificationError.value = t("error_generic");
+    } catch (error: any) {
+        updateNotificationError.value = errorString(error.statusCode);
         logicStore.chatMessageNotification = userStore.user.clientPortalPreferences.chatMessageNotification as MessageNotification;
     }
 }
@@ -112,9 +113,9 @@ async function updateAnalytics(): Promise<void> {
 
     try {
         await userStore.setSettings({ globalAnalytics: newAnalyticsState });
-    } catch (e) {
+    } catch (error: any) {
         logicStore.isAnalyticsAllowed = !newAnalyticsState;
-        updateNotificationError.value = t("error_generic");
+        updateNotificationError.value = errorString(error.statusCode);
     }
 }
 
@@ -131,8 +132,8 @@ async function resetSettings() {
                 globalAnalytics: null,
             });
         }
-    } catch (e) {
-        resetSettingsError.value = t("error_generic");
+    } catch (error: any) {
+        resetSettingsError.value = errorString(error.statusCode);
     } finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";
         logicStore.customSoundNotification = true;

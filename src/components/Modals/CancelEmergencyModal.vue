@@ -8,6 +8,7 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { errorString } from "@/utils/stringUtils";
 
 const emit = defineEmits(["emergencyCanceled", "close"]);
 const emergencyStore = useEmergencyStore();
@@ -32,7 +33,7 @@ async function cancelEmergency() {
         document.body.style.overflow = "auto";
         emit("emergencyCanceled");
     } catch (error: any) {
-        errorCancelingEmergency.value = t("error_generic");
+        errorCancelingEmergency.value = errorString(error.statusCode);
     }
     cancelingEmergency.value = false;
 }

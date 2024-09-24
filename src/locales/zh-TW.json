@@ -179,7 +179,7 @@
     "tracking_emergencyRulesModalTitle": "規則",
     "tracking_emergencyRulesModalDescription": "Medrunner 團隊將透過聊天室與您聯繫，請隨時注意您的訊息並確保在設定中啟用了通知。請記住，您的救援團隊可能只會說英語。",
     "tracking_emergencyRulesModalHideLater": "不再提示",
-    "tracking_titleNoCancel": "A Medrunner team is on the way, you cannot cancel your emergency.",
+    "tracking_titleNoCancel": "一組 Medrunner 已正在前往您的地點，所以無法取消您的救援行動。",
     "history_unknown": "未知",
     "history_low": "低",
     "history_medium": "中",

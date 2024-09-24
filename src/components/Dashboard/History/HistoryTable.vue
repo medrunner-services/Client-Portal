@@ -11,6 +11,7 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
+import { errorString } from "@/utils/stringUtils";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -106,7 +107,7 @@ async function loadHistory() {
             setActivePageFromCache(0);
         }
     } catch (error: any) {
-        errorLoadingHistory.value = t("error_loadingData");
+        errorLoadingHistory.value = errorString(error.statusCode, t("error_loadingData"));
         loaded.value = true;
     }
 }

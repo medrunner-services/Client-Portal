@@ -12,6 +12,7 @@ import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -112,9 +113,7 @@ async function sendDetails(): Promise<void> {
 
         emit("submittedDetails");
     } catch (error: any) {
-        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
-        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
-        else formErrorMessage.value = t("error_generic");
+        formErrorMessage.value = errorString(error.statusCode);
     }
 
     submittingDetails.value = false;

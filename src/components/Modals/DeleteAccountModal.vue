@@ -6,6 +6,7 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -23,8 +24,8 @@ async function deleteAccount(): Promise<void> {
 
     try {
         await userStore.deleteAccount();
-    } catch (e) {
-        errorDeletingAccount.value = t("error_generic");
+    } catch (error: any) {
+        errorDeletingAccount.value = errorString(error.statusCode);
     } finally {
         document.body.style.overflow = "auto";
         await userStore.disconnectUser();

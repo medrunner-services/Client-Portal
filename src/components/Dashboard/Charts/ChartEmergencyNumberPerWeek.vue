@@ -7,6 +7,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 const { t, locale } = useI18n();
 
 const userStore = useUserStore();
@@ -202,8 +203,8 @@ async function fetchMissionsForPeriod() {
         } while (paginationToken);
 
         emergenciesPerDay.value.reverse();
-    } catch (error) {
-        errorLoading.value = t("error_loadingData");
+    } catch (error: any) {
+        errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
     }
 }
 

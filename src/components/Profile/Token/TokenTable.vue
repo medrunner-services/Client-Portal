@@ -8,6 +8,7 @@ import TokenTableRow from "@/components/Profile/Token/TokenTableRow.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -31,8 +32,8 @@ async function getTokens(): Promise<void> {
     try {
         const apiTokens = await userStore.fetchUserApiTokens();
         userTokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
-    } catch (e) {
-        loadingTokensError.value = t("error_generic");
+    } catch (error: any) {
+        loadingTokensError.value = errorString(error.statusCode);
     } finally {
         loadingTokens.value = false;
     }
