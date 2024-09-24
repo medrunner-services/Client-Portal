@@ -26,11 +26,23 @@ onMounted(async () => {
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
             if (response.ok) {
+                let apiInitialized = false;
                 const responseBody = await response.json();
 
-                await initializeApi(responseBody.refreshToken);
-                await initializeWebsocket();
-                await initializeApp();
+                try {
+                    await initializeApi(responseBody.refreshToken);
+                    await initializeWebsocket();
+
+                    apiInitialized = true;
+                } catch (e) {
+                    await router.push("/login?error=generic");
+                }
+
+                try {
+                    await initializeApp(apiInitialized);
+                } catch (e) {
+                    await router.push("/login?error=generic");
+                }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
@@ -55,11 +67,23 @@ onMounted(async () => {
             );
 
             if (response.ok) {
+                let apiInitialized = false;
                 const responseBody = await response.json();
 
-                await initializeApi(responseBody.refreshToken);
-                await initializeWebsocket();
-                await initializeApp();
+                try {
+                    await initializeApi(responseBody.refreshToken);
+                    await initializeWebsocket();
+
+                    apiInitialized = true;
+                } catch (e) {
+                    await router.push("/login?error=generic");
+                }
+
+                try {
+                    await initializeApp(apiInitialized);
+                } catch (e) {
+                    await router.push("/login?error=generic");
+                }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
