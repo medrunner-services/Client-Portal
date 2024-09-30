@@ -11,11 +11,13 @@ export interface Props {
     modelValue?: string | number;
     type?: "text" | "number";
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
+    uppercase?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
+    uppercase: false,
     radius: "rounded-lg",
     type: "text",
 });
@@ -38,6 +40,7 @@ const selectInputClasses = computed(() => {
 
     if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
     if (props.radius !== "none") allClasses.push(props.radius);
+    if (props.uppercase) allClasses.push("uppercase");
 
     return allClasses.join(" ");
 });
@@ -80,7 +83,7 @@ const selectInputClasses = computed(() => {
         <input
             v-model="value"
             :type="props.type"
-            class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 placeholder:normal-case focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
             :disabled="props.disabled"
             :required="props.required"

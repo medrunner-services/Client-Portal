@@ -4,12 +4,14 @@ import { useI18n } from "vue-i18n";
 import { RouterLink } from "vue-router";
 
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
+import CodeRedeemModal from "@/components/Modals/CodeRedeemModal.vue";
 import LanguageDropdown from "@/components/Navbar/LanguageDropdown.vue";
 import { useLogicStore } from "@/stores/logicStore";
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const showBugReportModal = ref(false);
+const showCodeRedeemModal = ref(false);
 </script>
 
 <template>
@@ -28,6 +30,9 @@ const showBugReportModal = ref(false);
         </ul>
 
         <div class="flex items-center">
+            <!-- TODO: localization -->
+            <p class="cursor-pointer" @click="showCodeRedeemModal = true">Redeem code</p>
+            <div class="mx-5 h-4 border border-gray-300" />
             <p class="cursor-pointer text-primary-600 dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
             <div class="mx-5 h-4 border border-gray-300" />
             <LanguageDropdown />
@@ -48,6 +53,7 @@ const showBugReportModal = ref(false);
         </div>
 
         <BugReportModal v-if="showBugReportModal" @close="showBugReportModal = false" />
+        <CodeRedeemModal v-if="showCodeRedeemModal" @close="showCodeRedeemModal = false" />
     </div>
 </template>
 

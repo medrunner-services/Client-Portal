@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ChangelogRecap from "@/components/Profile/ChangelogRecap.vue";
+import CodesManagement from "@/components/Profile/CodesManagement.vue";
 import TokenManagement from "@/components/Profile/TokenManagement.vue";
 import UserAccount from "@/components/Profile/UserAccount.vue";
 import UserSettings from "@/components/Profile/UserSettings.vue";
@@ -13,6 +14,8 @@ import UserSettings from "@/components/Profile/UserSettings.vue";
             <UserSettings class="mt-10" />
 
             <TokenManagement class="mt-10" />
+
+            <CodesManagement class="mt-10" />
         </div>
 
         <div class="xl:w-1/2">

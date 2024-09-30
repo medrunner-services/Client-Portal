@@ -21,7 +21,7 @@ function closeModal() {
     <teleport to="#modals">
         <div
             class="fixed left-0 right-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
-            @click.self="props.userCloseModal ? closeModal() : null"
+            @mousedown.self="props.userCloseModal ? closeModal() : null"
         >
             <div
                 class="content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg bg-white p-4 shadow dark:bg-gray-800 lg:w-1/2 2xl:w-1/3"

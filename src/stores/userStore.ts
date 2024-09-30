@@ -115,6 +115,14 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function redeemCode(code: string): Promise<void> {
+        const response = await api.code.redeem(code);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
@@ -130,5 +138,6 @@ export const useUserStore = defineStore("user", () => {
         deleteApiToken,
         setSettings,
         deleteAccount,
+        redeemCode,
     };
 });
