@@ -4,7 +4,7 @@ import { useUserStore } from "@/stores/userStore";
 
 import DashboardView from "./views/DashboardView.vue";
 
-async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
+async function isUserComplete(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
 
     if (!userStore.isAuthenticated) {
@@ -36,6 +36,16 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
     return true;
 }
 
+async function isUserAuthenticated(): Promise<string | boolean> {
+    const userStore = useUserStore();
+
+    if (!userStore.isAuthenticated) {
+        return "/";
+    }
+
+    return true;
+}
+
 async function isUserNotLinked(): Promise<string | boolean> {
     const userStore = useUserStore();
 
@@ -57,19 +67,19 @@ export const router = createRouter({
             path: "/",
             name: "dashboard",
             component: DashboardView,
-            beforeEnter: isUserAuthenticated,
+            beforeEnter: isUserComplete,
         },
         {
             path: "/emergency",
             name: "emergency",
             component: () => import("@/views/EmergencyView.vue"),
-            beforeEnter: isUserAuthenticated,
+            beforeEnter: isUserComplete,
         },
         {
             path: "/profile",
             name: "profile",
             component: () => import("@/views/ProfileView.vue"),
-            beforeEnter: isUserAuthenticated,
+            beforeEnter: isUserComplete,
         },
         {
             path: "/login",
@@ -88,6 +98,12 @@ export const router = createRouter({
             alias: "/auth/register",
             name: "auth",
             component: () => import("@/views/AuthView.vue"),
+        },
+        {
+            path: "/redeem",
+            name: "redeem",
+            component: () => import("@/views/RedeemView.vue"),
+            beforeEnter: isUserAuthenticated,
         },
         {
             path: "/:pathMatch(.*)*",

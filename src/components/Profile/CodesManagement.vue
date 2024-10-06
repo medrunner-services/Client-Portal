@@ -7,7 +7,6 @@ import { useUserStore } from "@/stores/userStore";
 const userStore = useUserStore();
 const { t } = useI18n();
 
-// TODO: localization
 function getCodeTypeString(type: CodeType): string {
     switch (type) {
         case CodeType.CitizenCon2954:
@@ -21,9 +20,8 @@ function getCodeTypeString(type: CodeType): string {
 
 <template>
     <div>
-        <!--  TODO: localization  -->
         <div class="min-h-11">
-            <h2 class="font-Mohave text-2xl font-semibold uppercase">Promotional codes</h2>
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("profile_redeemedCodes") }}</h2>
         </div>
 
         <div class="w-full">
@@ -33,8 +31,8 @@ function getCodeTypeString(type: CodeType): string {
                         <div
                             class="grid grid-cols-12 rounded-t-lg bg-gray-50 p-3 font-Mohave font-semibold uppercase text-gray-500 dark:bg-gray-700 dark:text-gray-400 md:grid-cols-12"
                         >
-                            <div class="col-span-5">Code</div>
-                            <div class="col-span-3">Event</div>
+                            <div class="col-span-5">{{ t("profile_code") }}</div>
+                            <div class="col-span-3">{{ t("profile_event") }}</div>
                         </div>
                         <div v-if="userStore.user.redeemedCodes.length > 0">
                             <div v-for="code in userStore.user.redeemedCodes" :key="code.code">
@@ -48,7 +46,7 @@ function getCodeTypeString(type: CodeType): string {
                             </div>
                         </div>
                         <div v-else class="flex h-56 w-full items-center justify-center">
-                            <p>No codes redeemed</p>
+                            <p>{{ t("profile_noCodesRedeemed") }}</p>
                         </div>
                     </div>
                 </div>

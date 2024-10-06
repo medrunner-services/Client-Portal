@@ -29,12 +29,13 @@ function closeModal() {
                 <div class="flex w-full justify-between">
                     <p class="text-xl font-semibold">{{ props.title }}</p>
                     <svg
+                        v-if="props.userCloseModal"
                         class="ml-auto h-3 w-3 cursor-pointer text-gray-800 dark:text-white"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 14 14"
-                        @click="props.userCloseModal ? closeModal() : null"
+                        @click="closeModal()"
                     >
                         <path
                             stroke="currentColor"

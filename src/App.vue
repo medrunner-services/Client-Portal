@@ -36,7 +36,11 @@ onMounted(async () => {
         <GlobalAlert v-if="alertStore.showAlert" />
 
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
-            <NavbarContainer v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== '404'" />
+            <NavbarContainer
+                v-if="
+                    route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404'
+                "
+            />
 
             <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
@@ -48,9 +52,9 @@ onMounted(async () => {
 
             <RouterView
                 class="w-full flex-grow"
-                :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' ? 'my-0' : 'my-14'"
+                :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
             />
-            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth'" />
+            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>
     </div>
 </template>

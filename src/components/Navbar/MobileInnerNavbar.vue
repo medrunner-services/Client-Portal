@@ -104,8 +104,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         </li>
                     </ul>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
-                    <!-- TODO: localization -->
-                    <p class="cursor-pointer p-4" @click="showCodeRedeemModal = true">Redeem code</p>
+                    <p class="cursor-pointer p-4" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
                     <p class="cursor-pointer p-4 text-primary-600 dark:text-red-700" @click="showBugReportModal = true">
                         {{ t("navbar_reportBug") }}

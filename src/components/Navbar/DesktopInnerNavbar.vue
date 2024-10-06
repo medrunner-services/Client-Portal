@@ -30,8 +30,7 @@ const showCodeRedeemModal = ref(false);
         </ul>
 
         <div class="flex items-center">
-            <!-- TODO: localization -->
-            <p class="cursor-pointer" @click="showCodeRedeemModal = true">Redeem code</p>
+            <p class="cursor-pointer" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
             <div class="mx-5 h-4 border border-gray-300" />
             <p class="cursor-pointer text-primary-600 dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
             <div class="mx-5 h-4 border border-gray-300" />
