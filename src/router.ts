@@ -36,11 +36,12 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
     return true;
 }
 
-async function isUserAuthenticated(): Promise<string | boolean> {
+async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
 
     if (!userStore.isAuthenticated) {
-        return "/";
+        if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
+        else return "/login";
     }
 
     return true;
