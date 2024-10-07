@@ -280,6 +280,7 @@
     "error_unknownRsiAccountHelper": "Мы не нашли аккаунта RSI с таким именем пользователя. Убедитесь, что вы ввели правильное имя пользователя RSI и что ваш аккаунт RSI является публичным, а не частным.",
     "error_rsiNewAccountLinkedHelper": "Этот аккаунт RSI уже связан с другим аккаунтом Medrunner. Возможно, у вас уже есть аккаунт под другим аккаунтом в discord. Если у вас есть другой аккаунт discord, попробуйте войти под ним или откройте тикет в службу IT-поддержки в нашем discord, объяснив ситуацию.",
     "login_linkHelperTitle": "У вас возникли проблемы с соединением аккаунта?",
+    "login_continueAccountSetup": "Continue account setup",
     "bugReport_title": "Нашли ошибку?",
     "bugReport_copyUserAgent": "Если вы заметили ошибку, пожалуйста, сообщите о ней через эту форму, и мы примем меры по указанному адресу электронной почты.",
     "bugReport_goToBugForm": "Заполните анкету",
@@ -356,6 +357,7 @@
     "profile_code": "Code",
     "profile_event": "Event",
     "profile_noCodesRedeemed": "No codes redeemed",
+    "code_skip": "Skip",
     "404_somethingMissing": "Что-то не хватает.",
     "404_helperText": "К сожалению, мы не можем найти эту страницу. На главной странице вы можете найти большое количество информации.",
     "404_backToHomepage": "Вернуться на главную страницу"

@@ -280,6 +280,7 @@
     "error_unknownRsiAccountHelper": "Vi kunne ikke finne en RSI bruker med dette brukernavnet. Vennligst forsikre deg om at du har skrevet riktig RSI brukernavn og at din RSI konto er satt til åpen og ikke privat.",
     "error_rsiNewAccountLinkedHelper": "Denne RSI-kontoen er allerede koblet til en annen Medrunner-konto. Det er mulig du allerede har en konto hos oss under en annen discord-konto. Hvis du har en annen discord-konto, prøv å logge på med den i stedet, eller åpne en IT-støttebillett i vår discord som forklarer situasjonen.",
     "login_linkHelperTitle": "Har du problemer med å koble kontoen din?",
+    "login_continueAccountSetup": "Continue account setup",
     "bugReport_title": "Funnet en feil?",
     "bugReport_copyUserAgent": "Hvis du har lagt merke til en feil, vennligst rapporter den i dette skjemaet så vil vi følge opp gjennom emailen gitt.",
     "bugReport_goToBugForm": "Fyll ut skjemaet",
@@ -356,6 +357,7 @@
     "profile_code": "Code",
     "profile_event": "Event",
     "profile_noCodesRedeemed": "No codes redeemed",
+    "code_skip": "Skip",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
     "404_backToHomepage": "Tilbake til hjemmesiden"

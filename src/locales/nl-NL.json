@@ -280,6 +280,7 @@
     "error_unknownRsiAccountHelper": "We konden geen RSI-account vinden met deze gebruikersnaam. Let erop dat u de juiste RSI-naam heeft gebruikt en dat uw profiel openbaar is.",
     "error_rsiNewAccountLinkedHelper": "Deze RSI-account is al gekoppeld aan een ander Medrunner account. Het is mogelijk dat uw account al is gekoppeld aan een ander Discord account. Mocht dit het geval zijn verzoeken wij u vriendelijk in te loggen met de juiste account. Mocht dit niet lukken dan verzoeken wij u een IT support ticket in te dienen op onze Discord.",
     "login_linkHelperTitle": "Ervaart u problemen met het verbinden van uw account?",
+    "login_continueAccountSetup": "Continue account setup",
     "bugReport_title": "Een bug gevonden?",
     "bugReport_copyUserAgent": "Als u een bug heeft gevonden, meld deze dan via dit formulier. We nemen contact op via het opgegeven e-mailadres.",
     "bugReport_goToBugForm": "Vul het formulier in",
@@ -356,6 +357,7 @@
     "profile_code": "Code",
     "profile_event": "Event",
     "profile_noCodesRedeemed": "No codes redeemed",
+    "code_skip": "Skip",
     "404_somethingMissing": "Er ontbreekt iets.",
     "404_helperText": "Sorry, we kunnen die pagina niet vinden. Op de startpagina vind je veel om te ontdekken.",
     "404_backToHomepage": "Terug naar Startpagina"

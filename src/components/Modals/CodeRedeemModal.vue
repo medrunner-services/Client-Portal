@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
@@ -9,6 +10,7 @@ import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const userStore = useUserStore();
+const router = useRouter();
 
 const emit = defineEmits(["close"]);
 
@@ -124,12 +126,16 @@ function handlePaste(event: ClipboardEvent) {
 
     inputsField[Math.ceil(pasteData.length / 4) - 1]?.focus();
 }
+
+async function goToLinkPage() {
+    await router.push("/login/link");
+}
 </script>
 
 <template>
     <ModalContainer v-slot="modalContainer" :user-close-modal="props.canCloseModal" :title="t('profile_redeemACode')" @close="emit('close')">
         <div v-if="isCodeRedeemed">
-            <div class="mt-12 flex flex-col items-center">
+            <div class="mb-8 mt-12 flex flex-col items-center">
                 <div>
                     <div class="h-24 w-24 rounded-full bg-green-300 p-8 shadow-md">
                         <svg
@@ -153,8 +159,8 @@ function handlePaste(event: ClipboardEvent) {
                 <p class="mt-4 text-gray-500 dark:text-gray-400">{{ t("profile_codeRedeemed") }}</p>
             </div>
 
-            <GlobalButton type="secondary" size="full" class="mt-8" @click="modalContainer.close()">
-                {{ t("tracking_backCancelButton") }}</GlobalButton
+            <GlobalButton v-if="!userStore.user.rsiHandle" type="secondary" size="full" @click="modalContainer.close()">
+                {{ t("login_continueAccountSetup") }}</GlobalButton
             >
         </div>
 
@@ -253,6 +259,9 @@ function handlePaste(event: ClipboardEvent) {
                     >
                     <GlobalButton v-if="props.canCloseModal" type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
+                    >
+                    <GlobalButton v-else-if="!userStore.user.rsiHandle" type="secondary" size="full" class="mt-2 lg:mt-0" @click="goToLinkPage()">
+                        {{ t("code_skip") }}</GlobalButton
                     >
                 </div>
             </form>

@@ -280,6 +280,7 @@
     "error_unknownRsiAccountHelper": "We did not find an RSI account with this username. Please ensure you have entered the correct RSI handle and that your RSI account is public, not private.",
     "error_rsiNewAccountLinkedHelper": "This RSI account is already linked to a different Medrunner account. It's possible you already have an account with us under a different discord account. If you have another discord account, try logging in with that one instead, or open an IT support ticket in our discord explaining the situation.",
     "login_linkHelperTitle": "Having issues linking your account?",
+    "login_continueAccountSetup": "Continue account setup",
     "bugReport_title": "Found a bug?",
     "bugReport_copyUserAgent": "If you’ve noticed a bug, please report it through this form, and we will follow up through the email provided.",
     "bugReport_goToBugForm": "Fill out the form",
@@ -356,6 +357,7 @@
     "profile_code": "Code",
     "profile_event": "Event",
     "profile_noCodesRedeemed": "No codes redeemed",
+    "code_skip": "Skip",
     "404_somethingMissing": "Something's missing.",
     "404_helperText": "Sorry, we can't find that page. You'll find lots to explore on the home page.",
     "404_backToHomepage": "Back to home page"
