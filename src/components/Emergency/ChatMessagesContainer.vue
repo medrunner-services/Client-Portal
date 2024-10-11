@@ -67,7 +67,7 @@ const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
 
 function parseChatMessageString(message: ChatMessage): string {
     const htmlMessage = toHTML(message.contents);
-    let sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
+    const sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
     const timestampDeath = sanitizedHtmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
     let stringTimestampDeath;
     if (timestampDeath && timestampDeath[0]) {
@@ -133,7 +133,7 @@ function truncatedMessage(message: ChatMessage): string {
 }
 
 function messageClasses(messageIndex: number, senderId: string): string {
-    let classes: string[] = [];
+    const classes: string[] = [];
 
     if (isMessageAuthor(senderId)) {
         classes.push("self-end bg-primary-600 text-white lg:mr-6");

@@ -23,7 +23,7 @@ async function confirmWarning() {
     try {
         isConfirming.value = true;
         await userStore.setSettings({ lastConfirmedWarningId: props.emergencyId });
-    } catch (e) {
+    } catch (_e) {
         return;
     }
 

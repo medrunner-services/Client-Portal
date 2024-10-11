@@ -23,7 +23,7 @@ onMounted(async () => {
 
     try {
         await router.isReady();
-    } catch (e) {
+    } catch (_e) {
         errorLoadingPage.value = true;
     } finally {
         isLoadingPage.value = false;

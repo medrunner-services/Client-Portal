@@ -34,7 +34,8 @@ function enableScrolling(): void {
 function switchNavMenuSate(): void {
     showMenu.value = !showMenu.value;
     showLanguageMenu.value = false;
-    scrollEnabled.value ? disableScrolling() : enableScrolling();
+    if (scrollEnabled.value) disableScrolling();
+    else enableScrolling();
 }
 
 async function changeLanguage(newLocal: string): Promise<void> {
@@ -43,7 +44,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 
     try {
         await userStore.setSettings({ selectedLanguage: newLocal });
-    } catch (e) {
+    } catch (_e) {
         return;
     }
 }

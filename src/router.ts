@@ -19,7 +19,7 @@ async function isUserComplete(to: RouteLocationNormalized): Promise<string | boo
     try {
         const blockCheck = await userStore.fetchUserBlocklistStatus();
         if (blockCheck.blocked) userStore.isBlocked = true;
-    } catch (e) {
+    } catch (_e) {
         return "/login?error=generic";
     }
 

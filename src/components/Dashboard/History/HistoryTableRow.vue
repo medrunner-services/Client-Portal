@@ -44,7 +44,7 @@ const handleClickOutside = (event: MouseEvent) => {
 };
 
 function getResponders(responders: any): string {
-    let responderArray = [];
+    const responderArray = [];
     for (const responder of responders) {
         if (responder.class !== Class.LEAD) responderArray.push(responder.rsiHandle);
     }

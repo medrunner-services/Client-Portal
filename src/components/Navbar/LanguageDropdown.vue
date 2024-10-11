@@ -38,7 +38,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 
     try {
         await userStore.setSettings({ selectedLanguage: newLocal });
-    } catch (e) {
+    } catch (_e) {
         return;
     }
 }

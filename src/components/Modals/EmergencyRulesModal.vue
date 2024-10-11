@@ -20,7 +20,7 @@ async function confirmRules() {
         try {
             isConfirming.value = true;
             await userStore.setSettings({ hideEmergencyRulesModal: true });
-        } catch (e) {
+        } catch (_e) {
             return;
         }
     }

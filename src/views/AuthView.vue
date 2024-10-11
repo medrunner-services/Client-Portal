@@ -34,13 +34,13 @@ onMounted(async () => {
                     await initializeWebsocket();
 
                     apiInitialized = true;
-                } catch (e) {
+                } catch (_e) {
                     await router.push("/login?error=generic");
                 }
 
                 try {
                     await initializeApp(apiInitialized);
-                } catch (e) {
+                } catch (_e) {
                     await router.push("/login?error=generic");
                 }
 
@@ -55,7 +55,7 @@ onMounted(async () => {
                 if (response.status === 401) await router.push("/login?error=accountUnknown");
                 else await router.push("/login?error=generic");
             }
-        } catch (error: any) {
+        } catch (_e) {
             await router.push("/login?error=generic");
         }
     } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
@@ -75,13 +75,13 @@ onMounted(async () => {
                     await initializeWebsocket();
 
                     apiInitialized = true;
-                } catch (e) {
+                } catch (_e) {
                     await router.push("/login?error=generic");
                 }
 
                 try {
                     await initializeApp(apiInitialized);
-                } catch (e) {
+                } catch (_e) {
                     await router.push("/login?error=generic");
                 }
 
@@ -96,7 +96,7 @@ onMounted(async () => {
                 if (response.status === 409) await router.push("/login?error=accountKnown");
                 else await router.push("/login?error=generic");
             }
-        } catch (error: any) {
+        } catch (_e) {
             await router.push("/login?error=generic");
         }
     } else {

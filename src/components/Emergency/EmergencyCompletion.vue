@@ -25,7 +25,7 @@ async function rateEmergency(): Promise<void> {
             await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency!.id, inputRating.value, inputRemarks.value);
         else if (inputRating.value) await emergencyStore.rateCompletedEmergency(emergencyStore.trackedEmergency!.id, inputRating.value);
         emit("ratedEmergency");
-    } catch (error: any) {
+    } catch (_e) {
         emit("ratedEmergency");
     }
 
