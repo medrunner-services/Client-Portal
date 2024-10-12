@@ -280,7 +280,7 @@
     "error_unknownRsiAccountHelper": "Wir konnten kein RSI-Konto mit diesem Namen finden. Bitte stellen Sie sicher, dass Sie den Namen richtig eingegeben haben und Ihr Konto öffentlich und nicht privat ist.",
     "error_rsiNewAccountLinkedHelper": "Dieses RSI-Konto ist bereits mit einem Medrunner-Konto verknüpft. Möglicherweise haben Sie vergessen, dass Sie bereits ein Konto erstellt haben. Versuchen Sie sich mit einem anderen Discord-Konto anzumelden oder wenden Sie sich an den IT-Support, um die Situation zu klären.",
     "login_linkHelperTitle": "Haben Sie Probleme bei der Verknüpfung Ihres Kontos?",
-    "login_continueAccountSetup": "Continue account setup",
+    "login_continueAccountSetup": "Kontoeinrichtung fortsetzen",
     "bugReport_title": "Bug gefunden?",
     "bugReport_copyUserAgent": "Wenn Sie einen Bug bemerkt haben, melden Sie ihn bitte über dieses Formular, wir melden uns mit der angegebenen E-Mail-Adresse.",
     "bugReport_goToBugForm": "Füllen Sie das Formular aus",
@@ -357,7 +357,7 @@
     "profile_code": "Code",
     "profile_event": "Event",
     "profile_noCodesRedeemed": "Keine Codes eingelöst",
-    "code_skip": "Skip",
+    "code_skip": "Überspringen",
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"

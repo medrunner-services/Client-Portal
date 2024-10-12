@@ -280,7 +280,7 @@
     "error_unknownRsiAccountHelper": "我们没有用您提供的用户名找到任何RSI账号。请确保您输入了正确的RSI账户名，且您的RSI账户被设置为公开而非私密。",
     "error_rsiNewAccountLinkedHelper": "这个RSI账户已绑定了一个不同的Medrunner账户。您可能已经用过一个不同的Discord账户并在我们网站注册过一个账户。如果您有一个不同的Discord账户，请尝试用那个账户登录，或在我们的Discord服务器里开启一份信息服务工单并在工单中详细描述该情况。",
     "login_linkHelperTitle": "在绑定账户时遇到了问题？",
-    "login_continueAccountSetup": "Continue account setup",
+    "login_continueAccountSetup": "继续设置账户",
     "bugReport_title": "发现了一个故障？",
     "bugReport_copyUserAgent": "如果您注意到了一个故障，请在此表单里报告出来，我们将用先前提供的邮箱以后续联系。",
     "bugReport_goToBugForm": "填写表单",
@@ -357,7 +357,7 @@
     "profile_code": "代码",
     "profile_event": "活动",
     "profile_noCodesRedeemed": "无代码兑换记录",
-    "code_skip": "Skip",
+    "code_skip": "跳过",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "对不起，我们找不到该页面。你可以在主页找到很多东西。",
     "404_backToHomepage": "返回主页"
