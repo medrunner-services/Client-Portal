@@ -28,7 +28,7 @@ export const useLogicStore = defineStore("logic", () => {
         if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
             return "/images/medrunner-logo-dev.svg";
         } else {
-            return "/images/medrunner-logo-beta.svg";
+            return "/images/medrunner-logo-stable.svg";
         }
     });
 
@@ -83,6 +83,8 @@ export const useLogicStore = defineStore("logic", () => {
                 return "Русский";
             case "zh-CN":
                 return "简体中文";
+            case "no-NO":
+                return "Norsk";
             default:
                 return "Unknown";
         }

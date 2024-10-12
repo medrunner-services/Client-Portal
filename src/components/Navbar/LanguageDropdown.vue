@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, type Ref, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useLogicStore } from "@/stores/logicStore";
@@ -10,8 +10,8 @@ const logicStore = useLogicStore();
 const userStore = useUserStore();
 
 const showDropdown = ref(false);
-const selectorDiv: Ref<HTMLDivElement | null> = ref(null);
-const selectorParent: Ref<HTMLDivElement | null> = ref(null);
+const selectorDiv = ref<HTMLDivElement | null>(null);
+const selectorParent = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
     document.addEventListener("click", handleClickOutside);
@@ -38,7 +38,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 
     try {
         await userStore.setSettings({ selectedLanguage: newLocal });
-    } catch (e) {
+    } catch (_e) {
         return;
     }
 }

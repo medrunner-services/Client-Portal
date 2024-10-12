@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ApiToken } from "@medrunner/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import CreateTokenModal from "@/components/Modals/CreateTokenModal.vue";
@@ -8,6 +8,7 @@ import TokenTableRow from "@/components/Profile/Token/TokenTableRow.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -20,7 +21,7 @@ const emit = defineEmits(["closeCreateTokenModal"]);
 
 const loadingTokens = ref(false);
 const loadingTokensError = ref("");
-const userTokens: Ref<ApiToken[]> = ref([]);
+const userTokens = ref<ApiToken[]>([]);
 
 onMounted(async () => {
     await getTokens();
@@ -31,8 +32,8 @@ async function getTokens(): Promise<void> {
     try {
         const apiTokens = await userStore.fetchUserApiTokens();
         userTokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
-    } catch (e) {
-        loadingTokensError.value = t("error_generic");
+    } catch (error: any) {
+        loadingTokensError.value = errorString(error.statusCode);
     } finally {
         loadingTokens.value = false;
     }

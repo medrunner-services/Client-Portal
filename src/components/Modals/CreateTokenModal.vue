@@ -8,6 +8,7 @@ import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const emit = defineEmits(["tokenCreated", "close"]);
 const userStore = useUserStore();
@@ -50,9 +51,7 @@ async function createToken() {
     } catch (error: any) {
         submittingNewToken.value = false;
 
-        if (error.statusCode === 403) errorCreationToken.value = t("error_blockedUser");
-        else if (error.statusCode === 429) errorCreationToken.value = t("error_rateLimit");
-        else errorCreationToken.value = t("error_generic");
+        errorCreationToken.value = errorString(error.statusCode);
     }
 }
 

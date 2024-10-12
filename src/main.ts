@@ -15,15 +15,19 @@ const app = createApp(App);
 const loader = document.getElementById("loader");
 
 (async () => {
+    let apiInitialized = false;
+
     try {
         if (localStorage.getItem("refreshToken")) {
             await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
             await initializeWebsocket();
+
+            apiInitialized = true;
         }
     } finally {
         app.use(createPinia());
 
-        await initializeApp();
+        await initializeApp(apiInitialized);
 
         app.use(router);
         app.use(i18n);

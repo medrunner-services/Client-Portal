@@ -6,6 +6,7 @@ import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 export interface Props {
     token: ApiToken;
@@ -26,8 +27,8 @@ async function deleteToken(): Promise<void> {
         await userStore.deleteApiToken(props.token.id);
         document.body.style.overflow = "auto";
         emit("tokenDeleted", props.token.id);
-    } catch (e) {
-        errorDeletingToken.value = t("error_generic");
+    } catch (error: any) {
+        errorDeletingToken.value = errorString(error.statusCode);
     }
 
     deletingToken.value = false;

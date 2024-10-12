@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { RouterLink } from "vue-router";
 
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
+import CodeRedeemModal from "@/components/Modals/CodeRedeemModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 const logicStore = useLogicStore();
@@ -14,6 +15,7 @@ const showMenu = ref(false);
 const showLanguageMenu = ref(false);
 const scrollEnabled = ref(true);
 const showBugReportModal = ref(false);
+const showCodeRedeemModal = ref(false);
 
 function disableScrolling(): void {
     document.body.style.height = "100%";
@@ -32,7 +34,8 @@ function enableScrolling(): void {
 function switchNavMenuSate(): void {
     showMenu.value = !showMenu.value;
     showLanguageMenu.value = false;
-    scrollEnabled.value ? disableScrolling() : enableScrolling();
+    if (scrollEnabled.value) disableScrolling();
+    else enableScrolling();
 }
 
 async function changeLanguage(newLocal: string): Promise<void> {
@@ -41,7 +44,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 
     try {
         await userStore.setSettings({ selectedLanguage: newLocal });
-    } catch (e) {
+    } catch (_e) {
         return;
     }
 }
@@ -102,6 +105,8 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         </li>
                     </ul>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
+                    <p class="cursor-pointer p-4" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
+                    <div class="border border-gray-100 dark:border-gray-700"></div>
                     <p class="cursor-pointer p-4 text-primary-600 dark:text-red-700" @click="showBugReportModal = true">
                         {{ t("navbar_reportBug") }}
                     </p>
@@ -158,6 +163,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         </div>
 
         <BugReportModal v-if="showBugReportModal" @close="showBugReportModal = false" />
+        <CodeRedeemModal v-if="showCodeRedeemModal" @close="showCodeRedeemModal = false" />
     </div>
 </template>
 

@@ -14,7 +14,7 @@ import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
 import { ws } from "@/utils/medrunnerClient";
 import { sendBrowserNotification } from "@/utils/notificationFunctions";
-import { replaceAtMentions } from "@/utils/stringUtils";
+import { errorString, replaceAtMentions } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -30,8 +30,8 @@ const errorLoadingMessages = ref("");
 onMounted(async () => {
     try {
         emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency!.id)).data;
-    } catch (error) {
-        errorLoadingMessages.value = t("error_generic");
+    } catch (error: any) {
+        errorLoadingMessages.value = errorString(error.statusCode);
     }
 
     ws.on("ChatMessageCreate", async (newMessage: ChatMessage) => {
@@ -88,8 +88,7 @@ async function sendMessage() {
 
         inputMessage.value = "";
     } catch (error: any) {
-        if (error.statusCode === 429) errorSendingMessage.value = t("error_rateLimit");
-        else errorSendingMessage.value = t("error_generic");
+        errorSendingMessage.value = errorString(error.statusCode);
     } finally {
         sendingMessage.value = false;
     }

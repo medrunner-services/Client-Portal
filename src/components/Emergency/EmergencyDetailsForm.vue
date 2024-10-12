@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
@@ -12,6 +12,7 @@ import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -29,15 +30,15 @@ const inputInjury = ref("");
 const inputCrimestat = ref("");
 const inputLocationType = ref("");
 const inputCrimestatDetails = ref("");
-const inputDeathHours: Ref<number | undefined> = ref(undefined);
-const inputDeathMinutes: Ref<number | undefined> = ref(undefined);
+const inputDeathHours = ref<number | undefined>(undefined);
+const inputDeathMinutes = ref<number | undefined>(undefined);
 const inputShip = ref("");
-const inputBeacon: Ref<boolean | undefined> = ref(undefined);
+const inputBeacon = ref<boolean | undefined>(undefined);
 const inputBeaconPlayer = ref("");
 const inputBeaconDistance = ref("");
-const inputEnemies: Ref<boolean | undefined> = ref(undefined);
+const inputEnemies = ref<boolean | undefined>(undefined);
 const inputEnemiesDetails = ref("");
-const inputParty: Ref<boolean | undefined> = ref(undefined);
+const inputParty = ref<boolean | undefined>(undefined);
 const inputPartyDetails = ref([""]);
 const inputRemarks = ref("");
 const formErrorMessage = ref("");
@@ -112,9 +113,7 @@ async function sendDetails(): Promise<void> {
 
         emit("submittedDetails");
     } catch (error: any) {
-        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
-        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
-        else formErrorMessage.value = t("error_generic");
+        formErrorMessage.value = errorString(error.statusCode);
     }
 
     submittingDetails.value = false;

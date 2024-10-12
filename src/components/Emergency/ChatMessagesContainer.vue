@@ -2,7 +2,7 @@
 import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
 import { toHTML } from "discord-markdown";
 import DOMPurify from "dompurify";
-import { computed, type ComputedRef, onMounted, type Ref, ref } from "vue";
+import { computed, type ComputedRef, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -27,10 +27,10 @@ const emit = defineEmits<{
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const chatBox: Ref<HTMLDivElement | null> = ref(null);
+const chatBox = ref<HTMLDivElement | null>(null);
 const distanceFromBottom = ref(0);
-const showFullMessage: Ref<Record<string, boolean>> = ref({});
-const readMoreClicked: Ref<boolean> = ref(false);
+const showFullMessage = ref<Record<string, boolean>>({});
+const readMoreClicked = ref(false);
 
 onMounted(async () => {
     if (chatBox.value) {
@@ -67,7 +67,7 @@ const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
 
 function parseChatMessageString(message: ChatMessage): string {
     const htmlMessage = toHTML(message.contents);
-    let sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
+    const sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
     const timestampDeath = sanitizedHtmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
     let stringTimestampDeath;
     if (timestampDeath && timestampDeath[0]) {
@@ -133,7 +133,7 @@ function truncatedMessage(message: ChatMessage): string {
 }
 
 function messageClasses(messageIndex: number, senderId: string): string {
-    let classes: string[] = [];
+    const classes: string[] = [];
 
     if (isMessageAuthor(senderId)) {
         classes.push("self-end bg-primary-600 text-white lg:mr-6");

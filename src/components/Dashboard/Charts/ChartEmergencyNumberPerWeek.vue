@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, type Ref, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -7,13 +7,14 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 const { t, locale } = useI18n();
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
 
 const daySelect = ref(7);
-const chartOptions: Ref<any> = ref({
+const chartOptions = ref<any>({
     chart: {
         height: "100%",
         width: "100%",
@@ -87,11 +88,11 @@ const chartSeries = ref([
     },
 ]);
 
-const emergenciesPerDay: Ref<number[]> = ref([]);
-const dateLabels: Ref<string[]> = ref([]);
+const emergenciesPerDay = ref<number[]>([]);
+const dateLabels = ref<string[]>([]);
 const errorLoading = ref("");
 
-const oldestDateNeeded: Ref<Date> = ref(new Date());
+const oldestDateNeeded = ref(new Date());
 
 const totalNumberOfEmergencies = computed(() => {
     return emergenciesPerDay.value.reduce((sum, current) => sum + current, 0);
@@ -202,8 +203,8 @@ async function fetchMissionsForPeriod() {
         } while (paginationToken);
 
         emergenciesPerDay.value.reverse();
-    } catch (error) {
-        errorLoading.value = t("error_loadingData");
+    } catch (error: any) {
+        errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
     }
 }
 

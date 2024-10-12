@@ -10,7 +10,6 @@ const animatedElement = ref<HTMLDivElement | null>(null);
 
 watchEffect(() => {
     if (animatedElement.value && alertStore.message) {
-        console.log();
         animatedElement.value.classList.remove("animate-width");
         void animatedElement.value.offsetWidth;
         animatedElement.value.classList.add("animate-width");

@@ -62,7 +62,7 @@ export function askNotificationPermission() {
                     userStore.setSettings({ globalNotifications: true }).then(() => {
                         logicStore.isNotificationGranted = true;
                     });
-                } catch (e) {
+                } catch (_e) {
                     logicStore.isNotificationGranted = false;
                 }
             }

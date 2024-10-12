@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { Location, LocationDetail } from "@medrunner/api-client";
-import { computed, onMounted, type Ref, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -18,7 +19,7 @@ const inputSystem = ref("");
 const inputPlanet = ref("");
 const inputLocation = ref("");
 const inputThreatLevel = ref("");
-const locationsInformation: Ref<LocationDetail[]> = ref([]);
+const locationsInformation = ref<LocationDetail[]>([]);
 
 onMounted(async () => {
     locationsInformation.value = await emergencyStore.fetchMetaLocations();
@@ -109,9 +110,7 @@ async function submitEmergency() {
         inputThreatLevel.value = "";
     } catch (error: any) {
         formSubmittingEmergency.value = false;
-        if (error.statusCode === 403) formErrorMessage.value = t("error_blockedUser");
-        else if (error.statusCode === 429) formErrorMessage.value = t("error_rateLimit");
-        else formErrorMessage.value = t("error_generic");
+        formErrorMessage.value = errorString(error.statusCode);
     }
 }
 

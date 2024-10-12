@@ -1,11 +1,11 @@
 import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person } from "@medrunner/api-client";
 import { defineStore } from "pinia";
-import { computed, type Ref, ref } from "vue";
+import { computed, ref } from "vue";
 
 import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
-    const user: Ref<Person> = ref({} as Person);
+    const user = ref<Person>({} as Person);
     const isAuthenticated = ref(false);
     const isBlocked = ref(false);
 
@@ -115,6 +115,14 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function redeemCode(code: string): Promise<void> {
+        const response = await api.code.redeem(code);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
@@ -130,5 +138,6 @@ export const useUserStore = defineStore("user", () => {
         deleteApiToken,
         setSettings,
         deleteAccount,
+        redeemCode,
     };
 });

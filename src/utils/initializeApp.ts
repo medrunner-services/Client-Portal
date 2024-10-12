@@ -13,11 +13,14 @@ import {
     initializeSettingNotifications,
 } from "@/utils/settingsUtils";
 
-export async function initializeApp(): Promise<void> {
+export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
     const { availableLocales, locale } = i18n.global;
 
-    if (localStorage.getItem("refreshToken")) {
+    initializeSettingDarkMode();
+    locale.value = initializeSettingLanguage(availableLocales);
+
+    if (apiConnected) {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
@@ -27,11 +30,9 @@ export async function initializeApp(): Promise<void> {
         }
     }
 
-    initializeSettingDarkMode();
     initializeSettingDiscordLinks();
     initializeSettingNotifications();
     initializeSettingAnalytics();
-    locale.value = initializeSettingLanguage(availableLocales);
 
     askNotificationPermission();
 

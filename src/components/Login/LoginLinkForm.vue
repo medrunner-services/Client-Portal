@@ -9,6 +9,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
+import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
@@ -50,19 +51,17 @@ const submittingLinkForm = async (): Promise<void> => {
         await router.push("/");
     } catch (error: any) {
         if (error.statusCode === 403) {
-            formErrorMessage.value = t("error_noIdRsiBio");
+            formErrorMessage.value = errorString(error.statusCode, t("error_noIdRsiBio"));
             formErrorHelper.value = t("error_noIdRsiBioHelper");
         } else if (error.statusCode === 404) {
-            formErrorMessage.value = t("error_unknownRsiAccount");
+            formErrorMessage.value = errorString(error.statusCode, t("error_unknownRsiAccount"));
             formErrorHelper.value = t("error_unknownRsiAccountHelper");
         } else if (error.statusCode === 409) {
-            formErrorMessage.value = t("error_rsiNewAccountLinked");
+            formErrorMessage.value = errorString(error.statusCode, t("error_rsiNewAccountLinked"));
             formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
-        } else if (error.statusCode === 429) {
-            formErrorMessage.value = t("error_rateLimit");
         } else if (error.statusCode === 503) {
-            formErrorMessage.value = t("error_externalAuthServiceDown");
-        } else formErrorMessage.value = t("error_generic");
+            formErrorMessage.value = errorString(error.statusCode, t("error_externalAuthServiceDown"));
+        } else formErrorMessage.value = errorString(error.statusCode);
     } finally {
         waitingForApi.value = false;
     }

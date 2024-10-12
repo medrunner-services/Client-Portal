@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Emergency, type MissionStatus, Origin, SubmissionSource } from "@medrunner/api-client";
-import { onMounted, type Ref, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -18,6 +18,7 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
 import { sendBrowserNotification } from "@/utils/notificationFunctions";
+import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -31,7 +32,7 @@ const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const respondingTeamNumber = ref(0);
-const oldEmergencyStatus: Ref<MissionStatus | undefined> = ref(undefined);
+const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
 
 onMounted(async () => {
     if (userStore.user.activeEmergency) {
@@ -42,8 +43,8 @@ onMounted(async () => {
             emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
             respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
             if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
-        } catch (error) {
-            errorLoadingEmergency.value = t("error_loadingTrackedEmergency");
+        } catch (error: any) {
+            errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
         }
 
         loadingEmergency.value = false;
@@ -85,8 +86,8 @@ onMounted(async () => {
         if (userStore.user.activeEmergency) {
             try {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-            } catch (e) {
-                errorLoadingEmergency.value = t("error_loadingTrackedEmergency");
+            } catch (error: any) {
+                errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
             }
         }
     });

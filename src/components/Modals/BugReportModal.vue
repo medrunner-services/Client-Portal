@@ -28,7 +28,7 @@ onMounted(async () => {
     youtrackForm?.appendChild(youtrackScript);
 
     youtrackScript.addEventListener("load", () => {
-        // @ts-ignore
+        // @ts-expect-error External script from YouTrack
         YTFeedbackForm.getClientJSApi("338413ce-0ad3-4399-a84c-1cc299fad5d8").then(async (form: any) => {
             form.setBlockValue("RSI Handle", userStore.user.rsiHandle);
             form.setBlockValue("Browser info", navigator.userAgent);
@@ -38,15 +38,15 @@ onMounted(async () => {
             const ytBrowserInput = document.querySelector("#youtrack-form [data-test-title='Browser info']");
             const ytHandleInput = document.querySelector("#youtrack-form [data-test-title='RSI Handle']");
 
-            // @ts-ignore
+            // @ts-expect-error External script from YouTrack
             ytTitle.style.display = "none";
-            // @ts-ignore
+            // @ts-expect-error External script from YouTrack
             ytForm.style.padding = "0";
-            // @ts-ignore
+            // @ts-expect-error External script from YouTrack
             ytForm.style.width = "100%";
-            // @ts-ignore
+            // @ts-expect-error External script from YouTrack
             ytBrowserInput.style.display = "none";
-            // @ts-ignore
+            // @ts-expect-error External script from YouTrack
             ytHandleInput.style.display = "none";
         });
 

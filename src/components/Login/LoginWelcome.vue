@@ -18,7 +18,12 @@ const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABL
         <GlobalButton class="mt-8 w-full" size="full" @click="redirectToDiscordLogin(encodeURIComponent(route.query.redirect as string) ?? '')"
             >{{ t("login_logInButton") }}
         </GlobalButton>
-        <GlobalButton v-if="isRegistrationEnabled" class="mt-4 w-full" type="secondary" size="full" @click="redirectToDiscordRegister()"
+        <GlobalButton
+            v-if="isRegistrationEnabled"
+            class="mt-4 w-full"
+            type="secondary"
+            size="full"
+            @click="redirectToDiscordRegister(encodeURIComponent(route.query.redirect as string) ?? '')"
             >{{ t("login_registerButton") }}
         </GlobalButton>
     </div>

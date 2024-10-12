@@ -16,8 +16,8 @@ let context: CanvasRenderingContext2D | null;
 let scale = 1,
     width = 0,
     height = 0;
-let stars: Star[] = [];
-let cameraVelocity = {
+const stars: Star[] = [];
+const cameraVelocity = {
     x: 0,
     y: 0,
     tx: 0,

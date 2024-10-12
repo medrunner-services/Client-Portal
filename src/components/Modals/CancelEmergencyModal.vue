@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CancellationReason } from "@medrunner/api-client";
-import { type Ref, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -8,13 +8,14 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { errorString } from "@/utils/stringUtils";
 
 const emit = defineEmits(["emergencyCanceled", "close"]);
 const emergencyStore = useEmergencyStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
 
-const inputCancelReason: Ref<CancellationReason | ""> = ref("");
+const inputCancelReason = ref<CancellationReason | "">("");
 const cancelingEmergency = ref(false);
 const errorCancelingEmergency = ref("");
 
@@ -32,7 +33,7 @@ async function cancelEmergency() {
         document.body.style.overflow = "auto";
         emit("emergencyCanceled");
     } catch (error: any) {
-        errorCancelingEmergency.value = t("error_generic");
+        errorCancelingEmergency.value = errorString(error.statusCode);
     }
     cancelingEmergency.value = false;
 }

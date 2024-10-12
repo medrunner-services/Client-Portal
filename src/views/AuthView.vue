@@ -26,11 +26,23 @@ onMounted(async () => {
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
             );
             if (response.ok) {
+                let apiInitialized = false;
                 const responseBody = await response.json();
 
-                await initializeApi(responseBody.refreshToken);
-                await initializeWebsocket();
-                await initializeApp();
+                try {
+                    await initializeApi(responseBody.refreshToken);
+                    await initializeWebsocket();
+
+                    apiInitialized = true;
+                } catch (_e) {
+                    await router.push("/login?error=generic");
+                }
+
+                try {
+                    await initializeApp(apiInitialized);
+                } catch (_e) {
+                    await router.push("/login?error=generic");
+                }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
@@ -43,7 +55,7 @@ onMounted(async () => {
                 if (response.status === 401) await router.push("/login?error=accountUnknown");
                 else await router.push("/login?error=generic");
             }
-        } catch (error: any) {
+        } catch (_e) {
             await router.push("/login?error=generic");
         }
     } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
@@ -55,23 +67,36 @@ onMounted(async () => {
             );
 
             if (response.ok) {
+                let apiInitialized = false;
                 const responseBody = await response.json();
 
-                await initializeApi(responseBody.refreshToken);
-                await initializeWebsocket();
-                await initializeApp();
+                try {
+                    await initializeApi(responseBody.refreshToken);
+                    await initializeWebsocket();
+
+                    apiInitialized = true;
+                } catch (_e) {
+                    await router.push("/login?error=generic");
+                }
+
+                try {
+                    await initializeApp(apiInitialized);
+                } catch (_e) {
+                    await router.push("/login?error=generic");
+                }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
                 }
 
-                await router.push("/login/link");
+                if (route.query.state && route.query.state !== "undefined") await router.push(decodeURIComponent(route.query.state as string));
+                else await router.push("/login/link");
             } else {
                 if (response.status === 409) await router.push("/login?error=accountKnown");
                 else await router.push("/login?error=generic");
             }
-        } catch (error: any) {
+        } catch (_e) {
             await router.push("/login?error=generic");
         }
     } else {
