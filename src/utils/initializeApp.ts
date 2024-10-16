@@ -18,8 +18,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     const { availableLocales, locale } = i18n.global;
 
     initializeSettingDarkMode();
-    locale.value = initializeSettingLanguage(availableLocales);
-
+    initializeSettingDiscordLinks();
+    
     if (apiConnected) {
         try {
             userStore.user = await userStore.fetchUser();
@@ -30,7 +30,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
-    initializeSettingDiscordLinks();
+    
+    locale.value = initializeSettingLanguage(availableLocales);
     initializeSettingNotifications();
     initializeSettingAnalytics();
 
