@@ -254,7 +254,7 @@ async function goToLinkPage() {
                         :submit="true"
                         size="full"
                         :error-text="errorRedeemingCode"
-                        :disabled="completeInputCode.length < 16 || !isCompleteCodeValid"
+                        :disabled="completeInputCode.length < 19 || !isCompleteCodeValid"
                         >{{ t("profile_redeemCode") }}</GlobalButton
                     >
                     <GlobalButton v-if="props.canCloseModal" type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">

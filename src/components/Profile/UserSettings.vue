@@ -245,14 +245,14 @@ async function resetSettings() {
                     >{{ t("user_discordLinkSetting") }}</GlobalToggle
                 >
                 <!--  TODO: localization  -->
-                <GlobalToggle
-                    v-model="logicStore.isDebugLoggerEnabled"
-                    :helper="t('user_helperDebugModeSetting')"
-                    side="right"
-                    class="mt-4"
-                    @input-click="updateDebugLogger()"
-                    >{{ t("user_debugModeSetting") }}</GlobalToggle
-                >
+                <!--                <GlobalToggle-->
+                <!--                    v-model="logicStore.isDebugLoggerEnabled"-->
+                <!--                    :helper="t('user_helperDebugModeSetting')"-->
+                <!--                    side="right"-->
+                <!--                    class="mt-4"-->
+                <!--                    @input-click="updateDebugLogger()"-->
+                <!--                    >{{ t("user_debugModeSetting") }}</GlobalToggle-->
+                <!--                >-->
             </div>
 
             <div class="mt-8 flex w-full">
