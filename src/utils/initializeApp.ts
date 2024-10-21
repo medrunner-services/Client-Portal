@@ -8,6 +8,7 @@ import {
     askNotificationPermission,
     initializeSettingAnalytics,
     initializeSettingDarkMode,
+    initializeSettingDebugLogger,
     initializeSettingDiscordLinks,
     initializeSettingLanguage,
     initializeSettingNotifications,
@@ -19,7 +20,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
     initializeSettingDarkMode();
     initializeSettingDiscordLinks();
-    
+    initializeSettingDebugLogger();
+
     if (apiConnected) {
         try {
             userStore.user = await userStore.fetchUser();
@@ -30,7 +32,6 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
-    
     locale.value = initializeSettingLanguage(availableLocales);
     initializeSettingNotifications();
     initializeSettingAnalytics();

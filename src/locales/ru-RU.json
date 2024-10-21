@@ -341,7 +341,7 @@
     "user_notificationCustomSoundSetting": "Пользовательский звук",
     "user_helperNotificationCustomSoundSetting": "Уникальный звук уведомления, который обходит функцию Не беспокоить.",
     "user_discordLinkSetting": "Ссылки на Discord Web",
-    "user_helperDiscordLinkSetting": "Открывайте Discord в веб-браузере, а не в локальной программе.",
+    "user_helperDiscordLinkSetting": "Открывать Discord в веб-браузере, а не в родной программе.",
     "user_cancel": "Отменить",
     "user_deleteAccount": "Удалить аккаунт",
     "user_deleteAccountButtonTitle": "Аккаунт сотрудника не может быть удален пользователем.",
@@ -358,6 +358,8 @@
     "profile_event": "Событие",
     "profile_noCodesRedeemed": "Нет использованных кодов",
     "code_skip": "Пропустить",
+    "user_debugModeSetting": "Debug mode",
+    "user_helperDebugModeSetting": "Enables debug logging in your browser console to share with the developers.",
     "404_somethingMissing": "Что-то не хватает.",
     "404_helperText": "К сожалению, мы не можем найти эту страницу. На главной странице вы можете найти большое количество информации.",
     "404_backToHomepage": "Вернуться на главную страницу"
