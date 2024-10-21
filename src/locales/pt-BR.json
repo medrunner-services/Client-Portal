@@ -358,6 +358,8 @@
     "profile_event": "Event",
     "profile_noCodesRedeemed": "No codes redeemed",
     "code_skip": "Skip",
+    "user_debugModeSetting": "Debug mode",
+    "user_helperDebugModeSetting": "Enables debug logging in your browser console to share with the developers.",
     "404_somethingMissing": "Algo está faltando.",
     "404_helperText": "Desculpe, não conseguimos encontrar essa página. Você encontrará muito para explorar na página inicial.",
     "404_backToHomepage": "Voltar para a página inicial"

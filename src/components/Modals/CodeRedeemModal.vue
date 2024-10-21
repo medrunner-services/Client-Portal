@@ -42,8 +42,8 @@ const completeInputCode = computed(() => {
 
 const isCompleteCodeValid = computed(() => {
     if (completeInputCode.value.length < 19) return true;
-    const checkCharacter = calculateCheckCharacter(completeInputCode.value);
-    return completeInputCode.value[18] === checkCharacter;
+    const checkCharacter = calculateCheckCharacter(completeInputCode.value.toUpperCase());
+    return completeInputCode.value[18].toUpperCase() === checkCharacter;
 });
 
 function calculateCheckCharacter(code: string) {
@@ -254,7 +254,7 @@ async function goToLinkPage() {
                         :submit="true"
                         size="full"
                         :error-text="errorRedeemingCode"
-                        :disabled="completeInputCode.length < 16 || !isCompleteCodeValid"
+                        :disabled="completeInputCode.length < 20 || !isCompleteCodeValid"
                         >{{ t("profile_redeemCode") }}</GlobalButton
                     >
                     <GlobalButton v-if="props.canCloseModal" type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">

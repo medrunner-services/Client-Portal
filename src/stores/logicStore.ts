@@ -14,6 +14,7 @@ export const useLogicStore = defineStore("logic", () => {
     const isAnalyticsAllowed = ref(true);
     const darkMode = ref(false);
     const isDiscordOpenWeb = ref(false);
+    const isDebugLoggerEnabled = ref(false);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -211,6 +212,7 @@ export const useLogicStore = defineStore("logic", () => {
         chatMessageNotification,
         darkMode,
         isDiscordOpenWeb,
+        isDebugLoggerEnabled,
         isAnalyticsAllowed,
         isLoginAnimationAllowed,
         loginAnimationSpeed,
