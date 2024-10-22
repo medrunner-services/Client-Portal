@@ -178,7 +178,6 @@ async function goToLinkPage() {
                         maxlength="4"
                         minlength="4"
                         required
-                        inputmode="numeric"
                         autocomplete="off"
                         data-1p-ignore
                         data-lpignore="true"
@@ -197,7 +196,6 @@ async function goToLinkPage() {
                         maxlength="4"
                         minlength="4"
                         required
-                        inputmode="numeric"
                         autocomplete="off"
                         data-1p-ignore
                         data-lpignore="true"
@@ -216,7 +214,6 @@ async function goToLinkPage() {
                         maxlength="4"
                         minlength="4"
                         required
-                        inputmode="numeric"
                         autocomplete="off"
                         data-1p-ignore
                         data-lpignore="true"
@@ -235,7 +232,6 @@ async function goToLinkPage() {
                         maxlength="4"
                         minlength="4"
                         required
-                        inputmode="numeric"
                         autocomplete="off"
                         data-1p-ignore
                         data-lpignore="true"
