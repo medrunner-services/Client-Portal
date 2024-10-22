@@ -1,5 +1,6 @@
 import { MedrunnerApiClient } from "@medrunner/api-client";
 import { HubConnection } from "@microsoft/signalr";
+
 import { debugLogger } from "@/utils/debugLogger";
 
 export let api: MedrunnerApiClient;

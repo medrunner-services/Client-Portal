@@ -119,15 +119,15 @@ async function updateAnalytics(): Promise<void> {
     }
 }
 
-function updateDebugLogger(): void {
-    if (logicStore.isDebugLoggerEnabled) {
-        logicStore.isDebugLoggerEnabled = false;
-        localStorage.setItem("isDebugLoggerEnabled", "false");
-    } else {
-        logicStore.isDebugLoggerEnabled = true;
-        localStorage.setItem("isDebugLoggerEnabled", "true");
-    }
-}
+// function updateDebugLogger(): void {
+//     if (logicStore.isDebugLoggerEnabled) {
+//         logicStore.isDebugLoggerEnabled = false;
+//         localStorage.setItem("isDebugLoggerEnabled", "false");
+//     } else {
+//         logicStore.isDebugLoggerEnabled = true;
+//         localStorage.setItem("isDebugLoggerEnabled", "true");
+//     }
+// }
 
 async function resetSettings() {
     isResettingSettings.value = true;
