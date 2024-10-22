@@ -174,7 +174,7 @@ async function goToLinkPage() {
                         v-model="codeValuePart1"
                         class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
-                        type="tel"
+                        type="text"
                         maxlength="4"
                         minlength="4"
                         required
@@ -192,7 +192,7 @@ async function goToLinkPage() {
                         v-model="codeValuePart2"
                         class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
-                        type="tel"
+                        type="text"
                         maxlength="4"
                         minlength="4"
                         required
@@ -210,7 +210,7 @@ async function goToLinkPage() {
                         v-model="codeValuePart3"
                         class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
-                        type="tel"
+                        type="text"
                         maxlength="4"
                         minlength="4"
                         required
@@ -228,7 +228,7 @@ async function goToLinkPage() {
                         v-model="codeValuePart4"
                         class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
-                        type="tel"
+                        type="text"
                         maxlength="4"
                         minlength="4"
                         required
