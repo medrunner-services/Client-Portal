@@ -42,8 +42,8 @@ const completeInputCode = computed(() => {
 
 const isCompleteCodeValid = computed(() => {
     if (completeInputCode.value.length < 19) return true;
-    const checkCharacter = calculateCheckCharacter(completeInputCode.value);
-    return completeInputCode.value[18] === checkCharacter;
+    const checkCharacter = calculateCheckCharacter(completeInputCode.value.toUpperCase());
+    return completeInputCode.value[18].toUpperCase() === checkCharacter;
 });
 
 function calculateCheckCharacter(code: string) {

@@ -22,6 +22,14 @@ export function initializeSettingDiscordLinks() {
     }
 }
 
+export function initializeSettingDebugLogger() {
+    const logicStore = useLogicStore();
+
+    if (localStorage.getItem("isDebugLoggerEnabled") === "true") {
+        logicStore.isDebugLoggerEnabled = true;
+    }
+}
+
 export function initializeSettingNotifications() {
     const logicStore = useLogicStore();
     const userStore = useUserStore();

@@ -358,6 +358,8 @@
     "profile_event": "Événement",
     "profile_noCodesRedeemed": "Aucun code échangé",
     "code_skip": "Ignorer",
+    "user_debugModeSetting": "Mode debug",
+    "user_helperDebugModeSetting": "Active la journalisation du débogage dans la console de votre navigateur afin de la partager avec les développeurs.",
     "404_somethingMissing": "Il manque quelque chose.",
     "404_helperText": "Désolé, nous ne trouvons pas cette page. Vous trouverez beaucoup de choses à explorer sur la page d'accueil.",
     "404_backToHomepage": "Retour à la page d'accueil"

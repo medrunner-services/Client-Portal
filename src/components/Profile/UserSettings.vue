@@ -119,6 +119,16 @@ async function updateAnalytics(): Promise<void> {
     }
 }
 
+// function updateDebugLogger(): void {
+//     if (logicStore.isDebugLoggerEnabled) {
+//         logicStore.isDebugLoggerEnabled = false;
+//         localStorage.setItem("isDebugLoggerEnabled", "false");
+//     } else {
+//         logicStore.isDebugLoggerEnabled = true;
+//         localStorage.setItem("isDebugLoggerEnabled", "true");
+//     }
+// }
+
 async function resetSettings() {
     isResettingSettings.value = true;
 
@@ -234,6 +244,15 @@ async function resetSettings() {
                     @input-click="updateDiscordOpen()"
                     >{{ t("user_discordLinkSetting") }}</GlobalToggle
                 >
+                <!--  TODO: localization  -->
+                <!--                <GlobalToggle-->
+                <!--                    v-model="logicStore.isDebugLoggerEnabled"-->
+                <!--                    :helper="t('user_helperDebugModeSetting')"-->
+                <!--                    side="right"-->
+                <!--                    class="mt-4"-->
+                <!--                    @input-click="updateDebugLogger()"-->
+                <!--                    >{{ t("user_debugModeSetting") }}</GlobalToggle-->
+                <!--                >-->
             </div>
 
             <div class="mt-8 flex w-full">

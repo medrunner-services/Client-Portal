@@ -1,6 +1,8 @@
 import { MedrunnerApiClient } from "@medrunner/api-client";
 import { HubConnection } from "@microsoft/signalr";
 
+import { debugLogger } from "@/utils/debugLogger";
+
 export let api: MedrunnerApiClient;
 export let ws: HubConnection;
 
@@ -12,6 +14,24 @@ export async function initializeApi(refreshToken: string | undefined) {
         },
         async (newTokens) => {
             localStorage.setItem("refreshToken", newTokens.refreshToken);
+            debugLogger("Token refreshed and stored!");
+        },
+        {
+            trace(message?: any) {
+                debugLogger(message, "trace");
+            },
+            info(message?: any) {
+                debugLogger(message, "info");
+            },
+            warn(message?: any) {
+                debugLogger(message, "warn");
+            },
+            error(message?: any) {
+                debugLogger(message, "error");
+            },
+            debug(message?: any) {
+                debugLogger(message, "debug");
+            },
         },
     );
 }

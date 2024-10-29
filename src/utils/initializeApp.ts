@@ -8,6 +8,7 @@ import {
     askNotificationPermission,
     initializeSettingAnalytics,
     initializeSettingDarkMode,
+    initializeSettingDebugLogger,
     initializeSettingDiscordLinks,
     initializeSettingLanguage,
     initializeSettingNotifications,
@@ -18,7 +19,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     const { availableLocales, locale } = i18n.global;
 
     initializeSettingDarkMode();
-    locale.value = initializeSettingLanguage(availableLocales);
+    initializeSettingDiscordLinks();
+    initializeSettingDebugLogger();
 
     if (apiConnected) {
         try {
@@ -30,7 +32,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
-    initializeSettingDiscordLinks();
+    locale.value = initializeSettingLanguage(availableLocales);
     initializeSettingNotifications();
     initializeSettingAnalytics();
 
