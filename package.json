@@ -15,7 +15,8 @@
     "lint": "eslint . --fix",
     "format": "prettier --write src/",
     "prepush": "run-p lint format type-check",
-    "update-locals": "node --env-file=.env.development update-locals.js"
+    "update-locals": "node --env-file=.env.development update-locals.js",
+    "update-packages": "ncu -i -u --format group"
   },
   "dependencies": {
     "@intlify/unplugin-vue-i18n": "^5.2.0",
