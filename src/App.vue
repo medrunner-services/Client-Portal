@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
 import GlobalFooter from "@/components/GlobalFooter.vue";
+import AlertBanner from "@/components/Navbar/AlertBanner.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -55,6 +56,8 @@ onMounted(async () => {
                 :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
             />
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
+
+            <AlertBanner />
         </div>
     </div>
 </template>
