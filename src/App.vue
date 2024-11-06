@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
 import GlobalFooter from "@/components/GlobalFooter.vue";
+import AlertBanner from "@/components/Navbar/AlertBanner.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -41,6 +42,8 @@ onMounted(async () => {
                     route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404'
                 "
             />
+
+            <AlertBanner v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
 
             <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />

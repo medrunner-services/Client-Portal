@@ -114,6 +114,7 @@ async function sendMessage() {
                         <GlobalTextInput
                             v-model="inputMessage"
                             :required="true"
+                            :disabled="sendingMessage"
                             class="mr-4 w-full"
                             :placeholder="t('tracking_placeholderMessageInput')"
                         />

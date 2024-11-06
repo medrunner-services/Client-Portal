@@ -37,6 +37,7 @@ const appVersion = __APP_VERSION__;
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
+                        <li>Fixed bug where spamming enter key would send the same message multiple times in chat.</li>
                         <li>Fixed a lot of little bugs.</li>
                     </ul>
                 </div>
