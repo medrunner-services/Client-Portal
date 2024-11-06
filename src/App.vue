@@ -57,7 +57,7 @@ onMounted(async () => {
             />
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
 
-            <AlertBanner />
+            <AlertBanner v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>
     </div>
 </template>
