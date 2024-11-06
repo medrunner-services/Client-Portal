@@ -43,6 +43,8 @@ onMounted(async () => {
                 "
             />
 
+            <AlertBanner v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
+
             <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
@@ -56,8 +58,6 @@ onMounted(async () => {
                 :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
             />
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
-
-            <AlertBanner v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>
     </div>
 </template>
