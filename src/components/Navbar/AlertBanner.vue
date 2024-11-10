@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -7,10 +7,6 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 const { t } = useI18n();
 
 const showBanner = ref(true);
-
-onMounted(() => {
-    if (Date.now() > 1731301199000) showBanner.value = false;
-});
 </script>
 
 <template>
