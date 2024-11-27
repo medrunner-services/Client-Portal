@@ -29,5 +29,5 @@ export default [
         },
     },
     prettierConfig,
-    { ignores: ["**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js"] },
+    { ignores: [".node_modules/", "**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js"] },
 ];

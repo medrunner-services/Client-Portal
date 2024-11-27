@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 
 import DashboardView from "./views/DashboardView.vue";
@@ -14,13 +15,6 @@ async function isUserComplete(to: RouteLocationNormalized): Promise<string | boo
 
     if (!userStore.user.rsiHandle) {
         return "/login/link";
-    }
-
-    try {
-        const blockCheck = await userStore.fetchUserBlocklistStatus();
-        if (blockCheck.blocked) userStore.isBlocked = true;
-    } catch (_e) {
-        return "/login?error=generic";
     }
 
     return true;
@@ -112,6 +106,18 @@ export const router = createRouter({
             component: () => import("@/views/404View.vue"),
         },
     ],
+});
+
+router.beforeEach(() => {
+    const logicStore = useLogicStore();
+
+    logicStore.isRouterLoading = true;
+});
+
+router.afterEach(() => {
+    const logicStore = useLogicStore();
+
+    logicStore.isRouterLoading = false;
 });
 
 export default router;

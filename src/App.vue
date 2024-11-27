@@ -10,11 +10,15 @@ import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const alertStore = useAlertStore();
+const userStore = useUserStore();
+const logicStore = useLogicStore();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
@@ -22,6 +26,13 @@ const showAlertBanner = ref(false);
 
 onMounted(async () => {
     isLoadingPage.value = true;
+
+    try {
+        const blockCheck = await userStore.fetchUserBlocklistStatus();
+        if (blockCheck.blocked) userStore.isBlocked = true;
+    } catch (_e) {
+        return;
+    }
 
     try {
         await router.isReady();
@@ -48,7 +59,7 @@ onMounted(async () => {
                 v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showAlertBanner"
             />
 
-            <div v-if="isLoadingPage" class="flex w-full flex-grow items-center justify-center">
+            <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full flex-grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
 
@@ -57,6 +68,7 @@ onMounted(async () => {
             </div>
 
             <RouterView
+                v-else
                 class="w-full flex-grow"
                 :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
             />

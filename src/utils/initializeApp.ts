@@ -13,6 +13,7 @@ import {
     initializeSettingLanguage,
     initializeSettingNotifications,
 } from "@/utils/settingsUtils";
+import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
 export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
@@ -40,7 +41,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
     if (ws && ws.state === HubConnectionState.Connected) {
         ws.on("PersonUpdate", (newUser: Person) => {
-            userStore.user = newUser;
+            personUpdate(newUser);
         });
 
         ws.onreconnected(async () => {

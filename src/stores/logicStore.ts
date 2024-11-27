@@ -7,6 +7,7 @@ import { MessageNotification } from "@/types";
 
 export const useLogicStore = defineStore("logic", () => {
     const { t, locale } = i18n.global;
+    const isRouterLoading = ref(false);
     const isNotificationGranted = ref(false);
     const customSoundNotification = ref(true);
     const emergencyUpdateNotification = ref(true);
@@ -206,6 +207,7 @@ export const useLogicStore = defineStore("logic", () => {
     }
 
     return {
+        isRouterLoading,
         isNotificationGranted,
         customSoundNotification,
         emergencyUpdateNotification,
