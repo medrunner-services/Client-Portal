@@ -31,6 +31,13 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             if (error.statusCode === 403) localStorage.removeItem("refreshToken");
             else return;
         }
+
+        try {
+            const blockCheck = await userStore.fetchUserBlocklistStatus();
+            if (blockCheck.blocked) userStore.isBlocked = true;
+        } catch (_e) {
+            return;
+        }
     }
 
     locale.value = initializeSettingLanguage(availableLocales);

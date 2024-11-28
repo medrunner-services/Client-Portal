@@ -11,13 +11,11 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const alertStore = useAlertStore();
-const userStore = useUserStore();
 const logicStore = useLogicStore();
 
 const isLoadingPage = ref(true);
@@ -26,13 +24,6 @@ const showAlertBanner = ref(false);
 
 onMounted(async () => {
     isLoadingPage.value = true;
-
-    try {
-        const blockCheck = await userStore.fetchUserBlocklistStatus();
-        if (blockCheck.blocked) userStore.isBlocked = true;
-    } catch (_e) {
-        return;
-    }
 
     try {
         await router.isReady();
