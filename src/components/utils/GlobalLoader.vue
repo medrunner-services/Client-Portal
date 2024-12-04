@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n();
-
 export interface Props {
     width?: string;
     height?: string;
@@ -40,7 +36,6 @@ const props = withDefaults(defineProps<Props>(), {
                     fill="currentFill"
                 />
             </svg>
-            <span class="font-semibold" :class="props.textSize">{{ t("home_loading") }}</span>
         </div>
     </div>
 </template>
