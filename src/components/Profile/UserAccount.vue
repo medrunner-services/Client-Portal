@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { PersonType } from "@medrunner/api-client";
-import { ref } from "vue";
+import { CodeType, PersonType } from "@medrunner/api-client";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -23,6 +23,16 @@ const isUpdatingUsername = ref(false);
 const isLoggingOut = ref(false);
 const errorUpdatingUsername = ref("");
 const displayDeleteAccountModal = ref(false);
+const userBadges = ref<{ name: string; icon: string }[]>([]);
+
+onMounted(() => {
+    if (userStore.user.redeemedCodes.some((code) => code.type === CodeType.CitizenCon2954)) {
+        userBadges.value.push({ name: "CitizenCon 2954", icon: "/icons/badges/CitizenCon2954.svg" });
+    }
+    if (userStore.user.personType == PersonType.STAFF) {
+        userBadges.value.push({ name: "Medrunner", icon: "/images/medrunner-logo-square.webp" });
+    }
+});
 
 const isAccountDeletionEnabled = !!(
     import.meta.env.VITE_FEATURE_ACCOUNT_DELETION_ENABLED && import.meta.env.VITE_FEATURE_ACCOUNT_DELETION_ENABLED === "true"
@@ -123,6 +133,22 @@ function closeEditingUsername() {
                         class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     >
                         <p>{{ logicStore.timestampToDate(userStore.user.created) }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div v-if="userBadges.length > 0" class="mt-4 w-full">
+                <div class="w-full">
+                    <p class="mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ t("user_badges") }}</p>
+                    <div class="flex w-full flex-col gap-4 sm:w-fit sm:flex-row">
+                        <div
+                            v-for="badge in userBadges"
+                            :key="badge.name"
+                            class="flex items-center rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                        >
+                            <img class="mr-2 h-9 w-9" :src="badge.icon" alt="Badge" />
+                            <p class="font-Mohave text-lg font-semibold">{{ badge.name }}</p>
+                        </div>
                     </div>
                 </div>
             </div>

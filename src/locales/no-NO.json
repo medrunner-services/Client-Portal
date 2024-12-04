@@ -360,6 +360,7 @@
     "code_skip": "Hopp over",
     "user_debugModeSetting": "Debug modus",
     "user_helperDebugModeSetting": "Skrur på debug logging i nettleser konsollen din for å dele informasjonen med utviklerene.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
     "404_backToHomepage": "Tilbake til hjemmesiden"

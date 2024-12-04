@@ -360,6 +360,7 @@
     "code_skip": "Пропустить",
     "user_debugModeSetting": "Debug mode",
     "user_helperDebugModeSetting": "Enables debug logging in your browser console to share with the developers.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Что-то не хватает.",
     "404_helperText": "К сожалению, мы не можем найти эту страницу. На главной странице вы можете найти большое количество информации.",
     "404_backToHomepage": "Вернуться на главную страницу"

@@ -360,6 +360,7 @@
     "code_skip": "Skip",
     "user_debugModeSetting": "Debug mode",
     "user_helperDebugModeSetting": "Enables debug logging in your browser console to share with the developers.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Something's missing.",
     "404_helperText": "Sorry, we can't find that page. You'll find lots to explore on the home page.",
     "404_backToHomepage": "Back to home page"

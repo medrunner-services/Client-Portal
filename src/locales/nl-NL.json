@@ -360,6 +360,7 @@
     "code_skip": "Skip",
     "user_debugModeSetting": "Debug mode",
     "user_helperDebugModeSetting": "Enables debug logging in your browser console to share with the developers.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Er ontbreekt iets.",
     "404_helperText": "Sorry, we kunnen die pagina niet vinden. Op de startpagina vind je veel om te ontdekken.",
     "404_backToHomepage": "Terug naar Startpagina"

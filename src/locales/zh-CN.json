@@ -360,6 +360,7 @@
     "code_skip": "跳过",
     "user_debugModeSetting": "调试模式",
     "user_helperDebugModeSetting": "启用浏览器中的调试模式，与开发人员共享。",
+    "user_badges": "Badges",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

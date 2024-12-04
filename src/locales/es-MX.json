@@ -360,6 +360,7 @@
     "code_skip": "Saltarse",
     "user_debugModeSetting": "Modo de depuración",
     "user_helperDebugModeSetting": "Habilita el registro de depuración en la consola del navegador para compartirlo con los desarrolladores.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Algo falta.",
     "404_helperText": "Lo sentimos, no podemos encontrar esa página. Encontrarás mucho para explorar en la página de inicio.",
     "404_backToHomepage": "Volver a la página de inicio"

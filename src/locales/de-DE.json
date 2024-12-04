@@ -360,6 +360,7 @@
     "code_skip": "Überspringen",
     "user_debugModeSetting": "Debug Modus",
     "user_helperDebugModeSetting": "Erlaubt die Weitergabe ihrer Protokolldaten aus der Browserkonsole an die Entwickler.",
+    "user_badges": "Badges",
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"

@@ -1,4 +1,4 @@
-import { CancellationReason, MissionStatus } from "@medrunner/api-client";
+import { CancellationReason, CodeType, MissionStatus } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -165,6 +165,16 @@ export const useLogicStore = defineStore("logic", () => {
         }
     }
 
+    function getCodeTypeString(type: CodeType): string {
+        switch (type) {
+            case CodeType.CitizenCon2954:
+                return "CitizenCon 2954";
+
+            default:
+                return t("history_unknown");
+        }
+    }
+
     function timestampToHours(timestamp: number | string): string {
         const now = new Date();
         const date = new Date(timestamp);
@@ -229,6 +239,7 @@ export const useLogicStore = defineStore("logic", () => {
         getRatingString,
         getCancelReasonString,
         getStatusString,
+        getCodeTypeString,
         timestampToHours,
         timestampToDate,
     };
