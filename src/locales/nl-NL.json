@@ -287,6 +287,7 @@
     "login_welcomeRegisterButton": "Create a Medrunner account",
     "login_welcomeRegisterLoginReminder": "Already have a Medrunner account? You should try to log in with another discord account",
     "login_welcomeRegisterLoginReminderLink": "here.",
+    "login_welcomeBackHelperLink": "Learn more about Medrunner at",
     "bugReport_title": "Een bug gevonden?",
     "bugReport_copyUserAgent": "Als u een bug heeft gevonden, meld deze dan via dit formulier. We nemen contact op via het opgegeven e-mailadres.",
     "bugReport_goToBugForm": "Vul het formulier in",

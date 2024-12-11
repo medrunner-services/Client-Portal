@@ -14,7 +14,10 @@ const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABL
 <template>
     <div>
         <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_welcomeBack") }}</h1>
-        <p class="mt-2 font-medium text-gray-500">{{ t("login_welcomeBackHelperText") }}</p>
+        <p class="text-lg font-medium">{{ t("login_welcomeBackHelperText") }}</p>
+        <p class="mt-2 text-gray-500">
+            {{ t("login_welcomeBackHelperLink") }}<a target="_blank" class="ml-1 underline" href="https://medrunner.space">medrunner.space</a>.
+        </p>
         <GlobalButton class="mt-8 w-full" size="full" @click="redirectToDiscordLogin(encodeURIComponent(route.query.redirect as string) ?? '')"
             >{{ t("login_logInButton") }}
         </GlobalButton>
