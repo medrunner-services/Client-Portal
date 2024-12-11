@@ -183,6 +183,7 @@
     "tracking_emergencyRulesModalDescription": "Een Medrunner team zal contact opnemen via de chat box. Blijf alstublieft opletten voor inkomende berichten en zorg dat notificaties aan staan in uw instellingen. Wees bewust dat het reagerende team waarschijnlijk alleen Engels spreekt.",
     "tracking_emergencyRulesModalHideLater": "Niet nog een keer tonen",
     "tracking_titleNoCancel": "Een Medrunner team is al onderweg, u kunt de noodoproep nu niet annuleren.",
+    "teams_assignedTo": "{teamNames} is deployed|{teamNames} are deployed",
     "history_unknown": "Onbekend",
     "history_low": "Geen dreiging",
     "history_medium": "PvE",

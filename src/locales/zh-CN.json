@@ -183,6 +183,7 @@
     "tracking_emergencyRulesModalDescription": "一支Medrunner小队将会在对话框里联系您。请注意查收信息并确保你在设置里已打开消息提醒。请记住你的小队可能只会说英语。",
     "tracking_emergencyRulesModalHideLater": "不再显示",
     "tracking_titleNoCancel": "一只Medrunner救援小队已经在路上，您无法取消请求。",
+    "teams_assignedTo": "{teamNames} are deployed",
     "history_unknown": "未知",
     "history_low": "无威胁",
     "history_medium": "非真人威胁",
@@ -360,7 +361,7 @@
     "code_skip": "跳过",
     "user_debugModeSetting": "调试模式",
     "user_helperDebugModeSetting": "启用浏览器中的调试模式，与开发人员共享。",
-    "user_badges": "Badges",
+    "user_badges": "徽章",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

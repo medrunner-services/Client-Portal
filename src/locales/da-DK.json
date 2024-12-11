@@ -183,6 +183,7 @@
     "tracking_emergencyRulesModalDescription": "Et Medrunner-team vil kontakte dig via chatboksen. Hold øje med indgående beskeder og sørg for, at notifikationer er aktiveret i indstillingerne. Husk venligst, at teamet muligvis kun taler engelsk.",
     "tracking_emergencyRulesModalHideLater": "Vis ikke igen",
     "tracking_titleNoCancel": "A Medrunner team is on the way, you cannot cancel your emergency.",
+    "teams_assignedTo": "{teamNames} is deployed|{teamNames} are deployed",
     "history_unknown": "Ukendt",
     "history_low": "Lav",
     "history_medium": "Medium",

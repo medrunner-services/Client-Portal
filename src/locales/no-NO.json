@@ -183,6 +183,7 @@
     "tracking_emergencyRulesModalDescription": "Et Medrunner-team vil kontakte deg via chat-boksen. Vær oppmerksom på innkommende meldinger og sørg for at du har varsler aktivert i innstillingene. Husk at ditt svarteam bare kan snakke engelsk.",
     "tracking_emergencyRulesModalHideLater": "Ikke vis igjen",
     "tracking_titleNoCancel": "Et Medrunner team er på vei, du kan ikke avbryte nødssituasjonen din.",
+    "teams_assignedTo": "{teamNames} is deployed|{teamNames} are deployed",
     "history_unknown": "Ukjent",
     "history_low": "Ingen trussel",
     "history_medium": "PvE",
@@ -360,7 +361,7 @@
     "code_skip": "Hopp over",
     "user_debugModeSetting": "Debug modus",
     "user_helperDebugModeSetting": "Skrur på debug logging i nettleser konsollen din for å dele informasjonen med utviklerene.",
-    "user_badges": "Badges",
+    "user_badges": "Medaljer",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
     "404_backToHomepage": "Tilbake til hjemmesiden"

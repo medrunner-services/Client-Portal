@@ -183,6 +183,7 @@
     "tracking_emergencyRulesModalDescription": "Ein Medrunner Team wird Sie über den Chat kontaktieren. Achten Sie bitte auf eingehende Nachrichten und stellen Sie sicher, dass die Benachrichtigungen in den Einstellungen aktiviert sind. Bitte denken Sie daran, dass unser Team möglicherweise nur Englisch spricht.",
     "tracking_emergencyRulesModalHideLater": "Nicht erneut anzeigen",
     "tracking_titleNoCancel": "Ein Medrunner Team ist auf dem Weg. Sie können Ihren Notruf nicht abbrechen.",
+    "teams_assignedTo": "{teamNames} is deployed|{teamNames} are deployed",
     "history_unknown": "Unbekannt",
     "history_low": "Keine Gefahr",
     "history_medium": "PvE-Gefahr",
@@ -360,7 +361,7 @@
     "code_skip": "Überspringen",
     "user_debugModeSetting": "Debug Modus",
     "user_helperDebugModeSetting": "Erlaubt die Weitergabe ihrer Protokolldaten aus der Browserkonsole an die Entwickler.",
-    "user_badges": "Badges",
+    "user_badges": "Abzeichen",
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"
