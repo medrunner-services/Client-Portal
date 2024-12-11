@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
@@ -13,7 +13,6 @@ import { useLogicStore } from "@/stores/logicStore";
 import { AlertColors } from "@/types";
 
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const alertStore = useAlertStore();
@@ -29,11 +28,6 @@ onMounted(async () => {
             showLoginRegister.value = true;
         } else {
             alertStore.newAlert(AlertColors.RED, getErrorText());
-            await router.replace({
-                name: route.name as string,
-                params: router.currentRoute.value.params,
-                query: {},
-            });
         }
     }
 });

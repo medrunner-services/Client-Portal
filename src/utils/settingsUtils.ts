@@ -63,7 +63,7 @@ export function askNotificationPermission() {
     const logicStore = useLogicStore();
     const userStore = useUserStore();
 
-    if ("Notification" in window && Notification.permission === "default") {
+    if (userStore.isAuthenticated && "Notification" in window && Notification.permission === "default") {
         Notification.requestPermission().then((permission) => {
             if (permission === "granted") {
                 try {
