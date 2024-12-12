@@ -12,14 +12,11 @@ const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
 
-const showFlashingArrow = ref(false);
 const waitingForPermission = ref(false);
 const disablingNotifications = ref(false);
 const permission = ref<"unsupported" | "default" | "denied" | "granted">("Notification" in window ? Notification.permission : "unsupported");
 
 async function askBrowserPermission() {
-    showFlashingArrow.value = true;
-
     if ("Notification" in window) {
         waitingForPermission.value = true;
         permission.value = await Notification.requestPermission();
@@ -76,12 +73,10 @@ async function disableNotifications() {
 
             <div class="mt-8">
                 <div v-if="permission !== 'granted'" class="gap-2 lg:flex">
-                    <GlobalButton v-if="!showFlashingArrow && !waitingForPermission" size="full" @click="askBrowserPermission()">
+                    <GlobalButton v-if="!waitingForPermission" size="full" @click="askBrowserPermission()">
                         {{ t("notification_buttonEnable") }}</GlobalButton
                     >
-                    <GlobalButton v-else-if="showFlashingArrow && waitingForPermission" size="full" :disabled="true">
-                        {{ t("notification_waitingBrowser") }}</GlobalButton
-                    >
+                    <GlobalButton v-else-if="waitingForPermission" size="full" :disabled="true"> {{ t("notification_waitingBrowser") }}</GlobalButton>
 
                     <GlobalButton
                         type="secondary"
@@ -100,7 +95,7 @@ async function disableNotifications() {
                 </div>
             </div>
 
-            <div v-if="showFlashingArrow" class="flashing-circle">
+            <div v-if="waitingForPermission" class="flashing-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>
