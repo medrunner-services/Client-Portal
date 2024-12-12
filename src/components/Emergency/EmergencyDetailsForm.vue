@@ -45,12 +45,7 @@ const formErrorMessage = ref("");
 const submittingDetails = ref(false);
 
 onMounted(() => {
-    const modalVisibilityPreference =
-        "hideEmergencyRulesModal" in userStore.user.clientPortalPreferences
-            ? (userStore.user.clientPortalPreferences.hideEmergencyRulesModal as boolean)
-            : false;
-
-    if (!modalVisibilityPreference) displayRulesModal.value = true;
+    if (!userStore.syncedSettings.hideEmergencyRulesModal) displayRulesModal.value = true;
 });
 
 function confirmedRules(): void {

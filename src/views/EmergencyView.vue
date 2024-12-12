@@ -67,7 +67,11 @@ onMounted(async () => {
                 respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
             }
 
-            if (updatedEmergency.status !== 1 && oldEmergencyStatus.value !== updatedEmergency.status && logicStore.emergencyUpdateNotification) {
+            if (
+                updatedEmergency.status !== 1 &&
+                oldEmergencyStatus.value !== updatedEmergency.status &&
+                userStore.syncedSettings.emergencyUpdateNotification
+            ) {
                 await sendBrowserNotification(
                     emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
                     emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),

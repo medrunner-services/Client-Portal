@@ -3,16 +3,11 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { i18n } from "@/i18n";
-import { MessageNotification } from "@/types";
 
 export const useLogicStore = defineStore("logic", () => {
     const { t, locale } = i18n.global;
     const isRouterLoading = ref(false);
     const isNotificationGranted = ref(false);
-    const customSoundNotification = ref(true);
-    const emergencyUpdateNotification = ref(true);
-    const chatMessageNotification = ref(MessageNotification.ALL);
-    const isAnalyticsAllowed = ref(true);
     const darkMode = ref(false);
     const isDiscordOpenWeb = ref(false);
     const isDebugLoggerEnabled = ref(false);
@@ -219,13 +214,9 @@ export const useLogicStore = defineStore("logic", () => {
     return {
         isRouterLoading,
         isNotificationGranted,
-        customSoundNotification,
-        emergencyUpdateNotification,
-        chatMessageNotification,
         darkMode,
         isDiscordOpenWeb,
         isDebugLoggerEnabled,
-        isAnalyticsAllowed,
         isLoginAnimationAllowed,
         loginAnimationSpeed,
         loginAnimationStarSize,

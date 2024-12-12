@@ -34,10 +34,7 @@ onMounted(async () => {
     activePage.value = [...loadedHistory.value];
     loaded.value = true;
 
-    const lastConfirmedEmergencyWarning =
-        "lastConfirmedWarningId" in userStore.user.clientPortalPreferences
-            ? (userStore.user.clientPortalPreferences.lastConfirmedWarningId as string)
-            : null;
+    const lastConfirmedEmergencyWarning = userStore.syncedSettings.lastConfirmedWarningId;
 
     if (
         loadedHistory.value.length > 0 &&

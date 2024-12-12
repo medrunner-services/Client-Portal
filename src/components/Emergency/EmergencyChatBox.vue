@@ -9,7 +9,6 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
 import { ws } from "@/utils/medrunnerClient";
@@ -19,7 +18,6 @@ import { errorString, replaceAtMentions } from "@/utils/stringUtils";
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 const router = useRouter();
 
 const inputMessage = ref("");
@@ -51,12 +49,12 @@ onMounted(async () => {
             );
 
             if (newMessage.senderId !== userStore.user.id) {
-                if (logicStore.chatMessageNotification === MessageNotification.ALL) {
+                if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
                     await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
                         window.focus();
                         router.push({ name: "emergency" });
                     });
-                } else if (logicStore.chatMessageNotification === MessageNotification.PING) {
+                } else if (userStore.syncedSettings.chatMessageNotification === MessageNotification.PING) {
                     if (
                         newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
                         newMessage.contents.includes(`@${userStore.user.discordId}`)

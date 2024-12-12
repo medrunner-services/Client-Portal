@@ -37,15 +37,13 @@ onMounted(async () => {
         isLoadingPage.value = false;
     }
 
-    if (userStore.isAuthenticated && "Notification" in window) {
-        const defaultNotificationSetting =
-            "globalNotifications" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.globalNotifications as boolean)
-                : null;
-
-        if (Notification.permission === "default" && (defaultNotificationSetting === null || defaultNotificationSetting))
-            showNotificationPermissionModal.value = true;
-    }
+    if (
+        userStore.isAuthenticated &&
+        "Notification" in window &&
+        Notification.permission === "default" &&
+        userStore.syncedSettings.globalNotifications
+    )
+        showNotificationPermissionModal.value = true;
 });
 </script>
 

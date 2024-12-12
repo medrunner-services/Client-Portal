@@ -3,14 +3,15 @@ import { HubConnectionState } from "@microsoft/signalr";
 
 import { i18n } from "@/i18n";
 import { useUserStore } from "@/stores/userStore";
+import type { SyncedSettings } from "@/types.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
-    initializeSettingAnalytics,
     initializeSettingDarkMode,
     initializeSettingDebugLogger,
     initializeSettingDiscordLinks,
     initializeSettingLanguage,
     initializeSettingNotifications,
+    migrateSyncedSettings,
 } from "@/utils/settingsUtils";
 import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
@@ -26,6 +27,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
+            if (userStore.user.clientPortalPreferencesBlob)
+                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         } catch (error: any) {
             if (error.statusCode === 403) localStorage.removeItem("refreshToken");
             else return;
@@ -39,9 +42,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
+    await migrateSyncedSettings();
+
     locale.value = initializeSettingLanguage(availableLocales);
     initializeSettingNotifications();
-    initializeSettingAnalytics();
 
     if (ws && ws.state === HubConnectionState.Connected) {
         ws.on("PersonUpdate", (newUser: Person) => {
@@ -50,6 +54,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
         ws.onreconnected(async () => {
             userStore.user = await userStore.fetchUser();
+            if (userStore.user.clientPortalPreferencesBlob)
+                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         });
     }
 }

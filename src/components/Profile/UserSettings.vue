@@ -57,28 +57,27 @@ async function updateGlobalNotificationPerms(): Promise<void> {
 
 async function updateCustomSoundNotification() {
     try {
-        await userStore.setSettings({ customSoundNotification: !logicStore.customSoundNotification });
+        await userStore.setSettings({ customSoundNotification: !userStore.syncedSettings.customSoundNotification });
     } catch (error: any) {
-        logicStore.customSoundNotification = !logicStore.customSoundNotification;
+        userStore.syncedSettings.customSoundNotification = !userStore.syncedSettings.customSoundNotification;
         updateNotificationError.value = errorString(error.statusCode);
     }
 }
 
 async function updateEmergencyUpdateNotification() {
     try {
-        await userStore.setSettings({ emergencyUpdateNotification: !logicStore.emergencyUpdateNotification });
+        await userStore.setSettings({ emergencyUpdateNotification: !userStore.syncedSettings.emergencyUpdateNotification });
     } catch (error: any) {
-        logicStore.emergencyUpdateNotification = !logicStore.emergencyUpdateNotification;
+        userStore.syncedSettings.emergencyUpdateNotification = !userStore.syncedSettings.emergencyUpdateNotification;
         updateNotificationError.value = errorString(error.statusCode);
     }
 }
 
 async function updateMessageNotification() {
     try {
-        await userStore.setSettings({ chatMessageNotification: logicStore.chatMessageNotification });
+        await userStore.setSettings({ chatMessageNotification: userStore.syncedSettings.chatMessageNotification });
     } catch (error: any) {
         updateNotificationError.value = errorString(error.statusCode);
-        logicStore.chatMessageNotification = userStore.user.clientPortalPreferences.chatMessageNotification as MessageNotification;
     }
 }
 
@@ -107,14 +106,12 @@ function updateDiscordOpen(): void {
 async function updateAnalytics(): Promise<void> {
     let newAnalyticsState = true;
 
-    if (logicStore.isAnalyticsAllowed) {
-        newAnalyticsState = false;
-    }
+    if (userStore.syncedSettings.globalAnalytics) newAnalyticsState = false;
 
     try {
         await userStore.setSettings({ globalAnalytics: newAnalyticsState });
     } catch (error: any) {
-        logicStore.isAnalyticsAllowed = !newAnalyticsState;
+        userStore.syncedSettings.globalAnalytics = !newAnalyticsState;
         updateNotificationError.value = errorString(error.statusCode);
     }
 }
@@ -146,11 +143,11 @@ async function resetSettings() {
         resetSettingsError.value = errorString(error.statusCode);
     } finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";
-        logicStore.customSoundNotification = true;
-        logicStore.emergencyUpdateNotification = true;
-        logicStore.chatMessageNotification = MessageNotification.ALL;
+        userStore.syncedSettings.customSoundNotification = true;
+        userStore.syncedSettings.emergencyUpdateNotification = true;
+        userStore.syncedSettings.chatMessageNotification = MessageNotification.ALL;
+        userStore.syncedSettings.globalAnalytics = true;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        logicStore.isAnalyticsAllowed = true;
         logicStore.isDiscordOpenWeb = false;
 
         localStorage.removeItem("darkMode");
@@ -187,7 +184,7 @@ async function resetSettings() {
 
                     <div class="ml-4 md:ml-8">
                         <GlobalToggle
-                            v-model="logicStore.emergencyUpdateNotification"
+                            v-model="userStore.syncedSettings.emergencyUpdateNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
                             :helper="t('user_helperNotificationEmergencyUpdateSetting')"
@@ -195,7 +192,7 @@ async function resetSettings() {
                             >{{ t("user_notificationEmergencyUpdateSetting") }}
                         </GlobalToggle>
                         <GlobalSelectInput
-                            v-model="logicStore.chatMessageNotification"
+                            v-model="userStore.syncedSettings.chatMessageNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             :label="t('user_notificationChatMessageSetting')"
                             :helper="t('user_helperNotificationChatMessageSetting')"
@@ -210,7 +207,7 @@ async function resetSettings() {
                             @change="updateMessageNotification()"
                         />
                         <GlobalToggle
-                            v-model="logicStore.customSoundNotification"
+                            v-model="userStore.syncedSettings.customSoundNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
                             :helper="t('user_helperNotificationCustomSoundSetting')"
@@ -229,7 +226,7 @@ async function resetSettings() {
                     >{{ t("user_darkModeSetting") }}</GlobalToggle
                 >
                 <GlobalToggle
-                    v-model="logicStore.isAnalyticsAllowed"
+                    v-model="userStore.syncedSettings.globalAnalytics"
                     :helper="t('user_analyticsDisclaimer')"
                     side="right"
                     class="mt-4"
