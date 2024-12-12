@@ -5,7 +5,6 @@ import { i18n } from "@/i18n";
 import { useUserStore } from "@/stores/userStore";
 import { ws } from "@/utils/medrunnerClient";
 import {
-    askNotificationPermission,
     initializeSettingAnalytics,
     initializeSettingDarkMode,
     initializeSettingDebugLogger,
@@ -43,8 +42,6 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     locale.value = initializeSettingLanguage(availableLocales);
     initializeSettingNotifications();
     initializeSettingAnalytics();
-
-    askNotificationPermission();
 
     if (ws && ws.state === HubConnectionState.Connected) {
         ws.on("PersonUpdate", (newUser: Person) => {

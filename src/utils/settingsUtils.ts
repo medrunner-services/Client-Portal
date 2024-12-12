@@ -59,25 +59,6 @@ export function initializeSettingNotifications() {
     }
 }
 
-export function askNotificationPermission() {
-    const logicStore = useLogicStore();
-    const userStore = useUserStore();
-
-    if (userStore.isAuthenticated && "Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                try {
-                    userStore.setSettings({ globalNotifications: true }).then(() => {
-                        logicStore.isNotificationGranted = true;
-                    });
-                } catch (_e) {
-                    logicStore.isNotificationGranted = false;
-                }
-            }
-        });
-    }
-}
-
 export function initializeSettingAnalytics() {
     const logicStore = useLogicStore();
     const userStore = useUserStore();
