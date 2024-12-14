@@ -20,7 +20,7 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>The portal is now out of Beta!</li>
+                        <li>!</li>
                         <li>Added the ability to redeem promotional codes to your account, and see what codes you have redeemed in your profile.</li>
                         <li>Added Norwegian to the available languages.</li>
                     </ul>

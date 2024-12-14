@@ -12,19 +12,16 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { useUserStore } from "@/stores/userStore.ts";
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 const alertStore = useAlertStore();
 const logicStore = useLogicStore();
-const userStore = useUserStore();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
 const showAlertBanner = ref(false);
-const showNotificationPermissionModal = ref(false);
 
 onMounted(async () => {
     isLoadingPage.value = true;
@@ -36,14 +33,6 @@ onMounted(async () => {
     } finally {
         isLoadingPage.value = false;
     }
-
-    if (
-        userStore.isAuthenticated &&
-        "Notification" in window &&
-        Notification.permission === "default" &&
-        userStore.syncedSettings.globalNotifications
-    )
-        showNotificationPermissionModal.value = true;
 });
 </script>
 
@@ -78,7 +67,7 @@ onMounted(async () => {
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>
 
-        <NotificationPermissionModal v-if="showNotificationPermissionModal" @close="showNotificationPermissionModal = false" />
+        <NotificationPermissionModal v-if="logicStore.showNotificationPermissionModal" @close="logicStore.showNotificationPermissionModal = false" />
     </div>
 </template>
 

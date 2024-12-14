@@ -11,6 +11,7 @@ export const useLogicStore = defineStore("logic", () => {
     const darkMode = ref(false);
     const isDiscordOpenWeb = ref(false);
     const isDebugLoggerEnabled = ref(false);
+    const showNotificationPermissionModal = ref(false);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -224,6 +225,7 @@ export const useLogicStore = defineStore("logic", () => {
         medrunnerLogoUrl,
         userDevice,
         discordBaseUrl,
+        showNotificationPermissionModal,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

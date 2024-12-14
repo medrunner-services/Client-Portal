@@ -39,7 +39,13 @@ export function initializeSettingNotifications() {
     if (userStore.isAuthenticated) {
         if ("Notification" in window && Notification.permission === "granted" && userStore.syncedSettings.globalNotifications !== false) {
             logicStore.isNotificationGranted = true;
-        }
+        } else if (
+            userStore.isAuthenticated &&
+            "Notification" in window &&
+            Notification.permission === "default" &&
+            userStore.syncedSettings.globalNotifications
+        )
+            logicStore.showNotificationPermissionModal = true;
     }
 }
 
