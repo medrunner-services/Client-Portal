@@ -286,7 +286,7 @@
     "login_welcomeRegisterHelperText": "看起来这个Discord账户没有连接到Medrunner账户，您想创建一个吗？",
     "login_welcomeRegisterButton": "创建一个Medrunner账户",
     "login_welcomeRegisterLoginReminder": "已经有Medrunner账户了吗？请您尝试用另一个Discord账户登录",
-    "login_welcomeRegisterLoginReminderLink": "here.",
+    "login_welcomeRegisterLoginReminderLink": "点击这里",
     "login_welcomeBackHelperLink": "了解关于Medrunner的更多内容，请访问",
     "bugReport_title": "发现了一个故障？",
     "bugReport_copyUserAgent": "如果您注意到了一个故障，请在此表单里报告出来，我们将用先前提供的邮箱以后续联系。",
@@ -375,7 +375,7 @@
     "notification_buttonEnable": "开启消息通知",
     "notification_waitingBrowser": "正在等待浏览器授权……",
     "user_close": "关闭",
-    "notification_buttonDisable": "Disable notifications",
+    "notification_buttonDisable": "关闭消息通知",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

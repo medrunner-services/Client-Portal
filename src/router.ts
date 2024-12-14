@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteLocationNormalized } from "vu
 
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { usePostHog } from "@/usePostHog";
 
 import DashboardView from "./views/DashboardView.vue";
 
@@ -108,16 +109,24 @@ export const router = createRouter({
     ],
 });
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
     const logicStore = useLogicStore();
 
     logicStore.isRouterLoading = true;
+
+    if (from.path !== to.path) {
+        posthog.capture("$pageleave");
+    }
 });
 
 router.afterEach(() => {
     const logicStore = useLogicStore();
 
     logicStore.isRouterLoading = false;
+
+    posthog.capture("$pageview");
 });
+
+const { posthog } = usePostHog();
 
 export default router;

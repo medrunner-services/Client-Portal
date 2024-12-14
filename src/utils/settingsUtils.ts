@@ -1,5 +1,7 @@
+import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { usePostHog } from "@/usePostHog";
 import { api } from "@/utils/medrunnerClient";
 
 export function initializeSettingDarkMode() {
@@ -81,5 +83,24 @@ export async function migrateSyncedSettings() {
         } catch (_e) {
             return;
         }
+    }
+}
+
+export function initializeAnalytics() {
+    const userStore = useUserStore();
+    const { locale } = i18n.global;
+    const { posthog } = usePostHog();
+
+    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics === true) {
+        posthog.opt_in_capturing();
+
+        posthog.identify(userStore.user.id, {
+            discordId: userStore.user.discordId,
+            rsiHandle: userStore.user.rsiHandle ?? "",
+            personType: userStore.user.personType,
+            active: userStore.user.active,
+            language: locale.value,
+            debugModeEnabled: localStorage.getItem("isDebugLoggerEnabled") === "true",
+        });
     }
 }

@@ -6,6 +6,7 @@ import { useUserStore } from "@/stores/userStore";
 import type { SyncedSettings } from "@/types.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
+    initializeAnalytics,
     initializeSettingDarkMode,
     initializeSettingDebugLogger,
     initializeSettingDiscordLinks,
@@ -42,10 +43,13 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
-    await migrateSyncedSettings();
+    if (apiConnected) {
+        await migrateSyncedSettings();
 
-    locale.value = initializeSettingLanguage(availableLocales);
-    initializeSettingNotifications();
+        locale.value = initializeSettingLanguage(availableLocales);
+        initializeSettingNotifications();
+        initializeAnalytics();
+    }
 
     if (ws && ws.state === HubConnectionState.Connected) {
         ws.on("PersonUpdate", (newUser: Person) => {

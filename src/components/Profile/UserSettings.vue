@@ -10,12 +10,14 @@ import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
+import { usePostHog } from "@/usePostHog";
 import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
 const route = useRoute();
+const { posthog } = usePostHog();
 
 const updateNotificationError = ref("");
 const resetSettingsError = ref("");
@@ -113,6 +115,12 @@ async function updateAnalytics(): Promise<void> {
     } catch (error: any) {
         userStore.syncedSettings.globalAnalytics = !newAnalyticsState;
         updateNotificationError.value = errorString(error.statusCode);
+    }
+
+    if (userStore.syncedSettings.globalAnalytics) {
+        posthog.opt_in_capturing();
+    } else {
+        posthog.opt_out_capturing();
     }
 }
 
