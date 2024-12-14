@@ -20,25 +20,26 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>!</li>
-                        <li>Added the ability to redeem promotional codes to your account, and see what codes you have redeemed in your profile.</li>
-                        <li>Added Norwegian to the available languages.</li>
+                        <li>Added a new pop up to easily enable notifications.</li>
+                        <li>Added a new login page when the user tries to log-in with an unknown discord account.</li>
+                        <li>Added user badges in the profile.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Improved error codes across the app.</li>
-                        <li>Made the cancel emergency button disabled instead of hidden.</li>
+                        <li>Added a link to medrunner.space on the login page.</li>
+                        <li>The name of the responding medrunner teams is now displayed on the emergency page.</li>
+                        <li>Made the loader use the same theme as the rest of the app, no more flash bangs for dark mode users!</li>
+                        <li>Improved navigation and loading times.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Fixed bug where spamming enter key would send the same message multiple times in chat.</li>
-                        <li>Fixed a lot of little bugs.</li>
+                        <li>Fixed little bugs.</li>
                     </ul>
                 </div>
             </div>

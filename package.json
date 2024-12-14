@@ -1,6 +1,6 @@
 {
   "name": "client-portal",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "private": false,
   "type": "module",
   "scripts": {
@@ -26,7 +26,7 @@
     "dompurify": "^3.2.3",
     "flowbite": "^2.5.2",
     "pinia": "^2.3.0",
-    "posthog-js": "^1.195.0",
+    "posthog-js": "^1.200.1",
     "vue": "^3.5.13",
     "vue-i18n": "^10.0.5",
     "vue-router": "^4.5.0",
@@ -43,7 +43,7 @@
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.7",
-    "eslint": "^9.16.0",
+    "eslint": "^9.17.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-vue": "^9.32.0",
     "npm-run-all2": "^7.0.1",
