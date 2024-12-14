@@ -1,20 +1,17 @@
-import { CancellationReason, MissionStatus } from "@medrunner/api-client";
+import { CancellationReason, CodeType, MissionStatus } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { i18n } from "@/i18n";
-import { MessageNotification } from "@/types";
 
 export const useLogicStore = defineStore("logic", () => {
     const { t, locale } = i18n.global;
+    const isRouterLoading = ref(false);
     const isNotificationGranted = ref(false);
-    const customSoundNotification = ref(true);
-    const emergencyUpdateNotification = ref(true);
-    const chatMessageNotification = ref(MessageNotification.ALL);
-    const isAnalyticsAllowed = ref(true);
     const darkMode = ref(false);
     const isDiscordOpenWeb = ref(false);
     const isDebugLoggerEnabled = ref(false);
+    const showNotificationPermissionModal = ref(false);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -164,6 +161,16 @@ export const useLogicStore = defineStore("logic", () => {
         }
     }
 
+    function getCodeTypeString(type: CodeType): string {
+        switch (type) {
+            case CodeType.CitizenCon2954:
+                return "CitizenCon 2954";
+
+            default:
+                return t("history_unknown");
+        }
+    }
+
     function timestampToHours(timestamp: number | string): string {
         const now = new Date();
         const date = new Date(timestamp);
@@ -206,14 +213,11 @@ export const useLogicStore = defineStore("logic", () => {
     }
 
     return {
+        isRouterLoading,
         isNotificationGranted,
-        customSoundNotification,
-        emergencyUpdateNotification,
-        chatMessageNotification,
         darkMode,
         isDiscordOpenWeb,
         isDebugLoggerEnabled,
-        isAnalyticsAllowed,
         isLoginAnimationAllowed,
         loginAnimationSpeed,
         loginAnimationStarSize,
@@ -221,12 +225,14 @@ export const useLogicStore = defineStore("logic", () => {
         medrunnerLogoUrl,
         userDevice,
         discordBaseUrl,
+        showNotificationPermissionModal,
         addTextToClipboard,
         getLanguageString,
         getThreatString,
         getRatingString,
         getCancelReasonString,
         getStatusString,
+        getCodeTypeString,
         timestampToHours,
         timestampToDate,
     };

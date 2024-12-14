@@ -21,12 +21,13 @@
   </head>
   <body>
     <div id="app"></div>
-    <div id="loader" style="margin: 0; padding: 0">
-        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; box-sizing: border-box; position: fixed">
+    <div id="loader" style="margin: 0; padding: 0;">
+        <div id="spinner" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; box-sizing: border-box; position: fixed">
             <div>
                 <div style="display: flex; flex-direction: column; align-items: center; ">
                     <svg
                         aria-hidden="true"
+                        id="svg-spinner"
                         style="margin-bottom: 1.5rem; width: 4rem; height: 4rem; color: #E5E7EB; fill: #AA0000; animation: spin 1s linear infinite;"
                         viewBox="0 0 100 101"
                         fill="none"
@@ -41,7 +42,6 @@
                             fill="currentFill"
                         />
                     </svg>
-                    <span style="font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; font-family: Inter, sans-serif; color: rgb(17 24 39);">Loading...</span>
                 </div>
             </div>
         </div>
@@ -49,4 +49,14 @@
     <div id="modals"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
+
+  <script>
+      if (
+          (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem("darkMode") == null) ||
+          localStorage.getItem("darkMode") === "true"
+      ) {
+          document.getElementById("spinner").style.backgroundColor = "#1f2937";
+          document.getElementById("svg-spinner").style.color = "#4b5563";
+      }
+  </script>
 </html>

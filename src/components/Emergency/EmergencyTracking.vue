@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Class, type TeamMember } from "@medrunner/api-client";
 import { Level } from "@medrunner/api-client";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyResponderStaffName from "@/components/Emergency/EmergencyResponderStaffName.vue";
 import CancelEmergencyModal from "@/components/Modals/CancelEmergencyModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 
@@ -69,6 +70,31 @@ async function addTextToClipboard(text: string) {
         isEmergencyIDCopied.value = false;
     }, 2000);
 }
+
+const getAssignedTeamsString = computed(() => {
+    if (emergencyStore.trackedEmergency && emergencyStore.trackedEmergency.respondingTeams.length > 0) {
+        const teamNames = emergencyStore.trackedEmergency.respondingTeams
+            .slice()
+            .sort((a, b) => a.teamName.localeCompare(b.teamName))
+            .map((team) => team.teamName);
+
+        const teamNamesString = teamNames.join(", ").replace(/, ([^,]*)$/, " and $1");
+
+        return t(
+            "teams_assignedTo",
+            {
+                teamNames: teamNamesString,
+            },
+            teamNames.length,
+        );
+    } else {
+        return "";
+    }
+});
+
+const showSuccessRate = computed(() => {
+    return emergencyStore.trackedEmergency && emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3;
+});
 </script>
 
 <template>
@@ -113,9 +139,17 @@ async function addTextToClipboard(text: string) {
 
             <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0 && emergencyStore.trackedEmergencyTeamDetails">
                 <p class="mt-8 font-Mohave text-2xl font-bold">{{ t("tracking_responders") }}</p>
-                <p v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3" class="mt-1 text-sm font-medium">
-                    {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}% {{ t("tracking_responderSuccessRate") }}
-                </p>
+
+                <GlobalTextBox v-if="getAssignedTeamsString || showSuccessRate" class="mt-2 text-sm lg:w-fit" font-weight="normal">
+                    <div class="flex items-center">
+                        <p v-if="getAssignedTeamsString">{{ getAssignedTeamsString }}</p>
+                        <p v-if="getAssignedTeamsString && showSuccessRate" class="px-1 font-medium">|</p>
+                        <p v-if="showSuccessRate" class="font-medium">
+                            {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}%
+                            {{ t("tracking_responderSuccessRate") }}
+                        </p>
+                    </div></GlobalTextBox
+                >
 
                 <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
                     <div

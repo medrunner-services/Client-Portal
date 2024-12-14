@@ -2,12 +2,23 @@ import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import { MessageNotification, type SyncedSettings } from "@/types.ts";
 import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
     const user = ref<Person>({} as Person);
     const isAuthenticated = ref(false);
     const isBlocked = ref(false);
+    const syncedSettings = ref<SyncedSettings>({
+        hideEmergencyRulesModal: false,
+        globalNotifications: true,
+        emergencyUpdateNotification: true,
+        customSoundNotification: false,
+        chatMessageNotification: MessageNotification.ALL,
+        globalAnalytics: true,
+        selectedLanguage: "",
+        lastConfirmedWarningId: "",
+    });
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
@@ -97,12 +108,18 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function setSettings(settings: Record<string, unknown>): Promise<Record<string, unknown>> {
-        const response = await api.client.setSettings(settings);
+    async function setSettings(settings: Record<string, unknown>): Promise<void> {
+        const mergedSettings: Record<string, unknown> = { ...syncedSettings.value, ...settings };
 
-        if (response.success && response.data) {
-            return response.data;
-        } else {
+        for (const key in mergedSettings) {
+            if (mergedSettings[key] === null) {
+                delete mergedSettings[key];
+            }
+        }
+
+        const response = await api.client.setUserSettings(JSON.stringify(mergedSettings));
+
+        if (!response.success) {
             throw response;
         }
     }
@@ -127,6 +144,7 @@ export const useUserStore = defineStore("user", () => {
         user,
         isAuthenticated,
         isBlocked,
+        syncedSettings,
         totalNumberOfEmergencies,
         disconnectUser,
         linkUser,

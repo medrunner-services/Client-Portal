@@ -2,21 +2,24 @@
 export interface Props {
     color?: "gray" | "yellow" | "outline";
     icon?: "warning";
+    fontWeight?: "normal" | "medium";
 }
 
 const props = withDefaults(defineProps<Props>(), {
     color: "gray",
+    fontWeight: "medium",
 });
 </script>
 
 <template>
     <div
-        class="flex items-center rounded-lg border p-2.5 text-sm font-medium"
+        class="flex items-center rounded-lg border p-2.5 text-sm"
         :class="{
             'border-gray-200 dark:border-gray-700': props.color === 'gray',
             'border-yellow-300 bg-yellow-100 text-yellow-800 dark:border-yellow-400 dark:bg-yellow-800 dark:text-yellow-300':
                 props.color === 'yellow',
             'border-primary-600 dark:border-primary-300': props.color === 'outline',
+            'font-medium': props.fontWeight === 'medium',
         }"
     >
         <svg

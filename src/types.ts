@@ -10,3 +10,14 @@ export enum AlertColors {
     BLUE = "blue",
     YELLOW = "yellow",
 }
+
+export interface SyncedSettings {
+    hideEmergencyRulesModal: boolean;
+    globalNotifications: boolean;
+    emergencyUpdateNotification: boolean;
+    customSoundNotification: boolean;
+    chatMessageNotification: MessageNotification;
+    globalAnalytics: boolean;
+    selectedLanguage: string;
+    lastConfirmedWarningId: string;
+}

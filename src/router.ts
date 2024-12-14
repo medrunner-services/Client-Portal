@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { usePostHog } from "@/usePostHog";
 
 import DashboardView from "./views/DashboardView.vue";
 
@@ -14,13 +16,6 @@ async function isUserComplete(to: RouteLocationNormalized): Promise<string | boo
 
     if (!userStore.user.rsiHandle) {
         return "/login/link";
-    }
-
-    try {
-        const blockCheck = await userStore.fetchUserBlocklistStatus();
-        if (blockCheck.blocked) userStore.isBlocked = true;
-    } catch (_e) {
-        return "/login?error=generic";
     }
 
     return true;
@@ -113,5 +108,25 @@ export const router = createRouter({
         },
     ],
 });
+
+router.beforeEach((to, from) => {
+    const logicStore = useLogicStore();
+
+    logicStore.isRouterLoading = true;
+
+    if (from.path !== to.path) {
+        posthog.capture("$pageleave");
+    }
+});
+
+router.afterEach(() => {
+    const logicStore = useLogicStore();
+
+    logicStore.isRouterLoading = false;
+
+    posthog.capture("$pageview");
+});
+
+const { posthog } = usePostHog();
 
 export default router;

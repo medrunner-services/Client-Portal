@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
+import LoginRegister from "@/components/Login/LoginRegister.vue";
 import LoginSettings from "@/components/Login/LoginSettings.vue";
 import LoginWelcome from "@/components/Login/LoginWelcome.vue";
 import { useAlertStore } from "@/stores/alertStore";
@@ -12,22 +13,22 @@ import { useLogicStore } from "@/stores/logicStore";
 import { AlertColors } from "@/types";
 
 const route = useRoute();
-const router = useRouter();
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const alertStore = useAlertStore();
 
 const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
+const showLoginRegister = ref(false);
+const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED && import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED === "true");
 
 onMounted(async () => {
     if (routeQueryError.value) {
-        alertStore.newAlert(AlertColors.RED, getErrorText());
-        await router.replace({
-            name: route.name as string,
-            params: router.currentRoute.value.params,
-            query: {},
-        });
+        if (routeQueryError.value === "accountUnknown" && isRegistrationEnabled) {
+            showLoginRegister.value = true;
+        } else {
+            alertStore.newAlert(AlertColors.RED, getErrorText());
+        }
     }
 });
 
@@ -95,6 +96,7 @@ function getErrorText(): string {
                     </div>
                     <LoginSettings v-if="showSettings" />
                     <LoginLinkForm v-else-if="route.name === 'loginLink'" />
+                    <LoginRegister v-else-if="showLoginRegister" />
                     <LoginWelcome v-else />
                 </div>
             </div>

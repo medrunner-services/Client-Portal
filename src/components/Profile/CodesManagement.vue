@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { CodeType } from "@medrunner/api-client";
 import { useI18n } from "vue-i18n";
 
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
-
-function getCodeTypeString(type: CodeType): string {
-    switch (type) {
-        case CodeType.CitizenCon2954:
-            return "CitizenCon 2954";
-
-        default:
-            return t("history_unknown");
-    }
-}
 </script>
 
 <template>
@@ -40,7 +31,7 @@ function getCodeTypeString(type: CodeType): string {
                                     <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.code }}</div>
 
                                     <div class="col-span-3">
-                                        <p>{{ getCodeTypeString(code.type) }}</p>
+                                        <p>{{ logicStore.getCodeTypeString(code.type) }}</p>
                                     </div>
                                 </div>
                             </div>

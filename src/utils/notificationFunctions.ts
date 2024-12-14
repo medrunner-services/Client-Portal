@@ -1,18 +1,20 @@
 import { useLogicStore } from "@/stores/logicStore";
+import { useUserStore } from "@/stores/userStore.ts";
 
 import notificationSound from "../assets/notification.mp3";
 
 export async function sendBrowserNotification(title: string, body: string, onClick?: () => void) {
     const logicStore = useLogicStore();
+    const userStore = useUserStore();
 
     if (logicStore.isNotificationGranted && !document.hasFocus()) {
         const notification = new Notification(title, {
             body,
             icon: "/images/medrunner-logo-square.webp",
-            silent: logicStore.customSoundNotification,
+            silent: userStore.syncedSettings.customSoundNotification,
         });
 
-        if (logicStore.customSoundNotification) {
+        if (userStore.syncedSettings.customSoundNotification) {
             const audio = new Audio(notificationSound);
             audio.volume = 0.2;
             await audio.play();

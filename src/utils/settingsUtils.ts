@@ -1,6 +1,8 @@
+import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { MessageNotification } from "@/types";
+import { usePostHog } from "@/usePostHog";
+import { api } from "@/utils/medrunnerClient";
 
 export function initializeSettingDarkMode() {
     const logicStore = useLogicStore();
@@ -35,60 +37,15 @@ export function initializeSettingNotifications() {
     const userStore = useUserStore();
 
     if (userStore.isAuthenticated) {
-        const defaultNotificationSetting =
-            "globalNotifications" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.globalNotifications as boolean)
-                : null;
-
-        if ("Notification" in window && Notification.permission === "granted" && defaultNotificationSetting !== false) {
+        if ("Notification" in window && Notification.permission === "granted" && userStore.syncedSettings.globalNotifications !== false) {
             logicStore.isNotificationGranted = true;
-        }
-
-        logicStore.emergencyUpdateNotification =
-            "emergencyUpdateNotification" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.emergencyUpdateNotification as boolean)
-                : true;
-        logicStore.customSoundNotification =
-            "customSoundNotification" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.customSoundNotification as boolean)
-                : true;
-        logicStore.chatMessageNotification =
-            "chatMessageNotification" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.chatMessageNotification as MessageNotification)
-                : MessageNotification.ALL;
-    }
-}
-
-export function askNotificationPermission() {
-    const logicStore = useLogicStore();
-    const userStore = useUserStore();
-
-    if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission().then((permission) => {
-            if (permission === "granted") {
-                try {
-                    userStore.setSettings({ globalNotifications: true }).then(() => {
-                        logicStore.isNotificationGranted = true;
-                    });
-                } catch (_e) {
-                    logicStore.isNotificationGranted = false;
-                }
-            }
-        });
-    }
-}
-
-export function initializeSettingAnalytics() {
-    const logicStore = useLogicStore();
-    const userStore = useUserStore();
-
-    if (userStore.isAuthenticated) {
-        const defaultAnalyticsSetting =
-            "globalAnalytics" in userStore.user.clientPortalPreferences ? (userStore.user.clientPortalPreferences.globalAnalytics as boolean) : true;
-
-        if (!defaultAnalyticsSetting) {
-            logicStore.isAnalyticsAllowed = false;
-        }
+        } else if (
+            userStore.isAuthenticated &&
+            "Notification" in window &&
+            Notification.permission === "default" &&
+            userStore.syncedSettings.globalNotifications
+        )
+            logicStore.showNotificationPermissionModal = true;
     }
 }
 
@@ -97,10 +54,7 @@ export function initializeSettingLanguage(availableLocales: string[]): string {
     let userLanguage: string | undefined;
 
     if (userStore.isAuthenticated) {
-        userLanguage =
-            "selectedLanguage" in userStore.user.clientPortalPreferences
-                ? (userStore.user.clientPortalPreferences.selectedLanguage as string)
-                : undefined;
+        userLanguage = userStore.syncedSettings.selectedLanguage ? userStore.syncedSettings.selectedLanguage : undefined;
     }
 
     const availableMainLocales = availableLocales.map((locale) => locale.split("-")[0]);
@@ -118,5 +72,41 @@ export function initializeSettingLanguage(availableLocales: string[]): string {
         }
     } else {
         return "en-US";
+    }
+}
+
+export async function migrateSyncedSettings() {
+    const userStore = useUserStore();
+
+    if (
+        userStore.isAuthenticated &&
+        userStore.user.clientPortalPreferences &&
+        Object.keys(userStore.user.clientPortalPreferences).length > 0 &&
+        !userStore.user.clientPortalPreferencesBlob
+    ) {
+        try {
+            await api.client.setUserSettings(JSON.stringify(userStore.user.clientPortalPreferences));
+        } catch (_e) {
+            return;
+        }
+    }
+}
+
+export function initializeAnalytics() {
+    const userStore = useUserStore();
+    const { locale } = i18n.global;
+    const { posthog } = usePostHog();
+
+    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics === true) {
+        posthog.opt_in_capturing();
+
+        posthog.identify(userStore.user.id, {
+            discordId: userStore.user.discordId,
+            rsiHandle: userStore.user.rsiHandle ?? "",
+            personType: userStore.user.personType,
+            active: userStore.user.active,
+            language: locale.value,
+            debugModeEnabled: localStorage.getItem("isDebugLoggerEnabled") === "true",
+        });
     }
 }
