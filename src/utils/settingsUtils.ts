@@ -97,7 +97,7 @@ export function initializeAnalytics() {
     const { locale } = i18n.global;
     const { posthog } = usePostHog();
 
-    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics === true) {
+    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics) {
         posthog.opt_in_capturing();
 
         posthog.identify(userStore.user.id, {
