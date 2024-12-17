@@ -7,6 +7,7 @@ import type { SyncedSettings } from "@/types.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
     initializeAnalytics,
+    initializeMedrunnerSettings,
     initializeSettingDarkMode,
     initializeSettingDebugLogger,
     initializeSettingDiscordLinks,
@@ -45,6 +46,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
     if (apiConnected) {
         await migrateSyncedSettings();
+        await initializeMedrunnerSettings();
 
         locale.value = initializeSettingLanguage(availableLocales);
         initializeSettingNotifications();

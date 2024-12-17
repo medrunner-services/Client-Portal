@@ -110,3 +110,17 @@ export function initializeAnalytics() {
         });
     }
 }
+
+export async function initializeMedrunnerSettings() {
+    const logicStore = useLogicStore();
+    const userStore = useUserStore();
+
+    if (userStore.isAuthenticated) {
+        try {
+            const response = await api.orgSettings.getPublicSettings();
+            logicStore.medrunnerSettings = response.data;
+        } catch (_e) {
+            return;
+        }
+    }
+}

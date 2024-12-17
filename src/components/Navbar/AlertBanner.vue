@@ -3,14 +3,20 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
 
 const { t } = useI18n();
+const logicStore = useLogicStore();
 
 const showBanner = ref(true);
 </script>
 
 <template>
-    <div v-if="showBanner" id="banner" class="w-full border border-b border-gray-200 bg-yellow-100 px-4 py-3 text-yellow-800 dark:border-0 lg:py-2.5">
+    <div
+        v-if="logicStore.medrunnerSettings?.messageOfTheDay && showBanner"
+        id="banner"
+        class="w-full border border-b border-gray-200 bg-yellow-100 px-4 py-3 text-yellow-800 dark:border-0 lg:py-2.5"
+    >
         <div class="content-container flex w-full flex-col items-start justify-between md:flex-row md:items-center md:gap-8">
             <div class="sm:flex lg:items-center">
                 <svg class="mr-3 hidden h-5 w-5 shrink-0 sm:mb-0 lg:flex" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -21,8 +27,7 @@ const showBanner = ref(true);
                     ></path>
                 </svg>
                 <p class="mb-4 md:mb-0">
-                    Due to the soft reset caused by the latest patch,
-                    <span class="font-medium text-yellow-950">response times may be longer than usual. </span>We apologize for the inconvenience.
+                    {{ logicStore.medrunnerSettings.messageOfTheDay.message }}
                 </p>
             </div>
             <div class="flex w-full shrink-0 items-center space-x-4 md:w-fit lg:pl-10">
