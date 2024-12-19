@@ -39,7 +39,7 @@ const showAlertBanner = computed(() => {
     const messageOfTheDay = logicStore.medrunnerSettings?.messageOfTheDay;
     const dateRange = messageOfTheDay?.dateRange;
 
-    return messageOfTheDay && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)));
+    return messageOfTheDay?.message && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)));
 });
 </script>
 
