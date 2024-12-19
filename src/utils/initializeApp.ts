@@ -1,4 +1,4 @@
-import type { Person } from "@medrunner/api-client";
+import type { OrgSettings, Person } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 
 import { i18n } from "@/i18n";
@@ -15,6 +15,7 @@ import {
     initializeSettingNotifications,
     migrateSyncedSettings,
 } from "@/utils/settingsUtils";
+import { orgSettingsUpdate } from "@/utils/websocket/orgSettingsUpdate.ts";
 import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
 export async function initializeApp(apiConnected: boolean): Promise<void> {
@@ -56,6 +57,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     if (ws && ws.state === HubConnectionState.Connected) {
         ws.on("PersonUpdate", (newUser: Person) => {
             personUpdate(newUser);
+        });
+
+        ws.on("OrgSettingsUpdate", (updatedOrgSettings: OrgSettings) => {
+            orgSettingsUpdate(updatedOrgSettings);
         });
 
         ws.onreconnected(async () => {
