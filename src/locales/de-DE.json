@@ -250,7 +250,7 @@
     "home_blockedText": "Um diese Entscheidung anzufechten, treten Sie bitte unserem offiziellen Discord-Server bei und eröffnen Sie ein Support-Ticket für die Moderation. Wenn Sie von unserem Discord-Server gebannt wurden und nicht in der Lage sind, beizutreten, können Sie eine Beschwerde auf unserem Discord-Server für Bannbeschwerden einreichen.",
     "home_medrunnerDiscord": "Medrunner-Discord",
     "home_banAppealDiscord": "Discord für Bannbeschwerden",
-    "home_statusDown": "Dienste sind nicht verfügbar",
+    "home_statusDown": "Dienste sind Offline",
     "home_warningNoContactModalTitle": "Wir haben den Kontakt verloren!",
     "home_warningNoContactModalDescription": "Sie haben dem Medrunner Team bei Ihrem letzten Notruf nicht geantwortet. Wenn Sie unseren Service nach dem Absetzen eines Notrufs nicht mehr zu benötigen, können Sie den Notruf jederzeit stornieren, indem Sie den Knopf \"Notruf abbrechen\" klicken.",
     "home_warningNoContactModalWarning": "Wiederholte Notrufe, bei denen das Team keinen Kontakt herstellen kann, können zu einem UEC-Bußgeld oder zur Verweigerung des Services führen.",

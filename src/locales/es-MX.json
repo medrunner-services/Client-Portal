@@ -250,7 +250,7 @@
     "home_blockedText": "Para apelar esta decisión, únase a nuestro servidor oficial de Discord y abra un ticket de soporte de moderación. Si ha sido excluido de nuestro servidor de Discord y no puede unirse, puede enviar una apelación en nuestro servidor de Discord de apelación de prohibición.",
     "home_medrunnerDiscord": "Discord de Medrunner",
     "home_banAppealDiscord": "Apelación a la suspensión de Discord",
-    "home_statusDown": "Los servicios están caídos",
+    "home_statusDown": "Services are offline",
     "home_warningNoContactModalTitle": "Hemos perdido contacto!",
     "home_warningNoContactModalDescription": "No respondió al equipo de Medrunner en su última emergencia. Si no siente la necesidad de nuestros servicios después de enviar una emergencia, puede cancelar la emergencia directamente en el portal haciendo clic en el botón \"Cancelar emergencia\".",
     "home_warningNoContactModalWarning": "Las alertas repetidas que provocan que el equipo pierda el contacto pueden dar lugar a multas de UEC o a la denegación del servicio.",
