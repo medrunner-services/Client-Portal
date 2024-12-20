@@ -26,7 +26,7 @@ const showBanner = ref(true);
                         clip-rule="evenodd"
                     ></path>
                 </svg>
-                <p class="mb-4 md:mb-0">
+                <p class="mb-4 [overflow-wrap:anywhere] md:mb-0">
                     {{ logicStore.medrunnerSettings.messageOfTheDay.message }}
                 </p>
             </div>
