@@ -4,6 +4,8 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { usePostHog } from "@/usePostHog";
 
+const { posthog } = usePostHog();
+
 import DashboardView from "./views/DashboardView.vue";
 
 async function isUserComplete(to: RouteLocationNormalized): Promise<string | boolean> {
@@ -126,7 +128,5 @@ router.afterEach(() => {
 
     posthog.capture("$pageview");
 });
-
-const { posthog } = usePostHog();
 
 export default router;

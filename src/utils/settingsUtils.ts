@@ -97,7 +97,7 @@ export function initializeAnalytics() {
     const { locale } = i18n.global;
     const { posthog } = usePostHog();
 
-    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics === true) {
+    if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics) {
         posthog.opt_in_capturing();
 
         posthog.identify(userStore.user.id, {
@@ -108,5 +108,19 @@ export function initializeAnalytics() {
             language: locale.value,
             debugModeEnabled: localStorage.getItem("isDebugLoggerEnabled") === "true",
         });
+    }
+}
+
+export async function initializeMedrunnerSettings() {
+    const logicStore = useLogicStore();
+    const userStore = useUserStore();
+
+    if (userStore.isAuthenticated) {
+        try {
+            const response = await api.orgSettings.getPublicSettings();
+            logicStore.medrunnerSettings = response.data;
+        } catch (_e) {
+            return;
+        }
     }
 }

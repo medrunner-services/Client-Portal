@@ -23,6 +23,9 @@ const appVersion = __APP_VERSION__;
                         <li>Added a new pop up to easily enable notifications.</li>
                         <li>Added a new login page when the user tries to log-in with an unknown discord account.</li>
                         <li>Added user badges in the profile.</li>
+                        <li>Features are now synced with Medrunner Org settings.</li>
+                        <li>Added an alert banner to display global announcements.</li>
+                        <li>Service status on the emergency page is now synced in real time.</li>
                     </ul>
                 </div>
 
@@ -33,6 +36,7 @@ const appVersion = __APP_VERSION__;
                         <li>The name of the responding medrunner teams is now displayed on the emergency page.</li>
                         <li>Made the loader use the same theme as the rest of the app, no more flash bangs for dark mode users!</li>
                         <li>Improved navigation and loading times.</li>
+                        <li>Improved text wrapping on small screens.</li>
                     </ul>
                 </div>
 

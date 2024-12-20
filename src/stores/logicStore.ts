@@ -1,4 +1,4 @@
-import { CancellationReason, CodeType, MissionStatus } from "@medrunner/api-client";
+import { CancellationReason, CodeType, MissionStatus, type PublicOrgSettings } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -12,6 +12,8 @@ export const useLogicStore = defineStore("logic", () => {
     const isDiscordOpenWeb = ref(false);
     const isDebugLoggerEnabled = ref(false);
     const showNotificationPermissionModal = ref(false);
+    const medrunnerSettings = ref<PublicOrgSettings>();
+    const isAlertBannerVisible = ref(true);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -226,6 +228,8 @@ export const useLogicStore = defineStore("logic", () => {
         userDevice,
         discordBaseUrl,
         showNotificationPermissionModal,
+        medrunnerSettings,
+        isAlertBannerVisible,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

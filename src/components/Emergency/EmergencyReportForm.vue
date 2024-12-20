@@ -6,11 +6,13 @@ import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const formSubmittingEmergency = ref(false);
@@ -26,6 +28,10 @@ onMounted(async () => {
 
     if (getSystem.value.length === 2) inputSystem.value = getSystem.value[1].value;
     if (getPlanets.value.length === 2) inputPlanet.value = getPlanets.value[1].value;
+});
+
+const isEmergenciesDisabled = computed(() => {
+    return logicStore.medrunnerSettings && !logicStore.medrunnerSettings.emergenciesEnabled;
 });
 
 const getSystem = computed(() => {
@@ -133,7 +139,7 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                     class="w-full"
                     :options="getSystem"
                     :required="true"
-                    :disabled="getSystem.length <= 2"
+                    :disabled="getSystem.length <= 2 || isEmergenciesDisabled"
                     :label="t('form_system')"
                     :helper="t('form_helpSystem')"
                     @change="clearPlanetsLocations(true, true)"
@@ -144,7 +150,7 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                     class="w-full"
                     :options="getPlanets"
                     :required="true"
-                    :disabled="!inputSystem || getPlanets.length <= 2"
+                    :disabled="!inputSystem || getPlanets.length <= 2 || isEmergenciesDisabled"
                     :label="t('form_subSystem')"
                     :helper="t('form_helpSubSystem')"
                     @change="clearPlanetsLocations(false, true)"
@@ -154,7 +160,7 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                     v-model="inputLocation"
                     class="w-full"
                     :options="getLocations"
-                    :disabled="!inputPlanet || getLocations.length === 1"
+                    :disabled="!inputPlanet || getLocations.length === 1 || isEmergenciesDisabled"
                     :label="t('form_moon')"
                     :helper="t('form_helpMoon')"
                 />
@@ -162,6 +168,7 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 <GlobalSelectInput
                     v-model="inputThreatLevel"
                     class="w-full"
+                    :disabled="isEmergenciesDisabled"
                     :options="[
                         { value: '', label: t('form_assessTheThreat'), hidden: true },
                         { value: '0', label: t('form_unknownThreat') },
@@ -185,9 +192,14 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 >
             </p>
 
-            <GlobalButton class="mt-8" :submit="true" :error-text="formErrorMessage" :loading="formSubmittingEmergency">{{
-                t("form_reportEmergency")
-            }}</GlobalButton>
+            <GlobalButton
+                class="mt-8"
+                :submit="true"
+                :disabled="isEmergenciesDisabled"
+                :error-text="formErrorMessage"
+                :loading="formSubmittingEmergency"
+                >{{ t("form_reportEmergency") }}</GlobalButton
+            >
         </form>
     </div>
 </template>

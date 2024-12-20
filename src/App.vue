@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
@@ -21,7 +21,6 @@ const logicStore = useLogicStore();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
-const showAlertBanner = ref(false);
 
 onMounted(async () => {
     isLoadingPage.value = true;
@@ -33,6 +32,14 @@ onMounted(async () => {
     } finally {
         isLoadingPage.value = false;
     }
+});
+
+const showAlertBanner = computed(() => {
+    const now = new Date();
+    const messageOfTheDay = logicStore.medrunnerSettings?.messageOfTheDay;
+    const dateRange = messageOfTheDay?.dateRange;
+
+    return messageOfTheDay?.message && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)));
 });
 </script>
 
@@ -62,7 +69,13 @@ onMounted(async () => {
             <RouterView
                 v-else
                 class="w-full flex-grow"
-                :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
+                :class="
+                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
+                        ? 'my-0'
+                        : logicStore.isAlertBannerVisible
+                          ? 'mb-14 mt-6'
+                          : 'my-14'
+                "
             />
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>

@@ -47,6 +47,9 @@ export function errorString(errorCode: number, customMessage?: string): string {
             case 403:
                 defaultMessage = t("error_blockedUser");
                 break;
+            case 423:
+                defaultMessage = t("error_featureDisabled");
+                break;
         }
 
         return `${defaultMessage} (${errorCode})`;
