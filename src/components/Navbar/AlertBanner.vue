@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -7,13 +6,11 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
-
-const showBanner = ref(true);
 </script>
 
 <template>
     <div
-        v-if="logicStore.medrunnerSettings?.messageOfTheDay && showBanner"
+        v-if="logicStore.medrunnerSettings?.messageOfTheDay && logicStore.isAlertBannerVisible"
         id="banner"
         class="w-full border border-b border-gray-200 bg-yellow-100 px-4 py-3 text-yellow-800 dark:border-0 lg:py-2.5"
     >
@@ -38,7 +35,7 @@ const showBanner = ref(true);
                     outline-text-color="text-yellow-800"
                     outline-border-color="border-yellow-800"
                     outline-hover-color="hover:bg-gray-200/10"
-                    @click="showBanner = false"
+                    @click="logicStore.isAlertBannerVisible = false"
                     >{{ t("tracking_finishButton") }}</GlobalButton
                 >
             </div>

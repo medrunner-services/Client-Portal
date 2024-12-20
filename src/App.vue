@@ -69,7 +69,13 @@ const showAlertBanner = computed(() => {
             <RouterView
                 v-else
                 class="w-full flex-grow"
-                :class="route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' ? 'my-0' : 'my-14'"
+                :class="
+                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
+                        ? 'my-0'
+                        : logicStore.isAlertBannerVisible
+                          ? 'mb-14 mt-6'
+                          : 'my-14'
+                "
             />
             <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
         </div>
