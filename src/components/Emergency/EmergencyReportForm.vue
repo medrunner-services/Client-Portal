@@ -117,9 +117,7 @@ async function submitEmergency() {
             location: formLocation,
             threatLevel: parseInt(inputThreatLevel.value),
         };
-
-        // TODO: Enable when api-client is updated
-        //if (inputRSIHandle.value) payload.rsiHandle = inputRSIHandle.value;
+        if (inputRSIHandle.value) payload.rsiHandle = inputRSIHandle.value;
 
         const response = await emergencyStore.createEmergency(payload);
 
