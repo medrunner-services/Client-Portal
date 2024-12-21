@@ -8,22 +8,6 @@ const { posthog } = usePostHog();
 
 import DashboardView from "./views/DashboardView.vue";
 
-async function isUserComplete(to: RouteLocationNormalized): Promise<string | boolean> {
-    const userStore = useUserStore();
-    const logicStore = useLogicStore();
-
-    if (!userStore.isAuthenticated) {
-        if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
-        else return "/login";
-    }
-
-    if (!userStore.user.rsiHandle && logicStore.medrunnerSettings && !logicStore.medrunnerSettings.anonymousAlertsEnabled) {
-        return "/login/link";
-    }
-
-    return true;
-}
-
 async function isUserNotAuthenticated(): Promise<string | boolean> {
     const userStore = useUserStore();
 
@@ -66,19 +50,19 @@ export const router = createRouter({
             path: "/",
             name: "dashboard",
             component: DashboardView,
-            beforeEnter: isUserComplete,
+            beforeEnter: isUserAuthenticated,
         },
         {
             path: "/emergency",
             name: "emergency",
             component: () => import("@/views/EmergencyView.vue"),
-            beforeEnter: isUserComplete,
+            beforeEnter: isUserAuthenticated,
         },
         {
             path: "/profile",
             name: "profile",
             component: () => import("@/views/ProfileView.vue"),
-            beforeEnter: isUserComplete,
+            beforeEnter: isUserAuthenticated,
         },
         {
             path: "/login",
