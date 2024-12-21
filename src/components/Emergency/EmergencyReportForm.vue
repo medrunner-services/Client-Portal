@@ -161,6 +161,7 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 v-model="inputRSIHandle"
                 class="mb-4 w-full lg:mb-8"
                 :required="true"
+                :disabled="isEmergenciesDisabled"
                 :label="t('user_RSIHandle')"
                 :placeholder="t('user_rsiHandlePlaceholder')"
                 :helper="t('user_rsiHandleHelper')"
