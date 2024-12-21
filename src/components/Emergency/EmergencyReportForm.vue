@@ -36,7 +36,12 @@ onMounted(async () => {
 const isEmergenciesDisabled = computed(() => {
     if (!logicStore.medrunnerSettings) return true;
 
-    if (!userStore.user.rsiHandle) return !logicStore.medrunnerSettings.anonymousAlertsEnabled || !logicStore.medrunnerSettings.emergenciesEnabled;
+    if (!userStore.user.rsiHandle)
+        return (
+            !logicStore.medrunnerSettings.anonymousAlertsEnabled ||
+            !logicStore.medrunnerSettings.emergenciesEnabled ||
+            !userStore.user.allowAnonymousAlert
+        );
     else return !logicStore.medrunnerSettings.emergenciesEnabled;
 });
 
@@ -146,7 +151,10 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
         <UnlinkedUserCTA v-if="!userStore.user.rsiHandle" class="mt-4" />
 
         <form
-            v-if="userStore.user.allowAnonymousAlert || userStore.user.rsiHandle"
+            v-if="
+                (logicStore.medrunnerSettings && logicStore.medrunnerSettings.anonymousAlertsEnabled && userStore.user.allowAnonymousAlert) ||
+                userStore.user.rsiHandle
+            "
             :class="userStore.user.rsiHandle ? 'mt-4' : 'mt-8'"
             @submit.prevent="submitEmergency()"
         >
