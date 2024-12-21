@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "Services are slightly degraded",
     "home_statusHeavilyDisrupted": "Services are heavily degraded",
     "error_featureDisabled": "This service is disabled, please retry again later",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "Log in met Discord",
     "login_registerButton": "Registreer met Discord",
     "login_welcomeBack": "Welkom",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "Wachtend op browserautorisatie...",
     "user_close": "Sluiten",
     "notification_buttonDisable": "Notificaties uitzetten",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "Er ontbreekt iets.",
     "404_helperText": "Sorry, we kunnen die pagina niet vinden. Op de startpagina vind je veel om te ontdekken.",
     "404_backToHomepage": "Terug naar Startpagina"

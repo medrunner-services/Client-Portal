@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "現有服務品質處於些微降級的狀態",
     "home_statusHeavilyDisrupted": "現有服務品質處於嚴重降級的狀態",
     "error_featureDisabled": "此服務目前已被停用，請稍後在試",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "使用Discord登入",
     "login_registerButton": "使用Discord註冊",
     "login_welcomeBack": "歡迎",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "正在等待瀏覽器授權...",
     "user_close": "關閉",
     "notification_buttonDisable": "停用通知功能",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
     "404_backToHomepage": "回到首頁"

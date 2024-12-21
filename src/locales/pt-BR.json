@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "Services are slightly degraded",
     "home_statusHeavilyDisrupted": "Services are heavily degraded",
     "error_featureDisabled": "This service is disabled, please retry again later",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "Faça Login com Discord",
     "login_registerButton": "Registre-se com Discord",
     "login_welcomeBack": "Bem-Vindo",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "Waiting for browser authorization...",
     "user_close": "Close",
     "notification_buttonDisable": "Disable notifications",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "Algo está faltando.",
     "404_helperText": "Desculpe, não conseguimos encontrar essa página. Você encontrará muito para explorar na página inicial.",
     "404_backToHomepage": "Voltar para a página inicial"

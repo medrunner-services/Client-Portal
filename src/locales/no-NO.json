@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "Tjenestene er degradert",
     "home_statusHeavilyDisrupted": "Tjenestene er ganske degraderte",
     "error_featureDisabled": "Denne tjenesten er ikke tilgjenglig, vennligst prøv igjen senere",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "Logg inn med Discord",
     "login_registerButton": "Registrere med Discord",
     "login_welcomeBack": "Velkommen",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "Venter på nettleserautorisasjon...",
     "user_close": "Lukk",
     "notification_buttonDisable": "Skru av notifikasjoner",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
     "404_backToHomepage": "Tilbake til hjemmesiden"

@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "Dienste sind leicht eingeschränkt",
     "home_statusHeavilyDisrupted": "Dienste sind massiv eingeschränkt",
     "error_featureDisabled": "Dieser Dienst ist deaktiviert. Bitte versuchen Sie es später noch einmal",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "Login mit Discord",
     "login_registerButton": "Mit Discord registrieren",
     "login_welcomeBack": "Willkommen",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "Warten auf Browser-Autorisierung...",
     "user_close": "Schließen",
     "notification_buttonDisable": "Benachrichtigungen ausschalten",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
     "404_backToHomepage": "Zurück zur Startseite"

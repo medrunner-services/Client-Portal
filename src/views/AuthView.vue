@@ -91,7 +91,7 @@ onMounted(async () => {
                 }
 
                 if (route.query.state && route.query.state !== "undefined") await router.push(decodeURIComponent(route.query.state as string));
-                else await router.push("/login/link");
+                else await router.push("/emergency");
             } else {
                 if (response.status === 409) await router.push("/login?error=accountKnown");
                 else await router.push("/login?error=generic");

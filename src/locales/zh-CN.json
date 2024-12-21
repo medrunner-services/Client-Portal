@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "服务正受到轻微影响",
     "home_statusHeavilyDisrupted": "服务正受到严重影响",
     "error_featureDisabled": "此服务暂时不可用，请稍后重试",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "通过 Discord 登录",
     "login_registerButton": "通过 Discord 注册",
     "login_welcomeBack": "欢迎",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "正在等待浏览器授权……",
     "user_close": "关闭",
     "notification_buttonDisable": "关闭消息通知",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

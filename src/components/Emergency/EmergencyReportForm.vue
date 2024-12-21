@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import type { Location, LocationDetail } from "@medrunner/api-client";
+import type { CreateEmergencyRequest, Location, LocationDetail } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
+import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
@@ -21,6 +23,7 @@ const inputSystem = ref("");
 const inputPlanet = ref("");
 const inputLocation = ref("");
 const inputThreatLevel = ref("");
+const inputRSIHandle = ref("");
 const locationsInformation = ref<LocationDetail[]>([]);
 
 onMounted(async () => {
@@ -31,7 +34,10 @@ onMounted(async () => {
 });
 
 const isEmergenciesDisabled = computed(() => {
-    return logicStore.medrunnerSettings && !logicStore.medrunnerSettings.emergenciesEnabled;
+    if (!logicStore.medrunnerSettings) return true;
+
+    if (!userStore.user.rsiHandle) return !logicStore.medrunnerSettings.anonymousAlertsEnabled || !logicStore.medrunnerSettings.emergenciesEnabled;
+    else return !logicStore.medrunnerSettings.emergenciesEnabled;
 });
 
 const getSystem = computed(() => {
@@ -102,10 +108,15 @@ async function submitEmergency() {
         };
         if (formLocation.tertiaryLocation === "") delete formLocation.tertiaryLocation;
 
-        const response = await emergencyStore.createEmergency({
+        const payload: CreateEmergencyRequest = {
             location: formLocation,
             threatLevel: parseInt(inputThreatLevel.value),
-        });
+        };
+
+        // TODO: Enable when api-client is updated
+        //if (inputRSIHandle.value) payload.rsiHandle = inputRSIHandle.value;
+
+        const response = await emergencyStore.createEmergency(payload);
 
         userStore.user.activeEmergency = response.id;
 
@@ -132,7 +143,23 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_emergency") }}</h2>
         </div>
 
-        <form class="mt-8" @submit.prevent="submitEmergency()">
+        <UnlinkedUserCTA v-if="!userStore.user.rsiHandle" class="mt-4" />
+
+        <form
+            v-if="userStore.user.allowAnonymousAlert || userStore.user.rsiHandle"
+            :class="userStore.user.rsiHandle ? 'mt-4' : 'mt-8'"
+            @submit.prevent="submitEmergency()"
+        >
+            <GlobalTextInput
+                v-if="!userStore.user.rsiHandle"
+                v-model="inputRSIHandle"
+                class="mb-4 w-full lg:mb-8"
+                :required="true"
+                :label="t('user_RSIHandle')"
+                :placeholder="t('user_rsiHandlePlaceholder')"
+                :helper="t('user_rsiHandleHelper')"
+            />
+
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:flex-row lg:gap-8">
                 <GlobalSelectInput
                     v-model="inputSystem"
@@ -193,8 +220,9 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
             </p>
 
             <GlobalButton
-                class="mt-8"
+                class="mt-8 w-full lg:w-fit"
                 :submit="true"
+                size="full"
                 :disabled="isEmergenciesDisabled"
                 :error-text="formErrorMessage"
                 :loading="formSubmittingEmergency"

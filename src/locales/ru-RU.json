@@ -259,6 +259,8 @@
     "home_statusSlightlyDisrupted": "Services are slightly degraded",
     "home_statusHeavilyDisrupted": "Services are heavily degraded",
     "error_featureDisabled": "This service is disabled, please retry again later",
+    "home_unlinkedCTATitle": "This Medrunner account is not linked to an RSI account",
+    "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "login_logInButton": "Войти через Discord",
     "login_registerButton": "Зарегистрируйтесь c помощью Discord",
     "login_welcomeBack": "Добро пожаловать",
@@ -378,6 +380,8 @@
     "notification_waitingBrowser": "Ожидание авторизации браузера...",
     "user_close": "Закрыть",
     "notification_buttonDisable": "Выключить уведомления",
+    "user_rsiHandlePlaceholder": "Your RSI Handle...",
+    "user_linkAccount": "Link account",
     "404_somethingMissing": "Что-то не хватает.",
     "404_helperText": "К сожалению, мы не можем найти эту страницу. На главной странице вы можете найти большое количество информации.",
     "404_backToHomepage": "Вернуться на главную страницу"

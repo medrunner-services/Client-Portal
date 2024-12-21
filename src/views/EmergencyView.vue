@@ -152,7 +152,9 @@ onMounted(async () => {
                 </div>
             </div>
 
-            <ServiceStatus v-else />
+            <div v-else>
+                <ServiceStatus />
+            </div>
         </div>
     </div>
 </template>
