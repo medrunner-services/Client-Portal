@@ -2,18 +2,24 @@
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { useLogicStore } from "@/stores/logicStore.ts";
 
 const { t } = useI18n();
-const logicStore = useLogicStore();
+
+export interface Props {
+    message: string;
+    showButton?: boolean;
+    buttonText?: string;
+    buttonFunction?: () => void;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    showButton: false,
+    buttonFunction: () => {},
+});
 </script>
 
 <template>
-    <div
-        v-if="logicStore.medrunnerSettings?.messageOfTheDay && logicStore.isAlertBannerVisible"
-        id="banner"
-        class="w-full border border-b border-gray-200 bg-yellow-100 px-4 py-3 text-yellow-800 dark:border-0 lg:py-2.5"
-    >
+    <div id="banner" class="w-full border border-b border-gray-200 bg-yellow-100 px-4 py-3 text-yellow-800 dark:border-0 lg:py-2.5">
         <div class="content-container flex w-full flex-col items-start justify-between md:flex-row md:items-center md:gap-8">
             <div class="sm:flex lg:items-center">
                 <svg class="mr-3 hidden h-5 w-5 shrink-0 sm:mb-0 lg:flex" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -24,10 +30,10 @@ const logicStore = useLogicStore();
                     ></path>
                 </svg>
                 <p class="mb-4 [overflow-wrap:anywhere] md:mb-0">
-                    {{ logicStore.medrunnerSettings.messageOfTheDay.message }}
+                    {{ props.message }}
                 </p>
             </div>
-            <div class="flex w-full shrink-0 items-center space-x-4 md:w-fit lg:pl-10">
+            <div v-if="props.showButton" class="flex w-full shrink-0 items-center space-x-4 md:w-fit lg:pl-10">
                 <GlobalButton
                     type="outline"
                     size="full"
@@ -35,8 +41,8 @@ const logicStore = useLogicStore();
                     outline-text-color="text-yellow-800"
                     outline-border-color="border-yellow-800"
                     outline-hover-color="hover:bg-gray-200/10"
-                    @click="logicStore.isAlertBannerVisible = false"
-                    >{{ t("tracking_finishButton") }}</GlobalButton
+                    @click="props.buttonFunction"
+                    >{{ props.buttonText ?? t("tracking_finishButton") }}</GlobalButton
                 >
             </div>
         </div>

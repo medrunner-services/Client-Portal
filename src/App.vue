@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { HubConnectionState } from "@microsoft/signalr";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
@@ -12,6 +13,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
+import { ws } from "@/utils/medrunnerClient";
 
 const route = useRoute();
 const router = useRouter();
@@ -34,18 +36,37 @@ onMounted(async () => {
     }
 });
 
-const showAlertBanner = computed(() => {
+const showMOTDAlertBanner = computed(() => {
     const now = new Date();
     const messageOfTheDay = logicStore.medrunnerSettings?.messageOfTheDay;
     const dateRange = messageOfTheDay?.dateRange;
 
-    return messageOfTheDay?.message && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)));
+    return (
+        logicStore.isMOTDBannerVisible &&
+        messageOfTheDay &&
+        messageOfTheDay.message &&
+        (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)))
+    );
+});
+
+const showWSAlertBanner = computed(() => {
+    return ws.state === HubConnectionState.Reconnecting || ws.state === HubConnectionState.Disconnected;
+});
+
+const getWSAlertBannerMessage = computed(() => {
+    return ws.state === HubConnectionState.Reconnecting ? t("websocket_reconnecting") : t("websocket_disconnected");
 });
 </script>
 
 <template>
     <div>
         <GlobalAlert v-if="alertStore.showAlert" />
+
+        <AlertBanner
+            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
+            :message="getWSAlertBannerMessage"
+            :show-button="false"
+        />
 
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
             <NavbarContainer
@@ -55,7 +76,14 @@ const showAlertBanner = computed(() => {
             />
 
             <AlertBanner
-                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showAlertBanner"
+                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showMOTDAlertBanner"
+                :message="logicStore!.medrunnerSettings!.messageOfTheDay!.message"
+                :show-button="true"
+                :button-function="
+                    () => {
+                        logicStore.isMOTDBannerVisible = false;
+                    }
+                "
             />
 
             <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full flex-grow items-center justify-center">
@@ -72,7 +100,7 @@ const showAlertBanner = computed(() => {
                 :class="
                     route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
                         ? 'my-0'
-                        : logicStore.isAlertBannerVisible
+                        : logicStore.isMOTDBannerVisible
                           ? 'mb-14 mt-6'
                           : 'my-14'
                 "
