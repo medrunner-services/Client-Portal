@@ -2,8 +2,9 @@ import type { OrgSettings, Person } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 
 import { i18n } from "@/i18n";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import type { SyncedSettings } from "@/types.ts";
+import { type SyncedSettings, WSState } from "@/types.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
     initializeAnalytics,
@@ -20,6 +21,7 @@ import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
 export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
+    const logicStore = useLogicStore();
     const { availableLocales, locale } = i18n.global;
 
     initializeSettingDarkMode();
@@ -64,9 +66,19 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         });
 
         ws.onreconnected(async () => {
+            logicStore.currentWSState = WSState.HEALTHY;
+
             userStore.user = await userStore.fetchUser();
             if (userStore.user.clientPortalPreferencesBlob)
                 userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+        });
+
+        ws.onreconnecting(() => {
+            logicStore.currentWSState = WSState.RECONNECTING;
+        });
+
+        ws.onclose(() => {
+            logicStore.currentWSState = WSState.DISCONNECTED;
         });
     }
 }

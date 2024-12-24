@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { i18n } from "@/i18n";
+import { WSState } from "@/types.ts";
 
 export const useLogicStore = defineStore("logic", () => {
     const { t, locale } = i18n.global;
@@ -14,6 +15,7 @@ export const useLogicStore = defineStore("logic", () => {
     const showNotificationPermissionModal = ref(false);
     const medrunnerSettings = ref<PublicOrgSettings>();
     const isMOTDBannerVisible = ref(true);
+    const currentWSState = ref(WSState.HEALTHY);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -230,6 +232,7 @@ export const useLogicStore = defineStore("logic", () => {
         showNotificationPermissionModal,
         medrunnerSettings,
         isMOTDBannerVisible,
+        currentWSState,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

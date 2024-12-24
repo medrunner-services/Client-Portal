@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { HubConnectionState } from "@microsoft/signalr";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
@@ -13,7 +12,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { ws } from "@/utils/medrunnerClient";
+import { WSState } from "@/types.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -50,11 +49,12 @@ const showMOTDAlertBanner = computed(() => {
 });
 
 const showWSAlertBanner = computed(() => {
-    return ws.state === HubConnectionState.Reconnecting || ws.state === HubConnectionState.Disconnected;
+    return logicStore.currentWSState === WSState.RECONNECTING || logicStore.currentWSState === WSState.DISCONNECTED;
 });
 
+// TODO: localization
 const getWSAlertBannerMessage = computed(() => {
-    return ws.state === HubConnectionState.Reconnecting ? t("websocket_reconnecting") : t("websocket_disconnected");
+    return logicStore.currentWSState === WSState.RECONNECTING ? "Reconnecting to server..." : "Connection lost, please refresh the page.";
 });
 </script>
 
@@ -62,6 +62,8 @@ const getWSAlertBannerMessage = computed(() => {
     <div>
         <GlobalAlert v-if="alertStore.showAlert" />
 
+        <!--    TODO: Change to a warning icon    -->
+        <!--    TODO: Change to red color scheme when DISCONNECTED   -->
         <AlertBanner
             v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
             :message="getWSAlertBannerMessage"

@@ -21,3 +21,9 @@ export interface SyncedSettings {
     selectedLanguage: string;
     lastConfirmedWarningId: string;
 }
+
+export enum WSState {
+    HEALTHY,
+    RECONNECTING,
+    DISCONNECTED,
+}
