@@ -19,7 +19,7 @@
     "update-packages": "ncu -i -u --format group"
   },
   "dependencies": {
-    "@intlify/unplugin-vue-i18n": "^6.0.1",
+    "@intlify/unplugin-vue-i18n": "^6.0.2",
     "@medrunner/api-client": "0.2.4",
     "apexcharts": "^4.3.0",
     "discord-markdown": "^2.5.1",
@@ -28,7 +28,7 @@
     "pinia": "^2.3.0",
     "posthog-js": "^1.203.1",
     "vue": "^3.5.13",
-    "vue-i18n": "^10.0.5",
+    "vue-i18n": "^11.0.1",
     "vue-router": "^4.5.0",
     "vue3-apexcharts": "^1.8.0"
   },
@@ -39,7 +39,7 @@
     "@types/node": "^22.10.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.1.0",
-    "@vue/eslint-config-typescript": "^14.1.4",
+    "@vue/eslint-config-typescript": "^14.2.0",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
     "dotenv": "^16.4.7",
@@ -51,9 +51,9 @@
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "tailwindcss": "^3.4.17",
-    "typescript": "5.6.3",
-    "vite": "^6.0.5",
-    "vue-tsc": "^2.0.29",
+    "typescript": "5.7.2",
+    "vite": "^6.0.6",
+    "vue-tsc": "^2.2.0",
     "yauzl": "^3.2.0"
   }
 }

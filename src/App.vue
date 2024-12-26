@@ -52,22 +52,28 @@ const showWSAlertBanner = computed(() => {
     return logicStore.currentWSState === WSState.RECONNECTING || logicStore.currentWSState === WSState.DISCONNECTED;
 });
 
-// TODO: localization
 const getWSAlertBannerMessage = computed(() => {
-    return logicStore.currentWSState === WSState.RECONNECTING ? "Reconnecting to server..." : "Connection lost, please refresh the page.";
+    return logicStore.currentWSState === WSState.RECONNECTING ? t("error_webSocketReconnection") : t("error_webSocketDisconnected");
 });
+
+function reloadPage() {
+    window.location.reload();
+}
 </script>
 
 <template>
     <div>
         <GlobalAlert v-if="alertStore.showAlert" />
 
-        <!--    TODO: Change to a warning icon    -->
-        <!--    TODO: Change to red color scheme when DISCONNECTED   -->
         <AlertBanner
             v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
+            icon="warning"
             :message="getWSAlertBannerMessage"
-            :show-button="false"
+            :show-button="logicStore.currentWSState !== WSState.RECONNECTING"
+            :color="logicStore.currentWSState === WSState.RECONNECTING ? 'yellow' : 'red'"
+            font-weight="medium"
+            :button-text="logicStore.currentWSState === WSState.DISCONNECTED ? t('home_reload') : undefined"
+            :button-function="logicStore.currentWSState === WSState.DISCONNECTED ? () => reloadPage() : undefined"
         />
 
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
