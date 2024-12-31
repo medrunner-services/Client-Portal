@@ -304,6 +304,7 @@
     "navbar_reportBug": "Rapporter en fejl",
     "navbar_home": "Hjem",
     "navbar_profile": "Min Profil",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "Sørg for at kopiere dit API token nu. Du vil ikke kunne se den igen!",
     "developer_createTokenFormName": "Navn",
     "developer_createTokenFormExpirationDate": "Udløbsdato",

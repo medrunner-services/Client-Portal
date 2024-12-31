@@ -304,6 +304,7 @@
     "navbar_reportBug": "Rapporteer een bug",
     "navbar_home": "Startpagina",
     "navbar_profile": "Mijn Profiel",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "Kopieer uw API-token nu. Hierna ziet u deze niet meer!",
     "developer_createTokenFormName": "Naam",
     "developer_createTokenFormExpirationDate": "Vervaldatum",

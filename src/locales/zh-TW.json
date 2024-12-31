@@ -304,6 +304,7 @@
     "navbar_reportBug": "回報錯誤",
     "navbar_home": "首頁",
     "navbar_profile": "我的個人檔案",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "確保您複製您的API代碼，您之後會無法再次看見此代碼!",
     "developer_createTokenFormName": "名字",
     "developer_createTokenFormExpirationDate": "到期日",

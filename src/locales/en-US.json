@@ -304,6 +304,7 @@
     "navbar_reportBug": "Report a bug",
     "navbar_home": "Home",
     "navbar_profile": "My Profile",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "Make sure to copy your API token now. You won’t be able to see it again!",
     "developer_createTokenFormName": "Name",
     "developer_createTokenFormExpirationDate": "Expiration date",

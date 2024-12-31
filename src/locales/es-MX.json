@@ -304,6 +304,7 @@
     "navbar_reportBug": "Informar de un error",
     "navbar_home": "Página de inicio",
     "navbar_profile": "Mi perfil",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "Asegúrese de copiar su token API ahora. No podrás volver a verlo!",
     "developer_createTokenFormName": "Nombre",
     "developer_createTokenFormExpirationDate": "Fecha de caducidad",

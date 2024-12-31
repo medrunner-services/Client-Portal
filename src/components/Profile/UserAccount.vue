@@ -32,7 +32,7 @@ onMounted(() => {
     if (userStore.user.redeemedCodes.some((code) => code.type === CodeType.CitizenCon2954)) {
         userBadges.value.push({ name: "CitizenCon 2954", icon: "/icons/badges/CitizenCon2954.svg" });
     }
-    if (userStore.user.personType == PersonType.STAFF) {
+    if (userStore.user.personType === PersonType.STAFF) {
         userBadges.value.push({ name: "Medrunner", icon: "/images/medrunner-logo-square.webp" });
     }
 });

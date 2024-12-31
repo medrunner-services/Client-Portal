@@ -304,6 +304,7 @@
     "navbar_reportBug": "Сообщить об ошибке",
     "navbar_home": "Главная страница",
     "navbar_profile": "Мой профиль",
+    "navbar_staffPortal": "Staff Portal",
     "developer_createTokenAlertCopy": "Не забудьте скопировать свой API-токен. Вы больше не сможете его увидеть!",
     "developer_createTokenFormName": "Имя",
     "developer_createTokenFormExpirationDate": "Истечения срока действия",

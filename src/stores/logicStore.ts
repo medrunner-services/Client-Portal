@@ -34,6 +34,14 @@ export const useLogicStore = defineStore("logic", () => {
         }
     });
 
+    const medrunnerStaffPortalUrl = computed(() => {
+        if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
+            return "https://staff.medrunner.dev";
+        } else {
+            return "https://staff.medrunner.space";
+        }
+    });
+
     const userDevice = computed(() => {
         if (navigator.userAgent.includes("Android")) {
             return "android";
@@ -233,6 +241,7 @@ export const useLogicStore = defineStore("logic", () => {
         medrunnerSettings,
         isMOTDBannerVisible,
         currentWSState,
+        medrunnerStaffPortalUrl,
         addTextToClipboard,
         getLanguageString,
         getThreatString,
