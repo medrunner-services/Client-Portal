@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
-import { toHTML } from "discord-markdown";
-import DOMPurify from "dompurify";
 import { computed, type ComputedRef, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useLogicStore } from "@/stores/logicStore";
-import { replaceAtMentions } from "@/utils/stringUtils";
+import { parseMarkdown, replaceAtMentions } from "@/utils/stringUtils";
 
 export interface Props {
     messages: ChatMessage[];
@@ -66,22 +64,9 @@ const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
 });
 
 function parseChatMessageString(message: ChatMessage): string {
-    const htmlMessage = toHTML(message.contents);
-    const sanitizedHtmlMessage = DOMPurify.sanitize(htmlMessage);
-    const timestampDeath = sanitizedHtmlMessage.match(/&lt;t:(.*?)(?=:R&gt;)/g);
-    let stringTimestampDeath;
-    if (timestampDeath && timestampDeath[0]) {
-        stringTimestampDeath = logicStore.timestampToHours(parseInt(timestampDeath[0].substring(6)) * 1000);
-    }
+    const htmlMessage = parseMarkdown(message.contents);
 
-    const htmlMessageParsedMentions = replaceAtMentions(sanitizedHtmlMessage, message.senderId, true, props.emergencyMembers, props.user);
-
-    return htmlMessageParsedMentions
-        .replace(/&lt;|&gt;/g, "")
-        .replace(/##(.*?)(?=<br>)/g, '<span style="font-weight: bold; font-size: 1.4rem;">\n$1\n</span>')
-        .replace(/<u>Time(.*?)(?=<)/g, '<span style="text-decoration: underline">Time of client death:</span>')
-        .replace(/t:(.*?):R/g, stringTimestampDeath ? `${stringTimestampDeath}` : "")
-        .replace(/\\n/g, "<br>");
+    return replaceAtMentions(htmlMessage, message.senderId, true, props.emergencyMembers, props.user);
 }
 
 function getMessageAuthor(message: ChatMessage): string {
@@ -172,7 +157,11 @@ function messageClasses(messageIndex: number, senderId: string): string {
             >
                 {{ getMessageAuthor(message) }}
             </p>
-            <p class="mt-1 break-words" v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"></p>
+            <p
+                class="markdown-extras prose mt-1 break-words"
+                :class="{ 'prose-invert text-white': isMessageAuthor }"
+                v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"
+            ></p>
             <div class="flex items-center justify-between">
                 <p
                     v-if="message.contents.length > 500 && !showFullMessage[message.id]"
@@ -200,5 +189,9 @@ function messageClasses(messageIndex: number, senderId: string): string {
 #anchor {
     overflow-anchor: auto;
     height: 1px;
+}
+
+.markdown-extras * {
+    border-inline-start-color: #e2e8f0;
 }
 </style>
