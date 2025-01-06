@@ -62,25 +62,25 @@ async function sendDetails(): Promise<void> {
             _The client type of location is:_  **${inputLocationType.value ? inputLocationType.value : "Unknown"}**\n
             _The client exact location is:_  **${inputExactLocation.value ? inputExactLocation.value : "Unknown"}**\n
             _Client ship:_  **${inputShip.value ? inputShip.value : "Unknown"}**\n
-            _Time until client death:_  **${
+            _Client death:_  **${
                 inputDeathHours.value || inputDeathMinutes.value
-                    ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:R>`
+                    ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:t>`
                     : "Unknown"
             }**\n
             _Is the client injured:_  **${inputInjury.value ? inputInjury.value : "Unknown"}**\n
             _Has the client sent an IG beacon?_  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**${
-                inputBeaconPlayer.value ? `\n\n> Name: ${inputBeaconPlayer.value}` : ""
-            }\n${inputBeaconDistance.value ? `> Distance: ${inputBeaconDistance.value}` : ""}\n
+                inputBeaconPlayer.value ? `\n\nName: ${inputBeaconPlayer.value}` : ""
+            }\n${inputBeaconDistance.value ? `Distance: ${inputBeaconDistance.value}` : ""}\n
             _Is the client in a team?_  **${inputParty.value === true ? "Yes" : inputParty.value === false ? "No" : "Unknown"}**${
-                inputParty.value === true && inputPartyDetails.value ? `\n\n> ${inputPartyDetails.value.filter((str) => str !== "").join(", ")}` : ""
+                inputParty.value === true && inputPartyDetails.value ? `\n\n${inputPartyDetails.value.filter((str) => str !== "").join(", ")}` : ""
             }\n
             _Are there enemies nearby?_  **${inputEnemies.value === true ? "Yes" : inputEnemies.value === false ? "No" : "Unknown"}**${
-                inputEnemiesDetails.value ? `\n\n> ${inputEnemiesDetails.value}` : ""
+                inputEnemiesDetails.value ? `\n\n${inputEnemiesDetails.value}` : ""
             }\n
             _Does the client have CrimeStat?_  **${inputCrimestat.value ? inputCrimestat.value : "Unknown"}**${
-                inputCrimestatDetails.value ? `\n\n> ${inputCrimestatDetails.value}` : ""
+                inputCrimestatDetails.value ? `\n\n${inputCrimestatDetails.value}` : ""
             }\n
-            _Remarks:_\n\n> ${inputRemarks.value ? inputRemarks.value : "None"}`,
+            _Remarks:_\n\n${inputRemarks.value ? inputRemarks.value : "None"}`,
         });
 
         currentFormPart.value = 1;

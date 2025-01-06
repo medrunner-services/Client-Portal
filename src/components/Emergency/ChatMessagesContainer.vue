@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
-import { computed, type ComputedRef, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -59,7 +59,7 @@ onMounted(async () => {
     }
 });
 
-const sortedMessages: ComputedRef<ChatMessage[]> = computed(() => {
+const sortedMessages = computed<ChatMessage[]>(() => {
     return [...props.messages].filter((obj) => obj.contents !== undefined).sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
 });
 
@@ -85,6 +85,7 @@ function getMessageAuthor(message: ChatMessage): string {
 }
 
 function isMessageAuthor(id: string): boolean {
+    console.log("Is message author? ", id === props.user.id);
     return id === props.user.id;
 }
 
@@ -158,8 +159,8 @@ function messageClasses(messageIndex: number, senderId: string): string {
                 {{ getMessageAuthor(message) }}
             </p>
             <p
-                class="markdown-extras prose mt-1 break-words"
-                :class="{ 'prose-invert text-white': isMessageAuthor }"
+                class="prose mt-1 break-words dark:prose-invert dark:text-white"
+                :class="{ 'markdown-extras prose-invert text-white': isMessageAuthor(message.senderId) }"
                 v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"
             ></p>
             <div class="flex items-center justify-between">
@@ -193,5 +194,11 @@ function messageClasses(messageIndex: number, senderId: string): string {
 
 .markdown-extras * {
     border-inline-start-color: #e2e8f0;
+    color: white !important;
+}
+
+.markdown-extras * ::marker {
+    border-inline-start-color: #e2e8f0;
+    color: white !important;
 }
 </style>

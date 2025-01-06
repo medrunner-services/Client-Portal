@@ -3,6 +3,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import { parseMarkdown } from "@/utils/stringUtils.ts";
 
 const { t } = useI18n();
 
@@ -80,13 +81,12 @@ const getButtonOutlineColors = computed(() => {
                 </svg>
 
                 <p
-                    class="mb-4 [overflow-wrap:anywhere] md:mb-0"
+                    class="markdown-extras mb-4 [overflow-wrap:anywhere] md:mb-0"
                     :class="{
                         'font-medium': props.fontWeight === 'medium',
                     }"
-                >
-                    {{ props.message }}
-                </p>
+                    v-html="parseMarkdown(props.message)"
+                ></p>
             </div>
             <div v-if="props.showButton" class="flex w-full shrink-0 items-center space-x-4 md:w-fit lg:pl-10">
                 <GlobalButton
@@ -104,4 +104,8 @@ const getButtonOutlineColors = computed(() => {
     </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.markdown-extras a) {
+    text-decoration: underline;
+}
+</style>

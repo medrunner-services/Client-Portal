@@ -59,6 +59,8 @@ export function errorString(errorCode: number, customMessage?: string): string {
 }
 
 export function parseMarkdown(text: string) {
+    const { locale } = i18n.global;
+
     const mdIt = MarkdownIt({
         html: true,
         linkify: true,
@@ -101,26 +103,56 @@ export function parseMarkdown(text: string) {
     };
 
     const manipulatedText = text.replace(/\\n/g, "<br>").replace(/<t:(\d+):([A-Za-z])>/g, (match, timestamp, format) => {
-        // TODO: Implement hammer time formating - timestamp is the unix timestamp and format is the letter specifying the desired format
         if (typeof timestamp !== "string" || typeof format !== "string") return timestamp;
+        const date = new Date(parseInt(timestamp) * 1000);
 
         switch (format) {
             case "d":
-                return timestamp;
+                return date.toLocaleDateString(locale.value, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                });
             case "D":
-                return timestamp;
+                return date.toLocaleDateString(locale.value, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                });
             case "t":
-                return timestamp;
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
             case "T":
-                return timestamp;
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    second: "2-digit",
+                });
             case "f":
-                return timestamp;
+                return date.toLocaleString(locale.value, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
             case "F":
-                return timestamp;
-            case "R":
-                return timestamp;
+                return date.toLocaleString(locale.value, {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
             default:
-                return timestamp;
+                return date.toLocaleDateString(locale.value, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                });
         }
     });
 
