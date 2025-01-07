@@ -198,7 +198,6 @@ function messageClasses(messageIndex: number, senderId: string): string {
 }
 
 .markdown-extras * ::marker {
-    border-inline-start-color: #e2e8f0;
     color: white !important;
 }
 </style>
