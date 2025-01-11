@@ -108,7 +108,7 @@ function reloadPage() {
                 :class="
                     route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
                         ? 'my-0'
-                        : logicStore.isMOTDBannerVisible
+                        : showMOTDAlertBanner
                           ? 'mb-14 mt-6'
                           : 'my-14'
                 "

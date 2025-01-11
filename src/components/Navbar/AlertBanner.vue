@@ -48,7 +48,7 @@ const getButtonOutlineColors = computed(() => {
             'bg-red-100 text-red-800': props.color === 'red',
         }"
     >
-        <div class="flex w-full flex-col items-start justify-between md:flex-row md:items-center md:gap-8">
+        <div class="content-container flex w-full flex-col items-start justify-between md:flex-row md:items-center md:gap-8">
             <div class="sm:flex lg:items-center">
                 <svg
                     v-if="props.icon === 'info'"
