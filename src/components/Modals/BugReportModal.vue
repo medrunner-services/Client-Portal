@@ -30,7 +30,7 @@ onMounted(async () => {
     youtrackScript.addEventListener("load", () => {
         // @ts-expect-error External script from YouTrack
         YTFeedbackForm.getClientJSApi("338413ce-0ad3-4399-a84c-1cc299fad5d8").then(async (form: any) => {
-            form.setBlockValue("RSI Handle", userStore.user.rsiHandle);
+            form.setBlockValue("RSI Handle", userStore.user.rsiHandle ?? userStore.user.id);
             form.setBlockValue("Browser info", navigator.userAgent);
 
             const ytTitle = document.querySelector("#youtrack-form h1");

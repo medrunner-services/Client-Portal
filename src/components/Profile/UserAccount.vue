@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import DeleteAccountModal from "@/components/Modals/DeleteAccountModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -31,7 +32,7 @@ onMounted(() => {
     if (userStore.user.redeemedCodes.some((code) => code.type === CodeType.CitizenCon2954)) {
         userBadges.value.push({ name: "CitizenCon 2954", icon: "/icons/badges/CitizenCon2954.svg" });
     }
-    if (userStore.user.personType == PersonType.STAFF) {
+    if (userStore.user.personType === PersonType.STAFF) {
         userBadges.value.push({ name: "Medrunner", icon: "/images/medrunner-logo-square.webp" });
     }
 });
@@ -88,9 +89,11 @@ function closeEditingUsername() {
             <GlobalButton size="full" icon="logout" :loading="isLoggingOut" @click="disconnectUser()">{{ t("navbar_disconnect") }}</GlobalButton>
         </div>
 
+        <UnlinkedUserCTA v-if="!userStore.user.rsiHandle" class="mt-4" />
+
         <GlobalCard class="mt-4 flex flex-col items-center justify-center">
             <div class="w-full">
-                <div class="flex w-full flex-col gap-2 lg:flex-row lg:items-end">
+                <div v-if="userStore.user.rsiHandle" class="flex w-full flex-col gap-2 lg:flex-row lg:items-end">
                     <GlobalTextInput
                         v-model="inputUsername"
                         class="flex-grow"
@@ -118,10 +121,11 @@ function closeEditingUsername() {
                         >
                     </div>
                 </div>
+
                 <p v-if="errorUpdatingUsername" class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ errorUpdatingUsername }}</p>
             </div>
 
-            <div class="mt-4 grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:flex-row">
+            <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-2 md:flex-row" :class="userStore.user.rsiHandle ? 'mt-4' : ''">
                 <div>
                     <p class="mb-2 block text-sm font-medium text-gray-900 dark:text-white">{{ t("user_userID") }}</p>
                     <div

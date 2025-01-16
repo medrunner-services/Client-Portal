@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PersonType } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterLink } from "vue-router";
@@ -110,6 +111,34 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     <p class="cursor-pointer p-4 text-primary-600 dark:text-red-700" @click="showBugReportModal = true">
                         {{ t("navbar_reportBug") }}
                     </p>
+                    <div v-if="userStore.user.personType === PersonType.STAFF" class="border border-gray-100 dark:border-gray-700"></div>
+                    <a
+                        v-if="userStore.user.personType === PersonType.STAFF"
+                        :href="logicStore.medrunnerStaffPortalUrl"
+                        target="_blank"
+                        :title="t('navbar_staffPortal')"
+                        class="flex gap-2 p-4"
+                        @click="switchNavMenuSate()"
+                    >
+                        <p class="cursor-pointer">{{ t("navbar_staffPortal") }}</p>
+                        <svg
+                            class="h-4 w-4 cursor-pointer text-gray-900 dark:text-white"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke="currentColor"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
+                            />
+                        </svg>
+                    </a>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
                     <div class="flex cursor-pointer items-center justify-between rounded p-4" @click="showLanguageMenu = !showLanguageMenu">
                         <div class="flex">

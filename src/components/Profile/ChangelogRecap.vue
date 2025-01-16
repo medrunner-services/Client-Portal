@@ -26,6 +26,12 @@ const appVersion = __APP_VERSION__;
                         <li>Features are now synced with Medrunner Org settings.</li>
                         <li>Added an alert banner to display global announcements.</li>
                         <li>Service status on the emergency page is now synced in real time.</li>
+                        <li>Added a link to the staff portal for medrunner staff.</li>
+                        <li>Added an indicator when connexion issues are detected and when a disconnection happens.</li>
+                        <li>
+                            Revamped markdown formatting across the app! We now support the full common mark standard and some extras chat messages!
+                        </li>
+                        <li>Added the ability for non-linked account to access the app and submit emergencies.</li>
                     </ul>
                 </div>
 
@@ -37,6 +43,8 @@ const appVersion = __APP_VERSION__;
                         <li>Made the loader use the same theme as the rest of the app, no more flash bangs for dark mode users!</li>
                         <li>Improved navigation and loading times.</li>
                         <li>Improved text wrapping on small screens.</li>
+                        <li>Changed wording "Server error" to "Game error".</li>
+                        <li>Changed wording "QRF" to "CAP".</li>
                     </ul>
                 </div>
 

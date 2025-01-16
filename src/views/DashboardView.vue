@@ -5,6 +5,7 @@ import ChartEmergencyNumberPerWeek from "@/components/Dashboard/Charts/ChartEmer
 import ChartEmergencySuccessRate from "@/components/Dashboard/Charts/ChartEmergencySuccessRate.vue";
 import CTAEmergency from "@/components/Dashboard/CTAEmergency.vue";
 import HistoryTable from "@/components/Dashboard/History/HistoryTable.vue";
+import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import { useUserStore } from "@/stores/userStore";
 
 const userStore = useUserStore();
@@ -14,6 +15,7 @@ const userStore = useUserStore();
     <div class="content-container flex flex-col gap-10 xl:flex-row">
         <div class="xl:w-1/2">
             <BlockedUserCTA v-if="userStore.isBlocked" />
+            <UnlinkedUserCTA v-else-if="!userStore.user.rsiHandle" />
             <CTAEmergency v-else />
             <HistoryTable class="mt-4" />
         </div>

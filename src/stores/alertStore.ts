@@ -10,7 +10,7 @@ export const useAlertStore = defineStore("alert", () => {
     const icon = ref("");
     const isCloseable = ref(true);
     const speed = ref(3500);
-    const currentTimeoutId = ref<NodeJS.Timeout>();
+    const currentTimeoutId = ref<number>();
 
     function newAlert(type: AlertColors = AlertColors.RED, content: string, closeable = true, alertIcon?: "info", duration = 3500) {
         message.value = content;

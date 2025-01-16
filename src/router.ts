@@ -10,13 +10,14 @@ import DashboardView from "./views/DashboardView.vue";
 
 async function isUserComplete(to: RouteLocationNormalized): Promise<string | boolean> {
     const userStore = useUserStore();
+    const logicStore = useLogicStore();
 
     if (!userStore.isAuthenticated) {
         if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
         else return "/login";
     }
 
-    if (!userStore.user.rsiHandle) {
+    if (!userStore.user.rsiHandle && logicStore.medrunnerSettings && !logicStore.medrunnerSettings.anonymousAlertsEnabled) {
         return "/login/link";
     }
 
@@ -60,6 +61,18 @@ async function isUserNotLinked(): Promise<string | boolean> {
 
 export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
+    scrollBehavior(to, from, savedPosition) {
+        if (savedPosition) {
+            return savedPosition;
+        } else if (to.hash) {
+            return {
+                el: to.hash,
+                behavior: "smooth",
+            };
+        } else {
+            return { top: 0 };
+        }
+    },
     routes: [
         {
             path: "/",

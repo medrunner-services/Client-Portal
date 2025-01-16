@@ -12,6 +12,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
+import { WSState } from "@/types.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -34,18 +35,46 @@ onMounted(async () => {
     }
 });
 
-const showAlertBanner = computed(() => {
+const showMOTDAlertBanner = computed(() => {
     const now = new Date();
     const messageOfTheDay = logicStore.medrunnerSettings?.messageOfTheDay;
     const dateRange = messageOfTheDay?.dateRange;
 
-    return messageOfTheDay?.message && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)));
+    return (
+        logicStore.isMOTDBannerVisible &&
+        messageOfTheDay &&
+        messageOfTheDay.message &&
+        (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)))
+    );
 });
+
+const showWSAlertBanner = computed(() => {
+    return logicStore.currentWSState === WSState.RECONNECTING || logicStore.currentWSState === WSState.DISCONNECTED;
+});
+
+const getWSAlertBannerMessage = computed(() => {
+    return logicStore.currentWSState === WSState.RECONNECTING ? t("error_webSocketReconnection") : t("error_webSocketDisconnected");
+});
+
+function reloadPage() {
+    window.location.reload();
+}
 </script>
 
 <template>
     <div>
         <GlobalAlert v-if="alertStore.showAlert" />
+
+        <AlertBanner
+            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
+            icon="warning"
+            :message="getWSAlertBannerMessage"
+            :show-button="logicStore.currentWSState !== WSState.RECONNECTING"
+            :color="logicStore.currentWSState === WSState.RECONNECTING ? 'yellow' : 'red'"
+            font-weight="medium"
+            :button-text="logicStore.currentWSState === WSState.DISCONNECTED ? t('home_reload') : undefined"
+            :button-function="logicStore.currentWSState === WSState.DISCONNECTED ? () => reloadPage() : undefined"
+        />
 
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
             <NavbarContainer
@@ -55,7 +84,14 @@ const showAlertBanner = computed(() => {
             />
 
             <AlertBanner
-                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showAlertBanner"
+                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showMOTDAlertBanner"
+                :message="logicStore!.medrunnerSettings!.messageOfTheDay!.message"
+                :show-button="true"
+                :button-function="
+                    () => {
+                        logicStore.isMOTDBannerVisible = false;
+                    }
+                "
             />
 
             <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full flex-grow items-center justify-center">
@@ -72,7 +108,7 @@ const showAlertBanner = computed(() => {
                 :class="
                     route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
                         ? 'my-0'
-                        : logicStore.isAlertBannerVisible
+                        : showMOTDAlertBanner
                           ? 'mb-14 mt-6'
                           : 'my-14'
                 "

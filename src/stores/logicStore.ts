@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { i18n } from "@/i18n";
+import { WSState } from "@/types.ts";
 
 export const useLogicStore = defineStore("logic", () => {
     const { t, locale } = i18n.global;
@@ -13,7 +14,9 @@ export const useLogicStore = defineStore("logic", () => {
     const isDebugLoggerEnabled = ref(false);
     const showNotificationPermissionModal = ref(false);
     const medrunnerSettings = ref<PublicOrgSettings>();
-    const isAlertBannerVisible = ref(true);
+    const isMOTDBannerVisible = ref(true);
+    const currentWSState = ref(WSState.HEALTHY);
+    const emergencyCompletedNotificationSent = ref<string[]>([]);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -29,6 +32,14 @@ export const useLogicStore = defineStore("logic", () => {
             return "/images/medrunner-logo-dev.svg";
         } else {
             return "/images/medrunner-logo-stable.svg";
+        }
+    });
+
+    const medrunnerStaffPortalUrl = computed(() => {
+        if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
+            return "https://staff.medrunner.dev";
+        } else {
+            return "https://staff.medrunner.space";
         }
     });
 
@@ -229,7 +240,10 @@ export const useLogicStore = defineStore("logic", () => {
         discordBaseUrl,
         showNotificationPermissionModal,
         medrunnerSettings,
-        isAlertBannerVisible,
+        isMOTDBannerVisible,
+        currentWSState,
+        medrunnerStaffPortalUrl,
+        emergencyCompletedNotificationSent,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

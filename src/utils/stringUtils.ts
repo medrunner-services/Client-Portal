@@ -1,4 +1,6 @@
 import type { Person, TeamMember } from "@medrunner/api-client";
+import DOMPurify from "dompurify";
+import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n";
 
@@ -54,4 +56,106 @@ export function errorString(errorCode: number, customMessage?: string): string {
 
         return `${defaultMessage} (${errorCode})`;
     }
+}
+
+export function parseMarkdown(text: string) {
+    const { locale } = i18n.global;
+
+    const mdIt = MarkdownIt({
+        html: true,
+        linkify: true,
+        typographer: true,
+        breaks: true,
+    });
+
+    mdIt.disable("code");
+
+    const defaultRender =
+        mdIt.renderer.rules.link_open ||
+        mdIt.renderer.rules.em_open ||
+        mdIt.renderer.rules.em_close ||
+        function (tokens, idx, options, env, self) {
+            return self.renderToken(tokens, idx, options);
+        };
+
+    mdIt.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+        tokens[idx].attrSet("target", "_blank");
+
+        return defaultRender(tokens, idx, options, env, self);
+    };
+
+    mdIt.renderer.rules.em_open = function (tokens, idx, options, env, self) {
+        const token = tokens[idx];
+        if (token.markup === "_") {
+            token.tag = "u";
+        }
+
+        return defaultRender(tokens, idx, options, env, self);
+    };
+
+    mdIt.renderer.rules.em_close = function (tokens, idx, options, env, self) {
+        const token = tokens[idx];
+        if (token.markup === "_") {
+            token.tag = "u";
+        }
+
+        return defaultRender(tokens, idx, options, env, self);
+    };
+
+    const manipulatedText = text.replace(/\\n/g, "<br>").replace(/<t:(\d+):([A-Za-z])>/g, (match, timestamp, format) => {
+        if (typeof timestamp !== "string" || typeof format !== "string") return timestamp;
+        const date = new Date(parseInt(timestamp) * 1000);
+
+        switch (format) {
+            case "d":
+                return date.toLocaleDateString(locale.value, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                });
+            case "D":
+                return date.toLocaleDateString(locale.value, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                });
+            case "t":
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
+            case "T":
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    second: "2-digit",
+                });
+            case "f":
+                return date.toLocaleString(locale.value, {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
+            case "F":
+                return date.toLocaleString(locale.value, {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
+            default:
+                return date.toLocaleDateString(locale.value, {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                });
+        }
+    });
+
+    const sanitizedText = DOMPurify.sanitize(manipulatedText);
+    return mdIt.render(sanitizedText);
 }
