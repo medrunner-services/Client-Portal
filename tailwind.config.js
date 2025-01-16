@@ -26,6 +26,13 @@ export default {
                 Mohave: ["Mohave", "sans-serif"],
                 Inter: ["Inter", "sans-serif"],
             },
+            typography: (theme) => ({
+                DEFAULT: {
+                    css: {
+                        maxWidth: "none",
+                    },
+                },
+            }),
         },
     },
     plugins: [require("flowbite/plugin"), require("@tailwindcss/forms"), require("@tailwindcss/typography")],
