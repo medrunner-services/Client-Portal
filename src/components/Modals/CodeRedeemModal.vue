@@ -129,6 +129,7 @@ function handlePaste(event: ClipboardEvent) {
 
 async function goToLinkPage() {
     await router.push("/login/link");
+    return;
 }
 </script>
 

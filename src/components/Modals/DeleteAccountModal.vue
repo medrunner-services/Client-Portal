@@ -29,10 +29,11 @@ async function deleteAccount(): Promise<void> {
     } finally {
         document.body.style.overflow = "auto";
         await userStore.disconnectUser();
-        await router.push("/login");
+        deletingAccount.value = false;
     }
 
-    deletingAccount.value = false;
+    await router.push("/login");
+    return;
 }
 </script>
 

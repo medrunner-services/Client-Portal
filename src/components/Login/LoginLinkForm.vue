@@ -49,6 +49,7 @@ const submittingLinkForm = async (): Promise<void> => {
         await initializeWebsocket();
 
         await router.push("/");
+        return;
     } catch (error: any) {
         if (error.statusCode === 403) {
             formErrorMessage.value = errorString(error.statusCode, t("error_noIdRsiBio"));
@@ -71,6 +72,7 @@ async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
     await userStore.disconnectUser();
     await router.push("/login");
+    return;
 }
 </script>
 

@@ -73,6 +73,7 @@ async function disconnectUser(): Promise<void> {
     posthog.reset();
     await userStore.disconnectUser();
     await router.push("/login");
+    return;
 }
 
 function closeEditingUsername() {
