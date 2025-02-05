@@ -4,7 +4,6 @@ import type {
     ChatMessageRequest,
     CreateEmergencyRequest,
     Emergency,
-    LocationDetail,
     PaginatedResponse,
     ResponseRating,
     TeamDetailsResponse,
@@ -102,16 +101,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function fetchMetaLocations(): Promise<LocationDetail[]> {
-        const response = await api.emergency.emergencyLocations();
-
-        if (response.success && response.data) {
-            return response.data;
-        } else {
-            throw response;
-        }
-    }
-
     function getEmergencyStatusTitle(status: number): string {
         switch (status) {
             case 1:
@@ -176,7 +165,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         rateCompletedEmergency,
         sendEmergencyMessage,
         fetchChatHistory,
-        fetchMetaLocations,
         getEmergencyStatusTitle,
         getEmergencyStatusSubtitle,
     };
