@@ -109,6 +109,7 @@
     "formDetailed_locationTypeOther": "Otro",
     "formDetailed_placeholderBeaconPlayer": "¿Cómo se llama el jugador?",
     "formDetailed_locationTypeDistributionCenter": "Centro de distribucion",
+    "formDetailed_locationTypeContestedZones": "Contested Zones",
     "tracking_messageReceived": "Mensaje recibido",
     "tracking_helpOnTheWay": "La ayuda está en camino",
     "tracking_operationSuccessful": "Operación exitosa",

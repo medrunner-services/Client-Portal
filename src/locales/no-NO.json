@@ -109,6 +109,7 @@
     "formDetailed_locationTypeOther": "Annet",
     "formDetailed_placeholderBeaconPlayer": "Hva er spillerens navn?",
     "formDetailed_locationTypeDistributionCenter": "Distribusjonssenter",
+    "formDetailed_locationTypeContestedZones": "Contested Zones",
     "tracking_messageReceived": "Melding motatt",
     "tracking_helpOnTheWay": "Hjelpen er på vei",
     "tracking_operationSuccessful": "Operasjon velykket",
