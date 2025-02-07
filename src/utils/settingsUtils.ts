@@ -124,3 +124,19 @@ export async function initializeMedrunnerSettings() {
         }
     }
 }
+
+export function initializeTabChecker() {
+    const logicStore = useLogicStore();
+
+    const tabChannel = new BroadcastChannel("tab-check");
+
+    tabChannel.postMessage(`checkTab`);
+
+    tabChannel.onmessage = (event) => {
+        if (event.data === "checkTab") {
+            tabChannel.postMessage("exists");
+        } else if (event.data === "exists") {
+            logicStore.isFirstInstance = false;
+        }
+    };
+}

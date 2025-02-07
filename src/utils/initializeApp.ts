@@ -14,6 +14,7 @@ import {
     initializeSettingDiscordLinks,
     initializeSettingLanguage,
     initializeSettingNotifications,
+    initializeTabChecker,
     migrateSyncedSettings,
 } from "@/utils/settingsUtils";
 import { orgSettingsUpdate } from "@/utils/websocket/orgSettingsUpdate.ts";
@@ -24,6 +25,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     const logicStore = useLogicStore();
     const { availableLocales, locale } = i18n.global;
 
+    initializeTabChecker();
     initializeSettingDarkMode();
     initializeSettingDiscordLinks();
     initializeSettingDebugLogger();

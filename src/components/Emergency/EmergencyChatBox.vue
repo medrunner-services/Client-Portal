@@ -47,10 +47,11 @@ onMounted(async () => {
                 emergencyStore.trackedEmergency.respondingTeam.allMembers,
                 userStore.user,
             );
+            const notificationTag = `chatMessageCreate-${newMessage.id}`;
 
             if (newMessage.senderId !== userStore.user.id) {
                 if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
-                    await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                    await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                         window.focus();
                         router.push({ name: "emergency" });
                     });
@@ -59,7 +60,7 @@ onMounted(async () => {
                         newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
                         newMessage.contents.includes(`@${userStore.user.discordId}`)
                     ) {
-                        await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                        await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                             window.focus();
                             router.push({ name: "emergency" });
                         });

@@ -70,19 +70,17 @@ onMounted(async () => {
             if (
                 updatedEmergency.status !== 1 &&
                 oldEmergencyStatus.value !== updatedEmergency.status &&
-                userStore.syncedSettings.emergencyUpdateNotification &&
-                !logicStore.emergencyCompletedNotificationSent.includes(updatedEmergency.id)
+                userStore.syncedSettings.emergencyUpdateNotification
             ) {
                 await sendBrowserNotification(
                     emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
+                    `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
                     emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                     () => {
                         window.focus();
                         router.push({ name: "emergency" });
                     },
                 );
-
-                if (updatedEmergency.status > 2) logicStore.emergencyCompletedNotificationSent.push(updatedEmergency.id);
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;
