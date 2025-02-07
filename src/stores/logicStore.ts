@@ -17,6 +17,7 @@ export const useLogicStore = defineStore("logic", () => {
     const isMOTDBannerVisible = ref(true);
     const currentWSState = ref(WSState.HEALTHY);
     const isFirstInstance = ref(true);
+    const sentNotificationTags = ref<Set<string>>(new Set());
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -244,6 +245,7 @@ export const useLogicStore = defineStore("logic", () => {
         currentWSState,
         medrunnerStaffPortalUrl,
         isFirstInstance,
+        sentNotificationTags,
         addTextToClipboard,
         getLanguageString,
         getThreatString,

@@ -15,7 +15,8 @@ export async function sendBrowserNotification(title: string, tag: string, body: 
             silent: userStore.syncedSettings.customSoundNotification,
         });
 
-        if (userStore.syncedSettings.customSoundNotification) {
+        logicStore.sentNotificationTags.add(tag);
+        if (userStore.syncedSettings.customSoundNotification && !logicStore.sentNotificationTags.has(tag)) {
             const audio = new Audio(notificationSound);
             audio.volume = 0.2;
             await audio.play();
