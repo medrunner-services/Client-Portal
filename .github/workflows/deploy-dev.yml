@@ -12,8 +12,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Auth with GPR
         run: echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > ~/.npmrc
+
+      - name: Setup environment variables
+        run: |
+          echo "VITE_API_URL=${{ vars.API_URL_DEV }}" >> .env
+          echo "VITE_CALLBACK_URL=${{ vars.CALLBACK_URL_DEV }}" >> .env
+          echo "VITE_DISCORD_CLIENT_ID=${{ vars.DISCORD_CLIENT_ID_DEV }}" >> .env
+          echo "VITE_DISCORD_SERVER_ID=${{ vars.DISCORD_SERVER_ID_DEV }}" >> .env
+          echo "VITE_POSTHOG_TOKEN=${{ secrets.POSTHOG_TOKEN }}" >> .env      
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
@@ -37,12 +47,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=client-portal-dev
-        env:
-          VITE_API_URL: ${{ vars.API_URL_DEV }}
-          VITE_CALLBACK_URL: ${{ vars.CALLBACK_URL_DEV }}
-          VITE_DISCORD_CLIENT_ID: ${{ vars.DISCORD_CLIENT_ID_DEV }}
-          VITE_DISCORD_SERVER_ID: ${{ vars.DISCORD_SERVER_ID_DEV }}
-          VITE_POSTHOG_TOKEN: ${{ secrets.POSTHOG_TOKEN }}
 
       - name: Update Github deployment
         id: deployment-end
