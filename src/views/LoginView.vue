@@ -20,11 +20,10 @@ const alertStore = useAlertStore();
 const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
 const showLoginRegister = ref(false);
-const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED && import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED === "true");
 
 onMounted(async () => {
     if (routeQueryError.value) {
-        if (routeQueryError.value === "accountUnknown" && isRegistrationEnabled) {
+        if (routeQueryError.value === "accountUnknown") {
             showLoginRegister.value = true;
         } else {
             alertStore.newAlert(AlertColors.RED, getErrorText());
