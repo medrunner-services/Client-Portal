@@ -37,6 +37,12 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=client-portal-prod
+        env:
+          VITE_API_URL: ${{ vars.API_URL_PROD }}
+          VITE_CALLBACK_URL: ${{ vars.CALLBACK_URL_PROD }}
+          VITE_DISCORD_CLIENT_ID: ${{ vars.DISCORD_CLIENT_ID_PROD }}
+          VITE_DISCORD_SERVER_ID: ${{ vars.DISCORD_SERVER_ID_PROD }}
+          VITE_POSTHOG_TOKEN: ${{ secrets.POSTHOG_TOKEN }}
 
       - name: Update Github deployment
         id: deployment-end

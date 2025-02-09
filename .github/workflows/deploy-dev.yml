@@ -20,7 +20,7 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run lint
-      - run: npm run build
+      - run: npm run build:staging
 
       - name: Start Github deployment
         id: deployment-start
@@ -37,6 +37,12 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=client-portal-dev
+        env:
+          VITE_API_URL: ${{ vars.API_URL_DEV }}
+          VITE_CALLBACK_URL: ${{ vars.CALLBACK_URL_DEV }}
+          VITE_DISCORD_CLIENT_ID: ${{ vars.DISCORD_CLIENT_ID_DEV }}
+          VITE_DISCORD_SERVER_ID: ${{ vars.DISCORD_SERVER_ID_DEV }}
+          VITE_POSTHOG_TOKEN: ${{ secrets.POSTHOG_TOKEN }}
 
       - name: Update Github deployment
         id: deployment-end
