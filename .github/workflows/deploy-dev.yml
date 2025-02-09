@@ -1,0 +1,61 @@
+name: Deploy to dev
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build & Deploy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Auth with GPR
+        run: echo "//npm.pkg.github.com/:_authToken=${{secrets.GITHUB_TOKEN}}" > ~/.npmrc
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+
+      - name: Start Github deployment
+        id: deployment-start
+        uses: bobheadxi/deployments@v1
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: Development
+
+      - name: Deploy to cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          wranglerVersion: "latest"
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=client-portal-dev
+
+      - name: Update Github deployment
+        id: deployment-end
+        uses: bobheadxi/deployments@v1
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          env: ${{ steps.deployment-start.outputs.env }}
+          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
+          env_url: "https://portal.medrunner.dev"
+
+      - name: Get package info
+        id: package-info
+        uses: luizfelipelaviola/get-package-info@v2
+
+      - name: Notify Medrunner API
+        uses: satak/webrequest-action@master
+        with:
+          url: https://api.medrunner.dev/automation/deploy?secret=${{ secrets.AUTOMATION_DEPLOY_DEV }}&client=1&version=${{ steps.package-info.outputs.version }}
+          method: POST
