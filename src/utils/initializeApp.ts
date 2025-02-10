@@ -1,4 +1,4 @@
-import type { OrgSettings, Person } from "@medrunner/api-client";
+import type { Deployment, OrgSettings, Person } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 
 import { i18n } from "@/i18n";
@@ -17,6 +17,7 @@ import {
     initializeTabChecker,
     migrateSyncedSettings,
 } from "@/utils/settingsUtils";
+import { deploymentCreate } from "@/utils/websocket/deploymentCreate.ts";
 import { orgSettingsUpdate } from "@/utils/websocket/orgSettingsUpdate.ts";
 import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
@@ -65,6 +66,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
         ws.on("OrgSettingsUpdate", (updatedOrgSettings: OrgSettings) => {
             orgSettingsUpdate(updatedOrgSettings);
+        });
+
+        ws.on("DeploymentCreate", (newDeployment: Deployment) => {
+            deploymentCreate(newDeployment);
         });
 
         ws.onreconnected(async () => {

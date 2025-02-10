@@ -76,6 +76,17 @@ function reloadPage() {
             :button-function="logicStore.currentWSState === WSState.DISCONNECTED ? () => reloadPage() : undefined"
         />
 
+        <AlertBanner
+            v-if="route.name !== 'auth' && logicStore.showNewUpdateBanner"
+            icon="info"
+            :message="t('An update is available. Please refresh the page to get the latest version.')"
+            :show-button="true"
+            :color="'yellow'"
+            font-weight="medium"
+            :button-text="t('home_reload')"
+            :button-function="() => reloadPage()"
+        />
+
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
             <NavbarContainer
                 v-if="
