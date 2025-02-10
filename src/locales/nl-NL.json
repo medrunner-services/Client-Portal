@@ -265,6 +265,7 @@
     "home_unlinkedCTATitle": "Dit Medrunner-account is niet gelinkt aan een RSI-account",
     "home_unlinkedCTADescription": "Om gebruik te maken van Medrunner portal zonder beperkingen vragen wij om je Medrunner account te linken met je RSI-account.",
     "home_reload": "Reload",
+    "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "login_logInButton": "Log in met Discord",
     "login_registerButton": "Registreer met Discord",
     "login_welcomeBack": "Welkom",

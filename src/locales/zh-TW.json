@@ -265,6 +265,7 @@
     "home_unlinkedCTATitle": "此Medrunner帳號沒有與RSI的帳號進行聯結",
     "home_unlinkedCTADescription": "若要啟網站的所有功能，並不受限制地使用 Medrunner 服務，請連結您的 RSI 帳戶，以驗證您的 Medrunner 帳戶。",
     "home_reload": "Reload",
+    "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "login_logInButton": "使用Discord登入",
     "login_registerButton": "使用Discord註冊",
     "login_welcomeBack": "歡迎",

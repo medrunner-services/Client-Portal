@@ -265,6 +265,7 @@
     "home_unlinkedCTATitle": "Denne Medrunner brukeren er ikke koblet til en RSI bruker",
     "home_unlinkedCTADescription": "For å kunne bruke alle funksjonene til portalen og Medrunner servicer uten restriksjoner, vennligst bekreft Medrunner brukeren din ved å koble til RSI brukeren din.",
     "home_reload": "Last inn på nytt",
+    "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "login_logInButton": "Logg inn med Discord",
     "login_registerButton": "Registrere med Discord",
     "login_welcomeBack": "Velkommen",

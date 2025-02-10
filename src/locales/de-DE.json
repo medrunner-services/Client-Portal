@@ -265,6 +265,7 @@
     "home_unlinkedCTATitle": "Dieses Medrunner-Konto ist nicht mit einem RSI-Konto verknüpft",
     "home_unlinkedCTADescription": "Um alle Funktionen des Portals zu aktivieren und die Medrunner-Dienste ohne Einschränkungen zu nutzen, verifizieren Sie bitte Ihr Medrunner-Konto, indem Sie Ihr RSI-Konto verknüpfen.",
     "home_reload": "Neu laden",
+    "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "login_logInButton": "Login mit Discord",
     "login_registerButton": "Mit Discord registrieren",
     "login_welcomeBack": "Willkommen",

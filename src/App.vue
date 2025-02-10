@@ -79,7 +79,7 @@ function reloadPage() {
         <AlertBanner
             v-if="route.name !== 'auth' && logicStore.showNewUpdateBanner"
             icon="info"
-            :message="t('An update is available. Please refresh the page to get the latest version.')"
+            :message="t('home_reloadPage')"
             :show-button="true"
             :color="'yellow'"
             font-weight="medium"

@@ -265,6 +265,7 @@
     "home_unlinkedCTATitle": "Этот аккаунт Medrunner не связан с аккаунтом RSI",
     "home_unlinkedCTADescription": "Чтобы включить все возможности портала и пользоваться услугами Medrunner без ограничений, пожалуйста, подтвердите свой аккаунт Medrunner, связав с ним свой аккаунт RSI.",
     "home_reload": "Перезагрузить",
+    "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "login_logInButton": "Войти через Discord",
     "login_registerButton": "Зарегистрируйтесь c помощью Discord",
     "login_welcomeBack": "Добро пожаловать",
