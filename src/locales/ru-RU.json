@@ -27,6 +27,7 @@
     "error_codeInvalid": "Введенный код недействителен",
     "error_webSocketReconnection": "Связь была потеряна. Попытка повторного подключения...",
     "error_webSocketDisconnected": "Мы не можем подключиться к серверу. Пожалуйста, перезагрузите страницу.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "Имя пользователя в Star Citizen",
     "form_helpSCUsername": "Имя пользователя вашего аккаунта RSI",
     "form_confirm": "Подтвердить",

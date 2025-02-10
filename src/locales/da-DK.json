@@ -27,6 +27,7 @@
     "error_codeInvalid": "The code entered is invalid",
     "error_webSocketReconnection": "The connection has been lost. Attempting to reconnect...",
     "error_webSocketDisconnected": "We are unable to connect to the server. Please reload the page.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "Star Citizen Brugernavn",
     "form_helpSCUsername": "Brugernavnet på din RSI-konto",
     "form_confirm": "Bekræft",

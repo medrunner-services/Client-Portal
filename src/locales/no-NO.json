@@ -27,6 +27,7 @@
     "error_codeInvalid": "Koden er ikke gyldig",
     "error_webSocketReconnection": "Forbindelsen har gått tapt. Forsøker å koble til igjen...",
     "error_webSocketDisconnected": "Vi kunne ikke koble til serveren. Vennligst last inn siden på nytt.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "Star Citizen brukernavn",
     "form_helpSCUsername": "Brukernavnet til RSI brukeren din",
     "form_confirm": "Bekreft",

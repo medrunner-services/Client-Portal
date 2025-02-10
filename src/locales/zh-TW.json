@@ -27,6 +27,7 @@
     "error_codeInvalid": "輸入的代碼無效",
     "error_webSocketReconnection": "The connection has been lost. Attempting to reconnect...",
     "error_webSocketDisconnected": "We are unable to connect to the server. Please reload the page.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "星際公民用戶名稱",
     "form_helpSCUsername": "RSI帳戶當中的名稱",
     "form_confirm": "確認",

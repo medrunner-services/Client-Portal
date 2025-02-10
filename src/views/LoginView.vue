@@ -39,6 +39,8 @@ function getErrorText(): string {
             return t("error_loginAccountUnknown");
         case "accountKnown":
             return t("error_loginAccountKnown");
+        case "registrationDisabled":
+            return t("error_loginRegistrationDisabled");
         default:
             return t("error_generic");
     }

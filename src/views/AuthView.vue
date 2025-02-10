@@ -120,6 +120,9 @@ onMounted(async () => {
                 if (response.status === 409) {
                     await router.push("/login?error=accountKnown");
                     return;
+                } else if (response.status === 503) {
+                    await router.push("/login?error=registrationDisabled");
+                    return;
                 } else {
                     await router.push("/login?error=generic");
                     return;

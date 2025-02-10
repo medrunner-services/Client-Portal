@@ -27,6 +27,7 @@
     "error_codeInvalid": "Der eingegebene Code ist ungültig",
     "error_webSocketReconnection": "Die Verbindung wurde unterbrochen. Versuche neu zu verbinden...",
     "error_webSocketDisconnected": "Wir können keine Verbindung zum Server herstellen. Bitte laden Sie die Seite neu.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "Star Citizen Nutzername",
     "form_helpSCUsername": "Der Nutzername Ihres RSI-Kontos",
     "form_confirm": "Bestätigen",

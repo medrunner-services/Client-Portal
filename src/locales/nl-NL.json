@@ -27,6 +27,7 @@
     "error_codeInvalid": "Deze code is niet geldig",
     "error_webSocketReconnection": "De verbinding is verbroken. Er wordt geprobeerd opnieuw verbinding te maken...",
     "error_webSocketDisconnected": "We kunnen geen verbinding maken met de server. Laad de pagina opnieuw.",
+    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "form_SCUsername": "Star Citizen Gebruikersnaam",
     "form_helpSCUsername": "De gebruikersnaam van uw RSI-account",
     "form_confirm": "Bevestig",
