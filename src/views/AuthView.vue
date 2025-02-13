@@ -26,13 +26,15 @@ onMounted(async () => {
         try {
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                {
+                    credentials: "include",
+                },
             );
             if (response.ok) {
                 let apiInitialized = false;
-                const responseBody = await response.json();
 
                 try {
-                    await initializeApi(responseBody.refreshToken);
+                    await initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
@@ -80,14 +82,16 @@ onMounted(async () => {
                 `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
                     import.meta.env.VITE_CALLBACK_URL
                 }/auth/register`,
+                {
+                    credentials: "include",
+                },
             );
 
             if (response.ok) {
                 let apiInitialized = false;
-                const responseBody = await response.json();
 
                 try {
-                    await initializeApi(responseBody.refreshToken);
+                    await initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;

@@ -20,7 +20,7 @@ const loader = document.getElementById("loader");
     try {
         if (localStorage.getItem("refreshToken")) {
             try {
-                await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+                await initializeApi();
                 await initializeWebsocket();
 
                 apiInitialized = true;

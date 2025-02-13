@@ -27,7 +27,7 @@
     "error_codeInvalid": "输入的代码无效",
     "error_webSocketReconnection": "网络连接已断开。正在尝试重连……",
     "error_webSocketDisconnected": "我们无法连接至服务器。请刷新此页面。",
-    "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
+    "error_loginRegistrationDisabled": "账户注册功能当前已关闭。",
     "form_SCUsername": "星际公民用户名",
     "form_helpSCUsername": "您RSI账号的用户名",
     "form_confirm": "确认",
