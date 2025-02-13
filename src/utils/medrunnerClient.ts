@@ -12,8 +12,7 @@ export async function initializeApi() {
             baseUrl: import.meta.env.VITE_API_URL,
             cookieAuth: true,
         },
-        async (newTokens) => {
-            localStorage.setItem("refreshToken", newTokens.refreshToken);
+        async () => {
             debugLogger("Token refreshed and stored!");
         },
         {
