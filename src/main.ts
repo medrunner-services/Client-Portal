@@ -18,15 +18,13 @@ const loader = document.getElementById("loader");
     let apiInitialized = false;
 
     try {
-        if (localStorage.getItem("refreshToken")) {
-            try {
-                await initializeApi();
-                await initializeWebsocket();
+        try {
+            await initializeApi();
+            await initializeWebsocket();
 
-                apiInitialized = true;
-            } catch (_e) {
-                apiInitialized = false;
-            }
+            apiInitialized = true;
+        } catch (_e) {
+            apiInitialized = false;
         }
     } finally {
         app.use(createPinia());

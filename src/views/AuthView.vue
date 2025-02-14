@@ -51,7 +51,6 @@ onMounted(async () => {
                 }
 
                 if (!userStore.isAuthenticated) {
-                    localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
                     return;
                 }
@@ -108,7 +107,6 @@ onMounted(async () => {
                 }
 
                 if (!userStore.isAuthenticated) {
-                    localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
                     return;
                 }
