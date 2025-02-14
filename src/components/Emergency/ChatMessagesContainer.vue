@@ -4,8 +4,8 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
-import { useLogicStore } from "@/stores/logicStore";
-import { parseMarkdown, replaceAtMentions } from "@/utils/stringUtils";
+import { timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
     messages: ChatMessage[];
@@ -22,7 +22,6 @@ const emit = defineEmits<{
     loadNewMessages: [];
 }>();
 
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const chatBox = ref<HTMLDivElement | null>(null);
@@ -174,7 +173,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <p class="ml-auto mt-1 text-xs">{{ logicStore.timestampToHours(message.messageSentTimestamp) }}</p>
+                <p class="ml-auto mt-1 text-xs">{{ timestampToHours(message.messageSentTimestamp) }}</p>
             </div>
         </div>
 

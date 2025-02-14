@@ -6,13 +6,11 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
-import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
-const logicStore = useLogicStore();
 const userStore = useUserStore();
 const router = useRouter();
 const isIdCopied = ref(false);
@@ -24,7 +22,7 @@ const formErrorHelper = ref("");
 const userId = userStore.user.id;
 
 async function copyId(): Promise<void> {
-    await logicStore.addTextToClipboard(userStore.user.id);
+    await navigator.clipboard.writeText(userStore.user.id);
     isIdCopied.value = true;
 }
 
@@ -45,10 +43,11 @@ const submittingLinkForm = async (): Promise<void> => {
         await userStore.linkUser(formUsername.value);
         userStore.user.rsiHandle = formUsername.value;
 
-        await initializeApi(localStorage.getItem("refreshToken") ?? undefined);
+        await initializeApi();
         await initializeWebsocket();
 
         await router.push("/");
+        return;
     } catch (error: any) {
         if (error.statusCode === 403) {
             formErrorMessage.value = errorString(error.statusCode, t("error_noIdRsiBio"));
@@ -71,6 +70,7 @@ async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
     await userStore.disconnectUser();
     await router.push("/login");
+    return;
 }
 </script>
 

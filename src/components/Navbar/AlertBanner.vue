@@ -3,7 +3,7 @@ import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { parseMarkdown } from "@/utils/stringUtils.ts";
+import { parseMarkdown } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 

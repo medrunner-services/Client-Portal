@@ -10,10 +10,9 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
+import { getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const emit = defineEmits(["sendNewDetails"]);
@@ -133,7 +132,7 @@ const showSuccessRate = computed(() => {
 
                 <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("tracking_threatLevel") }}</p>
-                    <p class="text-lg">{{ logicStore.getThreatString(emergencyStore.trackedEmergency.threatLevel) }}</p>
+                    <p class="text-lg">{{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}</p>
                 </div>
             </div>
 

@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import DeleteTokenModal from "@/components/Modals/DeleteTokenModal.vue";
-import { useLogicStore } from "@/stores/logicStore";
+import { timestampToDate } from "@/utils/functions/dateTimeFunctions.ts";
 const { t } = useI18n();
 
 export interface Props {
@@ -12,7 +12,6 @@ export interface Props {
 }
 const props = defineProps<Props>();
 const emit = defineEmits(["tokenDeleted"]);
-const logicStore = useLogicStore();
 
 const displayDeleteTokenModal = ref(false);
 
@@ -26,13 +25,13 @@ const isTokenExpired = computed(() => {
         <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ props.token.name }}</div>
 
         <div class="col-span-3">
-            <div v-if="props.token.lastUsed">{{ logicStore.timestampToDate(props.token.lastUsed) }}</div>
+            <div v-if="props.token.lastUsed">{{ timestampToDate(props.token.lastUsed) }}</div>
             <p v-else>{{ t("developer_tokenNever") }}</p>
         </div>
 
         <div class="col-span-3 md:col-span-2">
             <div v-if="props.token.expirationDate" :class="isTokenExpired ? 'font-medium text-red-600' : ''">
-                {{ logicStore.timestampToDate(props.token.expirationDate) }}
+                {{ timestampToDate(props.token.expirationDate) }}
             </div>
             <p v-else class="font-medium text-yellow-400">{{ t("developer_tokenNever") }}</p>
         </div>

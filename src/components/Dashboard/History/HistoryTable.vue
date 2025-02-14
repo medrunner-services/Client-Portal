@@ -10,8 +10,8 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
-import { errorString } from "@/utils/stringUtils";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();

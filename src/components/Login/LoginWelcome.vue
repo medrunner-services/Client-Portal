@@ -7,8 +7,6 @@ import { redirectToDiscordLogin, redirectToDiscordRegister } from "@/utils/disco
 
 const { t } = useI18n();
 const route = useRoute();
-
-const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED && import.meta.env.VITE_FEATURE_REGISTRATION_ENABLED === "true");
 </script>
 
 <template>
@@ -22,7 +20,6 @@ const isRegistrationEnabled = !!(import.meta.env.VITE_FEATURE_REGISTRATION_ENABL
             >{{ t("login_logInButton") }}
         </GlobalButton>
         <GlobalButton
-            v-if="isRegistrationEnabled"
             class="mt-4 w-full"
             type="secondary"
             size="full"

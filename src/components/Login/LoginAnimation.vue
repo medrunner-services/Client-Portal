@@ -210,7 +210,8 @@ function renderStar(star: Star) {
 <style scoped>
 canvas {
     background-color: #000000;
-    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+    background-image:
+        radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
         radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
     position: fixed;
     width: 100%;

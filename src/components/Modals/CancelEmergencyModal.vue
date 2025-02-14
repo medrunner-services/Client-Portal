@@ -7,17 +7,37 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
-import { errorString } from "@/utils/stringUtils";
+import { getCancelReasonString } from "@/utils/functions/getStringsFunctions.ts";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const emit = defineEmits(["emergencyCanceled", "close"]);
 const emergencyStore = useEmergencyStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const inputCancelReason = ref<CancellationReason | "">("");
 const cancelingEmergency = ref(false);
 const errorCancelingEmergency = ref("");
+
+const selectOptions = [
+    { value: "", label: t("tracking_selectAReason"), hidden: true },
+    { value: CancellationReason.RESCUED, label: getCancelReasonString(CancellationReason.RESCUED) },
+    {
+        value: CancellationReason.SUCCUMBED_TO_WOUNDS,
+        label: getCancelReasonString(CancellationReason.SUCCUMBED_TO_WOUNDS),
+    },
+    {
+        value: CancellationReason.SERVER_ERROR,
+        label: getCancelReasonString(CancellationReason.SERVER_ERROR),
+    },
+    {
+        value: CancellationReason.RESPAWNED,
+        label: getCancelReasonString(CancellationReason.RESPAWNED),
+    },
+    {
+        value: CancellationReason.OTHER,
+        label: getCancelReasonString(CancellationReason.OTHER),
+    },
+];
 
 async function cancelEmergency() {
     cancelingEmergency.value = true;
@@ -48,26 +68,7 @@ async function cancelEmergency() {
                 <GlobalSelectInput
                     v-model="inputCancelReason"
                     class="mt-4"
-                    :options="[
-                        { value: '', label: t('tracking_selectAReason'), hidden: true },
-                        { value: CancellationReason.RESCUED, label: logicStore.getCancelReasonString(CancellationReason.RESCUED) },
-                        {
-                            value: CancellationReason.SUCCUMBED_TO_WOUNDS,
-                            label: logicStore.getCancelReasonString(CancellationReason.SUCCUMBED_TO_WOUNDS),
-                        },
-                        {
-                            value: CancellationReason.SERVER_ERROR,
-                            label: logicStore.getCancelReasonString(CancellationReason.SERVER_ERROR),
-                        },
-                        {
-                            value: CancellationReason.RESPAWNED,
-                            label: logicStore.getCancelReasonString(CancellationReason.RESPAWNED),
-                        },
-                        {
-                            value: CancellationReason.OTHER,
-                            label: logicStore.getCancelReasonString(CancellationReason.OTHER),
-                        },
-                    ]"
+                    :options="selectOptions"
                     :label="t('tracking_labelCancelEmergency')"
                     :required="true"
                 />

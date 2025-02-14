@@ -7,7 +7,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 const { t, locale } = useI18n();
 
 const userStore = useUserStore();

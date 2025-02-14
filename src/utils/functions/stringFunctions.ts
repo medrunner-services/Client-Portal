@@ -2,7 +2,7 @@ import type { Person, TeamMember } from "@medrunner/api-client";
 import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
-import { i18n } from "@/i18n";
+import { i18n } from "@/i18n.ts";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
     const memberIdToNameMap: any = {};

@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -129,6 +129,7 @@ function handlePaste(event: ClipboardEvent) {
 
 async function goToLinkPage() {
     await router.push("/login/link");
+    return;
 }
 </script>
 

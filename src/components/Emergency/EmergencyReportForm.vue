@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateEmergencyRequest, Location, LocationDetail } from "@medrunner/api-client";
+import type { CreateEmergencyRequest, Location, SpaceLocation } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -10,7 +10,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -24,10 +24,10 @@ const inputPlanet = ref("");
 const inputLocation = ref("");
 const inputThreatLevel = ref("");
 const inputRSIHandle = ref("");
-const locationsInformation = ref<LocationDetail[]>([]);
+const locationsInformation = ref<SpaceLocation[]>([]);
 
 onMounted(async () => {
-    locationsInformation.value = await emergencyStore.fetchMetaLocations();
+    if (logicStore.medrunnerSettings) locationsInformation.value = logicStore.medrunnerSettings.locationSettings.locations;
 
     if (getSystem.value.length === 2) inputSystem.value = getSystem.value[1].value;
     if (getPlanets.value.length === 2) inputPlanet.value = getPlanets.value[1].value;
@@ -49,11 +49,13 @@ const getSystem = computed(() => {
     const systems: any = [{ value: "", label: t("form_selectSystem"), hidden: true }];
 
     if (locationsInformation.value.length !== 0) {
-        locationsInformation.value.forEach((system) => {
-            systems.push({
-                value: system.name,
+        locationsInformation.value
+            .filter((location) => location.enabled)
+            .forEach((system) => {
+                systems.push({
+                    value: system.name,
+                });
             });
-        });
     }
 
     return systems;
@@ -63,14 +65,18 @@ const getPlanets = computed(() => {
     const planets: any = [{ value: "", label: t("form_selectAPlanet"), hidden: true }];
 
     if (inputSystem.value) {
-        const indexSystem = locationsInformation.value.findIndex((system) => system.name === inputSystem.value);
+        const indexSystem = locationsInformation.value
+            .filter((location) => location.enabled)
+            .findIndex((system) => system.name === inputSystem.value);
 
         if (indexSystem !== -1) {
-            locationsInformation.value[indexSystem].children.forEach((planet) => {
-                planets.push({
-                    value: planet.name,
+            locationsInformation.value[indexSystem].children
+                .filter((location) => location.enabled)
+                .forEach((planet) => {
+                    planets.push({
+                        value: planet.name,
+                    });
                 });
-            });
         }
     }
 
@@ -81,17 +87,23 @@ const getLocations = computed(() => {
     const locations: any = [{ value: "", label: t("form_selectAMoon") }];
 
     if (inputPlanet.value && inputSystem.value) {
-        const indexSystem = locationsInformation.value.findIndex((system) => system.name === inputSystem.value);
+        const indexSystem = locationsInformation.value
+            .filter((location) => location.enabled)
+            .findIndex((system) => system.name === inputSystem.value);
         if (indexSystem === -1) return locations;
 
-        const indexPlanet = locationsInformation.value[indexSystem].children.findIndex((planet) => planet.name === inputPlanet.value);
+        const indexPlanet = locationsInformation.value[indexSystem].children
+            .filter((location) => location.enabled)
+            .findIndex((planet) => planet.name === inputPlanet.value);
 
         if (indexPlanet !== -1) {
-            locationsInformation.value[indexSystem].children[indexPlanet].children.forEach((location) => {
-                locations.push({
-                    value: location.name,
+            locationsInformation.value[indexSystem].children[indexPlanet].children
+                .filter((location) => location.enabled)
+                .forEach((location) => {
+                    locations.push({
+                        value: location.name,
+                    });
                 });
-            });
         }
     }
 

@@ -6,7 +6,7 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -29,10 +29,11 @@ async function deleteAccount(): Promise<void> {
     } finally {
         document.body.style.overflow = "auto";
         await userStore.disconnectUser();
-        await router.push("/login");
+        deletingAccount.value = false;
     }
 
-    deletingAccount.value = false;
+    await router.push("/login");
+    return;
 }
 </script>
 

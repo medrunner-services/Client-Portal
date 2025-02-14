@@ -12,7 +12,7 @@ import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -239,6 +239,7 @@ async function sendDetails(): Promise<void> {
                     { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
                     { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
                     { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
+                    { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
                     { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },

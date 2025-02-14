@@ -8,7 +8,7 @@ import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const emit = defineEmits(["tokenCreated", "close"]);
 const userStore = useUserStore();

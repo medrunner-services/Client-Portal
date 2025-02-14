@@ -8,6 +8,7 @@ import BugReportModal from "@/components/Modals/BugReportModal.vue";
 import CodeRedeemModal from "@/components/Modals/CodeRedeemModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
 const logicStore = useLogicStore();
 const userStore = useUserStore();
 const { t, locale, availableLocales } = useI18n();
@@ -143,7 +144,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     <div class="flex cursor-pointer items-center justify-between rounded p-4" @click="showLanguageMenu = !showLanguageMenu">
                         <div class="flex">
                             <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-4 h-6 w-6" />
-                            {{ logicStore.getLanguageString(locale) }}
+                            {{ getLanguageString(locale) }}
                         </div>
 
                         <svg
@@ -184,7 +185,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                             @click="changeLanguage(language)"
                         >
                             <img :src="`/icons/flags/${language}.svg`" alt="Flag" class="mr-6 h-6 w-6" />
-                            <p>{{ logicStore.getLanguageString(language) }}</p>
+                            <p>{{ getLanguageString(language) }}</p>
                         </li>
                     </ul>
                 </div>

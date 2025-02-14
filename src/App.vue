@@ -76,6 +76,17 @@ function reloadPage() {
             :button-function="logicStore.currentWSState === WSState.DISCONNECTED ? () => reloadPage() : undefined"
         />
 
+        <AlertBanner
+            v-if="route.name !== 'auth' && logicStore.showNewUpdateBanner"
+            icon="info"
+            :message="t('home_reloadPage')"
+            :show-button="true"
+            :color="'yellow'"
+            font-weight="medium"
+            :button-text="t('home_reload')"
+            :button-function="() => reloadPage()"
+        />
+
         <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
             <NavbarContainer
                 v-if="
@@ -98,8 +109,8 @@ function reloadPage() {
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
 
-            <div v-else-if="errorLoadingPage" class="flex w-full flex-grow items-center justify-center">
-                <GlobalErrorText :text="t('error_globalLoading')" />
+            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full flex-grow items-center justify-center">
+                <GlobalErrorText :text="logicStore.errorInitializingApp ?? t('error_globalLoading')" />
             </div>
 
             <RouterView

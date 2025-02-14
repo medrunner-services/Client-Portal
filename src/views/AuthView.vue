@@ -15,8 +15,10 @@ onMounted(async () => {
     if (!route.query.code) {
         if (route.query.error) {
             await router.push({ name: "login", query: { error: `discord_${route.query.error}` } });
+            return;
         } else {
             await router.push("/login");
+            return;
         }
     }
 
@@ -24,39 +26,55 @@ onMounted(async () => {
         try {
             const response = await fetch(
                 `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                {
+                    credentials: "include",
+                },
             );
             if (response.ok) {
                 let apiInitialized = false;
-                const responseBody = await response.json();
 
                 try {
-                    await initializeApi(responseBody.refreshToken);
+                    await initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
                 } catch (_e) {
                     await router.push("/login?error=generic");
+                    return;
                 }
 
                 try {
                     await initializeApp(apiInitialized);
                 } catch (_e) {
                     await router.push("/login?error=generic");
+                    return;
                 }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
+                    return;
                 }
 
-                if (route.query.state && route.query.state !== "undefined") await router.push(decodeURIComponent(route.query.state as string));
-                else await router.push("/");
+                if (route.query.state && route.query.state !== "undefined") {
+                    await router.push(decodeURIComponent(route.query.state as string));
+                    return;
+                } else {
+                    await router.push("/");
+                    return;
+                }
             } else {
-                if (response.status === 401) await router.push("/login?error=accountUnknown");
-                else await router.push("/login?error=generic");
+                if (response.status === 401) {
+                    await router.push("/login?error=accountUnknown");
+                    return;
+                } else {
+                    await router.push("/login?error=generic");
+                    return;
+                }
             }
         } catch (_e) {
             await router.push("/login?error=generic");
+            return;
         }
     } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
         try {
@@ -64,43 +82,63 @@ onMounted(async () => {
                 `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
                     import.meta.env.VITE_CALLBACK_URL
                 }/auth/register`,
+                {
+                    credentials: "include",
+                },
             );
 
             if (response.ok) {
                 let apiInitialized = false;
-                const responseBody = await response.json();
 
                 try {
-                    await initializeApi(responseBody.refreshToken);
+                    await initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
                 } catch (_e) {
                     await router.push("/login?error=generic");
+                    return;
                 }
 
                 try {
                     await initializeApp(apiInitialized);
                 } catch (_e) {
                     await router.push("/login?error=generic");
+                    return;
                 }
 
                 if (!userStore.isAuthenticated) {
                     localStorage.removeItem("refreshToken");
                     await router.push("/login?error=generic");
+                    return;
                 }
 
-                if (route.query.state && route.query.state !== "undefined") await router.push(decodeURIComponent(route.query.state as string));
-                else await router.push("/emergency");
+                if (route.query.state && route.query.state !== "undefined") {
+                    await router.push(decodeURIComponent(route.query.state as string));
+                    return;
+                } else {
+                    await router.push("/emergency");
+                    return;
+                }
             } else {
-                if (response.status === 409) await router.push("/login?error=accountKnown");
-                else await router.push("/login?error=generic");
+                if (response.status === 409) {
+                    await router.push("/login?error=accountKnown");
+                    return;
+                } else if (response.status === 503) {
+                    await router.push("/login?error=registrationDisabled");
+                    return;
+                } else {
+                    await router.push("/login?error=generic");
+                    return;
+                }
             }
         } catch (_e) {
             await router.push("/login?error=generic");
+            return;
         }
     } else {
         await router.push("/login");
+        return;
     }
 });
 </script>

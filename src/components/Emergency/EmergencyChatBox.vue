@@ -11,9 +11,9 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
+import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
+import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
-import { sendBrowserNotification } from "@/utils/notificationFunctions";
-import { errorString, replaceAtMentions } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -47,10 +47,11 @@ onMounted(async () => {
                 emergencyStore.trackedEmergency.respondingTeam.allMembers,
                 userStore.user,
             );
+            const notificationTag = `chatMessageCreate-${newMessage.id}`;
 
             if (newMessage.senderId !== userStore.user.id) {
                 if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
-                    await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                    await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                         window.focus();
                         router.push({ name: "emergency" });
                     });
@@ -59,7 +60,7 @@ onMounted(async () => {
                         newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
                         newMessage.contents.includes(`@${userStore.user.discordId}`)
                     ) {
-                        await sendBrowserNotification(t("tracking_newMessage"), bodyNotification, () => {
+                        await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                             window.focus();
                             router.push({ name: "emergency" });
                         });

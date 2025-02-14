@@ -6,14 +6,13 @@ import { debugLogger } from "@/utils/debugLogger";
 export let api: MedrunnerApiClient;
 export let ws: HubConnection;
 
-export async function initializeApi(refreshToken: string | undefined) {
+export async function initializeApi() {
     api = MedrunnerApiClient.buildClient(
         {
             baseUrl: import.meta.env.VITE_API_URL,
-            refreshToken,
+            cookieAuth: true,
         },
-        async (newTokens) => {
-            localStorage.setItem("refreshToken", newTokens.refreshToken);
+        async () => {
             debugLogger("Token refreshed and stored!");
         },
         {

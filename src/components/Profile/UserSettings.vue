@@ -11,7 +11,7 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
 import { usePostHog } from "@/usePostHog";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();

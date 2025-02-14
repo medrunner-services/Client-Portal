@@ -16,9 +16,9 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
-import { sendBrowserNotification } from "@/utils/notificationFunctions";
-import { errorString } from "@/utils/stringUtils";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -70,19 +70,17 @@ onMounted(async () => {
             if (
                 updatedEmergency.status !== 1 &&
                 oldEmergencyStatus.value !== updatedEmergency.status &&
-                userStore.syncedSettings.emergencyUpdateNotification &&
-                !logicStore.emergencyCompletedNotificationSent.includes(updatedEmergency.id)
+                userStore.syncedSettings.emergencyUpdateNotification
             ) {
                 await sendBrowserNotification(
                     emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
+                    `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
                     emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
                     () => {
                         window.focus();
                         router.push({ name: "emergency" });
                     },
                 );
-
-                if (updatedEmergency.status > 2) logicStore.emergencyCompletedNotificationSent.push(updatedEmergency.id);
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;
