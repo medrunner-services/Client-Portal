@@ -1,7 +1,7 @@
-import { useLogicStore } from "@/stores/logicStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-import notificationSound from "../assets/notification.mp3";
+import notificationSound from "../../assets/notification.mp3";
 
 export async function sendBrowserNotification(title: string, tag: string, body: string, onClick?: () => void) {
     const logicStore = useLogicStore();

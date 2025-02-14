@@ -11,9 +11,9 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { MessageNotification } from "@/types";
+import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
+import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
-import { sendBrowserNotification } from "@/utils/notificationFunctions";
-import { errorString, replaceAtMentions } from "@/utils/stringUtils";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();

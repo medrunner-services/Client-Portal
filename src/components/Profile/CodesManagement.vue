@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
-import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { getCodeTypeString } from "@/utils/functions/getStringsFunctions.ts";
 
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 </script>
 
@@ -31,7 +30,7 @@ const { t } = useI18n();
                                     <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.code }}</div>
 
                                     <div class="col-span-3">
-                                        <p>{{ logicStore.getCodeTypeString(code.type) }}</p>
+                                        <p>{{ getCodeTypeString(code.type) }}</p>
                                     </div>
                                 </div>
                             </div>

@@ -9,13 +9,12 @@ import DeleteAccountModal from "@/components/Modals/DeleteAccountModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { usePostHog } from "@/usePostHog";
-import { errorString } from "@/utils/stringUtils";
+import { timestampToDate } from "@/utils/functions/dateTimeFunctions.ts";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 const router = useRouter();
 const { posthog } = usePostHog();
@@ -137,7 +136,7 @@ function closeEditingUsername() {
                     <div
                         class="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                     >
-                        <p>{{ logicStore.timestampToDate(userStore.user.created) }}</p>
+                        <p>{{ timestampToDate(userStore.user.created) }}</p>
                     </div>
                 </div>
             </div>

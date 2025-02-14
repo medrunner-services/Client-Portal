@@ -2,11 +2,10 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
 
 const { locale, availableLocales } = useI18n({ useScope: "global" });
-const logicStore = useLogicStore();
 const userStore = useUserStore();
 
 const showDropdown = ref(false);
@@ -52,7 +51,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
             @click="showDropdown = !showDropdown"
         >
             <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-2 h-6 w-6" />
-            {{ logicStore.getLanguageString(locale) }}
+            {{ getLanguageString(locale) }}
             <svg
                 class="ml-2.5 h-2.5 w-2.5"
                 :class="showDropdown ? 'rotate-180' : ''"
@@ -77,7 +76,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     @click="changeLanguage(language)"
                 >
                     <img :src="`/icons/flags/${language}.svg`" alt="Flag" class="mr-6 h-6 w-6" />
-                    <p>{{ logicStore.getLanguageString(language) }}</p>
+                    <p>{{ getLanguageString(language) }}</p>
                 </li>
             </ul>
         </div>

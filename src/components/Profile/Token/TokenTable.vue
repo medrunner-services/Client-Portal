@@ -8,7 +8,7 @@ import TokenTableRow from "@/components/Profile/Token/TokenTableRow.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/stringUtils";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const userStore = useUserStore();

@@ -6,13 +6,11 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
-import { errorString } from "@/utils/stringUtils";
 
 const { t } = useI18n();
-const logicStore = useLogicStore();
 const userStore = useUserStore();
 const router = useRouter();
 const isIdCopied = ref(false);
@@ -24,7 +22,7 @@ const formErrorHelper = ref("");
 const userId = userStore.user.id;
 
 async function copyId(): Promise<void> {
-    await logicStore.addTextToClipboard(userStore.user.id);
+    await navigator.clipboard.writeText(userStore.user.id);
     isIdCopied.value = true;
 }
 

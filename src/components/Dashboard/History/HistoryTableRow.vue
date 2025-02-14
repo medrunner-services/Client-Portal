@@ -5,9 +5,9 @@ import { useI18n } from "vue-i18n";
 
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { useLogicStore } from "@/stores/logicStore";
+import { timestampToDate, timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import { getCancelReasonString, getRatingString, getStatusString, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
-const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -122,13 +122,13 @@ async function addTextToClipboard(text: string) {
             <div class="col-span-4 font-medium text-gray-900 dark:text-white md:col-span-3 md:col-start-2">
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
-            <div class="col-span-2">{{ logicStore.timestampToDate(props.emergency.creationTimestamp) }}</div>
+            <div class="col-span-2">{{ timestampToDate(props.emergency.creationTimestamp) }}</div>
             <div class="col-span-2 hidden font-medium text-gray-900 dark:text-white md:block">
                 {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
             </div>
             <div class="col-span-2 hidden md:block">
                 <div class="mr-2 w-fit rounded px-2.5 py-0.5 text-xs font-medium" :class="getStatusColor(props.emergency.status)">
-                    {{ logicStore.getStatusString(props.emergency.status) }}
+                    {{ getStatusString(props.emergency.status) }}
                 </div>
             </div>
         </div>
@@ -207,18 +207,18 @@ async function addTextToClipboard(text: string) {
                     <div class="grid w-full grid-cols-3">
                         <div class="mt-2">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_created") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ logicStore.timestampToHours(props.emergency.creationTimestamp) }}</p>
+                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.creationTimestamp) }}</p>
                         </div>
                         <div v-if="props.emergency.acceptedTimestamp" class="mt-2 text-center">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_accepted") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ logicStore.timestampToHours(props.emergency.acceptedTimestamp) }}</p>
+                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.acceptedTimestamp) }}</p>
                         </div>
                         <div class="col-start-3 mt-2 text-right">
                             <p class="text-right text-sm font-semibold text-gray-900 dark:text-white">
-                                {{ logicStore.getStatusString(props.emergency.status) }}
+                                {{ getStatusString(props.emergency.status) }}
                             </p>
                             <p v-if="props.emergency.completionTimestamp" class="mt-1 text-xs text-gray-400">
-                                {{ logicStore.timestampToHours(props.emergency.completionTimestamp) }}
+                                {{ timestampToHours(props.emergency.completionTimestamp) }}
                             </p>
                         </div>
                     </div>
@@ -244,14 +244,14 @@ async function addTextToClipboard(text: string) {
                 <div class="mt-4 flex w-full flex-col gap-4 md:flex-row">
                     <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700">
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_threatLevel") }}</p>
-                        <p class="text text-base text-gray-500 dark:text-gray-400">{{ logicStore.getThreatString(props.emergency.threatLevel) }}</p>
+                        <p class="text text-base text-gray-500 dark:text-gray-400">{{ getThreatString(props.emergency.threatLevel) }}</p>
                     </div>
                     <div
                         v-if="props.emergency.rating"
                         class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_rating") }}</p>
-                        <p class="text text-base text-gray-500 dark:text-gray-400">{{ logicStore.getRatingString(props.emergency.rating) }}</p>
+                        <p class="text text-base text-gray-500 dark:text-gray-400">{{ getRatingString(props.emergency.rating) }}</p>
                     </div>
                     <div
                         v-else-if="props.emergency.cancellationReason"
@@ -259,7 +259,7 @@ async function addTextToClipboard(text: string) {
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_cancelReason") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">
-                            {{ logicStore.getCancelReasonString(props.emergency.cancellationReason) }}
+                            {{ getCancelReasonString(props.emergency.cancellationReason) }}
                         </p>
                     </div>
                 </div>
