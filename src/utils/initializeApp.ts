@@ -5,6 +5,7 @@ import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { type SyncedSettings, WSState } from "@/types.ts";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
     initializeAnalytics,
@@ -24,7 +25,7 @@ import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
     const logicStore = useLogicStore();
-    const { availableLocales, locale } = i18n.global;
+    const { availableLocales, locale, t } = i18n.global;
 
     initializeTabChecker();
     initializeSettingDarkMode();
@@ -39,24 +40,31 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                 userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         } catch (error: any) {
             if (error.statusCode === 403) localStorage.removeItem("refreshToken");
-            else return;
+            else {
+                logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[fetchUser]" }));
+                return;
+            }
         }
 
         try {
             const blockCheck = await userStore.fetchUserBlocklistStatus();
             if (blockCheck.blocked) userStore.isBlocked = true;
-        } catch (_e) {
-            return;
+        } catch (error: any) {
+            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[blockCheck]" }));
         }
     }
 
     if (apiConnected) {
-        await migrateSyncedSettings();
-        await initializeMedrunnerSettings();
+        try {
+            await migrateSyncedSettings();
+            await initializeMedrunnerSettings();
 
-        locale.value = initializeSettingLanguage(availableLocales);
-        initializeSettingNotifications();
-        initializeAnalytics();
+            locale.value = initializeSettingLanguage(availableLocales);
+            initializeSettingNotifications();
+            initializeAnalytics();
+        } catch (error: any) {
+            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[initializeSettings]" }));
+        }
     }
 
     if (ws && ws.state === HubConnectionState.Connected) {

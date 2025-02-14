@@ -17,6 +17,7 @@ export const useLogicStore = defineStore("logic", () => {
     const isFirstInstance = ref(true);
     const sentNotificationTags = ref<Set<string>>(new Set());
     const showNewUpdateBanner = ref(false);
+    const errorInitializingApp = ref("");
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem("loginAnimation")
@@ -73,6 +74,7 @@ export const useLogicStore = defineStore("logic", () => {
         darkMode,
         isDiscordOpenWeb,
         isDebugLoggerEnabled,
+        errorInitializingApp,
         isLoginAnimationAllowed,
         loginAnimationSpeed,
         loginAnimationStarSize,

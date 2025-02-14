@@ -109,8 +109,8 @@ function reloadPage() {
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
 
-            <div v-else-if="errorLoadingPage" class="flex w-full flex-grow items-center justify-center">
-                <GlobalErrorText :text="t('error_globalLoading')" />
+            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full flex-grow items-center justify-center">
+                <GlobalErrorText :text="logicStore.errorInitializingApp ?? t('error_globalLoading')" />
             </div>
 
             <RouterView

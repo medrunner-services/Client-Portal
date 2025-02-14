@@ -28,6 +28,7 @@
     "error_webSocketReconnection": "A conexão foi perdida. Tentando reconectar...",
     "error_webSocketDisconnected": "Não conseguimos conectar ao servidor. Por favor, recarregue a página.",
     "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
+    "error_appInitialization": "An error occurred while initializing the app {error}, please refresh the page",
     "form_SCUsername": "Nome de usuário Star Citizen",
     "form_helpSCUsername": "O nome de usuário da sua conta RSI",
     "form_confirm": "Confirmar",

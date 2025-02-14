@@ -28,6 +28,7 @@
     "error_webSocketReconnection": "Die Verbindung wurde unterbrochen. Versuche neu zu verbinden...",
     "error_webSocketDisconnected": "Wir können keine Verbindung zum Server herstellen. Bitte laden Sie die Seite neu.",
     "error_loginRegistrationDisabled": "Die Registrierung von Konten ist derzeit deaktiviert.",
+    "error_appInitialization": "An error occurred while initializing the app {error}, please refresh the page",
     "form_SCUsername": "Star Citizen Nutzername",
     "form_helpSCUsername": "Der Nutzername Ihres RSI-Kontos",
     "form_confirm": "Bestätigen",

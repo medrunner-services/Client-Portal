@@ -37,7 +37,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tsconfig/node18": "^18.2.4",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.13.2",
+    "@types/node": "^22.13.4",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.4.0",
