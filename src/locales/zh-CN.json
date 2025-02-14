@@ -28,7 +28,7 @@
     "error_webSocketReconnection": "网络连接已断开。正在尝试重连……",
     "error_webSocketDisconnected": "我们无法连接至服务器。请刷新此页面。",
     "error_loginRegistrationDisabled": "账户注册功能当前已关闭。",
-    "error_appInitialization": "An error occurred while initializing the app {error}, please refresh the page",
+    "error_appInitialization": "在启动{error}应用时出现了一处错误，请刷新页面",
     "form_SCUsername": "星际公民用户名",
     "form_helpSCUsername": "您RSI账号的用户名",
     "form_confirm": "确认",
