@@ -39,11 +39,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             if (userStore.user.clientPortalPreferencesBlob)
                 userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         } catch (error: any) {
-            if (error.statusCode === 403) localStorage.removeItem("refreshToken");
-            else {
-                logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[fetchUser]" }));
-                return;
-            }
+            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[fetchUser]" }));
+            return;
         }
 
         try {

@@ -30,9 +30,8 @@ export const useUserStore = defineStore("user", () => {
 
     async function disconnectUser(): Promise<void> {
         try {
-            await api.auth.signOut({ refreshToken: localStorage.getItem("refreshToken") ?? "" });
+            await api.auth.signOut({ refreshToken: "" });
         } finally {
-            localStorage.removeItem("refreshToken");
             isAuthenticated.value = false;
         }
     }
