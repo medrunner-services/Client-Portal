@@ -54,7 +54,7 @@ export function errorString(errorCode: number, customMessage?: string): string {
                 break;
         }
 
-        return `${defaultMessage} (${errorCode})`;
+        return `${defaultMessage} (${errorCode ?? "internal"})`;
     }
 }
 
