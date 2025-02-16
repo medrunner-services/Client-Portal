@@ -29,6 +29,7 @@
     "error_webSocketDisconnected": "Vi kunne ikke koble til serveren. Vennligst last inn siden på nytt.",
     "error_loginRegistrationDisabled": "Kontoregistreringer er for øyeblikket deaktivert.",
     "error_appInitialization": "En feil oppstod under initialisering av appen {error}, vennligst oppdater siden",
+    "error_failedMessage": "An error occurred while sending the message. Please reload the page and try again.",
     "form_SCUsername": "Star Citizen brukernavn",
     "form_helpSCUsername": "Brukernavnet til RSI brukeren din",
     "form_confirm": "Bekreft",

@@ -29,6 +29,7 @@
     "error_webSocketDisconnected": "Мы не можем подключиться к серверу. Пожалуйста, перезагрузите страницу.",
     "error_loginRegistrationDisabled": "В данное время регистрация аккаунтов отключена.",
     "error_appInitialization": "An error occurred while initializing the app {error}, please refresh the page",
+    "error_failedMessage": "An error occurred while sending the message. Please reload the page and try again.",
     "form_SCUsername": "Имя пользователя в Star Citizen",
     "form_helpSCUsername": "Имя пользователя вашего аккаунта RSI",
     "form_confirm": "Подтвердить",

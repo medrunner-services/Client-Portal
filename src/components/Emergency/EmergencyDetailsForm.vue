@@ -10,13 +10,16 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { AlertColors } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
+const alertStore = useAlertStore();
 
 const emit = defineEmits(["submittedDetails"]);
 
@@ -54,6 +57,10 @@ function confirmedRules(): void {
 
 async function sendDetails(): Promise<void> {
     try {
+        if (!emergencyStore.trackedEmergency) {
+            alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
+            return;
+        }
         submittingDetails.value = true;
         await emergencyStore.sendEmergencyMessage({
             emergencyId: emergencyStore.trackedEmergency!.id,
@@ -107,9 +114,9 @@ async function sendDetails(): Promise<void> {
         emit("submittedDetails");
     } catch (error: any) {
         formErrorMessage.value = errorString(error.statusCode);
+    } finally {
+        submittingDetails.value = false;
     }
-
-    submittingDetails.value = false;
 }
 </script>
 

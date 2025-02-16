@@ -147,6 +147,13 @@ export function parseMarkdown(text: string) {
                     hour: "numeric",
                     minute: "2-digit",
                 });
+            // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
+            // This is so the discord bot shows the reactive time and the portal the static time format we want
+            case "R":
+                return date.toLocaleTimeString(locale.value, {
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
             default:
                 return date.toLocaleDateString(locale.value, {
                     day: "2-digit",
