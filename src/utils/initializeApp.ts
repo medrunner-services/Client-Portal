@@ -51,12 +51,13 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
+    locale.value = initializeSettingLanguage(availableLocales);
+
     if (apiConnected) {
         try {
             await migrateSyncedSettings();
             await initializeMedrunnerSettings();
 
-            locale.value = initializeSettingLanguage(availableLocales);
             initializeSettingNotifications();
             initializeAnalytics();
         } catch (error: any) {
