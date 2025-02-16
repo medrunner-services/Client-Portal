@@ -64,7 +64,7 @@ async function sendDetails(): Promise<void> {
             _Client ship:_  **${inputShip.value ? inputShip.value : "Unknown"}**\n
             _Client death:_  **${
                 inputDeathHours.value || inputDeathMinutes.value
-                    ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:t>`
+                    ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:R>`
                     : "Unknown"
             }**\n
             _Is the client injured:_  **${inputInjury.value ? inputInjury.value : "Unknown"}**\n
