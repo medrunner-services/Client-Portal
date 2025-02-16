@@ -29,6 +29,7 @@
     "error_webSocketDisconnected": "We kunnen geen verbinding maken met de server. Laad de pagina opnieuw.",
     "error_loginRegistrationDisabled": "Account registrations are currently disabled.",
     "error_appInitialization": "An error occurred while initializing the app {error}, please refresh the page",
+    "error_failedMessage": "An error occurred while sending the message. Please reload the page and try again.",
     "form_SCUsername": "Star Citizen Gebruikersnaam",
     "form_helpSCUsername": "De gebruikersnaam van uw RSI-account",
     "form_confirm": "Bevestig",

@@ -8,9 +8,10 @@ import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
-import { MessageNotification } from "@/types";
+import { AlertColors, MessageNotification } from "@/types";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
@@ -19,6 +20,7 @@ const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const router = useRouter();
+const alertStore = useAlertStore();
 
 const inputMessage = ref("");
 const sendingMessage = ref(false);
@@ -80,10 +82,15 @@ async function sendMessage() {
 
     try {
         sendingMessage.value = true;
-        await emergencyStore.sendEmergencyMessage({
-            emergencyId: emergencyStore.trackedEmergency!.id,
-            contents: inputMessage.value,
-        });
+        if (emergencyStore.trackedEmergency) {
+            await emergencyStore.sendEmergencyMessage({
+                emergencyId: emergencyStore.trackedEmergency.id,
+                contents: inputMessage.value,
+            });
+        } else {
+            alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
+            return;
+        }
 
         inputMessage.value = "";
     } catch (error: any) {

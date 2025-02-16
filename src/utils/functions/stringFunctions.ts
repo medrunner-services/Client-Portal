@@ -54,7 +54,7 @@ export function errorString(errorCode: number, customMessage?: string): string {
                 break;
         }
 
-        return `${defaultMessage} (${errorCode})`;
+        return `${defaultMessage} (${errorCode ?? "internal"})`;
     }
 }
 
@@ -144,6 +144,13 @@ export function parseMarkdown(text: string) {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit",
+                });
+            // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
+            // This is so the discord bot shows the reactive time and the portal the static time format we want
+            case "R":
+                return date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                 });
