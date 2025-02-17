@@ -180,8 +180,6 @@
     "tracking_levelSection": "Nivå {levelNumber} Seksjon {sectionNumber}",
     "tracking_newMessage": "Ny melding",
     "tracking_chatDefaultStaffName": "Medrunner personale",
-    "tracking_textDiscordThread": "Denne nødsituasjonen ble sendt inn på Discord. Venligst kommuniser via discord tråden.",
-    "tracking_buttonDiscordThread": "Discord tråd",
     "tracking_emergencyID": "Krise ID:",
     "tracking_ClickToCopy": "Klikk for å kopiere",
     "tracking_readMore": "Les mere",

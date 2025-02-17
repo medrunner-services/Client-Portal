@@ -180,8 +180,6 @@
     "tracking_levelSection": "{levelNumber} 级 {sectionNumber} 阶",
     "tracking_newMessage": "新消息",
     "tracking_chatDefaultStaffName": "Medrunner职员",
-    "tracking_textDiscordThread": "此次任务是在Discord上提交的。请在Discord的讨论串里交流。",
-    "tracking_buttonDiscordThread": "Discord交流串",
     "tracking_emergencyID": "求救信号ID：",
     "tracking_ClickToCopy": "点击以复制",
     "tracking_readMore": "查看更多",

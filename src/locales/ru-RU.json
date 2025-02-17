@@ -180,8 +180,6 @@
     "tracking_levelSection": "Уровень {levelNumber} Раздел {sectionNumber}",
     "tracking_newMessage": "Новое сообщение",
     "tracking_chatDefaultStaffName": "Сотрудники Medrunner",
-    "tracking_textDiscordThread": "Этот вызов был получен в Discord. Пожалуйста, общайтесь через соответствующий канал в Discord.",
-    "tracking_buttonDiscordThread": "Канал Discord",
     "tracking_emergencyID": "ID чрезвычайной ситуации:",
     "tracking_ClickToCopy": "Нажмите, чтобы скопировать",
     "tracking_readMore": "Узнать подробнее",

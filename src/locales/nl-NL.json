@@ -180,8 +180,6 @@
     "tracking_levelSection": "Niveau {levelNumber} Sectie {sectionNumber}",
     "tracking_newMessage": "Nieuw bericht",
     "tracking_chatDefaultStaffName": "Medrunner personeel",
-    "tracking_textDiscordThread": "Deze missie was ingediend via Discord. Gelieve via de Discord thread te communiceren.",
-    "tracking_buttonDiscordThread": "Discord thread",
     "tracking_emergencyID": "Noodgeval ID:",
     "tracking_ClickToCopy": "Klik om te kopiëren",
     "tracking_readMore": "Meer lezen",

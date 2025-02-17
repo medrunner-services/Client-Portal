@@ -180,8 +180,6 @@
     "tracking_levelSection": "Niveau {levelNumber} Section {sectionNumber}",
     "tracking_newMessage": "Nouveau message",
     "tracking_chatDefaultStaffName": "Personnel Medrunner",
-    "tracking_textDiscordThread": "Cette mission a été soumise sur Discord. Veuillez communiquer via le fil de discussion discord.",
-    "tracking_buttonDiscordThread": "Discussion Discord",
     "tracking_emergencyID": "ID d'urgence :",
     "tracking_ClickToCopy": "Cliquez pour copier",
     "tracking_readMore": "Lire la suite",
