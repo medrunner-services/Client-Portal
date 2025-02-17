@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
-import { timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import { timestampToFullDate, timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
@@ -178,14 +178,10 @@ function messageClasses(messageIndex: number, senderId: string): string {
                     {{ t("tracking_readMore") }}
                 </p>
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
-                    <p
-                        v-if="message.edited"
-                        :title="message.updated ? timestampToHours(new Date(message.updated).getTime()) : undefined"
-                        class="italic"
-                    >
+                    <p v-if="message.edited" :title="timestampToFullDate(new Date(message.updated).getTime())" class="italic">
                         ({{ t("tracking_edited") }})
                     </p>
-                    <p>
+                    <p :title="timestampToFullDate(message.messageSentTimestamp)">
                         {{ timestampToHours(message.messageSentTimestamp) }}
                     </p>
                     <svg

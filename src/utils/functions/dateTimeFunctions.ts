@@ -42,3 +42,16 @@ export function timestampToDate(timestamp: number | string): string {
         day: "2-digit",
     });
 }
+
+export function timestampToFullDate(timestamp: number | string): string {
+    const { locale } = i18n.global;
+    return new Date(timestamp).toLocaleDateString(locale.value, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        hour12: false,
+        minute: "2-digit",
+    });
+}
