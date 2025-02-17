@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Emergency, type MissionStatus, Origin, SubmissionSource } from "@medrunner/api-client";
+import { type Emergency, type MissionStatus } from "@medrunner/api-client";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -10,11 +10,9 @@ import EmergencyDetailsForm from "@/components/Emergency/EmergencyDetailsForm.vu
 import EmergencyReportForm from "@/components/Emergency/EmergencyReportForm.vue";
 import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
 import ServiceStatus from "@/components/Emergency/ServiceStatus.vue";
-import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
@@ -22,11 +20,8 @@ import { ws } from "@/utils/medrunnerClient";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
-const logicStore = useLogicStore();
 const { t } = useI18n();
 const router = useRouter();
-
-const discordServerId = import.meta.env.VITE_DISCORD_SERVER_ID;
 
 const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
@@ -131,26 +126,7 @@ onMounted(async () => {
                     <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
                 </div>
 
-                <EmergencyChatBox
-                    v-if="
-                        emergencyStore.trackedEmergency.submissionSource !== SubmissionSource.BOT ||
-                        emergencyStore.trackedEmergency.origin === Origin.EVALUATION
-                    "
-                    class="mt-8"
-                />
-
-                <div v-else class="mt-8">
-                    <GlobalCard class="mt-4 flex flex-col items-center justify-center text-center">
-                        <p>{{ t("tracking_textDiscordThread") }}</p>
-                        <a
-                            :href="`${logicStore.discordBaseUrl}discord.com/channels/${discordServerId}/${emergencyStore.trackedEmergency.coordinationThread?.id}`"
-                            target="_blank"
-                            class="mt-8"
-                        >
-                            <GlobalButton icon="link">{{ t("tracking_buttonDiscordThread") }}</GlobalButton>
-                        </a>
-                    </GlobalCard>
-                </div>
+                <EmergencyChatBox class="mt-8" />
             </div>
 
             <div v-else>
