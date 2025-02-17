@@ -178,9 +178,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
                     {{ t("tracking_readMore") }}
                 </p>
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
-                    <p v-if="message.edited" :title="timestampToFullDate(new Date(message.updated).getTime())" class="italic">
-                        ({{ t("tracking_edited") }})
-                    </p>
+                    <p v-if="message.edited" :title="timestampToFullDate(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
                     <p :title="timestampToFullDate(message.messageSentTimestamp)">
                         {{ timestampToHours(message.messageSentTimestamp) }}
                     </p>
