@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@medrunner/api-client";
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -26,6 +26,8 @@ const inputMessage = ref("");
 const sendingMessage = ref(false);
 const errorSendingMessage = ref("");
 const errorLoadingMessages = ref("");
+const editingMessageId = ref<string | undefined>();
+const messageInputRef = ref<InstanceType<typeof GlobalTextInput>>();
 
 onMounted(async () => {
     try {
@@ -71,6 +73,17 @@ onMounted(async () => {
             }
         }
     });
+
+    ws.on("ChatMessageUpdate", async (updatedMessage: ChatMessage) => {
+        if (emergencyStore.trackedEmergency) {
+            const messageIndex = emergencyStore.trackedEmergencyMessages.findIndex((message) => message.id === updatedMessage.id);
+
+            if (messageIndex !== -1) {
+                emergencyStore.trackedEmergencyMessages[messageIndex] = updatedMessage;
+            }
+        }
+    });
+
     ws.onreconnected(async () => {
         if (emergencyStore.trackedEmergency)
             emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
@@ -83,10 +96,15 @@ async function sendMessage() {
     try {
         sendingMessage.value = true;
         if (emergencyStore.trackedEmergency) {
-            await emergencyStore.sendEmergencyMessage({
-                emergencyId: emergencyStore.trackedEmergency.id,
-                contents: inputMessage.value,
-            });
+            if (editingMessageId.value) {
+                await emergencyStore.updateEmergencyMessage(editingMessageId.value, inputMessage.value);
+                editingMessageId.value = undefined;
+            } else {
+                await emergencyStore.sendEmergencyMessage({
+                    emergencyId: emergencyStore.trackedEmergency.id,
+                    contents: inputMessage.value,
+                });
+            }
         } else {
             alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
             return;
@@ -98,6 +116,20 @@ async function sendMessage() {
     } finally {
         sendingMessage.value = false;
     }
+}
+
+function handleEditMessage(id: string, content: string) {
+    inputMessage.value = content;
+    editingMessageId.value = id;
+
+    nextTick(() => {
+        messageInputRef.value?.focus();
+    });
+}
+
+function escapeEditingMessage() {
+    inputMessage.value = "";
+    editingMessageId.value = undefined;
 }
 </script>
 
@@ -113,16 +145,40 @@ async function sendMessage() {
                     :messages="emergencyStore.trackedEmergencyMessages"
                     :emergency-members="emergencyStore.trackedEmergency.respondingTeam.allMembers"
                     :user="userStore.user"
+                    @edit-message="(id, content) => handleEditMessage(id, content)"
                 />
 
-                <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900">
+                <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
+                    <!--  TODO: localization  -->
+                    <div v-if="editingMessageId" class="-mt-1 mb-1 flex items-center gap-2 text-primary-600">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-5 cursor-pointer"
+                            @click="escapeEditingMessage()"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                            />
+                        </svg>
+
+                        <p class="text-sm font-semibold">Editing message</p>
+                    </div>
+
                     <form class="flex items-center dark:bg-gray-900" @submit.prevent="sendMessage()">
                         <GlobalTextInput
+                            ref="messageInputRef"
                             v-model="inputMessage"
                             :required="true"
                             :disabled="sendingMessage"
                             class="mr-4 w-full"
                             :placeholder="t('tracking_placeholderMessageInput')"
+                            @keydown.esc="escapeEditingMessage()"
                         />
                         <button type="submit" class="justify-center text-primary-600">
                             <svg

@@ -13,6 +13,7 @@ export interface Props {
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
     user: Person;
+    editingMessageId?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits<{
     loadNewMessages: [];
+    editMessage: [id: string, contents: string];
 }>();
 
 const { t } = useI18n();
@@ -28,6 +30,7 @@ const chatBox = ref<HTMLDivElement | null>(null);
 const distanceFromBottom = ref(0);
 const showFullMessage = ref<Record<string, boolean>>({});
 const readMoreClicked = ref(false);
+const hoveredMessageId = ref<string | undefined>();
 
 onMounted(async () => {
     if (chatBox.value) {
@@ -149,6 +152,8 @@ function messageClasses(messageIndex: number, senderId: string): string {
             :key="message.id"
             class="flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
             :class="messageClasses(index, message.senderId)"
+            @mouseenter="hoveredMessageId = message.id"
+            @mouseleave="hoveredMessageId = undefined"
         >
             <p
                 v-if="!isMessageAuthor(message.senderId) && (!isMessageChain(index) || isMessageChain(index) === 'top')"
@@ -158,7 +163,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
             </p>
             <p
                 class="prose mt-1 break-words dark:prose-invert dark:text-white"
-                :class="{ 'markdown-extras prose-invert text-white': isMessageAuthor(message.senderId) }"
+                :class="{ 'markdown-extras prose-invert text-right text-white': isMessageAuthor(message.senderId) }"
                 v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"
             ></p>
             <div class="flex items-center justify-between">
@@ -172,15 +177,25 @@ function messageClasses(messageIndex: number, senderId: string): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <p class="ml-auto mt-1 text-xs">
+                <div class="ml-auto mt-1 flex gap-2 text-xs">
                     <!--  TODO: localization  -->
-                    <span v-if="message.edited" class="italic">Edited - </span> {{ timestampToHours(message.messageSentTimestamp) }}
-                </p>
-                <svg class="size-3.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                        d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
-                    />
-                </svg>
+                    <p v-if="message.edited" class="italic">Edited -</p>
+                    <p>
+                        {{ timestampToHours(message.messageSentTimestamp) }}
+                    </p>
+                    <svg
+                        v-show="hoveredMessageId === message.id"
+                        class="size-3.5 cursor-pointer"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        @click="emit('editMessage', message.id, message.contents)"
+                    >
+                        <path
+                            d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
+                        />
+                    </svg>
+                </div>
             </div>
         </div>
 

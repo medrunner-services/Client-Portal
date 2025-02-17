@@ -91,6 +91,14 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function updateEmergencyMessage(id: string, contents: string): Promise<void> {
+        const response = await api.chatMessage.updateMessage(id, contents);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     async function fetchChatHistory(id: string, token?: string): Promise<PaginatedResponse<ChatMessage>> {
         const response = await api.chatMessage.getHistory(id, 50, token);
 
@@ -101,6 +109,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    // TODO: move to function file
     function getEmergencyStatusTitle(status: number): string {
         switch (status) {
             case 1:
@@ -126,6 +135,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    // TODO: move to function file
     function getEmergencyStatusSubtitle(status: number): string {
         switch (status) {
             case 1:
@@ -164,6 +174,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         cancelEmergency,
         rateCompletedEmergency,
         sendEmergencyMessage,
+        updateEmergencyMessage,
         fetchChatHistory,
         getEmergencyStatusTitle,
         getEmergencyStatusSubtitle,
