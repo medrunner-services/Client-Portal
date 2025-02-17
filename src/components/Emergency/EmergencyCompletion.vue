@@ -8,6 +8,7 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/functions/getStringsFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
@@ -41,9 +42,9 @@ async function rateEmergency(): Promise<void> {
 
         <GlobalCard class="mt-8">
             <p class="font-Mohave text-3xl font-bold">
-                {{ emergencyStore.getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
+                {{ getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
             </p>
-            <p class="mt-1 font-medium">{{ emergencyStore.getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
+            <p class="mt-1 font-medium">{{ getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
 
             <form
                 v-if="[MissionStatus.SUCCESS, MissionStatus.FAILED].includes(emergencyStore.trackedEmergency.status)"

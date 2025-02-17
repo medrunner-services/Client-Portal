@@ -14,6 +14,7 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/functions/getStringsFunctions.ts";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
@@ -68,9 +69,9 @@ onMounted(async () => {
                 userStore.syncedSettings.emergencyUpdateNotification
             ) {
                 await sendBrowserNotification(
-                    emergencyStore.getEmergencyStatusTitle(updatedEmergency.status),
+                    getEmergencyStatusTitle(updatedEmergency.status),
                     `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
-                    emergencyStore.getEmergencyStatusSubtitle(updatedEmergency.status),
+                    getEmergencyStatusSubtitle(updatedEmergency.status),
                     () => {
                         window.focus();
                         router.push({ name: "emergency" });

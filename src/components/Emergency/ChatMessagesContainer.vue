@@ -178,8 +178,13 @@ function messageClasses(messageIndex: number, senderId: string): string {
                     {{ t("tracking_readMore") }}
                 </p>
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
-                    <!--  TODO: localization  -->
-                    <p v-if="message.edited" class="italic">Edited -</p>
+                    <p
+                        v-if="message.edited"
+                        :title="message.updated ? timestampToHours(new Date(message.updated).getTime()) : undefined"
+                        class="italic"
+                    >
+                        ({{ t("tracking_edited") }})
+                    </p>
                     <p>
                         {{ timestampToHours(message.messageSentTimestamp) }}
                     </p>

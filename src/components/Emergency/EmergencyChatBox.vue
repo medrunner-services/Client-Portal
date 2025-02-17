@@ -27,6 +27,7 @@ const sendingMessage = ref(false);
 const errorSendingMessage = ref("");
 const errorLoadingMessages = ref("");
 const editingMessageId = ref<string | undefined>();
+const originalEditedMessage = ref<string>();
 const messageInputRef = ref<InstanceType<typeof GlobalTextInput>>();
 
 onMounted(async () => {
@@ -97,6 +98,10 @@ async function sendMessage() {
         sendingMessage.value = true;
         if (emergencyStore.trackedEmergency) {
             if (editingMessageId.value) {
+                if (originalEditedMessage.value === inputMessage.value) {
+                    escapeEditingMessage();
+                    return;
+                }
                 await emergencyStore.updateEmergencyMessage(editingMessageId.value, inputMessage.value);
                 editingMessageId.value = undefined;
             } else {
@@ -120,6 +125,7 @@ async function sendMessage() {
 
 function handleEditMessage(id: string, content: string) {
     inputMessage.value = content;
+    originalEditedMessage.value = content;
     editingMessageId.value = id;
 
     nextTick(() => {
@@ -129,6 +135,7 @@ function handleEditMessage(id: string, content: string) {
 
 function escapeEditingMessage() {
     inputMessage.value = "";
+    originalEditedMessage.value = undefined;
     editingMessageId.value = undefined;
 }
 </script>
@@ -149,8 +156,7 @@ function escapeEditingMessage() {
                 />
 
                 <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
-                    <!--  TODO: localization  -->
-                    <div v-if="editingMessageId" class="-mt-1 mb-1 flex items-center gap-2 text-primary-600">
+                    <div v-if="editingMessageId" class="-mt-1 mb-2 flex items-center gap-2 text-primary-600">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -167,7 +173,7 @@ function escapeEditingMessage() {
                             />
                         </svg>
 
-                        <p class="text-sm font-semibold">Editing message</p>
+                        <p class="text-sm font-semibold">{{ t("tracking_editingMessage") }}</p>
                     </div>
 
                     <form class="flex items-center dark:bg-gray-900" @submit.prevent="sendMessage()">

@@ -117,3 +117,55 @@ export function getCodeTypeString(type: CodeType): string {
             return t("history_unknown");
     }
 }
+
+export function getEmergencyStatusTitle(status: number): string {
+    const { t } = i18n.global;
+    switch (status) {
+        case 1:
+            return t("tracking_messageReceived");
+        case 2:
+            return t("tracking_helpOnTheWay");
+        case 3:
+            return t("tracking_operationSuccessful");
+        case 4:
+            return t("tracking_operationFailed");
+        case 5:
+            return t("tracking_operationNoContact");
+        case 6:
+            return t("tracking_operationCanceled");
+        case 7:
+            return t("tracking_operationRefused");
+        case 8:
+            return t("tracking_operationAborted");
+        case 9:
+            return t("tracking_serverError");
+        default:
+            return "Unknown";
+    }
+}
+
+export function getEmergencyStatusSubtitle(status: number): string {
+    const { t } = i18n.global;
+    switch (status) {
+        case 1:
+            return t("tracking_statusTextReceived");
+        case 2:
+            return t("tracking_statusTextOnTheirWay");
+        case 3:
+            return t("tracking_statusTextSuccess");
+        case 4:
+            return t("tracking_statusTextFailed");
+        case 5:
+            return t("tracking_statusTextNoContact");
+        case 6:
+            return t("tracking_statusTextConfirmedCanceled");
+        case 7:
+            return t("tracking_statusTextRefused");
+        case 8:
+            return t("tracking_statusTextAborted");
+        case 9:
+            return t("tracking_statusTextServerError");
+        default:
+            return "Unknown";
+    }
+}

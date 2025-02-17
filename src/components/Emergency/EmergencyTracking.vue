@@ -10,7 +10,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { getThreatString } from "@/utils/functions/getStringsFunctions.ts";
+import { getEmergencyStatusSubtitle, getEmergencyStatusTitle, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
@@ -110,9 +110,9 @@ const showSuccessRate = computed(() => {
 
         <GlobalCard class="mt-8">
             <p class="font-Mohave text-3xl font-bold text-primary-600 dark:text-red-700">
-                {{ emergencyStore.getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
+                {{ getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
             </p>
-            <p class="mt-1 font-medium">{{ emergencyStore.getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
+            <p class="mt-1 font-medium">{{ getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
 
             <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
