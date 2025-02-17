@@ -84,7 +84,6 @@ function getMessageAuthor(message: ChatMessage): string {
 }
 
 function isMessageAuthor(id: string): boolean {
-    console.log("Is message author? ", id === props.user.id);
     return id === props.user.id;
 }
 
