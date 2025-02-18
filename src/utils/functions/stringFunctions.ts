@@ -38,7 +38,7 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
 export function errorString(errorCode: number, customMessage?: string): string {
     const { t } = i18n.global;
 
-    if (customMessage) return `${customMessage} (${errorCode})`;
+    if (customMessage) return `${customMessage} (${errorCode ?? "internal"})`;
     else {
         let defaultMessage = t("error_generic");
 

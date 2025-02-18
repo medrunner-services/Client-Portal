@@ -36,10 +36,23 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
-            if (userStore.user.clientPortalPreferencesBlob)
-                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         } catch (error: any) {
+            // TODO: Remove console.log
+            console.log("[fetchUser] error");
+            console.log(error);
             logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[fetchUser]" }));
+            return;
+        }
+
+        try {
+            if (userStore.user.clientPortalPreferencesBlob) {
+                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+            }
+        } catch (error: any) {
+            // TODO: Remove console.log
+            console.log("[setPortalPreferencesBlob] error");
+            console.log(error);
+            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[setPortalPreferencesBlob]" }));
             return;
         }
 
