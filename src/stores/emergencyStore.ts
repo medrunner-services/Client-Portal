@@ -98,7 +98,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
     }
 
     async function fetchChatHistory(id: string, token?: string): Promise<PaginatedResponse<ChatMessage>> {
-        const response = await api.chatMessage.getHistory(id, 50, token);
+        const response = await api.chatMessage.getMessageHistory(id, 50, token);
 
         if (response.success && response.data) {
             return response.data;
