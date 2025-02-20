@@ -1,5 +1,24 @@
 import { i18n } from "@/i18n.ts";
 
+export function getTimeDifferenceString(startTimestamp: number, endTimestamp: number): string {
+    const timeToAccept = Math.floor(endTimestamp / 1000) - Math.floor(startTimestamp / 1000);
+
+    const days = Math.floor(timeToAccept / (60 * 60 * 24));
+    const hours = Math.floor((timeToAccept % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((timeToAccept % (60 * 60)) / 60);
+    const seconds = timeToAccept % 60;
+
+    if (days > 0) {
+        return `${days}d ${hours}h ${minutes}m`;
+    } else if (hours > 0) {
+        return `${hours}h ${minutes}m`;
+    } else if (minutes > 0) {
+        return `${minutes}m`;
+    } else {
+        return `${seconds}s`;
+    }
+}
+
 export function timestampToHours(timestamp: number | string): string {
     const { locale } = i18n.global;
     const now = new Date();
