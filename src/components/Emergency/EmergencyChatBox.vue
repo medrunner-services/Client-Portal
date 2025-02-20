@@ -136,6 +136,7 @@ function handleEditMessage(id: string, content: string) {
 
 function escapeEditingMessage() {
     inputMessage.value = "";
+    errorSendingMessage.value = "";
     originalEditedMessage.value = undefined;
     editingMessageId.value = undefined;
 }
