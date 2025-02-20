@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Bis zur Veröffentlichung nicht verfügbar",
     "error_loadingHistory": "Beim Laden Ihres Verlaufs ist ein Fehler aufgetreten",
     "error_generic": "Ein Fehler ist aufgetreten",
-    "error_blockedUser": "Dieses Konto ist gesperrt",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Fehlende Medrunner-ID in der RSI-Bio",
     "error_unknownRsiAccount": "Es konnte kein RSI-Konto mit diesem Benutzernamen gefunden werden",
     "error_rateLimit": "Sie senden zu viele Anfragen, bitte warten Sie ein paar Minuten und versuchen Sie es erneut",

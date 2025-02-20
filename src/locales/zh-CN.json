@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "正式发布之前无法使用",
     "error_loadingHistory": "历史数据加载失败",
     "error_generic": "系统出错",
-    "error_blockedUser": "该账户已被屏蔽",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "RSI账号简介中缺失Medrunner ID",
     "error_unknownRsiAccount": "未能找到与此用户名相符的RSI账号",
     "error_rateLimit": "操作过于频繁，请稍等后重试",

@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "直到發布之前無法使用",
     "error_loadingHistory": "載入您的歷史紀錄時遇到錯誤",
     "error_generic": "遭遇錯誤",
-    "error_blockedUser": "此帳戶已被封鎖",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "在RSI簡介當中缺乏Medrunner的ID",
     "error_unknownRsiAccount": "無法使用此帳戶名稱找到RSI帳戶",
     "error_rateLimit": "您已發出許多請求，請稍後再嘗試",

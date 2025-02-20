@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Unavailable until launch",
     "error_loadingHistory": "An error occurred loading your history",
     "error_generic": "An error occurred",
-    "error_blockedUser": "This account is blocked",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Missing Medrunner ID in RSI Bio",
     "error_unknownRsiAccount": "Unable to find an RSI account with this username",
     "error_rateLimit": "You are sending too many requests, please wait a few minutes and try again",

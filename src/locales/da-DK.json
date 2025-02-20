@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Ikke tilgængelig før lancering",
     "error_loadingHistory": "Der opstod en fejl ved indlæsning af din historik",
     "error_generic": "En fejl opstod",
-    "error_blockedUser": "Denne konto er blokeret",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Mangler Medrunner ID i RSI biografi",
     "error_unknownRsiAccount": "Kan ikke finde en RSI-konto med dette brugernavn",
     "error_rateLimit": "Du sender for mange anmodninger. Vent et par minutter og prøv igen",

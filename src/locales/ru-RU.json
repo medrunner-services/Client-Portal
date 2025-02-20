@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Недоступно до релиза игры",
     "error_loadingHistory": "Произошла ошибка при загрузке вашей истории",
     "error_generic": "Произошла ошибка",
-    "error_blockedUser": "Этот аккаунт заблокирован",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Medrunner ID отсутствует в биографии RSI",
     "error_unknownRsiAccount": "Невозможно найти аккаунт RSI с этим именем пользователя",
     "error_rateLimit": "Вы отправляете слишком много запросов. Пожалуйста, подождите несколько минут и повторите попытку.",

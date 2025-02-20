@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Niet beschikbaar tot lancering",
     "error_loadingHistory": "Een error is opgetreden tijdens het laden van je geschiedenis",
     "error_generic": "Er is een fout opgetreden",
-    "error_blockedUser": "Dit account is geblokkeerd",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Medrunner-ID ontbreekt in RSI bio",
     "error_unknownRsiAccount": "Niet in staat om een RSI account te vinden met deze gebruikersnaam",
     "error_rateLimit": "U heeft te veel verzoeken verstuurd, wacht alstublieft een paar minuten en probeer nog een keer",

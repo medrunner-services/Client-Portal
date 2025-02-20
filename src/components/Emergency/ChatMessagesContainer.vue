@@ -184,7 +184,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
                     <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
                     <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
                     <svg
-                        v-show="!isTranscript && hoveredMessageId === message.id"
+                        v-show="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id"
                         class="size-3.5 cursor-pointer"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

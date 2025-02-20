@@ -3,7 +3,7 @@
     "error_UnavailableFeatureLaunch": "Utilgjengelig frem til lansering",
     "error_loadingHistory": "En feil oppsto under lasting av loggen din",
     "error_generic": "En feil oppsto",
-    "error_blockedUser": "Denne brukeren er blokkert",
+    "error_blockedUser": "You cannot perform this action",
     "errorMissingMedrunnerId": "Manglende Medrunner ID i RSI Bio",
     "error_unknownRsiAccount": "Klarer ikke å finne en RSI bruker med det brukernavnet",
     "error_rateLimit": "Du sender for mange forespørsler, vennligst vent noen minutter og prøv igjen",
