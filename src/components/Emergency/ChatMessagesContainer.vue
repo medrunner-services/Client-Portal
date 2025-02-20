@@ -4,7 +4,8 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
-import { timestampToFullDate, timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
@@ -14,10 +15,12 @@ export interface Props {
     keepScrollPosition?: boolean;
     user: Person;
     editingMessageId?: string;
+    isTranscript?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     keepScrollPosition: false,
+    isTranscript: false,
 });
 const emit = defineEmits<{
     loadNewMessages: [];
@@ -178,12 +181,10 @@ function messageClasses(messageIndex: number, senderId: string): string {
                     {{ t("tracking_readMore") }}
                 </p>
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
-                    <p v-if="message.edited" :title="timestampToFullDate(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
-                    <p :title="timestampToFullDate(message.messageSentTimestamp)">
-                        {{ timestampToHours(message.messageSentTimestamp) }}
-                    </p>
+                    <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
+                    <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
                     <svg
-                        v-show="hoveredMessageId === message.id"
+                        v-show="!isTranscript && hoveredMessageId === message.id"
                         class="size-3.5 cursor-pointer"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"

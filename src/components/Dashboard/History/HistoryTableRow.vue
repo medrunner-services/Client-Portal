@@ -5,7 +5,8 @@ import { useI18n } from "vue-i18n";
 
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { getTimeDifferenceString, timestampToDate, timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { getTimeDifferenceString } from "@/utils/functions/dateTimeFunctions.ts";
 import { getCancelReasonString, getRatingString, getStatusString, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
 const { t } = useI18n();
@@ -122,7 +123,7 @@ async function addTextToClipboard(text: string) {
             <div class="col-span-4 font-medium text-gray-900 dark:text-white md:col-span-3 md:col-start-2">
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
-            <div class="col-span-2">{{ timestampToDate(props.emergency.creationTimestamp) }}</div>
+            <GlobalLocalizedDate class="col-span-2" :date="props.emergency.creationTimestamp" format="toDate" />
             <div class="col-span-2 hidden font-medium text-gray-900 dark:text-white md:block">
                 {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
             </div>
@@ -226,19 +227,22 @@ async function addTextToClipboard(text: string) {
                     <div class="grid w-full grid-cols-3">
                         <div class="mt-2">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_created") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.creationTimestamp) }}</p>
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.creationTimestamp" format="toHours" />
                         </div>
                         <div v-if="props.emergency.acceptedTimestamp" class="mt-2 text-center">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_accepted") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.acceptedTimestamp) }}</p>
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.acceptedTimestamp" format="toHours" />
                         </div>
                         <div class="col-start-3 mt-2 text-right">
                             <p class="text-right text-sm font-semibold text-gray-900 dark:text-white">
                                 {{ getStatusString(props.emergency.status) }}
                             </p>
-                            <p v-if="props.emergency.completionTimestamp" class="mt-1 text-xs text-gray-400">
-                                {{ timestampToHours(props.emergency.completionTimestamp) }}
-                            </p>
+                            <GlobalLocalizedDate
+                                v-if="props.emergency.completionTimestamp"
+                                class="mt-1 text-xs text-gray-400"
+                                :date="props.emergency.completionTimestamp"
+                                format="toHours"
+                            />
                         </div>
                     </div>
                 </div>
