@@ -92,6 +92,7 @@ onMounted(async () => {
 });
 
 async function sendMessage() {
+    if (!inputMessage.value) return;
     errorSendingMessage.value = "";
 
     try {
