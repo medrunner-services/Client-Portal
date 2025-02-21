@@ -228,7 +228,7 @@ async function sendDetails(): Promise<void> {
                 v-model="inputInjury"
                 class="w-full"
                 :options="[
-                    { value: '', label: t('formDetailed_selectSituation'), hidden: true },
+                    { value: '', label: t('formDetailed_selectInjuryTier'), hidden: true },
                     { value: 'No', label: t('formDetailed_no') },
                     { value: 'Tier 1', label: `${t('formDetailed_injuryTier', { number: '1' })}` },
                     { value: 'Tier 2', label: `${t('formDetailed_injuryTier', { number: '2' })}` },
@@ -268,7 +268,7 @@ async function sendDetails(): Promise<void> {
                     v-model="inputCrimestat"
                     class="w-full"
                     :options="[
-                        { value: '', label: t('formDetailed_selectSituation'), hidden: true },
+                        { value: '', label: t('formDetailed_selectCrimeStat'), hidden: true },
                         { value: 'No', label: t('formDetailed_no') },
                         { value: 'Level 1', label: `${t('formDetailed_level', { number: '1' })}` },
                         { value: 'Level 2', label: `${t('formDetailed_level', { number: '2' })}` },
