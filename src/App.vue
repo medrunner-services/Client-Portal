@@ -38,7 +38,7 @@ onMounted(async () => {
     console.log(
         document.cookie.split(";").map((cookie) => {
             const [key, value] = cookie.split("=");
-            return { key: key.trim(), value: value.trim() };
+            return { key: key, value: value };
         }),
     );
 });
