@@ -35,6 +35,7 @@ onMounted(async () => {
     }
 
     console.log("Cookies:");
+    console.log(document.cookie);
     console.log(
         document.cookie.split(";").map((cookie) => {
             const [key, value] = cookie.split("=");
