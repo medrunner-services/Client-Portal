@@ -2,7 +2,7 @@ import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { MessageNotification, type SyncedSettings } from "@/types.ts";
+import { LocalStorageItems, MessageNotification, type SyncedSettings } from "@/types.ts";
 import { api, ws } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
@@ -32,6 +32,8 @@ export const useUserStore = defineStore("user", () => {
         try {
             await api.auth.signOut();
             await ws.stop();
+            localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);
+            localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
         } finally {
             isAuthenticated.value = false;
         }

@@ -1,6 +1,6 @@
 {
     "error_generic": "En feil oppsto",
-    "error_blockedUser": "You cannot perform this action",
+    "error_blockedUser": "Du kan ikke utføre denne handlingen",
     "error_unknownRsiAccount": "Klarer ikke å finne en RSI bruker med det brukernavnet",
     "error_rateLimit": "Du sender for mange forespørsler, vennligst vent noen minutter og prøv igjen",
     "error_missingFields": "Venligst fyll ut de påkrevde feltene*",
@@ -100,8 +100,8 @@
     "formDetailed_placeholderBeaconPlayer": "Hva er spillerens navn?",
     "formDetailed_locationTypeDistributionCenter": "Distribusjonssenter",
     "formDetailed_locationTypeContestedZones": "Omstridte soner",
-    "formDetailed_selectInjuryTier": "Select an injury tier",
-    "formDetailed_selectCrimeStat": "Select a CrimeStat level",
+    "formDetailed_selectInjuryTier": "Velg nivå av skade",
+    "formDetailed_selectCrimeStat": "Velg kriminalitetsnivå",
     "tracking_messageReceived": "Melding motatt",
     "tracking_helpOnTheWay": "Hjelpen er på vei",
     "tracking_operationSuccessful": "Operasjon velykket",

@@ -5,6 +5,7 @@ import { createApp } from "vue";
 import VueApexCharts from "vue3-apexcharts";
 
 import { i18n } from "@/i18n";
+import { LocalStorageItems } from "@/types.ts";
 import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
@@ -16,15 +17,18 @@ const loader = document.getElementById("loader");
 
 (async () => {
     let apiInitialized = false;
+    const accessTokenExpiration = localStorage.getItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION) ?? undefined;
 
     try {
-        try {
-            await initializeApi();
-            await initializeWebsocket();
+        if (accessTokenExpiration && new Date(accessTokenExpiration).getTime() > new Date().getTime()) {
+            try {
+                await initializeApi();
+                await initializeWebsocket();
 
-            apiInitialized = true;
-        } catch (_e) {
-            apiInitialized = false;
+                apiInitialized = true;
+            } catch (_e) {
+                apiInitialized = false;
+            }
         }
     } finally {
         app.use(createPinia());
