@@ -33,15 +33,6 @@ onMounted(async () => {
     } finally {
         isLoadingPage.value = false;
     }
-
-    console.log("Cookies:");
-    console.log(document.cookie);
-    console.log(
-        document.cookie.split(";").map((cookie) => {
-            const [key, value] = cookie.split("=");
-            return { key: key, value: value };
-        }),
-    );
 });
 
 const showMOTDAlertBanner = computed(() => {
