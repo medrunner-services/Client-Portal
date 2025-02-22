@@ -17,10 +17,10 @@ const loader = document.getElementById("loader");
 
 (async () => {
     let apiInitialized = false;
-    const accessTokenExpiration = localStorage.getItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION) ?? undefined;
+    const refreshTokenExpiration = localStorage.getItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION) ?? undefined;
 
     try {
-        if (accessTokenExpiration && new Date(accessTokenExpiration).getTime() > new Date().getTime()) {
+        if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > new Date().getTime()) {
             try {
                 await initializeApi();
                 await initializeWebsocket();
