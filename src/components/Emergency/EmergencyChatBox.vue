@@ -7,6 +7,7 @@ import { useRouter } from "vue-router";
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
@@ -157,7 +158,7 @@ function escapeEditingMessage() {
                     @edit-message="(id, content) => handleEditMessage(id, content)"
                 />
 
-                <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
+                <div class="mt-5 rounded-lg bg-gray-100 px-3 pb-1.5 pt-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
                     <div v-if="editingMessageId" class="-mt-1 mb-2 flex items-center gap-2 text-primary-600">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -178,17 +179,21 @@ function escapeEditingMessage() {
                         <p class="text-sm font-semibold">{{ t("tracking_editingMessage") }}</p>
                     </div>
 
-                    <form class="flex items-center dark:bg-gray-900" @submit.prevent="sendMessage()">
-                        <GlobalTextInput
+                    <form class="flex items-center gap-4 dark:bg-gray-900" @submit.prevent="sendMessage()">
+                        <GlobalTextAreaInput
                             ref="messageInputRef"
                             v-model="inputMessage"
                             :required="true"
                             :disabled="sendingMessage"
-                            class="mr-4 w-full"
+                            class="w-full"
                             :placeholder="t('tracking_placeholderMessageInput')"
+                            :rows="1"
+                            :auto-grow="true"
+                            max-height="max-h-40"
+                            @keydown.enter.exact="sendMessage()"
                             @keydown.esc="escapeEditingMessage()"
                         />
-                        <button type="submit" class="justify-center text-primary-600">
+                        <button type="submit" class="mb-1 justify-center text-primary-600">
                             <svg
                                 v-if="sendingMessage"
                                 aria-hidden="true"

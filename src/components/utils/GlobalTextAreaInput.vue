@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import autosize from "autosize";
+import { onMounted, onUpdated, ref } from "vue";
 import { computed } from "vue";
 
 export interface Props {
@@ -12,6 +13,8 @@ export interface Props {
     modelValue?: string;
     rows?: number;
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
+    maxHeight?: string;
+    autoGrow?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,9 +22,25 @@ const props = withDefaults(defineProps<Props>(), {
     required: false,
     radius: "rounded-lg",
     rows: 5,
+    autoGrow: false,
 });
 
 const emit = defineEmits(["update:modelValue"]);
+
+const textAreaRef = ref<HTMLDivElement | null>(null);
+defineExpose({ focus: () => textAreaRef.value?.focus() });
+
+onMounted(() => {
+    if (props.autoGrow && textAreaRef.value) {
+        autosize(textAreaRef.value);
+    }
+});
+
+onUpdated(() => {
+    if (props.autoGrow && textAreaRef.value) {
+        autosize.update(textAreaRef.value);
+    }
+});
 
 const value = computed({
     get() {
@@ -39,6 +58,8 @@ const selectInputClasses = computed(() => {
 
     if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
     if (props.radius !== "none") allClasses.push(props.radius);
+    if (props.maxHeight) allClasses.push(props.maxHeight);
+    if (props.maxHeight && props.autoGrow) allClasses.push("!overflow-x-hidden");
 
     return allClasses.join(" ");
 });
@@ -79,13 +100,14 @@ const selectInputClasses = computed(() => {
             </div>
         </div>
         <textarea
+            ref="textAreaRef"
             v-model="value"
             class="w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
             :disabled="props.disabled"
             :required="props.required"
             :placeholder="props.placeholder"
-            :rows="rows"
+            :rows="props.rows"
         />
     </div>
 </template>
