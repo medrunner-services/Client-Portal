@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
+import { LocalStorageItems } from "@/types.ts";
 import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
@@ -31,6 +32,10 @@ onMounted(async () => {
                 },
             );
             if (response.ok) {
+                const responseData = await response.json();
+                localStorage.setItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION, responseData.accessTokenExpiration);
+                localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
+
                 let apiInitialized = false;
 
                 try {
@@ -87,6 +92,10 @@ onMounted(async () => {
             );
 
             if (response.ok) {
+                const responseData = await response.json();
+                localStorage.setItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION, responseData.accessTokenExpiration);
+                localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
+
                 let apiInitialized = false;
 
                 try {
