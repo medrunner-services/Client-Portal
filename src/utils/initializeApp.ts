@@ -67,8 +67,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     }
 
     if (ws && ws.state === HubConnectionState.Connected) {
-        ws.on("PersonUpdate", (newUser: Person) => {
-            personUpdate(newUser);
+        ws.on("PersonUpdate", async (newUser: Person) => {
+            await personUpdate(newUser);
         });
 
         ws.on("OrgSettingsUpdate", (updatedOrgSettings: OrgSettings) => {
