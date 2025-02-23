@@ -20,25 +20,28 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Added an update banner to inform the user of a new update and ask them to refresh the page.</li>
-                        <li>Added the "Contested Zones" location option in the emergency detail form.</li>
+                        <li>Added the ability to edit chat messages.</li>
+                        <li>Improved auth stability.</li>
+                        <li>Added back unique session per domain.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Improved error messages on initial load of the page.</li>
-                        <li>Improved error messages on registration.</li>
-                        <li>Greatly improved the notification system, no duplicate notifications should be possible now!</li>
+                        <li>Added time difference between emergency states in history.</li>
+                        <li>Added support for multiple line sin chat input.</li>
+                        <li>Made new features available instantly after user rank update.</li>
+                        <li>Improved localized date visuals.</li>
+                        <li>Improved plurals for some strings.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Fixed an authentication issue that caused some users to be disconnected on a regular basis.</li>
-                        <li>Fixed little bugs.</li>
+                        <li>Fixed some bugs linked to auth.</li>
+                        <li>Fixed small UI issues.</li>
                     </ul>
                 </div>
             </div>
