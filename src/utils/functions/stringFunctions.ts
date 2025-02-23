@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n.ts";
+import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
     const memberIdToNameMap: any = {};
@@ -38,7 +39,7 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
 export function errorString(errorCode: number, customMessage?: string): string {
     const { t } = i18n.global;
 
-    if (customMessage) return `${customMessage} (${errorCode})`;
+    if (customMessage) return `${customMessage} (${errorCode ?? "internal"})`;
     else {
         let defaultMessage = t("error_generic");
 
@@ -105,41 +106,47 @@ export function parseMarkdown(text: string) {
     const manipulatedText = text.replace(/\\n/g, "<br>").replace(/<t:(\d+):([A-Za-z])>/g, (match, timestamp, format) => {
         if (typeof timestamp !== "string" || typeof format !== "string") return timestamp;
         const date = new Date(parseInt(timestamp) * 1000);
+        let dateString;
 
         switch (format) {
             case "d":
-                return date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(locale.value, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                 });
+                break;
             case "D":
-                return date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(locale.value, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                 });
+                break;
             case "t":
-                return date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                 });
+                break;
             case "T":
-                return date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
                 });
+                break;
             case "f":
-                return date.toLocaleString(locale.value, {
+                dateString = date.toLocaleString(locale.value, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
                 });
+                break;
             case "F":
-                return date.toLocaleString(locale.value, {
+                dateString = date.toLocaleString(locale.value, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
@@ -147,20 +154,25 @@ export function parseMarkdown(text: string) {
                     hour: "numeric",
                     minute: "2-digit",
                 });
+                break;
             // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
             // This is so the discord bot shows the reactive time and the portal the static time format we want
             case "R":
-                return date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                 });
+                break;
             default:
-                return date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(locale.value, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                 });
+                break;
         }
+
+        return `<span class="cursor-help underline decoration-dotted" title="${timestampToFullDateTimeZone(parseInt(timestamp) * 1000)}">${dateString}</span>`;
     });
 
     const sanitizedText = DOMPurify.sanitize(manipulatedText);

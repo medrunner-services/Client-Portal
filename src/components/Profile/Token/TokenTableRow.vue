@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import DeleteTokenModal from "@/components/Modals/DeleteTokenModal.vue";
-import { timestampToDate } from "@/utils/functions/dateTimeFunctions.ts";
+import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 const { t } = useI18n();
 
 export interface Props {
@@ -25,14 +25,17 @@ const isTokenExpired = computed(() => {
         <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ props.token.name }}</div>
 
         <div class="col-span-3">
-            <div v-if="props.token.lastUsed">{{ timestampToDate(props.token.lastUsed) }}</div>
+            <GlobalLocalizedDate v-if="props.token.lastUsed" :date="props.token.lastUsed" format="toDate" />
             <p v-else>{{ t("developer_tokenNever") }}</p>
         </div>
 
         <div class="col-span-3 md:col-span-2">
-            <div v-if="props.token.expirationDate" :class="isTokenExpired ? 'font-medium text-red-600' : ''">
-                {{ timestampToDate(props.token.expirationDate) }}
-            </div>
+            <GlobalLocalizedDate
+                v-if="props.token.expirationDate"
+                :class="isTokenExpired ? 'font-medium text-red-600' : ''"
+                :date="props.token.expirationDate"
+                format="toDate"
+            />
             <p v-else class="font-medium text-yellow-400">{{ t("developer_tokenNever") }}</p>
         </div>
 

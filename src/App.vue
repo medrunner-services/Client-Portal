@@ -92,6 +92,7 @@ function reloadPage() {
                 v-if="
                     route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404'
                 "
+                :class="isLoadingPage ? 'invisible' : ''"
             />
 
             <AlertBanner

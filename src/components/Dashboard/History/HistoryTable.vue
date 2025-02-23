@@ -10,6 +10,7 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { LocalStorageItems } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 
@@ -20,7 +21,7 @@ const { t } = useI18n();
 const parentRowsDiv = ref<HTMLDivElement | null>(null);
 
 const activePage = ref<Emergency[]>([]);
-const pageSize = ref(parseInt(localStorage.getItem("selectedPageSize") ?? "10") ?? 10);
+const pageSize = ref(parseInt(localStorage.getItem(LocalStorageItems.SELECTED_PAGE_SIZE) ?? "10") ?? 10);
 const page = ref(0);
 const paginationToken = ref<string | undefined>();
 
@@ -77,7 +78,7 @@ watch(pageSize, async (newPageSize, oldPageSize) => {
         setActivePageFromCache(0);
     }
 
-    localStorage.setItem("selectedPageSize", newPageSize.toString());
+    localStorage.setItem(LocalStorageItems.SELECTED_PAGE_SIZE, newPageSize.toString());
 });
 
 async function bulkLoadEmergencies(history: ClientHistory[]): Promise<Emergency[]> {

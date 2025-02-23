@@ -9,7 +9,7 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { MessageNotification } from "@/types";
+import { LocalStorageItems, MessageNotification } from "@/types";
 import { usePostHog } from "@/usePostHog";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
@@ -87,21 +87,21 @@ function updateDarkMode(): void {
     if (logicStore.darkMode) {
         document.documentElement.classList.remove("dark");
         logicStore.darkMode = false;
-        localStorage.setItem("darkMode", "false");
+        localStorage.setItem(LocalStorageItems.DARK_MODE, "false");
     } else {
         document.documentElement.classList.add("dark");
         logicStore.darkMode = true;
-        localStorage.setItem("darkMode", "true");
+        localStorage.setItem(LocalStorageItems.DARK_MODE, "true");
     }
 }
 
 function updateDiscordOpen(): void {
     if (logicStore.isDiscordOpenWeb) {
         logicStore.isDiscordOpenWeb = false;
-        localStorage.setItem("isDiscordOpenWeb", "false");
+        localStorage.setItem(LocalStorageItems.IS_DISCORD_OPEN_WEB, "false");
     } else {
         logicStore.isDiscordOpenWeb = true;
-        localStorage.setItem("isDiscordOpenWeb", "true");
+        localStorage.setItem(LocalStorageItems.IS_DISCORD_OPEN_WEB, "true");
     }
 }
 
@@ -127,10 +127,10 @@ async function updateAnalytics(): Promise<void> {
 function updateDebugLogger(): void {
     if (logicStore.isDebugLoggerEnabled) {
         logicStore.isDebugLoggerEnabled = false;
-        localStorage.setItem("isDebugLoggerEnabled", "false");
+        localStorage.setItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED, "false");
     } else {
         logicStore.isDebugLoggerEnabled = true;
-        localStorage.setItem("isDebugLoggerEnabled", "true");
+        localStorage.setItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED, "true");
     }
 }
 
@@ -158,8 +158,8 @@ async function resetSettings() {
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
 
-        localStorage.removeItem("darkMode");
-        localStorage.removeItem("isDiscordOpenWeb");
+        localStorage.removeItem(LocalStorageItems.DARK_MODE);
+        localStorage.removeItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED);
 
         if (logicStore.darkMode) {
             document.documentElement.classList.add("dark");

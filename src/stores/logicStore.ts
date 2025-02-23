@@ -2,7 +2,7 @@ import type { PublicOrgSettings } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { WSState } from "@/types.ts";
+import { LocalStorageItems, WSState } from "@/types.ts";
 
 export const useLogicStore = defineStore("logic", () => {
     const isRouterLoading = ref(false);
@@ -20,13 +20,13 @@ export const useLogicStore = defineStore("logic", () => {
     const errorInitializingApp = ref("");
 
     const isLoginAnimationAllowed = ref(
-        localStorage.getItem("loginAnimation")
-            ? localStorage.getItem("loginAnimation") === "true"
+        localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION)
+            ? localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION) === "true"
             : !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
     );
-    const loginAnimationSpeed = ref(parseInt(localStorage.getItem("loginAnimationSpeed") ?? "1"));
-    const loginAnimationStarSize = ref(parseInt(localStorage.getItem("loginAnimationStarSize") ?? "2"));
-    const loginAnimationGlowSize = ref(parseInt(localStorage.getItem("loginAnimationGlowSize") ?? "2"));
+    const loginAnimationSpeed = ref(parseInt(localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION_SPEED) ?? "1"));
+    const loginAnimationStarSize = ref(parseInt(localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION_STAR_SIZE) ?? "2"));
+    const loginAnimationGlowSize = ref(parseInt(localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION_GLOW_SIZE) ?? "2"));
 
     const medrunnerLogoUrl = computed(() => {
         if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {

@@ -3,8 +3,10 @@ import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import ChatMessageToolbar from "@/components/Emergency/ChatMessageToolbar.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
-import { timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
@@ -13,13 +15,17 @@ export interface Props {
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
     user: Person;
+    editingMessageId?: string;
+    isTranscript?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     keepScrollPosition: false,
+    isTranscript: false,
 });
 const emit = defineEmits<{
     loadNewMessages: [];
+    editMessage: [id: string, contents: string];
 }>();
 
 const { t } = useI18n();
@@ -28,13 +34,22 @@ const chatBox = ref<HTMLDivElement | null>(null);
 const distanceFromBottom = ref(0);
 const showFullMessage = ref<Record<string, boolean>>({});
 const readMoreClicked = ref(false);
+const hoveredMessageId = ref<string | undefined>();
 
 onMounted(async () => {
     if (chatBox.value) {
         chatBox.value.scrollTop = chatBox.value.scrollHeight;
 
-        const observer = new MutationObserver(() => {
-            if (chatBox.value) {
+        const observer = new MutationObserver((event) => {
+            const hasToolbarMutation = event.some((mutation) => {
+                const addedHasToolbar = Array.from(mutation.addedNodes).some((node) => node instanceof Element && node.id === "chatMessageToolbar");
+                const removedHasToolbar = Array.from(mutation.removedNodes).some(
+                    (node) => node instanceof Element && node.id === "chatMessageToolbar",
+                );
+                return addedHasToolbar || removedHasToolbar;
+            });
+
+            if (chatBox.value && !hasToolbarMutation) {
                 if (!readMoreClicked.value) {
                     if (props.keepScrollPosition) {
                         chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
@@ -147,8 +162,10 @@ function messageClasses(messageIndex: number, senderId: string): string {
             v-for="(message, index) in sortedMessages"
             v-else
             :key="message.id"
-            class="flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
+            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
             :class="messageClasses(index, message.senderId)"
+            @mouseenter="hoveredMessageId = message.id"
+            @mouseleave="hoveredMessageId = undefined"
         >
             <p
                 v-if="!isMessageAuthor(message.senderId) && (!isMessageChain(index) || isMessageChain(index) === 'top')"
@@ -158,7 +175,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
             </p>
             <p
                 class="prose mt-1 break-words dark:prose-invert dark:text-white"
-                :class="{ 'markdown-extras prose-invert text-white': isMessageAuthor(message.senderId) }"
+                :class="{ 'markdown-extras prose-invert text-right text-white': isMessageAuthor(message.senderId) }"
                 v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"
             ></p>
             <div class="flex items-center justify-between">
@@ -172,8 +189,16 @@ function messageClasses(messageIndex: number, senderId: string): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <p class="ml-auto mt-1 text-xs">{{ timestampToHours(message.messageSentTimestamp) }}</p>
+                <div class="ml-auto mt-1 flex gap-2 text-xs">
+                    <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
+                    <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
+                </div>
             </div>
+
+            <ChatMessageToolbar
+                v-if="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id"
+                @edit-click="emit('editMessage', message.id, message.contents)"
+            />
         </div>
 
         <div id="anchor"></div>

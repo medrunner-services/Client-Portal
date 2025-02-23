@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@medrunner/api-client";
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
@@ -26,6 +27,9 @@ const inputMessage = ref("");
 const sendingMessage = ref(false);
 const errorSendingMessage = ref("");
 const errorLoadingMessages = ref("");
+const editingMessageId = ref<string | undefined>();
+const originalEditedMessage = ref<string>();
+const messageInputRef = ref<InstanceType<typeof GlobalTextInput>>();
 
 onMounted(async () => {
     try {
@@ -71,6 +75,17 @@ onMounted(async () => {
             }
         }
     });
+
+    ws.on("ChatMessageUpdate", async (updatedMessage: ChatMessage) => {
+        if (emergencyStore.trackedEmergency) {
+            const messageIndex = emergencyStore.trackedEmergencyMessages.findIndex((message) => message.id === updatedMessage.id);
+
+            if (messageIndex !== -1) {
+                emergencyStore.trackedEmergencyMessages[messageIndex] = updatedMessage;
+            }
+        }
+    });
+
     ws.onreconnected(async () => {
         if (emergencyStore.trackedEmergency)
             emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency.id)).data;
@@ -78,15 +93,25 @@ onMounted(async () => {
 });
 
 async function sendMessage() {
+    if (!inputMessage.value) return;
     errorSendingMessage.value = "";
 
     try {
         sendingMessage.value = true;
         if (emergencyStore.trackedEmergency) {
-            await emergencyStore.sendEmergencyMessage({
-                emergencyId: emergencyStore.trackedEmergency.id,
-                contents: inputMessage.value,
-            });
+            if (editingMessageId.value) {
+                if (originalEditedMessage.value === inputMessage.value) {
+                    escapeEditingMessage();
+                    return;
+                }
+                await emergencyStore.updateEmergencyMessage(editingMessageId.value, inputMessage.value);
+                editingMessageId.value = undefined;
+            } else {
+                await emergencyStore.sendEmergencyMessage({
+                    emergencyId: emergencyStore.trackedEmergency.id,
+                    contents: inputMessage.value,
+                });
+            }
         } else {
             alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
             return;
@@ -97,6 +122,35 @@ async function sendMessage() {
         errorSendingMessage.value = errorString(error.statusCode);
     } finally {
         sendingMessage.value = false;
+    }
+}
+
+function handleEditMessage(id: string, content: string) {
+    inputMessage.value = content;
+    originalEditedMessage.value = content;
+    editingMessageId.value = id;
+
+    nextTick(() => {
+        messageInputRef.value?.focus();
+    });
+}
+
+function escapeEditingMessage() {
+    inputMessage.value = "";
+    errorSendingMessage.value = "";
+    originalEditedMessage.value = undefined;
+    editingMessageId.value = undefined;
+}
+
+function editLastMessage() {
+    const lastMessage = emergencyStore.trackedEmergencyMessages
+        .filter((message) => message.senderId === userStore.user.id)
+        .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
+
+    console.log(lastMessage);
+
+    if (lastMessage) {
+        handleEditMessage(lastMessage.id, lastMessage.contents);
     }
 }
 </script>
@@ -113,18 +167,46 @@ async function sendMessage() {
                     :messages="emergencyStore.trackedEmergencyMessages"
                     :emergency-members="emergencyStore.trackedEmergency.respondingTeam.allMembers"
                     :user="userStore.user"
+                    @edit-message="(id, content) => handleEditMessage(id, content)"
                 />
 
-                <div class="mt-5 rounded-lg bg-gray-100 p-3 dark:bg-gray-900">
-                    <form class="flex items-center dark:bg-gray-900" @submit.prevent="sendMessage()">
-                        <GlobalTextInput
+                <div class="mt-5 rounded-lg bg-gray-100 px-3 pb-1.5 pt-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
+                    <div v-if="editingMessageId" class="-mt-1 mb-2 flex items-center gap-2 text-primary-600">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-5 cursor-pointer"
+                            @click="escapeEditingMessage()"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                            />
+                        </svg>
+
+                        <p class="text-sm font-semibold">{{ t("tracking_editingMessage") }}</p>
+                    </div>
+
+                    <form class="flex items-center gap-4 dark:bg-gray-900" @submit.prevent="sendMessage()">
+                        <GlobalTextAreaInput
+                            ref="messageInputRef"
                             v-model="inputMessage"
                             :required="true"
                             :disabled="sendingMessage"
-                            class="mr-4 w-full"
+                            class="w-full"
                             :placeholder="t('tracking_placeholderMessageInput')"
+                            :rows="1"
+                            :auto-grow="true"
+                            max-height="max-h-40"
+                            @keydown.enter.exact="sendMessage()"
+                            @keydown.esc="escapeEditingMessage()"
+                            @keydown.prevent.up="editLastMessage()"
                         />
-                        <button type="submit" class="justify-center text-primary-600">
+                        <button type="submit" class="mb-1 justify-center text-primary-600">
                             <svg
                                 v-if="sendingMessage"
                                 aria-hidden="true"

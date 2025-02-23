@@ -36,10 +36,11 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         try {
             userStore.user = await userStore.fetchUser();
             userStore.isAuthenticated = true;
-            if (userStore.user.clientPortalPreferencesBlob)
+
+            if (userStore.user.clientPortalPreferencesBlob) {
                 userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
-        } catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[fetchUser]" }));
+            }
+        } catch (_e: any) {
             return;
         }
 
@@ -51,12 +52,13 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
     }
 
+    locale.value = initializeSettingLanguage(availableLocales);
+
     if (apiConnected) {
         try {
             await migrateSyncedSettings();
             await initializeMedrunnerSettings();
 
-            locale.value = initializeSettingLanguage(availableLocales);
             initializeSettingNotifications();
             initializeAnalytics();
         } catch (error: any) {

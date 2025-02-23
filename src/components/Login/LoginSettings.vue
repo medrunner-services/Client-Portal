@@ -6,6 +6,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalRangeSlider from "@/components/utils/GlobalRangeSlider.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
+import { LocalStorageItems } from "@/types.ts";
 
 const logicStore = useLogicStore();
 const { t } = useI18n();
@@ -13,10 +14,10 @@ const { t } = useI18n();
 function updateAnimationState(): void {
     if (logicStore.isLoginAnimationAllowed) {
         logicStore.isLoginAnimationAllowed = false;
-        localStorage.setItem("loginAnimation", "false");
+        localStorage.setItem(LocalStorageItems.LOGIN_ANIMATION, "false");
     } else {
         logicStore.isLoginAnimationAllowed = true;
-        localStorage.setItem("loginAnimation", "true");
+        localStorage.setItem(LocalStorageItems.LOGIN_ANIMATION, "true");
     }
 }
 
@@ -26,10 +27,10 @@ function resetAnimationSettings(): void {
     logicStore.loginAnimationGlowSize = 2;
     logicStore.isLoginAnimationAllowed = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    localStorage.removeItem("loginAnimationSpeed");
-    localStorage.removeItem("loginAnimationStarSize");
-    localStorage.removeItem("loginAnimationGlowSize");
-    localStorage.removeItem("loginAnimation");
+    localStorage.removeItem(LocalStorageItems.LOGIN_ANIMATION_SPEED);
+    localStorage.removeItem(LocalStorageItems.LOGIN_ANIMATION_STAR_SIZE);
+    localStorage.removeItem(LocalStorageItems.LOGIN_ANIMATION_GLOW_SIZE);
+    localStorage.removeItem(LocalStorageItems.LOGIN_ANIMATION);
 }
 
 function saveAnimationSetting(setting: string, value: number): void {

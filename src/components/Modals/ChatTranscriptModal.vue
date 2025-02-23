@@ -72,6 +72,7 @@ async function loadAdditionalMessages(): Promise<void> {
             :user="userStore.user"
             :error-loading-additional-messages
             :keep-scroll-position="true"
+            :is-transcript="true"
             class="mt-4"
             @load-new-messages="loadAdditionalMessages()"
         />

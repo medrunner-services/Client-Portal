@@ -34,6 +34,8 @@ const value = computed({
 });
 
 const showHelper = ref(false);
+const inputRef = ref<HTMLInputElement>();
+defineExpose({ focus: () => inputRef.value?.focus() });
 
 const selectInputClasses = computed(() => {
     let allClasses: string[] = [];
@@ -81,6 +83,7 @@ const selectInputClasses = computed(() => {
             </div>
         </div>
         <input
+            ref="inputRef"
             v-model="value"
             :type="props.type"
             class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 placeholder:normal-case focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"

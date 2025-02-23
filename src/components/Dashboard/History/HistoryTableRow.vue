@@ -5,7 +5,8 @@ import { useI18n } from "vue-i18n";
 
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
-import { timestampToDate, timestampToHours } from "@/utils/functions/dateTimeFunctions.ts";
+import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { getTimeDifferenceString } from "@/utils/functions/dateTimeFunctions.ts";
 import { getCancelReasonString, getRatingString, getStatusString, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
 const { t } = useI18n();
@@ -122,7 +123,7 @@ async function addTextToClipboard(text: string) {
             <div class="col-span-4 font-medium text-gray-900 dark:text-white md:col-span-3 md:col-start-2">
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
-            <div class="col-span-2">{{ timestampToDate(props.emergency.creationTimestamp) }}</div>
+            <GlobalLocalizedDate class="col-span-2" :date="props.emergency.creationTimestamp" format="toDate" />
             <div class="col-span-2 hidden font-medium text-gray-900 dark:text-white md:block">
                 {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
             </div>
@@ -138,7 +139,7 @@ async function addTextToClipboard(text: string) {
                 <div class="mb-4">
                     <ol class="flex w-full items-center">
                         <li
-                            class="after:border-1 flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
+                            class="after:border-1 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
                                 <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
@@ -147,10 +148,23 @@ async function addTextToClipboard(text: string) {
                                     />
                                 </svg>
                             </div>
+                            <p
+                                v-if="props.emergency.acceptedTimestamp || props.emergency.completionTimestamp"
+                                class="absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{
+                                    getTimeDifferenceString(
+                                        props.emergency.creationTimestamp,
+                                        props.emergency.acceptedTimestamp
+                                            ? props.emergency.acceptedTimestamp
+                                            : (props.emergency.completionTimestamp ?? 0),
+                                    )
+                                }}
+                            </p>
                         </li>
                         <li
                             v-if="props.emergency.acceptedTimestamp"
-                            class="after:border-1 flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
+                            class="after:border-1 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
                                 <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
@@ -159,6 +173,12 @@ async function addTextToClipboard(text: string) {
                                     />
                                 </svg>
                             </div>
+                            <p
+                                v-if="props.emergency.completionTimestamp"
+                                class="absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900 dark:text-white"
+                            >
+                                {{ getTimeDifferenceString(props.emergency.acceptedTimestamp, props.emergency.completionTimestamp) }}
+                            </p>
                         </li>
                         <li class="flex items-center">
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
@@ -207,19 +227,22 @@ async function addTextToClipboard(text: string) {
                     <div class="grid w-full grid-cols-3">
                         <div class="mt-2">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_created") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.creationTimestamp) }}</p>
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.creationTimestamp" format="toHours" />
                         </div>
                         <div v-if="props.emergency.acceptedTimestamp" class="mt-2 text-center">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_accepted") }}</p>
-                            <p class="mt-1 text-xs text-gray-400">{{ timestampToHours(props.emergency.acceptedTimestamp) }}</p>
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.acceptedTimestamp" format="toHours" />
                         </div>
                         <div class="col-start-3 mt-2 text-right">
                             <p class="text-right text-sm font-semibold text-gray-900 dark:text-white">
                                 {{ getStatusString(props.emergency.status) }}
                             </p>
-                            <p v-if="props.emergency.completionTimestamp" class="mt-1 text-xs text-gray-400">
-                                {{ timestampToHours(props.emergency.completionTimestamp) }}
-                            </p>
+                            <GlobalLocalizedDate
+                                v-if="props.emergency.completionTimestamp"
+                                class="mt-1 text-xs text-gray-400"
+                                :date="props.emergency.completionTimestamp"
+                                format="toHours"
+                            />
                         </div>
                     </div>
                 </div>

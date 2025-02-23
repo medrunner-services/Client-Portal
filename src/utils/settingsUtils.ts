@@ -1,6 +1,7 @@
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { LocalStorageItems } from "@/types.ts";
 import { usePostHog } from "@/usePostHog";
 import { api } from "@/utils/medrunnerClient";
 
@@ -8,8 +9,8 @@ export function initializeSettingDarkMode() {
     const logicStore = useLogicStore();
 
     if (
-        (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem("darkMode") == null) ||
-        localStorage.getItem("darkMode") === "true"
+        (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem(LocalStorageItems.DARK_MODE) == null) ||
+        localStorage.getItem(LocalStorageItems.DARK_MODE) === "true"
     ) {
         document.documentElement.classList.add("dark");
         logicStore.darkMode = true;
@@ -19,7 +20,7 @@ export function initializeSettingDarkMode() {
 export function initializeSettingDiscordLinks() {
     const logicStore = useLogicStore();
 
-    if (localStorage.getItem("isDiscordOpenWeb") === "true") {
+    if (localStorage.getItem(LocalStorageItems.IS_DISCORD_OPEN_WEB) === "true") {
         logicStore.isDiscordOpenWeb = true;
     }
 }
@@ -27,7 +28,7 @@ export function initializeSettingDiscordLinks() {
 export function initializeSettingDebugLogger() {
     const logicStore = useLogicStore();
 
-    if (localStorage.getItem("isDebugLoggerEnabled") === "true") {
+    if (localStorage.getItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED) === "true") {
         logicStore.isDebugLoggerEnabled = true;
     }
 }
@@ -106,7 +107,7 @@ export function initializeAnalytics() {
             personType: userStore.user.personType,
             active: userStore.user.active,
             language: locale.value,
-            debugModeEnabled: localStorage.getItem("isDebugLoggerEnabled") === "true",
+            debugModeEnabled: localStorage.getItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED) === "true",
         });
     }
 }
