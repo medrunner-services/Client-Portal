@@ -238,6 +238,7 @@
     "home_unlinkedCTADescription": "To enable all feature of the portal and use the Medrunner services without restrictions, please verify your Medrunner account by linking your RSI account.",
     "home_reload": "Reload",
     "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
+    "home_emergencyChartTitle": "Emergency|Emergencies",
     "login_logInButton": "Log ind med Discord",
     "login_registerButton": "Registrer med din Discord-konto",
     "login_welcomeBack": "Velkommen",

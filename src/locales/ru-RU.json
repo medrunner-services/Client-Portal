@@ -238,6 +238,7 @@
     "home_unlinkedCTADescription": "Чтобы включить все возможности портала и пользоваться услугами Medrunner без ограничений, пожалуйста, подтвердите свой аккаунт Medrunner, связав с ним свой аккаунт RSI.",
     "home_reload": "Перезагрузить",
     "home_reloadPage": "Доступно обновление. Пожалуйста, перезагрузите страницу, чтобы получить последнюю версию.",
+    "home_emergencyChartTitle": "Emergency|Emergencies|Emergencies|Emergencies",
     "login_logInButton": "Войти через Discord",
     "login_registerButton": "Зарегистрируйтесь c помощью Discord",
     "login_welcomeBack": "Добро пожаловать",

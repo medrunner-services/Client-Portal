@@ -252,7 +252,7 @@ function changePeriod() {
 
             <div class="mt-8">
                 <p class="font-Mohave text-4xl font-bold text-gray-900 dark:text-white">{{ totalNumberOfEmergencies }}</p>
-                <p class="font-Mohave text-lg text-gray-500 dark:text-gray-400">{{ t("home_emergencies") }}</p>
+                <p class="font-Mohave text-lg text-gray-500 dark:text-gray-400">{{ t("home_emergencyChartTitle", totalNumberOfEmergencies) }}</p>
             </div>
 
             <div class="mt-4 w-full justify-center">

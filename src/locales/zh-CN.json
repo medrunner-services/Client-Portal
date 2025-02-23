@@ -238,6 +238,7 @@
     "home_unlinkedCTADescription": "若想启用所有功能并不受限制地使用 Medrunner 服务，请通过链接您的 RSI 账户来验证您的 Medrunner 账户。",
     "home_reload": "刷新",
     "home_reloadPage": "当前有可用更新。请刷新页面以获取最新版本。",
+    "home_emergencyChartTitle": "Emergencies",
     "login_logInButton": "通过 Discord 登录",
     "login_registerButton": "通过 Discord 注册",
     "login_welcomeBack": "欢迎",
