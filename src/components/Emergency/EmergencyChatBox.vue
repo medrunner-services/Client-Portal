@@ -141,6 +141,18 @@ function escapeEditingMessage() {
     originalEditedMessage.value = undefined;
     editingMessageId.value = undefined;
 }
+
+function editLastMessage() {
+    const lastMessage = emergencyStore.trackedEmergencyMessages
+        .filter((message) => message.senderId === userStore.user.id)
+        .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
+
+    console.log(lastMessage);
+
+    if (lastMessage) {
+        handleEditMessage(lastMessage.id, lastMessage.contents);
+    }
+}
 </script>
 
 <template>
@@ -192,6 +204,7 @@ function escapeEditingMessage() {
                             max-height="max-h-40"
                             @keydown.enter.exact="sendMessage()"
                             @keydown.esc="escapeEditingMessage()"
+                            @keydown.prevent.up="editLastMessage()"
                         />
                         <button type="submit" class="mb-1 justify-center text-primary-600">
                             <svg

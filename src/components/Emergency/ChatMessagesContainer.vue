@@ -3,6 +3,7 @@ import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import ChatMessageToolbar from "@/components/Emergency/ChatMessageToolbar.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
@@ -39,8 +40,16 @@ onMounted(async () => {
     if (chatBox.value) {
         chatBox.value.scrollTop = chatBox.value.scrollHeight;
 
-        const observer = new MutationObserver(() => {
-            if (chatBox.value) {
+        const observer = new MutationObserver((event) => {
+            const hasToolbarMutation = event.some((mutation) => {
+                const addedHasToolbar = Array.from(mutation.addedNodes).some((node) => node instanceof Element && node.id === "chatMessageToolbar");
+                const removedHasToolbar = Array.from(mutation.removedNodes).some(
+                    (node) => node instanceof Element && node.id === "chatMessageToolbar",
+                );
+                return addedHasToolbar || removedHasToolbar;
+            });
+
+            if (chatBox.value && !hasToolbarMutation) {
                 if (!readMoreClicked.value) {
                     if (props.keepScrollPosition) {
                         chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
@@ -153,7 +162,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
             v-for="(message, index) in sortedMessages"
             v-else
             :key="message.id"
-            class="flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
+            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
             :class="messageClasses(index, message.senderId)"
             @mouseenter="hoveredMessageId = message.id"
             @mouseleave="hoveredMessageId = undefined"
@@ -183,20 +192,13 @@ function messageClasses(messageIndex: number, senderId: string): string {
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
                     <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
                     <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
-                    <svg
-                        v-show="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id"
-                        class="size-3.5 cursor-pointer"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        @click="emit('editMessage', message.id, message.contents)"
-                    >
-                        <path
-                            d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z"
-                        />
-                    </svg>
                 </div>
             </div>
+
+            <ChatMessageToolbar
+                v-if="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id"
+                @edit-click="emit('editMessage', message.id, message.contents)"
+            />
         </div>
 
         <div id="anchor"></div>
