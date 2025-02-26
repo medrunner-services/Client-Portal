@@ -6,14 +6,11 @@ import { useRouter } from "vue-router";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import { useAlertStore } from "@/stores/alertStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const userStore = useUserStore();
-const alertStore = useAlertStore();
 const router = useRouter();
 const isIdCopied = ref(false);
 const waitingForApi = ref(false);
@@ -41,12 +38,9 @@ const submittingLinkForm = async (): Promise<void> => {
     formErrorMessage.value = "";
     formErrorHelper.value = "";
 
-    let isLinked = false;
-
     try {
-        await userStore.linkUser(formUsername.value);
+        userStore.user = await userStore.linkUser(formUsername.value);
 
-        isLinked = true;
         await router.push("/");
     } catch (error: any) {
         if (error.statusCode === 403) {
@@ -63,14 +57,6 @@ const submittingLinkForm = async (): Promise<void> => {
         } else formErrorMessage.value = errorString(error.statusCode);
     } finally {
         waitingForApi.value = false;
-    }
-
-    if (isLinked) {
-        try {
-            userStore.user = await userStore.fetchUser();
-        } catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "info", 10000);
-        }
     }
 };
 
