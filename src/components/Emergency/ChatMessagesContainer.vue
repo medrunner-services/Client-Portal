@@ -137,13 +137,21 @@ function messageClasses(messageIndex: number, senderId: string): string {
     if (isMessageAuthor(senderId)) {
         classes.push("self-end bg-primary-600 text-white lg:mr-6");
 
-        if (isMessageChain(messageIndex) === "top") classes.push("mt-4 pt-1 rounded-br");
-        else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
+        if (isMessageChain(messageIndex) === "top") {
+            if (messageIndex === 0) classes.push("mt-6");
+            else classes.push("mt-4");
+
+            classes.push("pt-1 rounded-br");
+        } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
         else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-0 pt-1 rounded-tr");
         else classes.push("mt-4 pt-2");
     } else {
-        if (isMessageChain(messageIndex) === "top") classes.push("mt-4 pt-2 rounded-bl");
-        else if (isMessageChain(messageIndex) === "middle") classes.push("mt-1 pt-1 rounded-l");
+        if (isMessageChain(messageIndex) === "top") {
+            if (messageIndex === 0) classes.push("mt-0");
+            else classes.push("mt-4");
+
+            classes.push("pt-2 rounded-bl");
+        } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-1 pt-1 rounded-l");
         else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-1 pt-1 rounded-tl");
         else classes.push("mt-4 pt-2");
     }
@@ -162,7 +170,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
             v-for="(message, index) in sortedMessages"
             v-else
             :key="message.id"
-            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 first:mt-0 dark:border-gray-700 lg:px-4"
+            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 dark:border-gray-700 lg:px-4"
             :class="messageClasses(index, message.senderId)"
             @mouseenter="hoveredMessageId = message.id"
             @mouseleave="hoveredMessageId = undefined"
