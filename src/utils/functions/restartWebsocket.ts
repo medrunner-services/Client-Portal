@@ -1,0 +1,22 @@
+import { HubConnectionState } from "@microsoft/signalr";
+
+import { useLogicStore } from "@/stores/logicStore.ts";
+import { LocalStorageItems, WSState } from "@/types.ts";
+import { ws } from "@/utils/medrunnerClient.ts";
+
+export async function restartWebsocket() {
+    const logicStore = useLogicStore();
+
+    try {
+        logicStore.wsManualReconnect = true;
+
+        await ws.stop();
+        localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);
+        await ws.start();
+        if (ws.state === HubConnectionState.Connected) logicStore.currentWSState = WSState.HEALTHY;
+    } catch (error) {
+        throw error;
+    } finally {
+        logicStore.wsManualReconnect = false;
+    }
+}
