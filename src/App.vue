@@ -49,7 +49,9 @@ const showMOTDAlertBanner = computed(() => {
 });
 
 const showWSAlertBanner = computed(() => {
-    return logicStore.currentWSState === WSState.RECONNECTING || logicStore.currentWSState === WSState.DISCONNECTED;
+    return (
+        !logicStore.wsManualReconnect && (logicStore.currentWSState === WSState.RECONNECTING || logicStore.currentWSState === WSState.DISCONNECTED)
+    );
 });
 
 const getWSAlertBannerMessage = computed(() => {
