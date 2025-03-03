@@ -147,8 +147,6 @@ function editLastMessage() {
         .filter((message) => message.senderId === userStore.user.id)
         .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
 
-    console.log(lastMessage);
-
     if (lastMessage) {
         handleEditMessage(lastMessage.id, lastMessage.contents);
     }

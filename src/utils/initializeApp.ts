@@ -87,8 +87,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                 userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
         });
 
-        ws.onreconnecting(() => {
-            logicStore.currentWSState = WSState.RECONNECTING;
+        ws.onreconnecting((error) => {
+            if (error) {
+                logicStore.currentWSState = WSState.RECONNECTING;
+            }
         });
 
         ws.onclose(() => {
