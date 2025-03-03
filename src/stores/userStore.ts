@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
 import { LocalStorageItems, MessageNotification, type SyncedSettings } from "@/types.ts";
-import { api, ws } from "@/utils/medrunnerClient";
+import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
+import { api } from "@/utils/medrunnerClient";
 
 export const useUserStore = defineStore("user", () => {
     const user = ref<Person>({} as Person);
@@ -31,7 +32,8 @@ export const useUserStore = defineStore("user", () => {
     async function disconnectUser(): Promise<void> {
         try {
             await api.auth.signOut();
-            await ws.stop();
+            // We do not want to wait for the socket to stop
+            stopWebsocket();
             localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);
             localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
         } finally {

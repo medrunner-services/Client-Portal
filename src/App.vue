@@ -13,6 +13,7 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { WSState } from "@/types.ts";
+import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -59,6 +60,7 @@ const getWSAlertBannerMessage = computed(() => {
 });
 
 function reloadPage() {
+    stopWebsocket();
     window.location.reload();
 }
 </script>

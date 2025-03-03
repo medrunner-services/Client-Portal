@@ -20,3 +20,18 @@ export async function restartWebsocket() {
         logicStore.wsManualReconnect = false;
     }
 }
+
+export async function stopWebsocket() {
+    const logicStore = useLogicStore();
+
+    try {
+        logicStore.wsManualReconnect = true;
+
+        await ws.stop();
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+    } catch (error) {
+        throw error;
+    } finally {
+        logicStore.wsManualReconnect = false;
+    }
+}
