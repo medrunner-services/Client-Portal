@@ -143,6 +143,7 @@ function escapeEditingMessage() {
 }
 
 function editLastMessage() {
+    if (inputMessage.value) return;
     const lastMessage = emergencyStore.trackedEmergencyMessages
         .filter((message) => message.senderId === userStore.user.id)
         .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
