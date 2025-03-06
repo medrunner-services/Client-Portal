@@ -240,6 +240,7 @@
     "home_reload": "Last inn på nytt",
     "home_reloadPage": "En oppdatering er tilgjengelig. Last inn siden på nytt for å få den nyeste versjonen.",
     "home_emergencyChartTitle": "Nødsituasjon|Nødsituasjoner",
+    "home_noData": "No data",
     "login_logInButton": "Logg inn med Discord",
     "login_registerButton": "Registrere med Discord",
     "login_welcomeBack": "Velkommen",

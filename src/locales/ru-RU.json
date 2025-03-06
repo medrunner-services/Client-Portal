@@ -240,6 +240,7 @@
     "home_reload": "Перезагрузить",
     "home_reloadPage": "Доступно обновление. Пожалуйста, перезагрузите страницу, чтобы получить последнюю версию.",
     "home_emergencyChartTitle": "Чрезвычайная ситуация|Чрезвычайные ситуации|Чрезвычайные ситуации|Emergencies",
+    "home_noData": "No data",
     "login_logInButton": "Войти через Discord",
     "login_registerButton": "Зарегистрируйтесь c помощью Discord",
     "login_welcomeBack": "Добро пожаловать",

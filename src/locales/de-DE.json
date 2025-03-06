@@ -240,6 +240,7 @@
     "home_reload": "Neu laden",
     "home_reloadPage": "Доступно обновление. Пожалуйста, перезагрузите страницу, чтобы получить последнюю версию.",
     "home_emergencyChartTitle": "Notruf|Emergencies",
+    "home_noData": "No data",
     "login_logInButton": "Login mit Discord",
     "login_registerButton": "Mit Discord registrieren",
     "login_welcomeBack": "Willkommen",

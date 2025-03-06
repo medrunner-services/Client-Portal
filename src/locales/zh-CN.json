@@ -240,6 +240,7 @@
     "home_reload": "刷新",
     "home_reloadPage": "当前有可用更新。请刷新页面以获取最新版本。",
     "home_emergencyChartTitle": "Emergencies",
+    "home_noData": "No data",
     "login_logInButton": "通过 Discord 登录",
     "login_registerButton": "通过 Discord 注册",
     "login_welcomeBack": "欢迎",

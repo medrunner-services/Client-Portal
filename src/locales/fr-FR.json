@@ -240,6 +240,7 @@
     "home_reload": "Recharger",
     "home_reloadPage": "Une mise à jour est disponible. Veuillez réactualiser la page pour obtenir la dernière version.",
     "home_emergencyChartTitle": "Urgence|Urgences",
+    "home_noData": "Aucunes données",
     "login_logInButton": "Connexion avec Discord",
     "login_registerButton": "S'inscrire avec Discord",
     "login_welcomeBack": "Bienvenue",

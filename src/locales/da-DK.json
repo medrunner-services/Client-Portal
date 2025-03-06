@@ -240,6 +240,7 @@
     "home_reload": "Reload",
     "home_reloadPage": "An update is available. Please reload the page to get the latest version.",
     "home_emergencyChartTitle": "Emergency|Emergencies",
+    "home_noData": "No data",
     "login_logInButton": "Log ind med Discord",
     "login_registerButton": "Registrer med din Discord-konto",
     "login_welcomeBack": "Velkommen",
