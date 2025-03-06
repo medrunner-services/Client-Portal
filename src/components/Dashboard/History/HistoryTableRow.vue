@@ -298,10 +298,6 @@ async function addTextToClipboard(text: string) {
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ getResponders(props.emergency.respondingTeam.staff) }}</p>
                     </div>
                 </div>
-                <div v-if="props.emergency.remarks" class="mt-4 w-full">
-                    <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_remarks") }}</p>
-                    <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.remarks }}</p>
-                </div>
                 <div class="mt-4">
                     <p
                         class="cursor-pointer text-sm text-gray-500 underline dark:text-gray-400"

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import { AlertColors } from "@/types";
+import { AlertColors, type AlertIcons } from "@/types";
 
 export const useAlertStore = defineStore("alert", () => {
     const showAlert = ref(false);
@@ -12,7 +12,7 @@ export const useAlertStore = defineStore("alert", () => {
     const speed = ref(3500);
     const currentTimeoutId = ref<number>();
 
-    function newAlert(type: AlertColors = AlertColors.RED, content: string, closeable = true, alertIcon?: "info", duration = 3500) {
+    function newAlert(type: AlertColors = AlertColors.RED, content: string, closeable = true, alertIcon: AlertIcons = "info", duration = 3500) {
         message.value = content;
         color.value = type;
         isCloseable.value = closeable;

@@ -96,5 +96,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         ws.onclose(() => {
             logicStore.currentWSState = WSState.DISCONNECTED;
         });
+    } else if (ws && ws.state === HubConnectionState.Disconnected) {
+        logicStore.currentWSState = WSState.DISCONNECTED;
     }
 }

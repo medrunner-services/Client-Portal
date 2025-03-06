@@ -19,30 +19,30 @@ const loader = document.getElementById("loader");
     let apiInitialized = false;
     const refreshTokenExpiration = localStorage.getItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION) ?? undefined;
 
-    try {
-        if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > new Date().getTime()) {
-            try {
-                await initializeApi();
-                await initializeWebsocket();
-
-                apiInitialized = true;
-            } catch (_e) {
-                apiInitialized = false;
-            }
+    if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > new Date().getTime()) {
+        try {
+            await initializeApi();
+            apiInitialized = true;
+        } catch (_e) {
+            return;
         }
-    } finally {
-        app.use(createPinia());
 
-        await initializeApp(apiInitialized);
+        try {
+            await initializeWebsocket();
+        } catch (_e) {}
+    }
 
-        app.use(router);
-        app.use(i18n);
-        app.use(VueApexCharts);
+    app.use(createPinia());
 
-        app.mount("#app");
+    await initializeApp(apiInitialized);
 
-        if (loader && loader.parentNode) {
-            loader.parentNode.removeChild(loader);
-        }
+    app.use(router);
+    app.use(i18n);
+    app.use(VueApexCharts);
+
+    app.mount("#app");
+
+    if (loader && loader.parentNode) {
+        loader.parentNode.removeChild(loader);
     }
 })();

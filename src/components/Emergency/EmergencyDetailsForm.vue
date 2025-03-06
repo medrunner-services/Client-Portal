@@ -12,14 +12,16 @@ import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
+import { AlertColors, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
+const logicStore = useLogicStore();
 
 const emit = defineEmits(["submittedDetails"]);
 
@@ -124,7 +126,7 @@ async function sendDetails(): Promise<void> {
     <div>
         <div class="flex min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
-            <span class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
+            <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
                 <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
             </span>
