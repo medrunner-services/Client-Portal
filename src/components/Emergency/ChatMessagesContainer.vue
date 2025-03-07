@@ -142,9 +142,9 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
         if (message.deleted) classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
         else classes.push("bg-primary-600 text-white");
 
+        if (messageIndex === 0) classes.push("mt-6");
         if (isMessageChain(messageIndex) === "top") {
-            if (messageIndex === 0) classes.push("mt-6");
-            else classes.push("mt-4");
+            if (messageIndex !== 0) classes.push("mt-4");
 
             classes.push("pt-1 rounded-br");
         } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
