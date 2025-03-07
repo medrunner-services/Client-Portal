@@ -362,6 +362,11 @@
     "notification_buttonDisable": "Désactiver les notifications",
     "user_rsiHandlePlaceholder": "Votre pseudo RSI...",
     "user_linkAccount": "Lier le compte",
+    "user_timeFormatSetting": "Format de l'heure",
+    "user_timeFormatSettingHelper": "Choisissez entre 12 heures (AM/PM), 24 heures ou automatique (selon votre choix de langue).",
+    "user_timeFormatSettingAutomatic": "Automatique",
+    "user_timeFormatSetting24h": "24h",
+    "user_timeFormatSetting12h": "12h (AM/PM)",
     "404_somethingMissing": "Il manque quelque chose.",
     "404_helperText": "Désolé, nous ne trouvons pas cette page. Vous trouverez beaucoup de choses à explorer sur la page d'accueil.",
     "404_backToHomepage": "Retour à la page d'accueil"

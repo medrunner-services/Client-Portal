@@ -20,6 +20,7 @@ export interface SyncedSettings {
     globalAnalytics: boolean;
     selectedLanguage: string;
     lastConfirmedWarningId: string;
+    hour12FormatingPreference?: boolean;
 }
 
 export enum WSState {

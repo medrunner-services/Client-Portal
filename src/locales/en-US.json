@@ -362,6 +362,11 @@
     "notification_buttonDisable": "Disable notifications",
     "user_rsiHandlePlaceholder": "Your RSI Handle...",
     "user_linkAccount": "Link account",
+    "user_timeFormatSetting": "Time Format",
+    "user_timeFormatSettingHelper": "Choose between 12-hour (AM/PM), 24-hour, or automatic (follows your language preference).",
+    "user_timeFormatSettingAutomatic": "Automatic",
+    "user_timeFormatSetting24h": "24h",
+    "user_timeFormatSetting12h": "12h (AM/PM)",
     "404_somethingMissing": "Something's missing.",
     "404_helperText": "Sorry, we can't find that page. You'll find lots to explore on the home page.",
     "404_backToHomepage": "Back to home page"

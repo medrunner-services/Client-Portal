@@ -1,4 +1,5 @@
 import { i18n } from "@/i18n.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 
 export function getTimeDifferenceString(startTimestamp: number, endTimestamp: number): string {
     const timeToAccept = Math.floor(endTimestamp / 1000) - Math.floor(startTimestamp / 1000);
@@ -21,6 +22,8 @@ export function getTimeDifferenceString(startTimestamp: number, endTimestamp: nu
 
 export function timestampToHours(timestamp: number | string): string {
     const { locale } = i18n.global;
+    const userStore = useUserStore();
+
     const now = new Date();
     const date = new Date(timestamp);
 
@@ -29,6 +32,7 @@ export function timestampToHours(timestamp: number | string): string {
             return date.toLocaleTimeString(locale.value, {
                 hour: "2-digit",
                 minute: "2-digit",
+                hour12: userStore.syncedSettings.hour12FormatingPreference,
             });
         } else {
             return date
@@ -37,6 +41,7 @@ export function timestampToHours(timestamp: number | string): string {
                     day: "2-digit",
                     hour: "2-digit",
                     minute: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 })
                 .replace(",", "");
         }
@@ -48,6 +53,7 @@ export function timestampToHours(timestamp: number | string): string {
                 day: "2-digit",
                 hour: "2-digit",
                 minute: "2-digit",
+                hour12: userStore.syncedSettings.hour12FormatingPreference,
             })
             .replace(",", "");
     }
@@ -55,15 +61,20 @@ export function timestampToHours(timestamp: number | string): string {
 
 export function timestampToDate(timestamp: number | string): string {
     const { locale } = i18n.global;
+    const userStore = useUserStore();
+
     return new Date(timestamp).toLocaleDateString(locale.value, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
+        hour12: userStore.syncedSettings.hour12FormatingPreference,
     });
 }
 
 export function timestampToFullDate(timestamp: number | string): string {
     const { locale } = i18n.global;
+    const userStore = useUserStore();
+
     return new Date(timestamp).toLocaleDateString(locale.value, {
         weekday: "long",
         year: "numeric",
@@ -71,11 +82,14 @@ export function timestampToFullDate(timestamp: number | string): string {
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
+        hour12: userStore.syncedSettings.hour12FormatingPreference,
     });
 }
 
 export function timestampToFullDateTimeZone(timestamp: number | string): string {
     const { locale } = i18n.global;
+    const userStore = useUserStore();
+
     return new Date(timestamp).toLocaleDateString(locale.value, {
         weekday: "long",
         year: "numeric",
@@ -84,5 +98,6 @@ export function timestampToFullDateTimeZone(timestamp: number | string): string 
         hour: "2-digit",
         minute: "2-digit",
         timeZoneName: "short",
+        hour12: userStore.syncedSettings.hour12FormatingPreference,
     });
 }

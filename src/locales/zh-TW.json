@@ -362,6 +362,11 @@
     "notification_buttonDisable": "停用通知功能",
     "user_rsiHandlePlaceholder": "您的RSI名稱...",
     "user_linkAccount": "連接賬號",
+    "user_timeFormatSetting": "Time Format",
+    "user_timeFormatSettingHelper": "Choose between 12-hour (AM/PM), 24-hour, or automatic (follows your language preference).",
+    "user_timeFormatSettingAutomatic": "Automatic",
+    "user_timeFormatSetting24h": "24h",
+    "user_timeFormatSetting12h": "12h (AM/PM)",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
     "404_backToHomepage": "回到首頁"
