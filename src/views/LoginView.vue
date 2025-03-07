@@ -11,6 +11,7 @@ import LoginWelcome from "@/components/Login/LoginWelcome.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore";
 import { AlertColors } from "@/types";
+import { clearURLParams } from "@/utils/functions/urlFunctions.ts";
 
 const route = useRoute();
 const { t } = useI18n();
@@ -28,6 +29,7 @@ onMounted(async () => {
         } else {
             alertStore.newAlert(AlertColors.RED, getErrorText());
         }
+        clearURLParams();
     }
 });
 
