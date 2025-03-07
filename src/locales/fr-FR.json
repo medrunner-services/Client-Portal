@@ -165,6 +165,7 @@
     "tracking_edited": "modifié",
     "tracking_editingMessage": "Édition du message",
     "tracking_chatMessageDeleted": "(Ce message a été supprimé)",
+    "tracking_emergencyRulesModalDescriptionSimplified": "Une équipe de Medrunner vous contactera via la boîte de dialogue. Veuillez prêter attention aux messages entrants et aux notifications. N'oubliez pas qu'il se peut qu'ils ne parlent que l'anglais.",
     "history_unknown": "Inconnu",
     "history_low": "Pas de danger",
     "history_medium": "PvE",

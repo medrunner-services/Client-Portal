@@ -165,6 +165,7 @@
     "tracking_edited": "edited",
     "tracking_editingMessage": "Editing message",
     "tracking_chatMessageDeleted": "(This message has been deleted)",
+    "tracking_emergencyRulesModalDescriptionSimplified": "A Medrunner team will contact you via the chat box. Please pay attention to incoming messages and update notifications. Please remember that your responding team may only speak English.",
     "history_unknown": "未知",
     "history_low": "低",
     "history_medium": "中",

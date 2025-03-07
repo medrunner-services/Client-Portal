@@ -165,6 +165,7 @@
     "tracking_edited": "bearbeitet",
     "tracking_editingMessage": "Nachricht wird bearbeitet",
     "tracking_chatMessageDeleted": "(This message has been deleted)",
+    "tracking_emergencyRulesModalDescriptionSimplified": "A Medrunner team will contact you via the chat box. Please pay attention to incoming messages and update notifications. Please remember that your responding team may only speak English.",
     "history_unknown": "Unbekannt",
     "history_low": "Keine Gefahr",
     "history_medium": "PvE-Gefahr",
