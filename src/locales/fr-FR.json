@@ -25,6 +25,7 @@
     "error_failedMessage": "Une erreur s'est produite lors de l'envoi du message. Veuillez recharger la page et réessayer.",
     "error_wsDisconnectedPageAccessError": "Vous ne pouvez pas accéder à cette page lorsque vous avez des problèmes de connexion avec le serveur. Veuillez actualiser la page.",
     "error_deletingChatMessage": "Une erreur s'est produite lors de la suppression de ce message",
+    "error_invalidRsiHandle": "Pseudo RSI invalide",
     "form_confirm": "Confirmer",
     "form_edit": "Modifier",
     "form_system": "Système",

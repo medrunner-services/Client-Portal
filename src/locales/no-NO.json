@@ -25,6 +25,7 @@
     "error_failedMessage": "En feil oppstod under sending av meldingen, vennligst last inn siden på nytt og prøv igjen.",
     "error_wsDisconnectedPageAccessError": "You cannot access this page while you have connection issues with the server. Please refresh the page.",
     "error_deletingChatMessage": "An error occurred deleting the message",
+    "error_invalidRsiHandle": "Invalid RSI Handle",
     "form_confirm": "Bekreft",
     "form_edit": "Rediger",
     "form_system": "Solsystem",

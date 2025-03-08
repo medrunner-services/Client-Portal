@@ -25,6 +25,7 @@
     "error_failedMessage": "在发送此消息时出现了一处错误。请刷新页面后重试。",
     "error_wsDisconnectedPageAccessError": "您无法在与服务器的连接存在问题时访问此页面。请刷新页面。",
     "error_deletingChatMessage": "在删除此消息时出现了一处错误",
+    "error_invalidRsiHandle": "Invalid RSI Handle",
     "form_confirm": "确认",
     "form_edit": "修改",
     "form_system": "星系",

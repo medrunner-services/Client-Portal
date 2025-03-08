@@ -25,6 +25,7 @@
     "error_failedMessage": "Beim Senden der Nachricht ist ein Fehler aufgetreten. Bitte laden Sie die Seite neu und versuchen Sie es erneut.",
     "error_wsDisconnectedPageAccessError": "You cannot access this page while you have connection issues with the server. Please refresh the page.",
     "error_deletingChatMessage": "An error occurred deleting the message",
+    "error_invalidRsiHandle": "Invalid RSI Handle",
     "form_confirm": "Bestätigen",
     "form_edit": "Bearbeiten",
     "form_system": "Sternensystem",

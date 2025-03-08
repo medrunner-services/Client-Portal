@@ -25,6 +25,7 @@
     "error_failedMessage": "Произошла ошибка при отправке сообщения. Пожалуйста, перезагрузите страницу и попробуйте снова.",
     "error_wsDisconnectedPageAccessError": "You cannot access this page while you have connection issues with the server. Please refresh the page.",
     "error_deletingChatMessage": "An error occurred deleting the message",
+    "error_invalidRsiHandle": "Invalid RSI Handle",
     "form_confirm": "Подтвердить",
     "form_edit": "Изменить",
     "form_system": "Система",

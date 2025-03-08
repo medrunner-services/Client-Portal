@@ -25,6 +25,7 @@
     "error_failedMessage": "在發送訊息時遭遇錯誤，請重整網頁並重試",
     "error_wsDisconnectedPageAccessError": "You cannot access this page while you have connection issues with the server. Please refresh the page.",
     "error_deletingChatMessage": "An error occurred deleting the message",
+    "error_invalidRsiHandle": "Invalid RSI Handle",
     "form_confirm": "確認",
     "form_edit": "編輯",
     "form_system": "所在星系",
