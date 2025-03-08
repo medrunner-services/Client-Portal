@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
@@ -122,13 +123,12 @@ async function disconnectUser(): Promise<void> {
                     >{{ t("login_termsOfService").split("~")[1] }}.</a
                 >
             </p>
-            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full" :error-text="formErrorMessage">
-                {{ t("login_verify") }}</GlobalButton
-            >
+            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full"> {{ t("login_verify") }}</GlobalButton>
 
             <GlobalButton size="full" class="mt-4" icon="logout" type="secondary" :loading="isLoggingOut" @click="disconnectUser()">{{
                 t("navbar_disconnect")
             }}</GlobalButton>
+            <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
         </form>
     </div>
 </template>

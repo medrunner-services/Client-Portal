@@ -11,8 +11,7 @@ export interface Props {
     inputSize?: "small" | "large";
     labelSize?: "small" | "large";
     size?: "fit" | "full";
-    error?: string;
-    showErrorString?: boolean;
+    error?: boolean;
     modelValue?: string | number | boolean | undefined;
     options: { value: string | number | boolean | undefined; label?: string; hidden?: boolean; disabled?: boolean }[];
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg";
@@ -21,7 +20,6 @@ export interface Props {
 const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
-    showErrorString: true,
     radius: "rounded-lg",
     helperType: "icon",
     inputPosition: "column",
@@ -110,7 +108,6 @@ const selectInputClasses = computed(() => {
                 {{ option.label ?? option.value }}
             </option>
         </select>
-        <p v-if="props.showErrorString && props.error" class="mt-2 text-sm font-semibold text-red-600">{{ props.error }}</p>
     </div>
 </template>
 

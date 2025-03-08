@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
@@ -250,7 +251,6 @@ async function goToLinkPage() {
                         :loading="submittingNewCode"
                         :submit="true"
                         size="full"
-                        :error-text="errorRedeemingCode"
                         :disabled="completeInputCode.length < 19 || !isCompleteCodeValid"
                         >{{ t("profile_redeemCode") }}</GlobalButton
                     >
@@ -261,6 +261,7 @@ async function goToLinkPage() {
                         {{ t("code_skip") }}</GlobalButton
                     >
                 </div>
+                <GlobalErrorText v-if="errorRedeemingCode" :text="errorRedeemingCode" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>
         </div>
     </ModalContainer>

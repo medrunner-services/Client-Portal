@@ -6,6 +6,7 @@ import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
 import IgnoreEmergencyDetailsFormModal from "@/components/Modals/IgnoreEmergencyDetailsFormModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
@@ -420,17 +421,12 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-8 flex flex-col gap-4 lg:flex-row">
             <div>
-                <GlobalButton
-                    v-if="currentFormPart === 3"
-                    :error-text="formErrorMessage"
-                    :loading="submittingDetails"
-                    class="w-full lg:w-fit"
-                    size="full"
-                    @click="sendDetails()"
-                    >{{ t("formDetailed_sendButton") }}</GlobalButton
-                >
+                <GlobalButton v-if="currentFormPart === 3" :loading="submittingDetails" class="w-full lg:w-fit" size="full" @click="sendDetails()">{{
+                    t("formDetailed_sendButton")
+                }}</GlobalButton>
                 <GlobalButton v-else class="w-full lg:w-fit" size="full" @click="currentFormPart++">{{ t("login_continue") }}</GlobalButton>
             </div>
+            <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
 
             <div>
                 <GlobalButton

@@ -198,10 +198,15 @@ async function resetSettings() {
                         v-model="logicStore.isNotificationGranted"
                         :helper="t('user_helperNotificationSetting')"
                         side="right"
-                        :error-text="updateNotificationError"
                         @input-click="updateGlobalNotificationPerms()"
                         >{{ t("user_notificationSetting") }}
                     </GlobalToggle>
+                    <GlobalErrorText
+                        v-if="updateNotificationError"
+                        :text="updateNotificationError"
+                        :icon="false"
+                        class="mt-2 text-sm font-semibold"
+                    />
 
                     <div class="ml-4 md:ml-8">
                         <GlobalToggle
@@ -298,15 +303,10 @@ async function resetSettings() {
             </div>
 
             <div class="mt-8 flex w-full">
-                <GlobalButton
-                    type="outline"
-                    class="ml-auto w-full lg:w-fit"
-                    :error-text="resetSettingsError"
-                    :disabled="isResettingSettings"
-                    size="full"
-                    @click="resetSettings()"
-                    >{{ t("user_resetSettings") }}</GlobalButton
-                >
+                <GlobalButton type="outline" class="ml-auto w-full lg:w-fit" :disabled="isResettingSettings" size="full" @click="resetSettings()">{{
+                    t("user_resetSettings")
+                }}</GlobalButton>
+                <GlobalErrorText v-if="resetSettingsError" :text="resetSettingsError" :icon="false" class="mt-2 text-sm font-semibold" />
             </div>
         </GlobalCard>
     </div>
