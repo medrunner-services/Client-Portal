@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
     inputPosition: "column",
     inputSize: "large",
     labelSize: "large",
-    size: "fit",
+    size: "full",
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
