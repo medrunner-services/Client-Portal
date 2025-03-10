@@ -20,28 +20,24 @@ const appVersion = __APP_VERSION__;
                 <div class="w-full">
                     <p class="text-xl font-semibold">{{ t("user_newFeaturesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Added the ability to edit chat messages.</li>
-                        <li>Improved auth stability.</li>
-                        <li>Added back unique session per domain.</li>
+                        <li>Added the ability to rate an emergency threw a link.</li>
+                        <li>Added a setting to choose the 12h or 24h time format and override their language preference.</li>
+                        <li>Added the ability to delete chat messages.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_improvementsTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Added time difference between emergency states in history.</li>
-                        <li>Added support for multiple line sin chat input.</li>
-                        <li>Made new features available instantly after user rank update.</li>
-                        <li>Improved localized date visuals.</li>
-                        <li>Improved plurals for some strings.</li>
+                        <li>Improved errors when loading the app.</li>
+                        <li>Improved "Emergency rule" modal texte to take into account the status of the users settings.</li>
                     </ul>
                 </div>
 
                 <div class="mt-8 w-full">
                     <p class="text-xl font-semibold">{{ t("user_bugFixesTitle") }}</p>
                     <ul class="mt-2 flex list-inside list-disc flex-col gap-1">
-                        <li>Fixed some bugs linked to auth.</li>
-                        <li>Fixed small UI issues.</li>
+                        <li>Fixed a bug that allowed users to edit their previous message even when the chat input was not empty.</li>
                     </ul>
                 </div>
             </div>

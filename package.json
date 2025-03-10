@@ -1,6 +1,6 @@
 {
   "name": "client-portal",
-  "version": "2.8.5",
+  "version": "2.9.0",
   "private": false,
   "type": "module",
   "scripts": {
@@ -44,7 +44,7 @@
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.5.0",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.21",
     "dotenv": "^16.4.7",
     "eslint": "^9.22.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
