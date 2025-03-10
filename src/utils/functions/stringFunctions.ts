@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n.ts";
+import { useUserStore } from "@/stores/userStore.ts";
 import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
@@ -61,6 +62,7 @@ export function errorString(errorCode: number, customMessage?: string): string {
 
 export function parseMarkdown(text: string) {
     const { locale } = i18n.global;
+    const userStore = useUserStore();
 
     const mdIt = MarkdownIt({
         html: true,
@@ -127,6 +129,7 @@ export function parseMarkdown(text: string) {
                 dateString = date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "T":
@@ -134,6 +137,7 @@ export function parseMarkdown(text: string) {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "f":
@@ -143,6 +147,7 @@ export function parseMarkdown(text: string) {
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "F":
@@ -153,6 +158,7 @@ export function parseMarkdown(text: string) {
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
@@ -161,6 +167,7 @@ export function parseMarkdown(text: string) {
                 dateString = date.toLocaleTimeString(locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
+                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             default:

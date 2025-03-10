@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
@@ -74,13 +75,14 @@ async function cancelEmergency() {
                 />
 
                 <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" :error-text="errorCancelingEmergency" icon="cancel">{{
+                    <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" icon="cancel">{{
                         t("tracking_cancelButton")
                     }}</GlobalButton>
                     <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
                     >
                 </div>
+                <GlobalErrorText v-if="errorCancelingEmergency" :text="errorCancelingEmergency" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>
         </div>
     </ModalContainer>

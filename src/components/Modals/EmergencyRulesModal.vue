@@ -5,10 +5,12 @@ import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCheckbox from "@/components/utils/GlobalCheckbox.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 
 const { t } = useI18n();
 const userStore = useUserStore();
+const logicStore = useLogicStore();
 
 const emit = defineEmits(["confirmed", "close"]);
 
@@ -35,7 +37,11 @@ async function confirmRules() {
     <ModalContainer :title="t('tracking_emergencyRulesModalTitle')" @close="emit('close')">
         <div>
             <p class="text-gray-500 dark:text-gray-400">
-                {{ t("tracking_emergencyRulesModalDescription") }}
+                {{
+                    logicStore.isNotificationGranted
+                        ? t("tracking_emergencyRulesModalDescriptionSimplified")
+                        : t("tracking_emergencyRulesModalDescription")
+                }}
             </p>
 
             <GlobalCheckbox v-model="checkboxValue" class="mt-8">{{ t("tracking_emergencyRulesModalHideLater") }}</GlobalCheckbox>

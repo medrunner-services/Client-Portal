@@ -9,21 +9,23 @@ export interface Props {
     helperType?: "icon" | "text";
     inputPosition?: "row" | "column";
     inputSize?: "small" | "large";
-    error?: string;
-    showErrorString?: boolean;
+    labelSize?: "small" | "large";
+    size?: "fit" | "full";
+    error?: boolean;
     modelValue?: string | number | boolean | undefined;
-    options: { value: string | number | boolean | undefined; label?: string; hidden?: boolean }[];
+    options: { value: string | number | boolean | undefined; label?: string; hidden?: boolean; disabled?: boolean }[];
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg";
 }
 
 const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
-    showErrorString: true,
     radius: "rounded-lg",
     helperType: "icon",
     inputPosition: "column",
     inputSize: "large",
+    labelSize: "large",
+    size: "full",
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
@@ -48,6 +50,7 @@ const selectInputClasses = computed(() => {
     if (props.inputPosition === "column") allClasses = allClasses.concat(["w-full"]);
     if (props.inputSize === "small") allClasses = allClasses.concat(["pl-2", "pr-1", "py-1.5", "h-fit"]);
     if (props.inputSize === "large") allClasses = allClasses.concat(["p-2.5"]);
+    if (props.size === "fit") allClasses = allClasses.concat(["md:w-fit"]);
     allClasses.push(props.radius);
 
     return allClasses.join(" ");
@@ -55,9 +58,13 @@ const selectInputClasses = computed(() => {
 </script>
 
 <template>
-    <div class="flex" :class="props.inputPosition === 'column' ? 'flex-col' : 'justify-between'">
-        <div v-if="props.label" class="mb-2 flex" :class="props.helperType === 'text' ? 'flex-col' : 'items-center'">
-            <label class="block text-sm font-medium text-gray-900 dark:text-white">{{ props.label }}<span v-if="props.required">*</span></label>
+    <div class="flex" :class="props.inputPosition === 'column' ? 'flex-col' : 'flex-col sm:flex-row sm:justify-between'">
+        <div
+            v-if="props.label"
+            class="mb-2 flex"
+            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.labelSize === 'small' ? 'text-sm' : '']"
+        >
+            <label class="block font-medium text-gray-900 dark:text-white">{{ props.label }}<span v-if="props.required">*</span></label>
 
             <div v-if="props.helperType === 'icon'" class="relative">
                 <svg
@@ -87,23 +94,20 @@ const selectInputClasses = computed(() => {
                     </div>
                 </div>
             </div>
-            <p v-else-if="props.helperType === 'text' && props.helper" class="text-xs text-gray-500 dark:text-gray-400">
-                {{ props.helper }}
-            </p>
+            <p v-else-if="props.helperType === 'text' && props.helper" class="text-xs text-gray-500 dark:text-gray-400">{{ props.helper }}</p>
         </div>
         <select
             v-model="value"
             :disabled="props.disabled"
             :required="props.required"
-            class="block cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            class="block w-full cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
             @change="$emit('change')"
         >
-            <option v-for="(option, index) in props.options" :key="index" :value="option.value" :hidden="option.hidden">
+            <option v-for="(option, index) in props.options" :key="index" :value="option.value" :hidden="option.hidden" :disabled="option.disabled">
                 {{ option.label ?? option.value }}
             </option>
         </select>
-        <p v-if="props.showErrorString && props.error" class="mt-2 text-sm font-semibold text-red-600">{{ props.error }}</p>
     </div>
 </template>
 

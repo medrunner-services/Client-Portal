@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalDateInput from "@/components/utils/GlobalDateInput.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
@@ -119,13 +120,12 @@ const getModalTitle = computed(() => {
                 />
 
                 <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="submittingNewToken" :submit="true" size="full" :error-text="errorCreationToken">{{
-                        t("developer_createTokenButton")
-                    }}</GlobalButton>
+                    <GlobalButton :loading="submittingNewToken" :submit="true" size="full">{{ t("developer_createTokenButton") }}</GlobalButton>
                     <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
                     >
                 </div>
+                <GlobalErrorText v-if="errorCreationToken" :text="errorCreationToken" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>
         </div>
     </ModalContainer>

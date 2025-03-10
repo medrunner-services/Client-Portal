@@ -4,7 +4,6 @@ import { computed } from "vue";
 export interface Props {
     side?: "left" | "right";
     helper?: string;
-    errorText?: string;
     modelValue?: boolean;
     size?: "small" | "large";
     disabled?: boolean;
@@ -51,7 +50,6 @@ const value = computed({
                 <p v-if="props.helper" class="text-xs text-gray-500 dark:text-gray-400">{{ props.helper }}</p>
             </div>
         </div>
-        <p class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ props.errorText }}</p>
     </div>
 </template>
 

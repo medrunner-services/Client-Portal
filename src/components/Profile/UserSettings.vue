@@ -5,6 +5,7 @@ import { useRoute } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
@@ -20,6 +21,7 @@ const route = useRoute();
 const { posthog } = usePostHog();
 
 const updateNotificationError = ref("");
+const updateHourFormatingError = ref("");
 const resetSettingsError = ref("");
 const isResettingSettings = ref(false);
 
@@ -80,6 +82,15 @@ async function updateMessageNotification() {
         await userStore.setSettings({ chatMessageNotification: userStore.syncedSettings.chatMessageNotification });
     } catch (error: any) {
         updateNotificationError.value = errorString(error.statusCode);
+    }
+}
+
+async function updateHourFormatingPreference() {
+    try {
+        updateHourFormatingError.value = "";
+        await userStore.setSettings({ hourFormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
+    } catch (error: any) {
+        updateHourFormatingError.value = errorString(error.statusCode);
     }
 }
 
@@ -145,6 +156,7 @@ async function resetSettings() {
                 emergencyUpdateNotification: null,
                 chatMessageNotification: null,
                 globalAnalytics: null,
+                hourFormatingPreference: null,
             });
         }
     } catch (error: any) {
@@ -155,6 +167,7 @@ async function resetSettings() {
         userStore.syncedSettings.emergencyUpdateNotification = true;
         userStore.syncedSettings.chatMessageNotification = MessageNotification.ALL;
         userStore.syncedSettings.globalAnalytics = true;
+        userStore.syncedSettings.hour12FormatingPreference = undefined;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
 
@@ -185,10 +198,15 @@ async function resetSettings() {
                         v-model="logicStore.isNotificationGranted"
                         :helper="t('user_helperNotificationSetting')"
                         side="right"
-                        :error-text="updateNotificationError"
                         @input-click="updateGlobalNotificationPerms()"
                         >{{ t("user_notificationSetting") }}
                     </GlobalToggle>
+                    <GlobalErrorText
+                        v-if="updateNotificationError"
+                        :text="updateNotificationError"
+                        :icon="false"
+                        class="mt-2 text-sm font-semibold"
+                    />
 
                     <div class="ml-4 md:ml-8">
                         <GlobalToggle
@@ -206,6 +224,7 @@ async function resetSettings() {
                             :helper="t('user_helperNotificationChatMessageSetting')"
                             helper-type="text"
                             input-position="row"
+                            label-size="small"
                             input-size="small"
                             :options="[
                                 { value: MessageNotification.ALL, label: t('user_notificationChatMessageSettingAll') },
@@ -223,13 +242,37 @@ async function resetSettings() {
                             >{{ t("user_notificationCustomSoundSetting") }}
                         </GlobalToggle>
                     </div>
+
+                    <div class="mt-4">
+                        <GlobalSelectInput
+                            v-model="userStore.syncedSettings.hour12FormatingPreference"
+                            :label="t('user_timeFormatSetting')"
+                            :helper="t('user_timeFormatSettingHelper')"
+                            helper-type="text"
+                            input-position="row"
+                            input-size="small"
+                            :options="[
+                                { value: undefined, label: t('user_timeFormatSettingAutomatic') },
+                                { value: false, label: t('user_timeFormatSetting24h') },
+                                { value: true, label: t('user_timeFormatSetting12h') },
+                            ]"
+                            @change="updateHourFormatingPreference()"
+                        />
+                        <GlobalErrorText
+                            v-if="updateHourFormatingError"
+                            :icon="false"
+                            class="text-sm"
+                            weight="font-medium"
+                            :text="updateHourFormatingError"
+                        />
+                    </div>
                 </div>
 
                 <GlobalToggle
                     v-model="logicStore.darkMode"
                     :helper="t('user_helperDarkModeSetting')"
                     side="right"
-                    class="mt-4"
+                    class="mt-2"
                     @input-click="updateDarkMode()"
                     >{{ t("user_darkModeSetting") }}</GlobalToggle
                 >
@@ -260,15 +303,10 @@ async function resetSettings() {
             </div>
 
             <div class="mt-8 flex w-full">
-                <GlobalButton
-                    type="outline"
-                    class="ml-auto w-full lg:w-fit"
-                    :error-text="resetSettingsError"
-                    :disabled="isResettingSettings"
-                    size="full"
-                    @click="resetSettings()"
-                    >{{ t("user_resetSettings") }}</GlobalButton
-                >
+                <GlobalButton type="outline" class="ml-auto w-full lg:w-fit" :disabled="isResettingSettings" size="full" @click="resetSettings()">{{
+                    t("user_resetSettings")
+                }}</GlobalButton>
+                <GlobalErrorText v-if="resetSettingsError" :text="resetSettingsError" :icon="false" class="mt-2 text-sm font-semibold" />
             </div>
         </GlobalCard>
     </div>

@@ -6,6 +6,7 @@ import { useI18n } from "vue-i18n";
 import ChatMessageToolbar from "@/components/Emergency/ChatMessageToolbar.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
@@ -26,9 +27,11 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
     loadNewMessages: [];
     editMessage: [id: string, contents: string];
+    deleteMessage: [id: string];
 }>();
 
 const { t } = useI18n();
+const logicStore = useLogicStore();
 
 const chatBox = ref<HTMLDivElement | null>(null);
 const distanceFromBottom = ref(0);
@@ -131,20 +134,24 @@ function truncatedMessage(message: ChatMessage): string {
     return message.contents.length > 500 ? `${parsedMessage.substring(0, 500)}...` : parsedMessage;
 }
 
-function messageClasses(messageIndex: number, senderId: string): string {
+function messageClasses(message: ChatMessage, messageIndex: number): string {
     const classes: string[] = [];
 
-    if (isMessageAuthor(senderId)) {
-        classes.push("self-end bg-primary-600 text-white lg:mr-6");
+    if (isMessageAuthor(message.senderId)) {
+        classes.push("self-end lg:mr-6");
+        if (message.deleted) classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
+        else classes.push("bg-primary-600 text-white");
 
+        if (messageIndex === 0) classes.push("mt-6");
         if (isMessageChain(messageIndex) === "top") {
-            if (messageIndex === 0) classes.push("mt-6");
-            else classes.push("mt-4");
+            if (messageIndex !== 0) classes.push("mt-4");
 
             classes.push("pt-1 rounded-br");
         } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
         else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-0 pt-1 rounded-tr");
         else classes.push("mt-4 pt-2");
+
+        if (message.deleted && !logicStore.darkMode) classes.push("mt-0.5 mb-0.5");
     } else {
         if (isMessageChain(messageIndex) === "top") {
             if (messageIndex === 0) classes.push("mt-0");
@@ -171,7 +178,7 @@ function messageClasses(messageIndex: number, senderId: string): string {
             v-else
             :key="message.id"
             class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 dark:border-gray-700 lg:px-4"
-            :class="messageClasses(index, message.senderId)"
+            :class="messageClasses(message, index)"
             @mouseenter="hoveredMessageId = message.id"
             @mouseleave="hoveredMessageId = undefined"
         >
@@ -183,8 +190,17 @@ function messageClasses(messageIndex: number, senderId: string): string {
             </p>
             <p
                 class="prose mt-1 break-words dark:prose-invert dark:text-white"
-                :class="{ 'markdown-extras prose-invert text-right text-white': isMessageAuthor(message.senderId) }"
-                v-html="showFullMessage[message.id] ? parseChatMessageString(message) : truncatedMessage(message)"
+                :class="[
+                    { 'markdown-extras prose-invert text-right': isMessageAuthor(message.senderId) },
+                    { 'italic text-gray-900': message.deleted },
+                ]"
+                v-html="
+                    message.deleted
+                        ? t('tracking_chatMessageDeleted')
+                        : showFullMessage[message.id]
+                          ? parseChatMessageString(message)
+                          : truncatedMessage(message)
+                "
             ></p>
             <div class="flex items-center justify-between">
                 <p
@@ -204,8 +220,9 @@ function messageClasses(messageIndex: number, senderId: string): string {
             </div>
 
             <ChatMessageToolbar
-                v-if="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id"
+                v-if="!isTranscript && isMessageAuthor(message.senderId) && hoveredMessageId === message.id && !message.deleted"
                 @edit-click="emit('editMessage', message.id, message.contents)"
+                @delete-click="emit('deleteMessage', message.id)"
             />
         </div>
 

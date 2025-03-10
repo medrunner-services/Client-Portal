@@ -6,20 +6,23 @@ import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
 import IgnoreEmergencyDetailsFormModal from "@/components/Modals/IgnoreEmergencyDetailsFormModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
+import { AlertColors, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
+const logicStore = useLogicStore();
 
 const emit = defineEmits(["submittedDetails"]);
 
@@ -124,7 +127,7 @@ async function sendDetails(): Promise<void> {
     <div>
         <div class="flex min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
-            <span class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
+            <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
                 <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
             </span>
@@ -418,17 +421,12 @@ async function sendDetails(): Promise<void> {
 
         <div class="mt-8 flex flex-col gap-4 lg:flex-row">
             <div>
-                <GlobalButton
-                    v-if="currentFormPart === 3"
-                    :error-text="formErrorMessage"
-                    :loading="submittingDetails"
-                    class="w-full lg:w-fit"
-                    size="full"
-                    @click="sendDetails()"
-                    >{{ t("formDetailed_sendButton") }}</GlobalButton
-                >
+                <GlobalButton v-if="currentFormPart === 3" :loading="submittingDetails" class="w-full lg:w-fit" size="full" @click="sendDetails()">{{
+                    t("formDetailed_sendButton")
+                }}</GlobalButton>
                 <GlobalButton v-else class="w-full lg:w-fit" size="full" @click="currentFormPart++">{{ t("login_continue") }}</GlobalButton>
             </div>
+            <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
 
             <div>
                 <GlobalButton

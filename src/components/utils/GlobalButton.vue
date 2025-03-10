@@ -5,7 +5,6 @@ export interface Props {
     type?: "primary" | "secondary" | "outline";
     submit?: boolean;
     loading?: boolean;
-    errorText?: string;
     size?: "fit" | "full";
     icon?: "link" | "pencil" | "logout" | "plus" | "cross" | "arrowLeft" | "cancel";
     iconPosition?: "left" | "right";
@@ -212,8 +211,6 @@ const { t } = useI18n();
                 <slot />
             </span>
         </button>
-
-        <p v-if="props.errorText" class="mt-2 text-sm font-semibold text-red-600 dark:text-red-500">{{ props.errorText }}</p>
     </div>
 </template>
 

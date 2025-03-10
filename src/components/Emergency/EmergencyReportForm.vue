@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 
 import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
@@ -243,11 +244,11 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 :submit="true"
                 size="full"
                 :disabled="isEmergenciesDisabled"
-                :error-text="formErrorMessage"
                 :loading="formSubmittingEmergency"
                 >{{ t("form_reportEmergency") }}</GlobalButton
             >
         </form>
+        <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
     </div>
 </template>
 

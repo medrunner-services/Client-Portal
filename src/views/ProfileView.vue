@@ -9,17 +9,17 @@ import UserSettings from "@/components/Profile/UserSettings.vue";
 <template>
     <div class="content-container flex flex-col gap-10 xl:flex-row">
         <div class="xl:w-1/2">
-            <UserAccount />
+            <UserSettings />
 
-            <UserSettings class="mt-10" />
-
-            <TokenManagement class="mt-10" />
-
-            <CodesManagement class="mt-10" />
+            <ChangelogRecap class="mt-10" />
         </div>
 
         <div class="xl:w-1/2">
-            <ChangelogRecap />
+            <UserAccount />
+
+            <CodesManagement class="mt-10" />
+
+            <TokenManagement class="mt-10" />
         </div>
     </div>
 </template>

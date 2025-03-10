@@ -125,6 +125,14 @@ async function sendMessage() {
     }
 }
 
+async function handleDeleteMessage(id: string) {
+    try {
+        await emergencyStore.deleteEmergencyMessage(id);
+    } catch (error: any) {
+        alertStore.newAlert(AlertColors.YELLOW, errorString(error.statusCode, t("error_deletingChatMessage")));
+    }
+}
+
 function handleEditMessage(id: string, content: string) {
     inputMessage.value = content;
     originalEditedMessage.value = content;
@@ -143,11 +151,11 @@ function escapeEditingMessage() {
 }
 
 function editLastMessage() {
+    if (inputMessage.value) return;
     const lastMessage = emergencyStore.trackedEmergencyMessages
         .filter((message) => message.senderId === userStore.user.id)
+        .filter((message) => !message.deleted)
         .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
-
-    console.log(lastMessage);
 
     if (lastMessage) {
         handleEditMessage(lastMessage.id, lastMessage.contents);
@@ -168,6 +176,7 @@ function editLastMessage() {
                     :emergency-members="emergencyStore.trackedEmergency.respondingTeam.allMembers"
                     :user="userStore.user"
                     @edit-message="(id, content) => handleEditMessage(id, content)"
+                    @delete-message="(id) => handleDeleteMessage(id)"
                 />
 
                 <div class="mt-5 rounded-lg bg-gray-100 px-3 pb-1.5 pt-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">

@@ -1,16 +1,21 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
+import { i18n } from "@/i18n.ts";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { AlertColors, WSState } from "@/types.ts";
 import { usePostHog } from "@/usePostHog";
 
 const { posthog } = usePostHog();
 
 import DashboardView from "./views/DashboardView.vue";
 
-async function isUserComplete(to: RouteLocationNormalized): Promise<string | boolean> {
+async function isUserComplete(to: RouteLocationNormalized, requiresWS: boolean = false): Promise<string | boolean> {
+    const { t } = i18n.global;
     const userStore = useUserStore();
     const logicStore = useLogicStore();
+    const alertStore = useAlertStore();
 
     if (!userStore.isAuthenticated) {
         if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
@@ -19,6 +24,11 @@ async function isUserComplete(to: RouteLocationNormalized): Promise<string | boo
 
     if (!userStore.user.rsiHandle && logicStore.medrunnerSettings && !logicStore.medrunnerSettings.anonymousAlertsEnabled) {
         return "/login/link";
+    }
+
+    if (requiresWS && logicStore.currentWSState !== WSState.HEALTHY) {
+        alertStore.newAlert(AlertColors.RED, t("error_wsDisconnectedPageAccessError"), false, "warning", 5000);
+        return false;
     }
 
     return true;
@@ -34,12 +44,20 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
     return true;
 }
 
-async function isUserAuthenticated(to: RouteLocationNormalized): Promise<string | boolean> {
+async function isUserAuthenticated(to: RouteLocationNormalized, requiresWS: boolean = false): Promise<string | boolean> {
+    const { t } = i18n.global;
     const userStore = useUserStore();
+    const logicStore = useLogicStore();
+    const alertStore = useAlertStore();
 
     if (!userStore.isAuthenticated) {
         if (to.fullPath.substring(1)) return `/login?redirect=${encodeURIComponent(to.fullPath)}`;
         else return "/login";
+    }
+
+    if (requiresWS && logicStore.currentWSState !== WSState.HEALTHY) {
+        alertStore.newAlert(AlertColors.RED, t("error_wsDisconnectedPageAccessError"), false, "warning", 5000);
+        return false;
     }
 
     return true;
@@ -78,19 +96,19 @@ export const router = createRouter({
             path: "/",
             name: "dashboard",
             component: DashboardView,
-            beforeEnter: isUserComplete,
+            beforeEnter: (to) => isUserComplete(to),
         },
         {
             path: "/emergency",
             name: "emergency",
             component: () => import("@/views/EmergencyView.vue"),
-            beforeEnter: isUserComplete,
+            beforeEnter: (to) => isUserComplete(to, true),
         },
         {
             path: "/profile",
             name: "profile",
             component: () => import("@/views/ProfileView.vue"),
-            beforeEnter: isUserComplete,
+            beforeEnter: (to) => isUserComplete(to),
         },
         {
             path: "/login",
@@ -114,7 +132,7 @@ export const router = createRouter({
             path: "/redeem",
             name: "redeem",
             component: () => import("@/views/RedeemView.vue"),
-            beforeEnter: isUserAuthenticated,
+            beforeEnter: (to) => isUserAuthenticated(to),
         },
         {
             path: "/:pathMatch(.*)*",

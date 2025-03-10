@@ -20,6 +20,7 @@ export interface SyncedSettings {
     globalAnalytics: boolean;
     selectedLanguage: string;
     lastConfirmedWarningId: string;
+    hour12FormatingPreference?: boolean;
 }
 
 export enum WSState {
@@ -40,3 +41,5 @@ export enum LocalStorageItems {
     LOGIN_ANIMATION_STAR_SIZE = "loginAnimationStarSize",
     LOGIN_ANIMATION_SPEED = "loginAnimationSpeed",
 }
+
+export type AlertIcons = "info" | "warning";

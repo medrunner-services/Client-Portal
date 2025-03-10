@@ -8,18 +8,29 @@ export interface Props {
     placeholder?: string;
     value?: string;
     helper?: string;
+    helperType?: "icon" | "text";
     modelValue?: string | number;
     type?: "text" | "number";
+    inputMode?: "text" | "numeric" | "none" | "search" | "email" | "tel" | "url" | "decimal";
+    inputPosition?: "row" | "column";
+    textSize?: "small" | "large";
+    inputClasses?: string;
+    maxlength?: number;
+    minlength?: number;
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
-    uppercase?: boolean;
+    error?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
-    uppercase: false,
     radius: "rounded-lg",
+    inputMode: "text",
+    helperType: "icon",
+    inputPosition: "column",
     type: "text",
+    textSize: "small",
+    error: false,
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -40,20 +51,45 @@ defineExpose({ focus: () => inputRef.value?.focus() });
 const selectInputClasses = computed(() => {
     let allClasses: string[] = [];
 
+    if (props.error)
+        allClasses = allClasses.concat([
+            "border-red-600",
+            "focus:border-red-600",
+            "focus:ring-red-600",
+            "dark:border-red-500",
+            "dark:focus:border-red-500",
+            "dark:focus:ring-red-500",
+        ]);
+    else
+        allClasses = allClasses.concat([
+            "border-gray-300",
+            "focus:border-gray-500",
+            "focus:ring-gray-500",
+            "dark:border-gray-600",
+            "dark:focus:border-gray-400",
+            "dark:focus:ring-gray-400",
+        ]);
+
     if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
     if (props.radius !== "none") allClasses.push(props.radius);
-    if (props.uppercase) allClasses.push("uppercase");
+    if (props.inputPosition === "row") allClasses = allClasses.concat(["w-fit"]);
+    if (props.inputPosition === "column") allClasses = allClasses.concat(["w-full"]);
+    if (props.inputClasses) allClasses.push(props.inputClasses);
 
     return allClasses.join(" ");
 });
 </script>
 
 <template>
-    <div>
-        <div v-if="props.label" class="mb-2 flex items-center">
-            <label class="block text-sm font-medium text-gray-900 dark:text-white">{{ props.label }}<span v-if="props.required">*</span></label>
+    <div class="flex" :class="props.inputPosition === 'column' ? 'flex-col' : 'flex-col sm:flex-row sm:items-end sm:justify-between'">
+        <div
+            v-if="props.label"
+            class="mb-2 flex"
+            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.textSize === 'small' ? 'text-sm' : '']"
+        >
+            <label class="block font-medium text-gray-900 dark:text-white">{{ props.label }}<span v-if="props.required">*</span></label>
 
-            <div class="relative">
+            <div v-if="props.helperType === 'icon'" class="relative">
                 <svg
                     v-if="helper"
                     class="ml-2 h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-500"
@@ -81,12 +117,16 @@ const selectInputClasses = computed(() => {
                     </div>
                 </div>
             </div>
+            <p v-else-if="props.helperType === 'text' && props.helper" class="text-xs text-gray-500 dark:text-gray-400">{{ props.helper }}</p>
         </div>
         <input
             ref="inputRef"
             v-model="value"
             :type="props.type"
-            class="block w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 placeholder:normal-case focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            :inputmode="props.inputMode"
+            :maxlength="props.maxlength"
+            :minlength="props.minlength"
+            class="block border bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             :class="selectInputClasses"
             :disabled="props.disabled"
             :required="props.required"

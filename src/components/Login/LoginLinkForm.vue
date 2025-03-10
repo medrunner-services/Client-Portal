@@ -4,16 +4,14 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
-import { useAlertStore } from "@/stores/alertStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const userStore = useUserStore();
-const alertStore = useAlertStore();
 const router = useRouter();
 const isIdCopied = ref(false);
 const waitingForApi = ref(false);
@@ -41,12 +39,9 @@ const submittingLinkForm = async (): Promise<void> => {
     formErrorMessage.value = "";
     formErrorHelper.value = "";
 
-    let isLinked = false;
-
     try {
-        await userStore.linkUser(formUsername.value);
+        userStore.user = await userStore.linkUser(formUsername.value);
 
-        isLinked = true;
         await router.push("/");
     } catch (error: any) {
         if (error.statusCode === 403) {
@@ -63,14 +58,6 @@ const submittingLinkForm = async (): Promise<void> => {
         } else formErrorMessage.value = errorString(error.statusCode);
     } finally {
         waitingForApi.value = false;
-    }
-
-    if (isLinked) {
-        try {
-            userStore.user = await userStore.fetchUser();
-        } catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "info", 10000);
-        }
     }
 };
 
@@ -136,13 +123,12 @@ async function disconnectUser(): Promise<void> {
                     >{{ t("login_termsOfService").split("~")[1] }}.</a
                 >
             </p>
-            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full" :error-text="formErrorMessage">
-                {{ t("login_verify") }}</GlobalButton
-            >
+            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full"> {{ t("login_verify") }}</GlobalButton>
 
             <GlobalButton size="full" class="mt-4" icon="logout" type="secondary" :loading="isLoggingOut" @click="disconnectUser()">{{
                 t("navbar_disconnect")
             }}</GlobalButton>
+            <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
         </form>
     </div>
 </template>

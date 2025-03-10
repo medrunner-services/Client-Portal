@@ -97,6 +97,14 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function deleteEmergencyMessage(id: string): Promise<void> {
+        const response = await api.chatMessage.deleteMessage(id);
+
+        if (!response.success) {
+            throw response;
+        }
+    }
+
     async function fetchChatHistory(id: string, token?: string): Promise<PaginatedResponse<ChatMessage>> {
         const response = await api.chatMessage.getMessageHistory(id, 50, token);
 
@@ -121,6 +129,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         rateCompletedEmergency,
         sendEmergencyMessage,
         updateEmergencyMessage,
+        deleteEmergencyMessage,
         fetchChatHistory,
     };
 });

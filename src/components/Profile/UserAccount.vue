@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CodeType, PersonType } from "@medrunner/api-client";
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -13,6 +13,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
 import { usePostHog } from "@/usePostHog";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { rsiHandleRegex } from "@/utils/globalVars.ts";
 
 const userStore = useUserStore();
 const { t } = useI18n();
@@ -76,6 +77,13 @@ function closeEditingUsername() {
     inputUsername.value = userStore.user.rsiHandle;
     errorUpdatingUsername.value = "";
 }
+
+const isInvalidRSIHandle = computed(() => {
+    if (inputUsername.value && isEditingUsername.value) {
+        const rsiHandle = inputUsername.value;
+        return !rsiHandle.match(rsiHandleRegex);
+    } else return false;
+});
 </script>
 
 <template>
@@ -97,6 +105,7 @@ function closeEditingUsername() {
                         :disabled="!isEditingUsername"
                         :placeholder="userStore.user.rsiHandle"
                         :helper="t('user_rsiHandleHelper')"
+                        :error="isInvalidRSIHandle"
                     />
                     <div class="lg:flex lg:items-end">
                         <GlobalButton
@@ -104,6 +113,7 @@ function closeEditingUsername() {
                             size="full"
                             :icon="isEditingUsername ? undefined : 'pencil'"
                             :loading="isUpdatingUsername"
+                            :disabled="isInvalidRSIHandle"
                             @click="updateUsername()"
                             >{{ isEditingUsername ? t("form_confirm") : t("form_edit") }}</GlobalButton
                         >
@@ -117,6 +127,9 @@ function closeEditingUsername() {
                         >
                     </div>
                 </div>
+                <p v-if="isInvalidRSIHandle" class="mt-1 text-sm font-semibold text-red-600 dark:text-red-500">
+                    {{ t("error_invalidRsiHandle") }}
+                </p>
 
                 <p v-if="errorUpdatingUsername" class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ errorUpdatingUsername }}</p>
             </div>

@@ -25,7 +25,9 @@ const successRate = computed(() => {
 
 <template>
     <GlobalCard class="text-center">
-        <p class="font-Mohave text-4xl font-bold uppercase text-gray-900 dark:text-white">{{ successRate }}%</p>
+        <p class="font-Mohave text-4xl font-bold uppercase text-gray-900 dark:text-white">
+            {{ successRate > 0 ? `${successRate}%` : t("home_noData") }}
+        </p>
         <p class="font-Mohave text-lg text-gray-500 dark:text-gray-400">{{ t("home_emergencySuccessRate") }}</p>
     </GlobalCard>
 </template>
