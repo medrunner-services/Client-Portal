@@ -8,6 +8,7 @@ import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import DeleteAccountModal from "@/components/Modals/DeleteAccountModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
@@ -127,9 +128,7 @@ const isInvalidRSIHandle = computed(() => {
                         >
                     </div>
                 </div>
-                <p v-if="isInvalidRSIHandle" class="mt-1 text-sm font-semibold text-red-600 dark:text-red-500">
-                    {{ t("error_invalidRsiHandle") }}
-                </p>
+                <GlobalErrorText v-if="isInvalidRSIHandle" class="mt-1 text-sm" :icon="false" :text="t('error_invalidRsiHandle')" />
 
                 <p v-if="errorUpdatingUsername" class="mt-2 text-xs font-medium text-red-600 dark:text-red-400">{{ errorUpdatingUsername }}</p>
             </div>
