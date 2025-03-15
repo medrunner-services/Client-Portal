@@ -27,7 +27,7 @@
     "flowbite": "^2.5.2",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.1",
-    "posthog-js": "^1.230.1",
+    "posthog-js": "^1.231.0",
     "vue": "^3.5.13",
     "vue-i18n": "^11.1.2",
     "vue-router": "^4.5.0",
@@ -55,7 +55,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.17",
     "typescript": "5.8.2",
-    "vite": "^6.2.1",
+    "vite": "^6.2.2",
     "vue-tsc": "^2.2.8",
     "yauzl": "^3.2.0"
   }
