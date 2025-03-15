@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ResponseRating } from "@medrunner/api-client";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -28,10 +28,10 @@ const inputRating = ref<ResponseRating>();
 const inputRemarks = ref("");
 
 async function rateEmergency() {
+    if (!inputRating.value || isInvalidReason.value) return;
+
     loadingRatingRequest.value = true;
     errorRatingEmergency.value = "";
-
-    if (!inputRating.value) return;
 
     try {
         await emergencyStore.rateCompletedEmergency(props.emergencyId, inputRating.value, inputRemarks.value);
@@ -44,6 +44,12 @@ async function rateEmergency() {
         loadingRatingRequest.value = false;
     }
 }
+
+const isInvalidReason = computed(() => {
+    if (inputRemarks.value) {
+        return inputRemarks.value.length > 1024;
+    } else return false;
+});
 </script>
 
 <template>
@@ -63,7 +69,14 @@ async function rateEmergency() {
                     :label="t('tracking_ratingTitle')"
                 />
 
-                <GlobalTextAreaInput v-model="inputRemarks" :label="t('tracking_remarks')" :helper="t('tracking_helperRemarks')" class="mt-4" />
+                <GlobalTextAreaInput
+                    v-model="inputRemarks"
+                    :label="t('tracking_remarks')"
+                    :helper="t('tracking_helperRemarks')"
+                    :error="isInvalidReason"
+                    class="mt-4"
+                />
+                <GlobalErrorText v-if="isInvalidReason" class="mt-1 text-sm" :icon="false" :text="t('error_reasonTooLong')" />
 
                 <div class="mt-8 gap-2 lg:flex">
                     <GlobalButton :loading="loadingRatingRequest" :submit="true" size="full">{{ t("tracking_sendRating") }}</GlobalButton>

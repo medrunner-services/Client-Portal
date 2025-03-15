@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@medrunner/api-client";
-import { nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
@@ -93,7 +93,7 @@ onMounted(async () => {
 });
 
 async function sendMessage() {
-    if (!inputMessage.value) return;
+    if (!inputMessage.value || isInvalidChatInput.value) return;
     errorSendingMessage.value = "";
 
     try {
@@ -161,6 +161,12 @@ function editLastMessage() {
         handleEditMessage(lastMessage.id, lastMessage.contents);
     }
 }
+
+const isInvalidChatInput = computed(() => {
+    if (inputMessage.value) {
+        return inputMessage.value.length > 4000;
+    } else return false;
+});
 </script>
 
 <template>
@@ -210,16 +216,21 @@ function editLastMessage() {
                             :placeholder="t('tracking_placeholderMessageInput')"
                             :rows="1"
                             :auto-grow="true"
+                            :error="isInvalidChatInput"
                             max-height="max-h-40"
                             @keydown.enter.exact="sendMessage()"
                             @keydown.esc="escapeEditingMessage()"
                             @keydown.prevent.up="editLastMessage()"
                         />
-                        <button type="submit" class="mb-1 justify-center text-primary-600">
+                        <button
+                            type="submit"
+                            :disabled="isInvalidChatInput"
+                            class="mb-1 cursor-pointer justify-center text-primary-600 disabled:cursor-not-allowed disabled:text-primary-600/50"
+                        >
                             <svg
                                 v-if="sendingMessage"
                                 aria-hidden="true"
-                                class="h-5 w-5 animate-spin fill-primary-600 text-gray-200 dark:text-gray-600"
+                                class="h-5 w-5 animate-spin text-gray-200 dark:text-gray-600"
                                 viewBox="0 0 100 101"
                                 fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -249,7 +260,8 @@ function editLastMessage() {
                         </button>
                     </form>
 
-                    <p v-if="errorSendingMessage" class="mt-3 w-full text-sm font-semibold text-red-600">{{ errorSendingMessage }}</p>
+                    <GlobalErrorText v-if="errorSendingMessage" class="mt-3 w-full text-sm" :icon="false" :text="errorSendingMessage" />
+                    <GlobalErrorText v-if="isInvalidChatInput" class="mt-3 w-full text-sm" :icon="false" :text="t('error_chatMessageTooLong')" />
                 </div>
             </div>
         </GlobalCard>

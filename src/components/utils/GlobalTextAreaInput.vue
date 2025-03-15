@@ -15,6 +15,7 @@ export interface Props {
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
     maxHeight?: string;
     autoGrow?: boolean;
+    error?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
     radius: "rounded-lg",
     rows: 5,
     autoGrow: false,
+    error: false,
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -55,6 +57,25 @@ const showHelper = ref(false);
 
 const selectInputClasses = computed(() => {
     let allClasses: string[] = [];
+
+    if (props.error)
+        allClasses = allClasses.concat([
+            "border-red-600",
+            "focus:border-red-600",
+            "focus:ring-red-600",
+            "dark:border-red-500",
+            "dark:focus:border-red-500",
+            "dark:focus:ring-red-500",
+        ]);
+    else
+        allClasses = allClasses.concat([
+            "border-gray-300",
+            "focus:border-gray-500",
+            "focus:ring-gray-500",
+            "dark:border-gray-600",
+            "dark:focus:border-gray-400",
+            "dark:focus:ring-gray-400",
+        ]);
 
     if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
     if (props.radius !== "none") allClasses.push(props.radius);
@@ -102,7 +123,7 @@ const selectInputClasses = computed(() => {
         <textarea
             ref="textAreaRef"
             v-model="value"
-            class="w-full border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            class="w-full border bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             :class="selectInputClasses"
             :disabled="props.disabled"
             :required="props.required"

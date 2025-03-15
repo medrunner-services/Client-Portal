@@ -37,6 +37,8 @@ function copyAndClose() {
 }
 
 async function createToken() {
+    if (!inputName.value || isInvalidTokenName) return;
+
     submittingNewToken.value = true;
     errorCreationToken.value = "";
 
@@ -59,6 +61,12 @@ async function createToken() {
 const getModalTitle = computed(() => {
     if (createdToken.value) return t("developer_tokenCreateFormTitle");
     else return t("developer_createTokenFormTitle");
+});
+
+const isInvalidTokenName = computed(() => {
+    if (inputName.value) {
+        return inputName.value.length > 64;
+    } else return false;
 });
 </script>
 
@@ -110,7 +118,10 @@ const getModalTitle = computed(() => {
                     :label="t('developer_createTokenFormName')"
                     :required="true"
                     :placeholder="t('developer_createTokenFormPlaceholderName')"
+                    :error="isInvalidTokenName"
                 />
+                <GlobalErrorText v-if="isInvalidTokenName" class="mt-1 text-sm" :icon="false" :text="t('error_tokenNameTooLong')" />
+
                 <GlobalDateInput
                     v-model="inputDate"
                     class="mt-4"
@@ -120,7 +131,9 @@ const getModalTitle = computed(() => {
                 />
 
                 <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="submittingNewToken" :submit="true" size="full">{{ t("developer_createTokenButton") }}</GlobalButton>
+                    <GlobalButton :loading="submittingNewToken" :disabled="isInvalidTokenName" :submit="true" size="full">{{
+                        t("developer_createTokenButton")
+                    }}</GlobalButton>
                     <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
                         {{ t("tracking_backCancelButton") }}</GlobalButton
                     >
