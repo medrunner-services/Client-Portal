@@ -32,14 +32,6 @@ jobs:
       - run: npm run lint
       - run: npm run build
 
-      - name: Start Github deployment
-        id: deployment-start
-        uses: bobheadxi/deployments@v1
-        with:
-          step: start
-          token: ${{ secrets.GITHUB_TOKEN }}
-          env: Production
-
       - name: Deploy to cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
@@ -47,18 +39,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=client-portal-prod
-
-      - name: Update Github deployment
-        id: deployment-end
-        uses: bobheadxi/deployments@v1
-        if: always()
-        with:
-          step: finish
-          token: ${{ secrets.GITHUB_TOKEN }}
-          status: ${{ job.status }}
-          env: ${{ steps.deployment-start.outputs.env }}
-          deployment_id: ${{ steps.deployment-start.outputs.deployment_id }}
-          env_url: "https://portal.medrunner.space"
 
       - name: Get package info
         id: package-info
