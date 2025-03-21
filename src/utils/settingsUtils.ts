@@ -1,8 +1,9 @@
+import { apm } from "@elastic/apm-rum";
+
+import { LocalStorageItems } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems } from "@/types.ts";
-import { usePostHog } from "@/usePostHog";
 import { api } from "@/utils/medrunnerClient";
 
 export function initializeSettingDarkMode() {
@@ -96,18 +97,17 @@ export async function migrateSyncedSettings() {
 export function initializeAnalytics() {
     const userStore = useUserStore();
     const { locale } = i18n.global;
-    const { posthog } = usePostHog();
 
     if (userStore.isAuthenticated && userStore.syncedSettings.globalAnalytics) {
-        posthog.opt_in_capturing();
-
-        posthog.identify(userStore.user.id, {
+        apm.setUserContext({ id: userStore.user.id });
+        apm.setCustomContext({
             discordId: userStore.user.discordId,
             rsiHandle: userStore.user.rsiHandle ?? "",
-            personType: userStore.user.personType,
-            active: userStore.user.active,
-            language: locale.value,
+            selectedLanguage: locale.value,
             debugModeEnabled: localStorage.getItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED) === "true",
+            darkModeEnabled: localStorage.getItem(LocalStorageItems.DARK_MODE) === "true",
+            discordWebLinks: localStorage.getItem(LocalStorageItems.IS_DISCORD_OPEN_WEB) === "true",
+            historyTablePageSize: localStorage.getItem(LocalStorageItems.SELECTED_PAGE_SIZE) ?? "10",
         });
     }
 }

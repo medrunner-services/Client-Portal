@@ -27,8 +27,8 @@
     "error_deletingChatMessage": "在删除此消息时出现了一处错误",
     "error_invalidRsiHandle": "无效的RSI账号",
     "error_tokenNameTooLong": "The token name cannot be longer than 64 characters.",
-    "error_chatMessageTooLong": "Your message is too long. You've hit the 4000 character count limit.",
-    "error_reasonTooLong": "The reason cannot be longer than 1024 characters.",
+    "error_chatMessageTooLong": "您的信息过长。您已经达到了四千字的上限。",
+    "error_reasonTooLong": "原因长度不可超过1024个字符。",
     "form_confirm": "确认",
     "form_edit": "修改",
     "form_system": "星系",
@@ -371,6 +371,7 @@
     "user_timeFormatSettingAutomatic": "自动",
     "user_timeFormatSetting24h": "24小时制",
     "user_timeFormatSetting12h": "12小时制（上午/下午）",
+    "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

@@ -1,10 +1,10 @@
 import type { Deployment, OrgSettings, Person } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 
+import { type SyncedSettings, WSState } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { type SyncedSettings, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {

@@ -371,6 +371,7 @@
     "user_timeFormatSettingAutomatic": "Automatic",
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (AM/PM)",
+    "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
     "404_somethingMissing": "Noget mangler.",
     "404_helperText": "Beklager, vi kan ikke finde siden. Der er masser at udforske på hovedsiden.",
     "404_backToHomepage": "Tilbage til Hovedsiden"

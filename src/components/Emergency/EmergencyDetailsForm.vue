@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { AlertColors, WSState } from "@/@types/types.ts";
 import EmergencyRulesModal from "@/components/Modals/EmergencyRulesModal.vue";
 import IgnoreEmergencyDetailsFormModal from "@/components/Modals/IgnoreEmergencyDetailsFormModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -15,7 +16,6 @@ import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();

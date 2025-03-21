@@ -4,6 +4,7 @@ import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
+import { AlertColors, MessageNotification } from "@/@types/types.ts";
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -12,7 +13,6 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors, MessageNotification } from "@/types";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";

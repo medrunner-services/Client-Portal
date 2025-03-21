@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 
+import { LocalStorageItems } from "@/@types/types.ts";
 import UserSettings from "@/components/Profile/UserSettings.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalRangeSlider from "@/components/utils/GlobalRangeSlider.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useLogicStore } from "@/stores/logicStore";
-import { LocalStorageItems } from "@/types.ts";
 
 const logicStore = useLogicStore();
 const { t } = useI18n();

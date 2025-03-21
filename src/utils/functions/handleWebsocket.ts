@@ -1,7 +1,7 @@
 import { HubConnectionState } from "@microsoft/signalr";
 
+import { LocalStorageItems, WSState } from "@/@types/types.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { LocalStorageItems, WSState } from "@/types.ts";
 import { ws } from "@/utils/medrunnerClient.ts";
 
 export async function restartWebsocket() {

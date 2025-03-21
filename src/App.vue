@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 
+import { WSState } from "@/@types/types.ts";
 import GlobalFooter from "@/components/GlobalFooter.vue";
 import NotificationPermissionModal from "@/components/Modals/NotificationPermissionModal.vue";
 import AlertBanner from "@/components/Navbar/AlertBanner.vue";
@@ -12,7 +13,6 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { WSState } from "@/types.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 
 const route = useRoute();

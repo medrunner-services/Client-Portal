@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import { AlertColors } from "@/@types/types.ts";
 import BlockedUserCTA from "@/components/Dashboard/BlockedUserCTA.vue";
 import ChartEmergencyBreakdown from "@/components/Dashboard/Charts/ChartEmergencyBreakdown.vue";
 import ChartEmergencyNumberPerWeek from "@/components/Dashboard/Charts/ChartEmergencyNumberPerWeek.vue";
@@ -13,7 +14,6 @@ import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import RateEmergencyModal from "@/components/Modals/RateEmergencyModal.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
 import { clearURLParams } from "@/utils/functions/urlFunctions.ts";
 
 const userStore = useUserStore();

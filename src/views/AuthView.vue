@@ -2,9 +2,9 @@
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { LocalStorageItems } from "@/@types/types.ts";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems } from "@/types.ts";
 import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 

@@ -1,7 +1,7 @@
 import { type Person } from "@medrunner/api-client";
 
+import type { SyncedSettings } from "@/@types/types.ts";
 import { useUserStore } from "@/stores/userStore";
-import type { SyncedSettings } from "@/types.ts";
 import { restartWebsocket } from "@/utils/functions/handleWebsocket.ts";
 
 export async function personUpdate(newUser: Person) {

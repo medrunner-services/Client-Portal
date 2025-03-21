@@ -4,6 +4,7 @@ import { Level } from "@medrunner/api-client";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { WSState } from "@/@types/types.ts";
 import EmergencyResponderStaffName from "@/components/Emergency/EmergencyResponderStaffName.vue";
 import CancelEmergencyModal from "@/components/Modals/CancelEmergencyModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
@@ -11,7 +12,6 @@ import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { WSState } from "@/types.ts";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 
 const emergencyStore = useEmergencyStore();

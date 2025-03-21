@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-import { AlertColors, type AlertIcons } from "@/types";
+import { AlertColors, type AlertIcons } from "@/@types/types.ts";
 
 export const useAlertStore = defineStore("alert", () => {
     const showAlert = ref(false);

@@ -2,7 +2,7 @@ import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person 
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { LocalStorageItems, MessageNotification, type SyncedSettings } from "@/types.ts";
+import { LocalStorageItems, MessageNotification, type SyncedSettings } from "@/@types/types.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 import { api } from "@/utils/medrunnerClient";
 

@@ -3,6 +3,7 @@ import { type ClientHistory, type Emergency, MissionStatus } from "@medrunner/ap
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { LocalStorageItems } from "@/@types/types.ts";
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
 import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -10,7 +11,6 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 

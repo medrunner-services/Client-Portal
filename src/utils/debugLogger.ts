@@ -1,4 +1,4 @@
-import { LocalStorageItems } from "@/types.ts";
+import { LocalStorageItems } from "@/@types/types.ts";
 
 export function debugLogger(message: string, type?: "trace" | "info" | "warn" | "error" | "debug") {
     if (localStorage.getItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED) === "true") {

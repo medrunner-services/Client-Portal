@@ -371,6 +371,7 @@
     "user_timeFormatSettingAutomatic": "Automatic",
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (AM/PM)",
+    "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
     "404_somethingMissing": "Чего-то не хватает.",
     "404_helperText": "К сожалению, мы не можем найти эту страницу. На главной странице вас ждёт гораздо больше интересного.",
     "404_backToHomepage": "Вернуться на главную страницу"

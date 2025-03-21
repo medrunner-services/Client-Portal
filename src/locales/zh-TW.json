@@ -371,6 +371,7 @@
     "user_timeFormatSettingAutomatic": "Automatic",
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (AM/PM)",
+    "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
     "404_backToHomepage": "回到首頁"

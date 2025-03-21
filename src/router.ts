@@ -1,13 +1,10 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from "vue-router";
 
+import { AlertColors, WSState } from "@/@types/types.ts";
 import { i18n } from "@/i18n.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors, WSState } from "@/types.ts";
-import { usePostHog } from "@/usePostHog";
-
-const { posthog } = usePostHog();
 
 import DashboardView from "./views/DashboardView.vue";
 
@@ -142,22 +139,16 @@ export const router = createRouter({
     ],
 });
 
-router.beforeEach((to, from) => {
+router.beforeEach(() => {
     const logicStore = useLogicStore();
 
     logicStore.isRouterLoading = true;
-
-    if (from.path !== to.path) {
-        posthog.capture("$pageleave");
-    }
 });
 
 router.afterEach(() => {
     const logicStore = useLogicStore();
 
     logicStore.isRouterLoading = false;
-
-    posthog.capture("$pageview");
 });
 
 export default router;

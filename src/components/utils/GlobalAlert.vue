@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
 
+import { AlertColors } from "@/@types/types.ts";
 import { useAlertStore } from "@/stores/alertStore";
-import { AlertColors } from "@/types";
 
 const alertStore = useAlertStore();
 

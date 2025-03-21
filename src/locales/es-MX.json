@@ -371,6 +371,7 @@
     "user_timeFormatSettingAutomatic": "Automático",
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (AM/PM)",
+    "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
     "404_somethingMissing": "Algo falta.",
     "404_helperText": "Lo sentimos, no podemos encontrar esa página. Encontrarás mucho para explorar en la página de inicio.",
     "404_backToHomepage": "Volver a la página de inicio"

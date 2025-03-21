@@ -3,22 +3,22 @@ import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import { AlertColors, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems, MessageNotification } from "@/types";
-import { usePostHog } from "@/usePostHog";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
+const alertStore = useAlertStore();
 const route = useRoute();
-const { posthog } = usePostHog();
 
 const updateNotificationError = ref("");
 const updateHourFormatingError = ref("");
@@ -128,11 +128,7 @@ async function updateAnalytics(): Promise<void> {
         updateNotificationError.value = errorString(error.statusCode);
     }
 
-    if (userStore.syncedSettings.globalAnalytics) {
-        posthog.opt_in_capturing();
-    } else {
-        posthog.opt_out_capturing();
-    }
+    alertStore.newAlert(AlertColors.BLUE, t("user_analyticsUpdatedNotification"));
 }
 
 function updateDebugLogger(): void {

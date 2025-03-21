@@ -2,7 +2,7 @@ import type { PublicOrgSettings } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import { LocalStorageItems, WSState } from "@/types.ts";
+import { LocalStorageItems, WSState } from "@/@types/types.ts";
 
 export const useLogicStore = defineStore("logic", () => {
     const isRouterLoading = ref(false);

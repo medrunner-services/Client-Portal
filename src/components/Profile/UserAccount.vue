@@ -12,14 +12,12 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
-import { usePostHog } from "@/usePostHog";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { rsiHandleRegex } from "@/utils/globalVars.ts";
 
 const userStore = useUserStore();
 const { t } = useI18n();
 const router = useRouter();
-const { posthog } = usePostHog();
 
 const inputUsername = ref(userStore.user.rsiHandle);
 const isEditingUsername = ref(false);
@@ -67,7 +65,6 @@ async function updateUsername() {
 async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
 
-    posthog.reset();
     await userStore.disconnectUser();
     await router.push("/login");
     return;
