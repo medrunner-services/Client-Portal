@@ -33,6 +33,7 @@ jobs:
       - run: npm run build
 
       - name: Deploy to cloudflare
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           wranglerVersion: "latest"

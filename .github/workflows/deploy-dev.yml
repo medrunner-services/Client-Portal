@@ -33,6 +33,7 @@ jobs:
       - run: npm run build:staging
 
       - name: Deploy to cloudflare
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           wranglerVersion: "latest"
@@ -42,9 +43,13 @@ jobs:
 
       - name: Get package info
         id: package-info
+        if: success() && steps.deploy.outcome == 'success'
+        continue-on-error: true
         uses: luizfelipelaviola/get-package-info@v2
 
       - name: Notify Medrunner API
+        if: success() && steps.deploy.outcome == 'success'
+        continue-on-error: true
         uses: satak/webrequest-action@master
         with:
           url: https://api.medrunner.dev/automation/deploy?secret=${{ secrets.AUTOMATION_DEPLOY_DEV }}&client=1&version=${{ steps.package-info.outputs.version }}
