@@ -21,7 +21,7 @@
   "dependencies": {
     "@elastic/apm-rum-vue": "^2.1.9",
     "@intlify/unplugin-vue-i18n": "^6.0.5",
-    "@medrunner/api-client": "0.5.2",
+    "@medrunner/api-client": "0.5.4",
     "apexcharts": "^4.5.0",
     "autosize": "^6.0.1",
     "dompurify": "^3.2.4",

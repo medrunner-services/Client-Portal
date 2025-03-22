@@ -25,7 +25,6 @@ const props = withDefaults(defineProps<Props>(), {
     inputPosition: "column",
     inputSize: "large",
     labelSize: "large",
-    size: "full",
 });
 
 const emit = defineEmits(["update:modelValue", "change"]);
@@ -41,6 +40,13 @@ const value = computed({
 
 const showHelper = ref(false);
 
+const effectiveSize = computed(() => {
+    if (props.size !== undefined) {
+        return props.size;
+    }
+    return props.inputPosition === "column" ? "full" : "fit";
+});
+
 const selectInputClasses = computed(() => {
     let allClasses: string[] = [];
 
@@ -50,7 +56,7 @@ const selectInputClasses = computed(() => {
     if (props.inputPosition === "column") allClasses = allClasses.concat(["w-full"]);
     if (props.inputSize === "small") allClasses = allClasses.concat(["pl-2", "pr-1", "py-1.5", "h-fit"]);
     if (props.inputSize === "large") allClasses = allClasses.concat(["p-2.5"]);
-    if (props.size === "fit") allClasses = allClasses.concat(["md:w-fit"]);
+    if (effectiveSize.value === "fit") allClasses = allClasses.concat(["md:w-fit"]);
     allClasses.push(props.radius);
 
     return allClasses.join(" ");

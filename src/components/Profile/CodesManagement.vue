@@ -1,11 +1,29 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
 import { getCodeTypeString } from "@/utils/functions/getStringsFunctions.ts";
+import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
 const { t } = useI18n();
+
+const loadingCodes = ref(false);
+const errorLoadingCodes = ref("");
+
+onMounted(async () => {
+    loadingCodes.value = true;
+    try {
+        userStore.redeemedCodes = await userStore.fetchUserRedeemedCodes();
+    } catch (error: any) {
+        errorLoadingCodes.value = errorString(error.statusCode);
+    } finally {
+        loadingCodes.value = false;
+    }
+});
 </script>
 
 <template>
@@ -24,8 +42,17 @@ const { t } = useI18n();
                             <div class="col-span-5">{{ t("profile_code") }}</div>
                             <div class="col-span-3">{{ t("profile_event") }}</div>
                         </div>
-                        <div v-if="userStore.user.redeemedCodes.length > 0">
-                            <div v-for="code in userStore.user.redeemedCodes" :key="code.code">
+
+                        <div v-if="errorLoadingCodes" class="flex h-56 w-full items-center justify-center">
+                            <GlobalErrorText :text="errorLoadingCodes" />
+                        </div>
+
+                        <div v-else-if="loadingCodes" class="flex h-56 w-full items-center justify-center">
+                            <GlobalLoader width="w-8" height="h-8" text-size="text-md" spacing="mb-4" />
+                        </div>
+
+                        <div v-else-if="userStore.redeemedCodes.length > 0">
+                            <div v-for="code in userStore.redeemedCodes" :key="code.code">
                                 <div class="grid grid-cols-12 items-center border-b px-3 py-1 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
                                     <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.code }}</div>
 
