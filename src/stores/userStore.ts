@@ -1,4 +1,4 @@
-import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person, RedeemedCode } from "@medrunner/api-client";
+import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person, PromotionalCode } from "@medrunner/api-client";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -20,7 +20,7 @@ export const useUserStore = defineStore("user", () => {
         selectedLanguage: "",
         lastConfirmedWarningId: "",
     });
-    const redeemedCodes = ref<RedeemedCode[]>([]);
+    const redeemedCodes = ref<PromotionalCode[]>([]);
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
@@ -147,7 +147,7 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function fetchUserRedeemedCodes(): Promise<RedeemedCode[]> {
+    async function fetchUserRedeemedCodes(): Promise<PromotionalCode[]> {
         const response = await api.code.getRedeemedCodes();
 
         if (response.success && response.data) {

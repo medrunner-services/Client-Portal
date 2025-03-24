@@ -52,9 +52,9 @@ onMounted(async () => {
                         </div>
 
                         <div v-else-if="userStore.redeemedCodes.length > 0">
-                            <div v-for="code in userStore.redeemedCodes" :key="code.code">
-                                <div class="grid grid-cols-12 items-center border-b px-3 py-1 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
-                                    <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.code }}</div>
+                            <div v-for="code in userStore.redeemedCodes" :key="code.id">
+                                <div class="grid grid-cols-12 items-center border-b p-3 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
+                                    <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.id }}</div>
 
                                     <div class="col-span-3">
                                         <p>{{ getCodeTypeString(code.type) }}</p>
