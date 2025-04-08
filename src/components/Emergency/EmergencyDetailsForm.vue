@@ -219,7 +219,6 @@ async function sendDetails(): Promise<void> {
                 :options="[
                     { value: '', label: t('formDetailed_selectSituation'), hidden: true },
                     { value: 'Unconscious', label: t('formDetailed_situationUnconscious') },
-                    { value: 'Out of fuel', label: t('formDetailed_situationFuel') },
                     { value: 'Stranded', label: t('formDetailed_situationStranded') },
                     { value: 'Other', label: t('formDetailed_situationOther') },
                 ]"
