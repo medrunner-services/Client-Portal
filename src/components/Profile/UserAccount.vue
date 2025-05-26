@@ -29,7 +29,7 @@ const displayDeleteAccountModal = ref(false);
 const userBadges = ref<{ name: string; icon: string }[]>([]);
 
 onMounted(() => {
-    if (userStore.user.redeemedCodes.some((code) => code.type === CodeType.CitizenCon2954)) {
+    if (userStore.user.redeemedCodes && userStore.user.redeemedCodes.some((code) => code.type === CodeType.CitizenCon2954)) {
         userBadges.value.push({ name: "CitizenCon 2954", icon: "/icons/badges/CitizenCon2954.svg" });
     }
     if (userStore.user.personType === PersonType.STAFF) {

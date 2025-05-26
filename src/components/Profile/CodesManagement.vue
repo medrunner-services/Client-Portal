@@ -24,7 +24,7 @@ const { t } = useI18n();
                             <div class="col-span-5">{{ t("profile_code") }}</div>
                             <div class="col-span-3">{{ t("profile_event") }}</div>
                         </div>
-                        <div v-if="userStore.user.redeemedCodes.length > 0">
+                        <div v-if="userStore.user.redeemedCodes && userStore.user.redeemedCodes.length > 0">
                             <div v-for="code in userStore.user.redeemedCodes" :key="code.code">
                                 <div class="grid grid-cols-12 items-center border-b px-3 py-1 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
                                     <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.code }}</div>

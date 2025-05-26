@@ -226,6 +226,7 @@ async function resetSettings() {
                             input-position="row"
                             label-size="small"
                             input-size="small"
+                            size="fit"
                             :options="[
                                 { value: MessageNotification.ALL, label: t('user_notificationChatMessageSettingAll') },
                                 { value: MessageNotification.PING, label: t('user_notificationChatMessageSettingPing') },
@@ -251,6 +252,7 @@ async function resetSettings() {
                             helper-type="text"
                             input-position="row"
                             input-size="small"
+                            size="fit"
                             :options="[
                                 { value: undefined, label: t('user_timeFormatSettingAutomatic') },
                                 { value: false, label: t('user_timeFormatSetting24h') },
