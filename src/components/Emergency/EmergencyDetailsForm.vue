@@ -249,6 +249,8 @@ async function sendDetails(): Promise<void> {
                     { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
                     { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
                     { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
+                    { value: 'Orbital Laser Platform', label: t('formDetailed_locationTypeOLP') },
+                    { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
                     { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },
