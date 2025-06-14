@@ -4,17 +4,15 @@ import { LocalStorageItems } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { api } from "@/utils/medrunnerClient";
 
 export function initializeSettingDarkMode() {
-    const logicStore = useLogicStore();
-
     if (
         (window.matchMedia("(prefers-color-scheme: dark)").matches && localStorage.getItem(LocalStorageItems.DARK_MODE) == null) ||
         localStorage.getItem(LocalStorageItems.DARK_MODE) === "true"
     ) {
-        document.documentElement.classList.add("dark");
-        logicStore.darkMode = true;
+        handleDarkModeUpdate(true);
     }
 }
 

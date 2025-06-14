@@ -12,6 +12,7 @@ import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
@@ -96,12 +97,10 @@ async function updateHourFormatingPreference() {
 
 function updateDarkMode(): void {
     if (logicStore.darkMode) {
-        document.documentElement.classList.remove("dark");
-        logicStore.darkMode = false;
+        handleDarkModeUpdate(false);
         localStorage.setItem(LocalStorageItems.DARK_MODE, "false");
     } else {
-        document.documentElement.classList.add("dark");
-        logicStore.darkMode = true;
+        handleDarkModeUpdate(true);
         localStorage.setItem(LocalStorageItems.DARK_MODE, "true");
     }
 }
