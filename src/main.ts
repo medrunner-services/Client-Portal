@@ -44,7 +44,7 @@ const appVersion = __APP_VERSION__;
 
     app.use(router);
     app.use(i18n);
-    app.use(VueApexCharts);
+    app.use(VueApexCharts as any); // related issue https://github.com/apexcharts/vue3-apexcharts/issues/141
     app.use(ApmVuePlugin, {
         router,
         config: {
