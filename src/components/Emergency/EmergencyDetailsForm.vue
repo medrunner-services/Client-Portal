@@ -253,6 +253,7 @@ async function sendDetails(): Promise<void> {
                     { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
                     { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                     { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
+                    { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
                     { value: 'Other', label: t('formDetailed_locationTypeOther') },
                 ]"
                 :label="t('formDetailed_locationType')"
