@@ -109,6 +109,7 @@
     "formDetailed_selectCrimeStat": "Wählen Sie Ihre CrimeStat-Stufe",
     "formDetailed_locationTypeOLP": "Orbitale Laserplattform",
     "formDetailed_locationTypePAF": "Plattformausrichtungseinrichtung",
+    "formDetailed_locationTypeASDFacility": "ASD Einrichtung",
     "tracking_messageReceived": "Nachricht erhalten",
     "tracking_helpOnTheWay": "Hilfe ist unterwegs",
     "tracking_operationSuccessful": "Einsatz erfolgreich",

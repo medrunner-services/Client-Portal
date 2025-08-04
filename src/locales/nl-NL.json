@@ -109,6 +109,7 @@
     "formDetailed_selectCrimeStat": "Selecteer misdaadniveau",
     "formDetailed_locationTypeOLP": "Orbital Laser Platform",
     "formDetailed_locationTypePAF": "Platform Alignment Facility",
+    "formDetailed_locationTypeASDFacility": "ASD Facility",
     "tracking_messageReceived": "Bericht ontvangen",
     "tracking_helpOnTheWay": "Hulp is onderweg",
     "tracking_operationSuccessful": "Operatie succesvol",

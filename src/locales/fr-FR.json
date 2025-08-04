@@ -109,6 +109,7 @@
     "formDetailed_selectCrimeStat": "Sélectionner un niveau de CrimeStat",
     "formDetailed_locationTypeOLP": "Plateforme de laser orbitale",
     "formDetailed_locationTypePAF": "Facilité d'alignement de la plateforme",
+    "formDetailed_locationTypeASDFacility": "Usine AFD",
     "tracking_messageReceived": "Message reçu",
     "tracking_helpOnTheWay": "L'aide est en chemin",
     "tracking_operationSuccessful": "Opération réussie",

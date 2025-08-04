@@ -109,6 +109,7 @@
     "formDetailed_selectCrimeStat": "Velg kriminalitetsnivå",
     "formDetailed_locationTypeOLP": "Orbital laserplattform",
     "formDetailed_locationTypePAF": "Plattformjusteringsanlegg",
+    "formDetailed_locationTypeASDFacility": "ASD Facility",
     "tracking_messageReceived": "Melding motatt",
     "tracking_helpOnTheWay": "Hjelpen er på vei",
     "tracking_operationSuccessful": "Operasjon velykket",
