@@ -75,23 +75,6 @@ export function initializeSettingLanguage(availableLocales: string[]): string {
     }
 }
 
-export async function migrateSyncedSettings() {
-    const userStore = useUserStore();
-
-    if (
-        userStore.isAuthenticated &&
-        userStore.user.clientPortalPreferences &&
-        Object.keys(userStore.user.clientPortalPreferences).length > 0 &&
-        !userStore.user.clientPortalPreferencesBlob
-    ) {
-        try {
-            await api.client.setUserSettings(JSON.stringify(userStore.user.clientPortalPreferences));
-        } catch (_e) {
-            return;
-        }
-    }
-}
-
 export function initializeAnalytics() {
     const userStore = useUserStore();
     const { locale } = i18n.global;

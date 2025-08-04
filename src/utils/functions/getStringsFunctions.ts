@@ -110,7 +110,7 @@ export function getStatusString(id: MissionStatus): string {
 export function getCodeTypeString(type: CodeType): string {
     const { t } = i18n.global;
     switch (type) {
-        case CodeType.CitizenCon2954:
+        case CodeType.CITIZEN_CON_2954:
             return "CitizenCon 2954";
 
         default:

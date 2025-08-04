@@ -16,7 +16,6 @@ import {
     initializeSettingLanguage,
     initializeSettingNotifications,
     initializeTabChecker,
-    migrateSyncedSettings,
 } from "@/utils/settingsUtils";
 import { deploymentCreate } from "@/utils/websocket/deploymentCreate.ts";
 import { orgSettingsUpdate } from "@/utils/websocket/orgSettingsUpdate.ts";
@@ -56,7 +55,6 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
     if (apiConnected) {
         try {
-            await migrateSyncedSettings();
             await initializeMedrunnerSettings();
 
             initializeSettingNotifications();

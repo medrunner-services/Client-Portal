@@ -17,7 +17,9 @@ const logicStore = useLogicStore();
 
         <div v-if="logicStore.medrunnerSettings">
             <GlobalCard
-                v-if="logicStore.medrunnerSettings.status === ServiceStatus.HEALTHY || logicStore.medrunnerSettings.status === ServiceStatus.UNKNOWN"
+                v-if="
+                    logicStore.medrunnerSettings.status === ServiceStatus.OPERATIONAL || logicStore.medrunnerSettings.status === ServiceStatus.UNKNOWN
+                "
                 class="mt-4 flex flex-col items-center justify-center gap-8"
             >
                 <img src="/images/StatusShield_green.svg" class="h-28" alt="Status shield" />
