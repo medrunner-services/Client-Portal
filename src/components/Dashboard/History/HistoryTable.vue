@@ -3,12 +3,13 @@ import { type ClientHistory, type Emergency, MissionStatus } from "@medrunner/ap
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-import { LocalStorageItems } from "@/@types/types.ts";
+import { AlertColors, LocalStorageItems, type WebSocketMessage } from "@/@types/types.ts";
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
 import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
@@ -16,6 +17,7 @@ import { ws } from "@/utils/medrunnerClient";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
+const alertStore = useAlertStore();
 const { t } = useI18n();
 
 const parentRowsDiv = ref<HTMLDivElement | null>(null);
@@ -45,25 +47,39 @@ onMounted(async () => {
         displayWarningNoContactModal.value = true;
     }
 
-    ws.on("EmergencyCreate", (newEmergency: Emergency) => {
-        if (newEmergency.clientId === userStore.user.id) {
-            loadedHistory.value.unshift(newEmergency);
-            if (page.value === 0) {
-                activePage.value = loadedHistory.value.slice(0, pageSize.value);
+    ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
+        try {
+            const newEmergency = await emergencyStore.fetchEmergency(message.id);
+
+            if (newEmergency.clientId === userStore.user.id) {
+                loadedHistory.value.unshift(newEmergency);
+                if (page.value === 0) {
+                    activePage.value = loadedHistory.value.slice(0, pageSize.value);
+                }
             }
+        } catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            return;
         }
     });
 
-    ws.on("EmergencyUpdate", (updatedEmergency: Emergency) => {
-        if (updatedEmergency.clientId === userStore.user.id) {
-            const indexLoadedHistory = loadedHistory.value.findIndex((emergency) => emergency.id === updatedEmergency.id);
-            const indexActivePage = activePage.value.findIndex((emergency) => emergency.id === updatedEmergency.id);
-            if (indexLoadedHistory !== -1) {
-                loadedHistory.value[indexLoadedHistory] = updatedEmergency;
+    ws.on("EmergencyUpdate", async (message: WebSocketMessage) => {
+        try {
+            const updatedEmergency = await emergencyStore.fetchEmergency(message.id);
+
+            if (updatedEmergency.clientId === userStore.user.id) {
+                const indexLoadedHistory = loadedHistory.value.findIndex((emergency) => emergency.id === updatedEmergency.id);
+                const indexActivePage = activePage.value.findIndex((emergency) => emergency.id === updatedEmergency.id);
+                if (indexLoadedHistory !== -1) {
+                    loadedHistory.value[indexLoadedHistory] = updatedEmergency;
+                }
+                if (indexActivePage !== -1) {
+                    activePage.value[indexActivePage] = updatedEmergency;
+                }
             }
-            if (indexActivePage !== -1) {
-                activePage.value[indexActivePage] = updatedEmergency;
-            }
+        } catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            return;
         }
     });
 });

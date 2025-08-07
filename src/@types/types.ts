@@ -43,3 +43,7 @@ export enum LocalStorageItems {
 }
 
 export type AlertIcons = "info" | "warning";
+
+export interface WebSocketMessage {
+    id: string;
+}

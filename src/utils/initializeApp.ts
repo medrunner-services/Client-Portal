@@ -1,4 +1,4 @@
-import type { Deployment, OrgSettings, Person } from "@medrunner/api-client";
+import type { Deployment } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 
 import { type SyncedSettings, WSState } from "@/@types/types.ts";
@@ -65,12 +65,12 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     }
 
     if (ws && ws.state === HubConnectionState.Connected) {
-        ws.on("PersonUpdate", async (newUser: Person) => {
-            await personUpdate(newUser);
+        ws.on("PersonUpdate", async () => {
+            await personUpdate();
         });
 
-        ws.on("OrgSettingsUpdate", (updatedOrgSettings: OrgSettings) => {
-            orgSettingsUpdate(updatedOrgSettings);
+        ws.on("OrgSettingsUpdate", async () => {
+            await orgSettingsUpdate();
         });
 
         ws.on("DeploymentCreate", (newDeployment: Deployment) => {

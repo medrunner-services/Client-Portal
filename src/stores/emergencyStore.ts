@@ -81,6 +81,16 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
+    async function fetchChatMessage(id: string): Promise<ChatMessage> {
+        const response = await api.chatMessage.getMessage(id);
+
+        if (response.success && response.data) {
+            return response.data;
+        } else {
+            throw response;
+        }
+    }
+
     async function sendEmergencyMessage(chatMessageRequest: ChatMessageRequest): Promise<void> {
         const response = await api.chatMessage.sendMessage(chatMessageRequest);
 
@@ -131,5 +141,6 @@ export const useEmergencyStore = defineStore("emergency", () => {
         updateEmergencyMessage,
         deleteEmergencyMessage,
         fetchChatHistory,
+        fetchChatMessage,
     };
 });

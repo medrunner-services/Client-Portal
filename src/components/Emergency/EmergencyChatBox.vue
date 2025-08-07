@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { ChatMessage } from "@medrunner/api-client";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-import { AlertColors, MessageNotification } from "@/@types/types.ts";
+import { AlertColors, MessageNotification, type WebSocketMessage } from "@/@types/types.ts";
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -38,51 +37,65 @@ onMounted(async () => {
         errorLoadingMessages.value = errorString(error.statusCode);
     }
 
-    ws.on("ChatMessageCreate", async (newMessage: ChatMessage) => {
-        if (
-            emergencyStore.trackedEmergency &&
-            newMessage.emergencyId === emergencyStore.trackedEmergency.id &&
-            !emergencyStore.trackedEmergencyMessages.some((message) => message.id === newMessage.id)
-        ) {
-            emergencyStore.trackedEmergencyMessages.push(newMessage);
+    ws.on("ChatMessageCreate", async (message: WebSocketMessage) => {
+        try {
+            const newMessage = await emergencyStore.fetchChatMessage(message.id);
 
-            const bodyNotification = replaceAtMentions(
-                newMessage.contents,
-                newMessage.senderId,
-                false,
-                emergencyStore.trackedEmergency.respondingTeam.allMembers,
-                userStore.user,
-            );
-            const notificationTag = `chatMessageCreate-${newMessage.id}`;
+            if (
+                emergencyStore.trackedEmergency &&
+                newMessage.emergencyId === emergencyStore.trackedEmergency.id &&
+                !emergencyStore.trackedEmergencyMessages.some((message) => message.id === newMessage.id)
+            ) {
+                emergencyStore.trackedEmergencyMessages.push(newMessage);
 
-            if (newMessage.senderId !== userStore.user.id) {
-                if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
-                    await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
-                        window.focus();
-                        router.push({ name: "emergency" });
-                    });
-                } else if (userStore.syncedSettings.chatMessageNotification === MessageNotification.PING) {
-                    if (
-                        newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
-                        newMessage.contents.includes(`@${userStore.user.discordId}`)
-                    ) {
+                const bodyNotification = replaceAtMentions(
+                    newMessage.contents,
+                    newMessage.senderId,
+                    false,
+                    emergencyStore.trackedEmergency.respondingTeam.allMembers,
+                    userStore.user,
+                );
+                const notificationTag = `chatMessageCreate-${newMessage.id}`;
+
+                if (newMessage.senderId !== userStore.user.id) {
+                    if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
                         await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                             window.focus();
                             router.push({ name: "emergency" });
                         });
+                    } else if (userStore.syncedSettings.chatMessageNotification === MessageNotification.PING) {
+                        if (
+                            newMessage.contents.includes(`@${userStore.user.rsiHandle}`) ||
+                            newMessage.contents.includes(`@${userStore.user.discordId}`)
+                        ) {
+                            await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
+                                window.focus();
+                                router.push({ name: "emergency" });
+                            });
+                        }
                     }
                 }
             }
+        } catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            return;
         }
     });
 
-    ws.on("ChatMessageUpdate", async (updatedMessage: ChatMessage) => {
-        if (emergencyStore.trackedEmergency) {
-            const messageIndex = emergencyStore.trackedEmergencyMessages.findIndex((message) => message.id === updatedMessage.id);
+    ws.on("ChatMessageUpdate", async (message: WebSocketMessage) => {
+        try {
+            const updatedMessage = await emergencyStore.fetchChatMessage(message.id);
 
-            if (messageIndex !== -1) {
-                emergencyStore.trackedEmergencyMessages[messageIndex] = updatedMessage;
+            if (emergencyStore.trackedEmergency) {
+                const messageIndex = emergencyStore.trackedEmergencyMessages.findIndex((message) => message.id === updatedMessage.id);
+
+                if (messageIndex !== -1) {
+                    emergencyStore.trackedEmergencyMessages[messageIndex] = updatedMessage;
+                }
             }
+        } catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            return;
         }
     });
 
