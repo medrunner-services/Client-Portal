@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
+import { fetchAllPaginatedResponse } from "@/utils/functions/fetchFunctions.ts";
 import { getCodeTypeString } from "@/utils/functions/getStringsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
@@ -17,7 +18,7 @@ const errorLoadingCodes = ref("");
 onMounted(async () => {
     loadingCodes.value = true;
     try {
-        userStore.redeemedCodes = await userStore.fetchUserRedeemedCodes();
+        userStore.redeemedCodes = await fetchAllPaginatedResponse(userStore.fetchUserRedeemedCodes);
     } catch (error: any) {
         errorLoadingCodes.value = errorString(error.statusCode);
     } finally {

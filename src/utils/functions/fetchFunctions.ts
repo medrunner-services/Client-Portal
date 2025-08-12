@@ -1,7 +1,7 @@
 import type { PaginatedResponse } from "@medrunner/api-client";
 
 export async function fetchAllPaginatedResponse<T>(
-    fetchFunction: (limit?: number, token?: string) => Promise<PaginatedResponse<T>>,
+    fetchFunction: (limit: number, token?: string) => Promise<PaginatedResponse<T>>,
     limit?: number,
 ): Promise<T[]> {
     const results: T[] = [];

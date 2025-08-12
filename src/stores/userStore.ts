@@ -147,8 +147,8 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function fetchUserRedeemedCodes(): Promise<PromotionalCode[]> {
-        const response = await api.code.getRedeemedCodes();
+    async function fetchUserRedeemedCodes(limit: number, paginationToken?: string): Promise<PaginatedResponse<PromotionalCode>> {
+        const response = await api.code.getRedeemedCodes(limit, paginationToken);
 
         if (response.success && response.data) {
             return response.data;
