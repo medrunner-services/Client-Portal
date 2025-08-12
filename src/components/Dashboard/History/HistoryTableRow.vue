@@ -123,7 +123,7 @@ async function addTextToClipboard(text: string) {
             <div class="col-span-4 font-medium text-gray-900 dark:text-white md:col-span-3 md:col-start-2">
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
-            <GlobalLocalizedDate class="col-span-2" :date="props.emergency.creationTimestamp" format="toDate" />
+            <GlobalLocalizedDate class="col-span-2" :date="props.emergency.created" format="toDate" />
             <div class="col-span-2 hidden font-medium text-gray-900 dark:text-white md:block">
                 {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
             </div>
@@ -149,21 +149,19 @@ async function addTextToClipboard(text: string) {
                                 </svg>
                             </div>
                             <p
-                                v-if="props.emergency.acceptedTimestamp || props.emergency.completionTimestamp"
+                                v-if="props.emergency.acceptedOn || props.emergency.completedOn"
                                 class="absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900 dark:text-white"
                             >
                                 {{
                                     getTimeDifferenceString(
-                                        props.emergency.creationTimestamp,
-                                        props.emergency.acceptedTimestamp
-                                            ? props.emergency.acceptedTimestamp
-                                            : (props.emergency.completionTimestamp ?? 0),
+                                        props.emergency.created,
+                                        props.emergency.acceptedOn ? props.emergency.acceptedOn : (props.emergency.completedOn ?? ""),
                                     )
                                 }}
                             </p>
                         </li>
                         <li
-                            v-if="props.emergency.acceptedTimestamp"
+                            v-if="props.emergency.acceptedOn"
                             class="after:border-1 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
@@ -174,10 +172,10 @@ async function addTextToClipboard(text: string) {
                                 </svg>
                             </div>
                             <p
-                                v-if="props.emergency.completionTimestamp"
+                                v-if="props.emergency.completedOn"
                                 class="absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900 dark:text-white"
                             >
-                                {{ getTimeDifferenceString(props.emergency.acceptedTimestamp, props.emergency.completionTimestamp) }}
+                                {{ getTimeDifferenceString(props.emergency.acceptedOn, props.emergency.completedOn) }}
                             </p>
                         </li>
                         <li class="flex items-center">
@@ -227,20 +225,20 @@ async function addTextToClipboard(text: string) {
                     <div class="grid w-full grid-cols-3">
                         <div class="mt-2">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_created") }}</p>
-                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.creationTimestamp" format="toHours" />
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.created" format="toHours" />
                         </div>
-                        <div v-if="props.emergency.acceptedTimestamp" class="mt-2 text-center">
+                        <div v-if="props.emergency.acceptedOn" class="mt-2 text-center">
                             <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ t("history_accepted") }}</p>
-                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.acceptedTimestamp" format="toHours" />
+                            <GlobalLocalizedDate class="mt-1 text-xs text-gray-400" :date="props.emergency.acceptedOn" format="toHours" />
                         </div>
                         <div class="col-start-3 mt-2 text-right">
                             <p class="text-right text-sm font-semibold text-gray-900 dark:text-white">
                                 {{ getStatusString(props.emergency.status) }}
                             </p>
                             <GlobalLocalizedDate
-                                v-if="props.emergency.completionTimestamp"
+                                v-if="props.emergency.completedOn"
                                 class="mt-1 text-xs text-gray-400"
-                                :date="props.emergency.completionTimestamp"
+                                :date="props.emergency.completedOn"
                                 format="toHours"
                             />
                         </div>

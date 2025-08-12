@@ -1,8 +1,8 @@
 import { i18n } from "@/i18n.ts";
 import { useUserStore } from "@/stores/userStore.ts";
 
-export function getTimeDifferenceString(startTimestamp: number, endTimestamp: number): string {
-    const timeToAccept = Math.floor(endTimestamp / 1000) - Math.floor(startTimestamp / 1000);
+export function getTimeDifferenceString(startDate: string, endDate: string): string {
+    const timeToAccept = Math.floor(new Date(endDate).getTime() / 1000) - Math.floor(new Date(startDate).getTime() / 1000);
 
     const days = Math.floor(timeToAccept / (60 * 60 * 24));
     const hours = Math.floor((timeToAccept % (60 * 60 * 24)) / (60 * 60));

@@ -215,7 +215,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 </p>
                 <div class="ml-auto mt-1 flex gap-2 text-xs">
                     <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
-                    <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
+                    <GlobalLocalizedDate :date="message.created" format="toHours" />
                 </div>
             </div>
 

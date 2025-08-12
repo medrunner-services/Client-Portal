@@ -16,7 +16,8 @@ const emit = defineEmits(["tokenDeleted"]);
 const displayDeleteTokenModal = ref(false);
 
 const isTokenExpired = computed(() => {
-    return props.token.expirationDate ? Date.now() / 1000 > props.token.expirationDate : false;
+    if (!props.token.expirationDate) return false;
+    return Date.now() / 1000 > new Date(props.token.expirationDate).getTime();
 });
 </script>
 

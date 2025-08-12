@@ -190,12 +190,12 @@ async function fetchMissionsForPeriod() {
     try {
         do {
             const response = await userStore.fetchUserEmergencyHistory(limit, paginationToken);
-            const recentEmergencies = response.data.filter((emergency) => isWithinLastPeriod(emergency.emergencyCreationTimestamp));
+            const recentEmergencies = response.data.filter((emergency) => isWithinLastPeriod(emergency.created));
 
-            recentEmergencies.forEach((emergency) => incrementDayCount(emergency.emergencyCreationTimestamp));
+            recentEmergencies.forEach((emergency) => incrementDayCount(emergency.created));
 
             if (recentEmergencies.length > 0) {
-                const oldestFetchedEmergencyTimestamp = response.data[response.data.length - 1].emergencyCreationTimestamp;
+                const oldestFetchedEmergencyTimestamp = response.data[response.data.length - 1].created;
                 paginationToken = isWithinLastPeriod(oldestFetchedEmergencyTimestamp) ? response.paginationToken : undefined;
             } else {
                 paginationToken = undefined;
