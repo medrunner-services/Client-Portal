@@ -109,6 +109,7 @@
     "formDetailed_selectCrimeStat": "Select a CrimeStat level",
     "formDetailed_locationTypeOLP": "Orbital Laser Platform",
     "formDetailed_locationTypePAF": "Platform Alignment Facility",
+    "formDetailed_locationTypeASDFacility": "ASD Facility",
     "tracking_messageReceived": "Message received",
     "tracking_helpOnTheWay": "Help is on the way",
     "tracking_operationSuccessful": "Operation successful",
