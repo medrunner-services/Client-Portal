@@ -35,6 +35,7 @@ const inputExactLocation = ref("");
 const inputInjury = ref("");
 const inputCrimestat = ref("");
 const inputLocationType = ref("");
+const inputLocationASDFacilityType = ref("");
 const inputCrimestatDetails = ref("");
 const inputDeathHours = ref<number | undefined>(undefined);
 const inputDeathMinutes = ref<number | undefined>(undefined);
@@ -68,16 +69,16 @@ async function sendDetails(): Promise<void> {
         await emergencyStore.sendEmergencyMessage({
             emergencyId: emergencyStore.trackedEmergency!.id,
             contents: `## Emergency details from Client\n\n
-            _The client's situation is:_  **${inputSituation.value ? inputSituation.value : "Unknown"}**\n
-            _The client type of location is:_  **${inputLocationType.value ? inputLocationType.value : "Unknown"}**\n
-            _The client exact location is:_  **${inputExactLocation.value ? inputExactLocation.value : "Unknown"}**\n
-            _Client ship:_  **${inputShip.value ? inputShip.value : "Unknown"}**\n
+            _The client's situation is:_  **${inputSituation.value ?? "Unknown"}**\n
+            _The client type of location is:_  **${inputLocationType.value && inputLocationASDFacilityType.value ? `${inputLocationType.value} (${inputLocationASDFacilityType.value})` : (inputLocationType.value ?? "Unknown")}**\n
+            _The client exact location is:_  **${inputExactLocation.value ?? "Unknown"}**\n
+            _Client ship:_  **${inputShip.value ?? "Unknown"}**\n
             _Client death:_  **${
                 inputDeathHours.value || inputDeathMinutes.value
                     ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:R>`
                     : "Unknown"
             }**\n
-            _Is the client injured:_  **${inputInjury.value ? inputInjury.value : "Unknown"}**\n
+            _Is the client injured:_  **${inputInjury.value ?? "Unknown"}**\n
             _Has the client sent an IG beacon?_  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**${
                 inputBeaconPlayer.value ? `\n\nName: ${inputBeaconPlayer.value}` : ""
             }\n${inputBeaconDistance.value ? `Distance: ${inputBeaconDistance.value}` : ""}\n
@@ -87,10 +88,10 @@ async function sendDetails(): Promise<void> {
             _Are there enemies nearby?_  **${inputEnemies.value === true ? "Yes" : inputEnemies.value === false ? "No" : "Unknown"}**${
                 inputEnemiesDetails.value ? `\n\n${inputEnemiesDetails.value}` : ""
             }\n
-            _Does the client have CrimeStat?_  **${inputCrimestat.value ? inputCrimestat.value : "Unknown"}**${
+            _Does the client have CrimeStat?_  **${inputCrimestat.value ?? "Unknown"}**${
                 inputCrimestatDetails.value ? `\n\n${inputCrimestatDetails.value}` : ""
             }\n
-            _Remarks:_\n\n${inputRemarks.value ? inputRemarks.value : "None"}`,
+            _Remarks:_\n\n${inputRemarks.value ?? "None"}`,
         });
 
         currentFormPart.value = 1;
@@ -240,25 +241,39 @@ async function sendDetails(): Promise<void> {
                 :helper="t('formDetailed_helpInjury')"
             />
 
-            <GlobalSelectInput
-                v-model="inputLocationType"
-                class="w-full"
-                :options="[
-                    { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
-                    { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
-                    { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
-                    { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
-                    { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
-                    { value: 'Orbital Laser Platform', label: t('formDetailed_locationTypeOLP') },
-                    { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
-                    { value: 'Space', label: t('formDetailed_locationTypeSpace') },
-                    { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
-                    { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
-                    { value: 'Other', label: t('formDetailed_locationTypeOther') },
-                ]"
-                :label="t('formDetailed_locationType')"
-                :helper="t('formDetailed_helpLocationType')"
-            />
+            <div>
+                <GlobalSelectInput
+                    v-model="inputLocationType"
+                    class="w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
+                        { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
+                        { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
+                        { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
+                        { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
+                        { value: 'Orbital Laser Platform', label: t('formDetailed_locationTypeOLP') },
+                        { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
+                        { value: 'Space', label: t('formDetailed_locationTypeSpace') },
+                        { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
+                        { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
+                        { value: 'Other', label: t('formDetailed_locationTypeOther') },
+                    ]"
+                    :label="t('formDetailed_locationType')"
+                    :helper="t('formDetailed_helpLocationType')"
+                />
+
+                <GlobalSelectInput
+                    v-if="inputLocationType && inputLocationType === 'ASD Facility'"
+                    v-model="inputLocationASDFacilityType"
+                    class="mt-2 w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectASDLocationType'), hidden: true },
+                        { value: 'Lazarus', label: t('formDetailed_ASDLocationLazarus') },
+                        { value: 'Farro', label: t('formDetailed_ASDLocationFarro') },
+                        { value: 'Onyx', label: t('formDetailed_ASDLocationOnyx') },
+                    ]"
+                />
+            </div>
 
             <GlobalTextInput
                 v-model="inputExactLocation"
