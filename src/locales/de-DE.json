@@ -110,7 +110,7 @@
     "formDetailed_locationTypeOLP": "Orbitale Laserplattform",
     "formDetailed_locationTypePAF": "Plattformausrichtungseinrichtung",
     "formDetailed_locationTypeASDFacility": "ASD Einrichtung",
-    "formDetailed_selectASDLocationType": "Select ASD facility",
+    "formDetailed_selectASDLocationType": "ASD Einrichtung auswählen",
     "formDetailed_ASDLocationLazarus": "Lazarus",
     "formDetailed_ASDLocationFarro": "Farro",
     "formDetailed_ASDLocationOnyx": "Onyx",

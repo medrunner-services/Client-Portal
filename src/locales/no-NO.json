@@ -110,7 +110,7 @@
     "formDetailed_locationTypeOLP": "Orbital laserplattform",
     "formDetailed_locationTypePAF": "Plattformjusteringsanlegg",
     "formDetailed_locationTypeASDFacility": "ASD Facility",
-    "formDetailed_selectASDLocationType": "Select ASD facility",
+    "formDetailed_selectASDLocationType": "Velg ASD anlegg",
     "formDetailed_ASDLocationLazarus": "Lazarus",
     "formDetailed_ASDLocationFarro": "Farro",
     "formDetailed_ASDLocationOnyx": "Onyx",
