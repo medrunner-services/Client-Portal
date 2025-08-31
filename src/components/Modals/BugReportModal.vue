@@ -15,7 +15,7 @@ const emit = defineEmits(["close"]);
 
 const loadingYtForm = ref(true);
 
-onMounted(async () => {
+onMounted(() => {
     const youtrackScript = document.createElement("script");
     const youtrackForm = document.getElementById("youtrack-form");
 
@@ -29,7 +29,7 @@ onMounted(async () => {
 
     youtrackScript.addEventListener("load", () => {
         // @ts-expect-error External script from YouTrack
-        YTFeedbackForm.getClientJSApi("338413ce-0ad3-4399-a84c-1cc299fad5d8").then(async (form: any) => {
+        YTFeedbackForm.getClientJSApi("338413ce-0ad3-4399-a84c-1cc299fad5d8").then((form: any) => {
             form.setBlockValue("RSI Handle", userStore.user.rsiHandle ?? userStore.user.id);
             form.setBlockValue("Browser info", navigator.userAgent);
 

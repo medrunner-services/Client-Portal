@@ -98,8 +98,8 @@ const totalNumberOfEmergencies = computed(() => {
     return emergenciesPerDay.value.reduce((sum, current) => sum + current, 0);
 });
 
-onMounted(() => {
-    fetchMissionsForPeriod();
+onMounted(async () => {
+    await fetchMissionsForPeriod();
     generateDateLabels();
 
     chartSeries.value[0].name = t("home_emergencies");
@@ -111,7 +111,7 @@ onMounted(() => {
     }
 });
 
-watch(locale, async () => {
+watch(locale, () => {
     generateDateLabels();
 
     chartSeries.value[0].name = t("home_emergencies");
@@ -208,12 +208,12 @@ async function fetchMissionsForPeriod() {
     }
 }
 
-function changePeriod() {
+async function changePeriod() {
     emergenciesPerDay.value = [];
     oldestDateNeeded.value = new Date();
     dateLabels.value = [];
 
-    fetchMissionsForPeriod();
+    await fetchMissionsForPeriod();
     generateDateLabels();
 
     chartSeries.value[0].data = emergenciesPerDay.value;

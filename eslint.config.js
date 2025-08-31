@@ -24,6 +24,8 @@ export default defineConfigWithVueTs(pluginVue.configs["flat/recommended"], vueT
             "vue/no-v-html": "off",
             "vue/require-default-prop": "off",
             "@typescript-eslint/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
+            "@typescript-eslint/only-throw-error": "off",
+            "@typescript-eslint/no-misused-promises": "off",
         },
     },
     prettierConfig,

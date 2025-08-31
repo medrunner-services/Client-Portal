@@ -15,7 +15,7 @@ const userStore = useUserStore();
 onMounted(async () => {
     if (!route.query.code) {
         if (route.query.error) {
-            await router.push({ name: "login", query: { error: `discord_${route.query.error}` } });
+            await router.push({ name: "login", query: { error: `discord_${route.query.error as string}` } });
             return;
         } else {
             await router.push("/login");
@@ -26,7 +26,7 @@ onMounted(async () => {
     if (route.path === "/auth" && !userStore.isAuthenticated) {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code as string}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
                 {
                     credentials: "include",
                 },
@@ -39,7 +39,7 @@ onMounted(async () => {
                 let apiInitialized = false;
 
                 try {
-                    await initializeApi();
+                    initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
@@ -83,7 +83,7 @@ onMounted(async () => {
     } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code as string}&redirectUri=${
                     import.meta.env.VITE_CALLBACK_URL
                 }/auth/register`,
                 {
@@ -99,7 +99,7 @@ onMounted(async () => {
                 let apiInitialized = false;
 
                 try {
-                    await initializeApi();
+                    initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;

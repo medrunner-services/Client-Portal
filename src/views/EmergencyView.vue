@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type MissionStatus } from "@medrunner/api-client";
+import { MissionStatus } from "@medrunner/api-client";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -41,7 +41,7 @@ onMounted(async () => {
             emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
             emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
             respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
-            if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
+            if (emergencyStore.trackedEmergency.status === MissionStatus.RECEIVED) displayFormDetails.value = true;
         } catch (error: any) {
             errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
         }
@@ -77,7 +77,7 @@ onMounted(async () => {
                 }
 
                 if (
-                    updatedEmergency.status !== 1 &&
+                    updatedEmergency.status !== MissionStatus.RECEIVED &&
                     oldEmergencyStatus.value !== updatedEmergency.status &&
                     userStore.syncedSettings.emergencyUpdateNotification
                 ) {
@@ -87,7 +87,7 @@ onMounted(async () => {
                         getEmergencyStatusSubtitle(updatedEmergency.status),
                         () => {
                             window.focus();
-                            router.push({ name: "emergency" });
+                            void router.push({ name: "emergency" });
                         },
                     );
                 }

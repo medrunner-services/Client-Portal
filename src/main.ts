@@ -18,13 +18,13 @@ const app = createApp(App);
 const loader = document.getElementById("loader");
 const appVersion = __APP_VERSION__;
 
-(async () => {
+await (async () => {
     let apiInitialized = false;
     const refreshTokenExpiration = localStorage.getItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION) ?? undefined;
 
     if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > new Date().getTime()) {
         try {
-            await initializeApi();
+            initializeApi();
             apiInitialized = true;
         } catch (_e) {
             return;

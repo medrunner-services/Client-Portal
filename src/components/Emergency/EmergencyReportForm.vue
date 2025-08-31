@@ -27,7 +27,7 @@ const inputThreatLevel = ref("");
 const inputRSIHandle = ref("");
 const locationsInformation = ref<SpaceLocation[]>([]);
 
-onMounted(async () => {
+onMounted(() => {
     if (logicStore.medrunnerSettings) locationsInformation.value = logicStore.medrunnerSettings.locationSettings.locations;
 
     if (getSystem.value.length === 2) inputSystem.value = getSystem.value[1].value;

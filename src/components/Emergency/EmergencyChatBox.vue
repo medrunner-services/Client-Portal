@@ -61,7 +61,7 @@ onMounted(async () => {
                     if (userStore.syncedSettings.chatMessageNotification === MessageNotification.ALL) {
                         await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                             window.focus();
-                            router.push({ name: "emergency" });
+                            void router.push({ name: "emergency" });
                         });
                     } else if (userStore.syncedSettings.chatMessageNotification === MessageNotification.PING) {
                         if (
@@ -70,7 +70,7 @@ onMounted(async () => {
                         ) {
                             await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
                                 window.focus();
-                                router.push({ name: "emergency" });
+                                void router.push({ name: "emergency" });
                             });
                         }
                     }
@@ -146,12 +146,12 @@ async function handleDeleteMessage(id: string) {
     }
 }
 
-function handleEditMessage(id: string, content: string) {
+async function handleEditMessage(id: string, content: string) {
     inputMessage.value = content;
     originalEditedMessage.value = content;
     editingMessageId.value = id;
 
-    nextTick(() => {
+    await nextTick(() => {
         messageInputRef.value?.focus();
     });
 }
@@ -163,7 +163,7 @@ function escapeEditingMessage() {
     editingMessageId.value = undefined;
 }
 
-function editLastMessage() {
+async function editLastMessage() {
     if (inputMessage.value) return;
     const lastMessage = emergencyStore.trackedEmergencyMessages
         .filter((message) => message.senderId === userStore.user.id)
@@ -171,7 +171,7 @@ function editLastMessage() {
         .sort((a, b) => Date.parse(b.created) - Date.parse(a.created))[0];
 
     if (lastMessage) {
-        handleEditMessage(lastMessage.id, lastMessage.contents);
+        await handleEditMessage(lastMessage.id, lastMessage.contents);
     }
 }
 

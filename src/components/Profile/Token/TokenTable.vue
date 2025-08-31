@@ -39,7 +39,7 @@ async function getTokens(): Promise<void> {
     }
 }
 
-async function deletedToken(id: string): Promise<void> {
+function deletedToken(id: string): void {
     userTokens.value = userTokens.value.filter((token) => token.id !== id);
 }
 </script>

@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", () => {
         try {
             await api.auth.signOut();
             // We do not want to wait for the socket to stop
-            stopWebsocket();
+            void stopWebsocket();
             localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);
             localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
         } finally {

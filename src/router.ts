@@ -8,7 +8,7 @@ import { useUserStore } from "@/stores/userStore";
 
 import DashboardView from "./views/DashboardView.vue";
 
-async function isUserComplete(to: RouteLocationNormalized, requiresWS: boolean = false): Promise<string | boolean> {
+function isUserComplete(to: RouteLocationNormalized, requiresWS: boolean = false): string | boolean {
     const { t } = i18n.global;
     const userStore = useUserStore();
     const logicStore = useLogicStore();
@@ -31,7 +31,7 @@ async function isUserComplete(to: RouteLocationNormalized, requiresWS: boolean =
     return true;
 }
 
-async function isUserNotAuthenticated(): Promise<string | boolean> {
+function isUserNotAuthenticated(): string | boolean {
     const userStore = useUserStore();
 
     if (userStore.isAuthenticated) {
@@ -41,7 +41,7 @@ async function isUserNotAuthenticated(): Promise<string | boolean> {
     return true;
 }
 
-async function isUserAuthenticated(to: RouteLocationNormalized, requiresWS: boolean = false): Promise<string | boolean> {
+function isUserAuthenticated(to: RouteLocationNormalized, requiresWS: boolean = false): string | boolean {
     const { t } = i18n.global;
     const userStore = useUserStore();
     const logicStore = useLogicStore();
@@ -60,7 +60,7 @@ async function isUserAuthenticated(to: RouteLocationNormalized, requiresWS: bool
     return true;
 }
 
-async function isUserNotLinked(): Promise<string | boolean> {
+function isUserNotLinked(): string | boolean {
     const userStore = useUserStore();
 
     if (!userStore.isAuthenticated) {

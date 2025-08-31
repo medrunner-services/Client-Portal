@@ -23,17 +23,16 @@ const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const isCopied = ref(false);
 
-function copyToken() {
-    navigator.clipboard.writeText(createdToken.value).then(() => {
-        isCopied.value = true;
-    });
+async function copyToken() {
+    await navigator.clipboard.writeText(createdToken.value);
+    isCopied.value = true;
 }
 
-function copyAndClose() {
-    navigator.clipboard.writeText(createdToken.value).then(() => {
-        document.body.style.overflow = "auto";
-        emit("close");
-    });
+async function copyAndClose() {
+    await navigator.clipboard.writeText(createdToken.value);
+
+    document.body.style.overflow = "auto";
+    emit("close");
 }
 
 async function createToken() {

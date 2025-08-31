@@ -39,7 +39,7 @@ const showFullMessage = ref<Record<string, boolean>>({});
 const readMoreClicked = ref(false);
 const hoveredMessageId = ref<string | undefined>();
 
-onMounted(async () => {
+onMounted(() => {
     if (chatBox.value) {
         chatBox.value.scrollTop = chatBox.value.scrollHeight;
 

@@ -23,7 +23,7 @@ const showChatTranscriptModal = ref(false);
 const isEmergencyIDCopied = ref(false);
 const showMissionDebugInfo = ref(false);
 
-onMounted(async () => {
+onMounted(() => {
     document.addEventListener("click", handleClickOutside);
 });
 

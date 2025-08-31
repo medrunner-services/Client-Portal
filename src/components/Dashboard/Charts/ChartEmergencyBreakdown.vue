@@ -108,7 +108,7 @@ onMounted(() => {
     }
 });
 
-watch(locale, async () => {
+watch(locale, () => {
     const chartLabels = [];
 
     for (const missionType of Object.keys(userStore.user.clientStats.missions)) {

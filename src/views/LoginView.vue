@@ -22,7 +22,7 @@ const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
 const showLoginRegister = ref(false);
 
-onMounted(async () => {
+onMounted(() => {
     if (routeQueryError.value) {
         if (routeQueryError.value === "accountUnknown") {
             showLoginRegister.value = true;

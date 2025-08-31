@@ -60,7 +60,7 @@ const getWSAlertBannerMessage = computed(() => {
 });
 
 function reloadPage() {
-    stopWebsocket();
+    void stopWebsocket();
     window.location.reload();
 }
 </script>

@@ -67,7 +67,7 @@ async function sendDetails(): Promise<void> {
         }
         submittingDetails.value = true;
         await emergencyStore.sendEmergencyMessage({
-            emergencyId: emergencyStore.trackedEmergency!.id,
+            emergencyId: emergencyStore.trackedEmergency.id,
             contents: `## Emergency details from Client\n\n
             _The client's situation is:_  **${inputSituation.value ?? "Unknown"}**\n
             _The client type of location is:_  **${inputLocationType.value && inputLocationASDFacilityType.value ? `${inputLocationType.value} (${inputLocationASDFacilityType.value})` : (inputLocationType.value ?? "Unknown")}**\n
