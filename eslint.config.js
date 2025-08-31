@@ -1,11 +1,9 @@
 import pluginVue from "eslint-plugin-vue";
-import vueTsEslintConfig from "@vue/eslint-config-typescript";
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
 import prettierConfig from "@vue/eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 
-export default [
-    ...pluginVue.configs["flat/recommended"],
-    ...vueTsEslintConfig(),
+export default defineConfigWithVueTs(pluginVue.configs["flat/recommended"], vueTsConfigs.recommendedTypeChecked, [
     {
         files: ["*.vue", "**/*.vue", "*.ts", "**/*.ts"],
         languageOptions: {
@@ -30,4 +28,4 @@ export default [
     },
     prettierConfig,
     { ignores: [".node_modules/", "**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js"] },
-];
+]);
