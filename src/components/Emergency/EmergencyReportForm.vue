@@ -148,7 +148,10 @@ async function submitEmergency() {
 }
 
 function clearPlanetsLocations(planets: boolean, locations: boolean) {
-    if (planets) inputPlanet.value = "";
+    if (planets) {
+        if (getPlanets.value.length === 2) inputPlanet.value = getPlanets.value[1].value;
+        else inputPlanet.value = "";
+    }
     if (locations) inputLocation.value = "";
 }
 </script>
