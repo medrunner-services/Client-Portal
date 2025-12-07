@@ -31,9 +31,7 @@ export const useLogicStore = defineStore("logic", () => {
 
     const medrunnerLogoUrl = computed(() => {
         if (import.meta.env.MODE === "development" || import.meta.env.MODE === "staging") {
-            // TODO: Change back to dev logo
-            // return "/images/medrunner-logo-dev.svg";
-            return "/images/medrunner-logo-stable.svg";
+            return "/images/medrunner-logo-dev.svg";
         } else {
             return "/images/medrunner-logo-stable.svg";
         }
