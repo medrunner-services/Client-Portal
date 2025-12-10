@@ -42,7 +42,7 @@ importers:
         specifier: 3.5.25
         version: 3.5.25(typescript@5.9.3)
       vue-echarts:
-        specifier: ^8.0.1
+        specifier: 8.0.1
         version: 8.0.1(echarts@6.0.0)(vue@3.5.25(typescript@5.9.3))
       vue-eslint-parser:
         specifier: 10.2.0
