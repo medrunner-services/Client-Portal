@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
     <div
-        class="rounded-lg border-gray-200 p-4 shadow-md dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900 md:p-6"
+        class="rounded-lg border-gray-200 p-4 shadow-md md:p-6 dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900"
         :class="[
             props.borderSize === 'fine' ? 'border' : '',
             props.borderSize === 'thick' ? 'border-2' : '',

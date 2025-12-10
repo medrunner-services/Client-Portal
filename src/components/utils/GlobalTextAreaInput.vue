@@ -77,10 +77,10 @@ const selectInputClasses = computed(() => {
             "dark:focus:ring-gray-400",
         ]);
 
-    if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
+    if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "text-gray-400!"]);
     if (props.radius !== "none") allClasses.push(props.radius);
     if (props.maxHeight) allClasses.push(props.maxHeight);
-    if (props.maxHeight && props.autoGrow) allClasses.push("!overflow-x-hidden");
+    if (props.maxHeight && props.autoGrow) allClasses.push("overflow-x-hidden!");
 
     return allClasses.join(" ");
 });
@@ -112,7 +112,7 @@ const selectInputClasses = computed(() => {
                 <div
                     v-if="showHelper"
                     role="tooltip"
-                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-xs dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
                 >
                     <div class="px-3 py-2">
                         <p>{{ props.helper }}</p>

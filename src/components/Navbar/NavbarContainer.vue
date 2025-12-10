@@ -13,6 +13,8 @@ import MobileInnerNavbar from "@/components/Navbar/MobileInnerNavbar.vue";
 </template>
 
 <style>
+@reference "@/assets/main.css";
+
 .router-link-active {
     @apply underline decoration-2 underline-offset-4;
 }

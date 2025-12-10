@@ -26,7 +26,7 @@ function splitOnLastZero(str: string): string[] {
         <div
             v-if="showPopover"
             role="tooltip"
-            class="absolute bottom-5 z-30 mb-1 inline-block rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
+            class="absolute bottom-5 z-30 mb-1 inline-block rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-xs dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
         >
             <div v-if="props.level" class="flex items-center p-2">
                 <img :src="`/icons/medals/${level}.svg`" alt="Success Medal" class="mr-2 h-5 w-5" />

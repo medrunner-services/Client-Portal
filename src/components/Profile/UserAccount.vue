@@ -98,7 +98,7 @@ const isInvalidRSIHandle = computed(() => {
                 <div v-if="userStore.user.rsiHandle" class="flex w-full flex-col gap-2 lg:flex-row lg:items-end">
                     <GlobalTextInput
                         v-model="inputUsername"
-                        class="flex-grow"
+                        class="grow"
                         :label="t('user_RSIHandle')"
                         :disabled="!isEditingUsername"
                         :placeholder="userStore.user.rsiHandle"
@@ -119,7 +119,7 @@ const isInvalidRSIHandle = computed(() => {
                             v-if="isEditingUsername"
                             type="secondary"
                             size="full"
-                            class="mt-2 lg:ml-2 lg:mt-0"
+                            class="mt-2 lg:mt-0 lg:ml-2"
                             @click="closeEditingUsername()"
                             >{{ t("user_cancel") }}</GlobalButton
                         >
@@ -168,7 +168,7 @@ const isInvalidRSIHandle = computed(() => {
 
             <div class="mt-8 flex w-full">
                 <GlobalButton
-                    type="outline"
+                    type="outline-solid"
                     class="ml-auto w-full lg:w-fit"
                     :disabled="userStore.user.personType !== PersonType.CLIENT"
                     :title="userStore.user.personType ? t('user_deleteAccountButtonTitle') : null"

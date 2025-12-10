@@ -36,7 +36,7 @@ const showCodeRedeemModal = ref(false);
         <div class="flex items-center">
             <p class="cursor-pointer" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
             <div class="mx-5 h-4 border border-gray-300" />
-            <p class="cursor-pointer text-primary-600 dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
+            <p class="text-primary-600 cursor-pointer dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
             <div v-if="userStore.user.personType === PersonType.STAFF" class="mx-5 h-4 border border-gray-300" />
             <a
                 v-if="userStore.user.personType === PersonType.STAFF"

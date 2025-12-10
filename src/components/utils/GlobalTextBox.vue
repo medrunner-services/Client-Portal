@@ -1,6 +1,6 @@
 <script setup lang="ts">
 export interface Props {
-    color?: "gray" | "yellow" | "outline";
+    color?: "gray" | "yellow" | "outline-solid";
     icon?: "warning";
     fontWeight?: "normal" | "medium";
 }
@@ -18,13 +18,13 @@ const props = withDefaults(defineProps<Props>(), {
             'border-gray-200 dark:border-gray-700': props.color === 'gray',
             'border-yellow-300 bg-yellow-100 text-yellow-800 dark:border-yellow-400 dark:bg-yellow-800 dark:text-yellow-300':
                 props.color === 'yellow',
-            'border-primary-600 dark:border-primary-300': props.color === 'outline',
+            'border-primary-600 dark:border-primary-300': props.color === 'outline-solid',
             'font-medium': props.fontWeight === 'medium',
         }"
     >
         <svg
             v-if="icon === 'warning'"
-            class="me-2 inline h-5 w-5 flex-shrink-0"
+            class="me-2 inline h-5 w-5 shrink-0"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"

@@ -38,7 +38,7 @@ onMounted(async () => {
                 <div>
                     <div class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
                         <div
-                            class="grid grid-cols-12 rounded-t-lg bg-gray-50 p-3 font-Mohave font-semibold uppercase text-gray-500 dark:bg-gray-700 dark:text-gray-400 md:grid-cols-12"
+                            class="font-Mohave grid grid-cols-12 rounded-t-lg bg-gray-50 p-3 font-semibold text-gray-500 uppercase md:grid-cols-12 dark:bg-gray-700 dark:text-gray-400"
                         >
                             <div class="col-span-5">{{ t("profile_code") }}</div>
                             <div class="col-span-3">{{ t("profile_event") }}</div>
@@ -54,8 +54,8 @@ onMounted(async () => {
 
                         <div v-else-if="userStore.redeemedCodes.length > 0">
                             <div v-for="code in userStore.redeemedCodes" :key="code.id">
-                                <div class="grid grid-cols-12 items-center border-b p-3 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
-                                    <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ code.id }}</div>
+                                <div class="grid grid-cols-12 items-center border-b p-3 last:border-b-0 md:grid-cols-12 dark:border-gray-700">
+                                    <div class="col-span-5 font-medium text-gray-900 md:col-span-5 dark:text-white">{{ code.id }}</div>
 
                                     <div class="col-span-3">
                                         <p>{{ getCodeTypeString(code.type) }}</p>

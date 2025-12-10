@@ -11,7 +11,7 @@ const route = useRoute();
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_welcomeBack") }}</h1>
+        <h1 class="font-Mohave mt-8 text-3xl font-bold">{{ t("login_welcomeBack") }}</h1>
         <p class="text-lg font-medium">{{ t("login_welcomeBackHelperText") }}</p>
         <p class="mt-2 text-gray-500">
             {{ t("login_welcomeBackHelperLink") }}<a target="_blank" class="ml-1 underline" href="https://medrunner.space">medrunner.space</a>.

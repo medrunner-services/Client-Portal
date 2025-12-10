@@ -3,7 +3,7 @@ module.exports = {
     upgrade: true,
     interactive: true,
     format: "group",
-    cooldown: 2,
+    cooldown: (packageName) => (packageName.startsWith("@medrunner") ? 0 : 2),
     /**
      @param name             The name of the dependency.
      @param defaultGroup     The predefined group name which will be used by default.

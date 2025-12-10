@@ -47,6 +47,8 @@ const value = computed({
 </template>
 
 <style scoped>
+@reference "@/assets/main.css";
+
 input[type="range"]::-webkit-slider-thumb {
     @apply bg-primary-600;
 }

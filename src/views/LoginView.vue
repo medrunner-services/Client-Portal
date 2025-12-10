@@ -60,7 +60,7 @@ function getErrorText(): string {
         />
 
         <div class="content-container flex h-full w-full items-center">
-            <div class="z-10 w-full rounded-lg bg-white dark:bg-gray-800 dark:text-white md:p-10 lg:mx-14 lg:w-1/2 2xl:w-1/3">
+            <div class="z-10 w-full rounded-lg bg-white md:p-10 lg:mx-14 lg:w-1/2 2xl:w-1/3 dark:bg-gray-800 dark:text-white">
                 <div>
                     <div class="flex items-center justify-between">
                         <img class="w-52 lg:w-72" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />

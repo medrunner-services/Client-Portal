@@ -2,7 +2,7 @@
 import { useI18n } from "vue-i18n";
 
 export interface Props {
-    type?: "primary" | "secondary" | "outline";
+    type?: "primary" | "secondary" | "outline-solid";
     submit?: boolean;
     loading?: boolean;
     size?: "fit" | "full";
@@ -33,15 +33,15 @@ const { t } = useI18n();
     <div :class="props.size === 'fit' ? 'w-fit' : ''">
         <button
             :type="props.submit ? 'submit' : 'button'"
-            class="flex cursor-pointer items-center justify-center rounded-lg border px-2.5 py-2.5 text-sm font-medium focus:outline-none disabled:cursor-not-allowed disabled:select-none disabled:opacity-50 sm:px-5"
+            class="flex cursor-pointer items-center justify-center rounded-lg border px-2.5 py-2.5 text-sm font-medium focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 disabled:select-none sm:px-5"
             :class="{
-                'border-primary-600 bg-primary-600 text-white hover:bg-primary-600/90 disabled:hover:bg-primary-600': props.type === 'primary',
-                'border-gray-300 hover:bg-gray-100 disabled:hover:bg-transparent dark:border-gray-600 dark:hover:border-gray-600 dark:hover:bg-gray-700 disabled:hover:dark:hover:bg-transparent':
+                'border-primary-600 bg-primary-600 hover:bg-primary-600/90 disabled:hover:bg-primary-600 text-white': props.type === 'primary',
+                'border-gray-300 hover:bg-gray-100 disabled:hover:bg-transparent dark:border-gray-600 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:disabled:hover:hover:bg-transparent':
                     props.type === 'secondary',
-                'bg-transparent disabled:hover:bg-transparent disabled:hover:dark:hover:bg-transparent': props.type === 'outline',
-                [props.outlineBorderColor]: props.type === 'outline',
-                [props.outlineTextColor]: props.type === 'outline',
-                [props.outlineHoverColor]: props.type === 'outline',
+                'bg-transparent disabled:hover:bg-transparent dark:disabled:hover:hover:bg-transparent': props.type === 'outline-solid',
+                [props.outlineBorderColor]: props.type === 'outline-solid',
+                [props.outlineTextColor]: props.type === 'outline-solid',
+                [props.outlineHoverColor]: props.type === 'outline-solid',
                 'cursor-progress': props.loading,
                 'w-full': props.size === 'full',
             }"
@@ -54,7 +54,7 @@ const { t } = useI18n();
                     class="mr-3 inline h-4 w-4 animate-spin"
                     :class="{
                         'text-white': props.type === 'primary',
-                        'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                        'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                         'text-gray-800 dark:text-white': props.type === 'secondary',
                     }"
                     viewBox="0 0 100 101"
@@ -79,7 +79,7 @@ const { t } = useI18n();
                         class="h-3.5 w-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -101,7 +101,7 @@ const { t } = useI18n();
                         class="h-3.5 w-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +118,7 @@ const { t } = useI18n();
                         class="h-5 w-5"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +137,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -153,7 +153,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -175,7 +175,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"
@@ -191,7 +191,7 @@ const { t } = useI18n();
                         class="h-4 w-4"
                         :class="{
                             'text-white': props.type === 'primary',
-                            'text-primary-600 dark:text-primary-400': props.type === 'outline',
+                            'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
                             'text-gray-800 dark:text-white': props.type === 'secondary',
                         }"
                         aria-hidden="true"

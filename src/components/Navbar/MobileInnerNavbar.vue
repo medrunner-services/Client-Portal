@@ -92,7 +92,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 
         <div
             v-if="showMenu"
-            class="absolute left-0 top-0 z-[5] h-screen w-screen bg-gray-600/75 pt-4 dark:bg-gray-700/75"
+            class="absolute top-0 left-0 z-5 h-screen w-screen bg-gray-600/75 pt-4 dark:bg-gray-700/75"
             @click.self="switchNavMenuSate()"
         >
             <div class="absolute top-[72px] z-10 w-full bg-white dark:bg-gray-800">
@@ -109,7 +109,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     <div class="border border-gray-100 dark:border-gray-700"></div>
                     <p class="cursor-pointer p-4" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
-                    <p class="cursor-pointer p-4 text-primary-600 dark:text-red-700" @click="showBugReportModal = true">
+                    <p class="text-primary-600 cursor-pointer p-4 dark:text-red-700" @click="showBugReportModal = true">
                         {{ t("navbar_reportBug") }}
                     </p>
                     <div v-if="userStore.user.personType === PersonType.STAFF" class="border border-gray-100 dark:border-gray-700"></div>
@@ -141,7 +141,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         </svg>
                     </a>
                     <div class="border border-gray-100 dark:border-gray-700"></div>
-                    <div class="flex cursor-pointer items-center justify-between rounded p-4" @click="showLanguageMenu = !showLanguageMenu">
+                    <div class="flex cursor-pointer items-center justify-between rounded-sm p-4" @click="showLanguageMenu = !showLanguageMenu">
                         <div class="flex">
                             <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-4 h-6 w-6" />
                             {{ getLanguageString(locale) }}

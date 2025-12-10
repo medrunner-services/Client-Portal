@@ -22,8 +22,8 @@ const isTokenExpired = computed(() => {
 </script>
 
 <template>
-    <div class="grid grid-cols-12 items-center border-b px-3 py-1 last:border-b-0 dark:border-gray-700 md:grid-cols-12">
-        <div class="col-span-5 font-medium text-gray-900 dark:text-white md:col-span-5">{{ props.token.name }}</div>
+    <div class="grid grid-cols-12 items-center border-b px-3 py-1 last:border-b-0 md:grid-cols-12 dark:border-gray-700">
+        <div class="col-span-5 font-medium text-gray-900 md:col-span-5 dark:text-white">{{ props.token.name }}</div>
 
         <div class="col-span-3">
             <GlobalLocalizedDate v-if="props.token.lastUsed" :date="props.token.lastUsed" format="toDate" />

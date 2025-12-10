@@ -129,13 +129,13 @@ async function sendDetails(): Promise<void> {
         <div class="flex min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
             <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
-                <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
+                <span class="bg-primary-600 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+                <span class="bg-primary-600 relative inline-flex h-3 w-3 rounded-full"></span>
             </span>
         </div>
 
         <GlobalCard class="mt-8">
-            <p class="font-Mohave text-3xl font-bold text-primary-600 dark:text-red-700">
+            <p class="font-Mohave text-primary-600 text-3xl font-bold dark:text-red-700">
                 {{ t("formDetailed_infoCardTitle") }}
             </p>
 
@@ -145,12 +145,12 @@ async function sendDetails(): Promise<void> {
         </GlobalCard>
 
         <div class="mt-8">
-            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base lg:mb-8">
+            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 sm:text-base lg:mb-8 dark:text-gray-400">
                 <li
-                    class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 dark:text-red-700 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] xl:after:mx-10"
+                    class="flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border after:border-b after:border-gray-200 sm:after:inline-block sm:after:content-[''] xl:after:mx-10 dark:text-red-700 dark:after:border-gray-700"
                 >
                     <div
-                        class="flex items-center text-primary-600 after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:text-red-700 dark:after:text-gray-500 sm:block sm:after:hidden"
+                        class="text-primary-600 flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] sm:block sm:after:hidden dark:text-red-700 dark:after:text-gray-500"
                     >
                         <svg
                             class="mr-2 h-4 w-4 sm:mx-auto sm:mb-2 sm:h-6 sm:w-6"
@@ -168,10 +168,10 @@ async function sendDetails(): Promise<void> {
                     </div>
                 </li>
                 <li
-                    class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 after:content-[''] dark:after:border-gray-700 sm:after:inline-block xl:after:mx-10"
+                    class="flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border after:border-b after:border-gray-200 after:content-[''] sm:after:inline-block xl:after:mx-10 dark:after:border-gray-700"
                 >
                     <div
-                        class="flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:block sm:after:hidden"
+                        class="flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] sm:block sm:after:hidden dark:after:text-gray-500"
                         :class="currentFormPart >= 2 ? 'text-primary-600 dark:text-red-700' : ''"
                     >
                         <svg
@@ -353,7 +353,7 @@ async function sendDetails(): Promise<void> {
                     class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderBeaconDistance')"
                 />
-                <p v-if="inputBeacon" class="mt-2 text-sm font-medium text-primary-600 dark:text-red-700">
+                <p v-if="inputBeacon" class="text-primary-600 mt-2 text-sm font-medium dark:text-red-700">
                     {{ t("formDetailed_beaconCancelMessage") }}
                 </p>
             </div>

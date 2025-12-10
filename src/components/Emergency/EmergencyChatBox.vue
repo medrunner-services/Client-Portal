@@ -184,7 +184,7 @@ const isInvalidChatInput = computed(() => {
 
 <template>
     <div>
-        <GlobalCard class="!p-3 lg:!p-6">
+        <GlobalCard class="p-3! lg:p-6!">
             <div v-if="errorLoadingMessages" class="flex w-full items-center justify-center">
                 <GlobalErrorText :text="errorLoadingMessages" />
             </div>
@@ -198,8 +198,8 @@ const isInvalidChatInput = computed(() => {
                     @delete-message="(id) => handleDeleteMessage(id)"
                 />
 
-                <div class="mt-5 rounded-lg bg-gray-100 px-3 pb-1.5 pt-3 dark:bg-gray-900" :class="{ 'border border-primary-600': editingMessageId }">
-                    <div v-if="editingMessageId" class="-mt-1 mb-2 flex items-center gap-2 text-primary-600">
+                <div class="mt-5 rounded-lg bg-gray-100 px-3 pt-3 pb-1.5 dark:bg-gray-900" :class="{ 'border-primary-600 border': editingMessageId }">
+                    <div v-if="editingMessageId" class="text-primary-600 -mt-1 mb-2 flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -238,7 +238,7 @@ const isInvalidChatInput = computed(() => {
                         <button
                             type="submit"
                             :disabled="isInvalidChatInput"
-                            class="mb-1 cursor-pointer justify-center text-primary-600 disabled:cursor-not-allowed disabled:text-primary-600/50"
+                            class="text-primary-600 disabled:text-primary-600/50 mb-1 cursor-pointer justify-center disabled:cursor-not-allowed"
                         >
                             <svg
                                 v-if="sendingMessage"

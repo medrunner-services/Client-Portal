@@ -22,7 +22,7 @@ function getButtonText() {
 <template>
     <GlobalCard>
         <div>
-            <h2 class="mb-4 font-Mohave text-2xl font-semibold">{{ getTitle() }}</h2>
+            <h2 class="font-Mohave mb-4 text-2xl font-semibold">{{ getTitle() }}</h2>
             <RouterLink class="block w-full lg:w-fit" to="/emergency">
                 <GlobalButton size="full" class="w-full lg:w-fit">{{ getButtonText() }}</GlobalButton>
             </RouterLink>

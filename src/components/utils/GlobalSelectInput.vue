@@ -50,12 +50,12 @@ const effectiveSize = computed(() => {
 const selectInputClasses = computed(() => {
     let allClasses: string[] = [];
 
-    if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "!text-gray-400"]);
+    if (props.disabled) allClasses = allClasses.concat(["cursor-not-allowed", "bg-gray-100", "text-gray-400!"]);
     if (props.error) allClasses = allClasses.concat(["border-red-600", "focus:border-red-500", "focus:ring-red-500"]);
     if (props.inputPosition === "row") allClasses = allClasses.concat(["w-fit"]);
     if (props.inputPosition === "column") allClasses = allClasses.concat(["w-full"]);
-    if (props.inputSize === "small") allClasses = allClasses.concat(["pl-2", "pr-1", "py-1.5", "h-fit"]);
-    if (props.inputSize === "large") allClasses = allClasses.concat(["p-2.5"]);
+    if (props.inputSize === "small") allClasses = allClasses.concat(["pl-2", "pr-8", "py-1.5", "h-fit"]);
+    if (props.inputSize === "large") allClasses = allClasses.concat(["p-2.5", "pr-8"]);
     if (effectiveSize.value === "fit") allClasses = allClasses.concat(["md:w-fit"]);
     allClasses.push(props.radius);
 
@@ -93,7 +93,7 @@ const selectInputClasses = computed(() => {
                 <div
                     v-if="showHelper"
                     role="tooltip"
-                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-xs dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
                 >
                     <div class="px-3 py-2">
                         <p>{{ props.helper }}</p>
@@ -106,7 +106,7 @@ const selectInputClasses = computed(() => {
             v-model="value"
             :disabled="props.disabled"
             :required="props.required"
-            class="block w-full cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400"
+            class="block cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900 focus:border-gray-500 focus:ring-gray-500 disabled:cursor-not-allowed dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400"
             :class="selectInputClasses"
             @change="$emit('change')"
         >

@@ -75,7 +75,7 @@ const isInvalidTokenName = computed(() => {
             <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
 
             <div class="mt-8 flex items-center">
-                <GlobalTextAreaInput v-model="createdToken" :rows="3" class="flex-grow" :disabled="true" />
+                <GlobalTextAreaInput v-model="createdToken" :rows="3" class="grow" :disabled="true" />
                 <svg
                     v-if="!isCopied"
                     class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"

@@ -50,7 +50,7 @@ function deletedToken(id: string): void {
             <div>
                 <div class="w-full text-left text-sm text-gray-500 dark:text-gray-400">
                     <div
-                        class="grid grid-cols-12 rounded-t-lg bg-gray-50 p-3 font-Mohave font-semibold uppercase text-gray-500 dark:bg-gray-700 dark:text-gray-400 md:grid-cols-12"
+                        class="font-Mohave grid grid-cols-12 rounded-t-lg bg-gray-50 p-3 font-semibold text-gray-500 uppercase md:grid-cols-12 dark:bg-gray-700 dark:text-gray-400"
                     >
                         <div class="col-span-5">{{ t("developer_tokenListName") }}</div>
                         <div class="col-span-3">{{ t("developer_tokenListLastUsed") }}</div>

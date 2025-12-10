@@ -12,7 +12,7 @@ const appVersion = __APP_VERSION__;
     <div>
         <div class="flex min-h-11 items-center justify-between">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_whatsNew") }}</h2>
-            <p class="rounded-full bg-primary-100 px-2 py-1 text-xs font-semibold text-primary-600">v{{ appVersion }}</p>
+            <p class="bg-primary-100 text-primary-600 rounded-full px-2 py-1 text-xs font-semibold">v{{ appVersion }}</p>
         </div>
 
         <GlobalCard class="mt-4 flex flex-col">

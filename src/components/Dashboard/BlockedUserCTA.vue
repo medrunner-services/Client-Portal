@@ -38,7 +38,9 @@ const logicStore = useLogicStore();
                         </a>
 
                         <a class="w-full lg:w-fit" href="https://discord.gg/dcyXDFZpYP" target="_blank">
-                            <GlobalButton icon="link" size="full" type="outline" class="text-gray-900">{{ t("home_banAppealDiscord") }}</GlobalButton>
+                            <GlobalButton icon="link" size="full" type="outline-solid" class="text-gray-900">{{
+                                t("home_banAppealDiscord")
+                            }}</GlobalButton>
                         </a>
                     </div>
                 </div>

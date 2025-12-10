@@ -71,10 +71,10 @@ async function disconnectUser(): Promise<void> {
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_verifyRSIAccount") }}</h1>
+        <h1 class="font-Mohave mt-8 text-3xl font-bold">{{ t("login_verifyRSIAccount") }}</h1>
         <p class="mt-2 font-medium text-gray-500 dark:text-gray-400" v-html="getAddToBioText()" />
         <div class="mt-5 flex items-center">
-            <GlobalTextInput v-model="userId" class="flex-grow" :disabled="true" />
+            <GlobalTextInput v-model="userId" class="grow" :disabled="true" />
             <svg
                 v-if="!isIdCopied"
                 class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"

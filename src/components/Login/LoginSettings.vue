@@ -74,7 +74,7 @@ function saveAnimationSetting(setting: string, value: number): void {
                 @input-click="() => saveAnimationSetting('loginAnimationGlowSize', logicStore.loginAnimationGlowSize)"
                 >{{ t("login_settingAnimationStarGlow") }}
             </GlobalRangeSlider>
-            <GlobalButton class="mt-6" type="outline" @click="resetAnimationSettings()">{{ t("login_settingReset") }} </GlobalButton>
+            <GlobalButton class="mt-6" type="outline-solid" @click="resetAnimationSettings()">{{ t("login_settingReset") }} </GlobalButton>
         </div>
     </div>
 </template>

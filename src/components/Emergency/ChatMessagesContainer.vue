@@ -177,7 +177,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
             v-for="(message, index) in sortedMessages"
             v-else
             :key="message.id"
-            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 dark:border-gray-700 lg:px-4"
+            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 lg:px-4 dark:border-gray-700"
             :class="messageClasses(message, index)"
             @mouseenter="hoveredMessageId = message.id"
             @mouseleave="hoveredMessageId = undefined"
@@ -189,10 +189,10 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 {{ getMessageAuthor(message) }}
             </p>
             <p
-                class="prose mt-1 break-words dark:prose-invert dark:text-white"
+                class="prose dark:prose-invert mt-1 wrap-break-word dark:text-white"
                 :class="[
                     { 'markdown-extras prose-invert text-right': isMessageAuthor(message.senderId) },
-                    { 'italic text-gray-900': message.deleted },
+                    { 'text-gray-900 italic': message.deleted },
                 ]"
                 v-html="
                     message.deleted
@@ -213,7 +213,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <div class="ml-auto mt-1 flex gap-2 text-xs">
+                <div class="mt-1 ml-auto flex gap-2 text-xs">
                     <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
                     <GlobalLocalizedDate :date="message.created" format="toHours" />
                 </div>

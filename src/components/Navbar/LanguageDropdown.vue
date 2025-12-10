@@ -47,7 +47,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
     <div class="relative">
         <button
             ref="selectorParent"
-            class="flex w-full items-center justify-between rounded py-2 pl-3 pr-4 lg:w-auto lg:border-0 lg:p-0 lg:hover:bg-transparent lg:dark:hover:bg-transparent"
+            class="flex w-full items-center justify-between rounded-sm py-2 pr-4 pl-3 lg:w-auto lg:border-0 lg:p-0 lg:hover:bg-transparent lg:dark:hover:bg-transparent"
             @click="showDropdown = !showDropdown"
         >
             <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-2 h-6 w-6" />
@@ -66,7 +66,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         <div
             v-if="showDropdown"
             ref="selectorDiv"
-            class="absolute left-1/2 top-14 z-10 w-44 -translate-x-1/2 transform rounded-lg border border-gray-200 bg-white font-normal shadow-lg dark:border-gray-700 dark:bg-gray-700 dark:shadow-gray-900"
+            class="absolute top-14 left-1/2 z-10 w-44 -translate-x-1/2 transform rounded-lg border border-gray-200 bg-white font-normal shadow-lg dark:border-gray-700 dark:bg-gray-700 dark:shadow-gray-900"
         >
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400">
                 <li

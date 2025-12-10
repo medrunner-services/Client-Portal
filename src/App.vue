@@ -110,22 +110,22 @@ function reloadPage() {
                 "
             />
 
-            <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full flex-grow items-center justify-center">
+            <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
 
-            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full flex-grow items-center justify-center">
+            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full grow items-center justify-center">
                 <GlobalErrorText :text="logicStore.errorInitializingApp ?? t('error_globalLoading')" />
             </div>
 
             <RouterView
                 v-else
-                class="w-full flex-grow"
+                class="w-full grow"
                 :class="
                     route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
                         ? 'my-0'
                         : showMOTDAlertBanner
-                          ? 'mb-14 mt-6'
+                          ? 'mt-6 mb-14'
                           : 'my-14'
                 "
             />

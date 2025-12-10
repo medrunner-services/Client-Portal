@@ -11,7 +11,7 @@ const route = useRoute();
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_welcomeRegister") }}</h1>
+        <h1 class="font-Mohave mt-8 text-3xl font-bold">{{ t("login_welcomeRegister") }}</h1>
         <p class="mt-2 font-medium text-gray-500">{{ t("login_welcomeRegisterHelperText") }}</p>
 
         <GlobalButton class="mt-6 w-full" size="full" @click="redirectToDiscordRegister(encodeURIComponent(route.query.redirect as string) ?? '')"

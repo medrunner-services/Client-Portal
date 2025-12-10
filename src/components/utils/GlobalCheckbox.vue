@@ -33,7 +33,7 @@ const value = computed({
                     v-model="value"
                     type="checkbox"
                     :disabled="props.disabled"
-                    class="h-4 w-4 cursor-pointer rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-300 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-400"
+                    class="text-primary-600 focus:ring-primary-300 dark:focus:ring-primary-400 h-4 w-4 cursor-pointer rounded-sm border-gray-300 bg-gray-100 focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
                     @click="$emit('inputClick')"
                 />
                 <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"><slot /></label>

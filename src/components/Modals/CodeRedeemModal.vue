@@ -137,7 +137,7 @@ async function goToLinkPage() {
 <template>
     <ModalContainer v-slot="modalContainer" :user-close-modal="props.canCloseModal" :title="t('profile_redeemACode')" @close="emit('close')">
         <div v-if="isCodeRedeemed">
-            <div class="mb-8 mt-12 flex flex-col items-center">
+            <div class="mt-12 mb-8 flex flex-col items-center">
                 <div>
                     <div class="h-24 w-24 rounded-full bg-green-300 p-8 shadow-md">
                         <svg
@@ -174,7 +174,7 @@ async function goToLinkPage() {
                     <input
                         ref="inputCodePart1"
                         v-model="codeValuePart1"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
+                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 md:p-2.5 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
@@ -192,7 +192,7 @@ async function goToLinkPage() {
                     <input
                         ref="inputCodePart2"
                         v-model="codeValuePart2"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
+                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 md:p-2.5 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
@@ -210,7 +210,7 @@ async function goToLinkPage() {
                     <input
                         ref="inputCodePart3"
                         v-model="codeValuePart3"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
+                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 md:p-2.5 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
@@ -228,7 +228,7 @@ async function goToLinkPage() {
                     <input
                         ref="inputCodePart4"
                         v-model="codeValuePart4"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
+                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 md:p-2.5 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
                         :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"

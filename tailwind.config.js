@@ -30,6 +30,24 @@ export default {
                 DEFAULT: {
                     css: {
                         maxWidth: "none",
+                        "li::marker": {
+                            color: theme("colors.black"),
+                        },
+                        "li:has(> h3)::marker": {
+                            fontSize: theme("fontSize.xl"),
+                            fontWeight: theme("fontWeight.bold"),
+                        },
+                        "li:has(> h2)::marker": {
+                            fontSize: theme("fontSize.2xl"),
+                            fontWeight: theme("fontWeight.bold"),
+                        },
+                    },
+                },
+                invert: {
+                    css: {
+                        "li::marker": {
+                            color: theme("colors.white"),
+                        },
                     },
                 },
             }),

@@ -42,7 +42,7 @@ const getButtonOutlineColors = computed(() => {
 
 <template>
     <div
-        class="w-full border border-b border-gray-200 px-4 py-3 dark:border-0 lg:py-2.5"
+        class="w-full border border-b border-gray-200 px-4 py-3 lg:py-2.5 dark:border-0"
         :class="{
             'bg-yellow-100 text-yellow-800': props.color === 'yellow',
             'bg-red-100 text-red-800': props.color === 'red',
@@ -81,7 +81,7 @@ const getButtonOutlineColors = computed(() => {
                 </svg>
 
                 <p
-                    class="markdown-extras mb-4 [overflow-wrap:anywhere] md:mb-0"
+                    class="markdown-extras mb-4 wrap-anywhere md:mb-0"
                     :class="{
                         'font-medium': props.fontWeight === 'medium',
                     }"
@@ -90,7 +90,7 @@ const getButtonOutlineColors = computed(() => {
             </div>
             <div v-if="props.showButton" class="flex w-full shrink-0 items-center space-x-4 md:w-fit lg:pl-10">
                 <GlobalButton
-                    type="outline"
+                    type="outline-solid"
                     size="full"
                     class="w-full md:w-fit"
                     :outline-text-color="getButtonOutlineColors.outlineTextColor"

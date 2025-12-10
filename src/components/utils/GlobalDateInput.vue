@@ -60,7 +60,7 @@ const showHelper = ref(false);
                 <div
                     v-if="showHelper"
                     role="tooltip"
-                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
+                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-xs dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
                 >
                     <div class="px-3 py-2">
                         <p>{{ props.helper }}</p>

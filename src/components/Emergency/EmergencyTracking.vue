@@ -105,42 +105,42 @@ const showSuccessRate = computed(() => {
             <div class="flex min-h-11 items-center">
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
                 <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
-                    <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
+                    <span class="bg-primary-600 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+                    <span class="bg-primary-600 relative inline-flex h-3 w-3 rounded-full"></span>
                 </span>
             </div>
         </div>
 
         <GlobalCard class="mt-8">
-            <p class="font-Mohave text-3xl font-bold text-primary-600 dark:text-red-700">
+            <p class="font-Mohave text-primary-600 text-3xl font-bold dark:text-red-700">
                 {{ getEmergencyStatusTitle(emergencyStore.trackedEmergency.status) }}
             </p>
             <p class="mt-1 font-medium">{{ getEmergencyStatusSubtitle(emergencyStore.trackedEmergency.status) }}</p>
 
             <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-                <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
+                <div class="rounded-lg bg-gray-100 p-2 shadow-sm dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("tracking_system") }}</p>
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.system }}</p>
                 </div>
 
-                <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
+                <div class="rounded-lg bg-gray-100 p-2 shadow-sm dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("tracking_subSystem") }}</p>
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.subsystem }}</p>
                 </div>
 
-                <div v-if="emergencyStore.trackedEmergency.tertiaryLocation" class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
+                <div v-if="emergencyStore.trackedEmergency.tertiaryLocation" class="rounded-lg bg-gray-100 p-2 shadow-sm dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("form_moon") }}</p>
                     <p class="text-lg">{{ emergencyStore.trackedEmergency.tertiaryLocation }}</p>
                 </div>
 
-                <div class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700">
+                <div class="rounded-lg bg-gray-100 p-2 shadow-sm dark:bg-gray-700">
                     <p class="text-lg font-semibold">{{ t("tracking_threatLevel") }}</p>
                     <p class="text-lg">{{ getThreatString(emergencyStore.trackedEmergency.threatLevel) }}</p>
                 </div>
             </div>
 
             <div v-if="emergencyStore.trackedEmergency.respondingTeam.staff.length > 0 && emergencyStore.trackedEmergencyTeamDetails">
-                <p class="mt-8 font-Mohave text-2xl font-bold">{{ t("tracking_responders") }}</p>
+                <p class="font-Mohave mt-8 text-2xl font-bold">{{ t("tracking_responders") }}</p>
 
                 <GlobalTextBox v-if="getAssignedTeamsString || showSuccessRate" class="mt-2 text-sm lg:w-fit" font-weight="normal">
                     <div class="flex items-center">
@@ -157,7 +157,7 @@ const showSuccessRate = computed(() => {
                     <div
                         v-for="responderClass in responderTeamToClassTeam(emergencyStore.trackedEmergency.respondingTeam.staff)"
                         :key="responderClass[0].class"
-                        class="rounded-lg bg-gray-100 p-2 shadow dark:bg-gray-700"
+                        class="rounded-lg bg-gray-100 p-2 shadow-sm dark:bg-gray-700"
                     >
                         <div class="flex gap-2">
                             <img :src="`/icons/classIcon_${responderClass[0].class}.svg`" alt="Class icon" class="h-7 w-7" />

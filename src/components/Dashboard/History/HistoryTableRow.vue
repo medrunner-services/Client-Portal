@@ -98,7 +98,7 @@ async function addTextToClipboard(text: string) {
     <div>
         <div
             ref="rowParent"
-            class="grid cursor-pointer grid-cols-7 items-center border-b py-3 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700 md:grid-cols-10"
+            class="grid cursor-pointer grid-cols-7 items-center border-b py-3 hover:bg-gray-200 md:grid-cols-10 dark:border-gray-700 dark:hover:bg-gray-700"
             :class="showDetails ? 'bg-gray-200 dark:bg-gray-700' : ''"
             @click="showDetails = !showDetails"
         >
@@ -120,15 +120,15 @@ async function addTextToClipboard(text: string) {
                     />
                 </svg>
             </div>
-            <div class="col-span-4 font-medium text-gray-900 dark:text-white md:col-span-3 md:col-start-2">
+            <div class="col-span-4 font-medium text-gray-900 md:col-span-3 md:col-start-2 dark:text-white">
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
             <GlobalLocalizedDate class="col-span-2" :date="props.emergency.created" format="toDate" />
-            <div class="col-span-2 hidden font-medium text-gray-900 dark:text-white md:block">
+            <div class="col-span-2 hidden font-medium text-gray-900 md:block dark:text-white">
                 {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
             </div>
             <div class="col-span-2 hidden md:block">
-                <div class="mr-2 w-fit rounded px-2.5 py-0.5 text-xs font-medium" :class="getStatusColor(props.emergency.status)">
+                <div class="mr-2 w-fit rounded-sm px-2.5 py-0.5 text-xs font-medium" :class="getStatusColor(props.emergency.status)">
                     {{ getStatusString(props.emergency.status) }}
                 </div>
             </div>
@@ -139,9 +139,9 @@ async function addTextToClipboard(text: string) {
                 <div class="mb-4">
                     <ol class="flex w-full items-center">
                         <li
-                            class="after:border-1 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
+                            class="after:border-primary-600 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border after:border-b-2 after:content-['']"
                         >
-                            <div class="rounded-full bg-primary-100 p-2 text-primary-600">
+                            <div class="bg-primary-100 text-primary-600 rounded-full p-2">
                                 <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                     <path
                                         d="M15 18h-2v-3.333a2 2 0 0 0-.4-1.2L10.45 10.6a1 1 0 0 1 0-1.2l2.15-2.867a2 2 0 0 0 .4-1.2V2h2a1 1 0 1 0 0-2H1a1 1 0 0 0 0 2h2v3.333a2 2 0 0 0 .4 1.2L5.55 9.4a1 1 0 0 1 0 1.2L3.4 13.467a2 2 0 0 0-.4 1.2V18H1a1 1 0 0 0 0 2h14a1 1 0 0 0 0-2Z"
@@ -162,9 +162,9 @@ async function addTextToClipboard(text: string) {
                         </li>
                         <li
                             v-if="props.emergency.acceptedOn"
-                            class="after:border-1 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border-b-2 after:border-primary-600 after:content-['']"
+                            class="after:border-primary-600 relative flex w-full items-center after:mx-6 after:inline-block after:w-full after:border after:border-b-2 after:content-['']"
                         >
-                            <div class="rounded-full bg-primary-100 p-2 text-primary-600">
+                            <div class="bg-primary-100 text-primary-600 rounded-full p-2">
                                 <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
                                     <path
                                         d="M15 1.943v12.114a1 1 0 0 1-1.581.814L8 11V5l5.419-3.871A1 1 0 0 1 15 1.943ZM7 4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2v5a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V4ZM4 17v-5h1v5H4ZM16 5.183v5.634a2.984 2.984 0 0 0 0-5.634Z"
@@ -179,7 +179,7 @@ async function addTextToClipboard(text: string) {
                             </p>
                         </li>
                         <li class="flex items-center">
-                            <div class="rounded-full bg-primary-100 p-2 text-primary-600">
+                            <div class="bg-primary-100 text-primary-600 rounded-full p-2">
                                 <svg
                                     v-if="props.emergency.status === MissionStatus.SUCCESS"
                                     class="h-3 w-3"
@@ -246,37 +246,37 @@ async function addTextToClipboard(text: string) {
                 </div>
 
                 <div class="mt-4 flex w-full flex-col gap-4 md:flex-row">
-                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700">
+                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700">
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_system") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.system }}</p>
                     </div>
-                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700">
+                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700">
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_nearestPlanet") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.subsystem }}</p>
                     </div>
                     <div
                         v-if="props.emergency.tertiaryLocation"
-                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
+                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("form_moon") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ props.emergency.tertiaryLocation }}</p>
                     </div>
                 </div>
                 <div class="mt-4 flex w-full flex-col gap-4 md:flex-row">
-                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700">
+                    <div class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700">
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_threatLevel") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ getThreatString(props.emergency.threatLevel) }}</p>
                     </div>
                     <div
                         v-if="props.emergency.rating"
-                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
+                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_rating") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">{{ getRatingString(props.emergency.rating) }}</p>
                     </div>
                     <div
                         v-else-if="props.emergency.cancellationReason"
-                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
+                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_cancelReason") }}</p>
                         <p class="text text-base text-gray-500 dark:text-gray-400">
@@ -287,7 +287,7 @@ async function addTextToClipboard(text: string) {
                 <div class="mt-4 grid w-full gap-4">
                     <div
                         v-if="props.emergency.respondingTeam.staff.length > 0"
-                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow dark:bg-gray-700"
+                        class="flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm dark:bg-gray-700"
                     >
                         <p class="text mb-2 text-base font-semibold text-gray-900 dark:text-white">{{ t("history_responders") }}</p>
                         <p v-if="teamLeader" class="text mb-2 text-base text-gray-500 dark:text-gray-400">
@@ -340,7 +340,7 @@ async function addTextToClipboard(text: string) {
                     </div>
                 </div>
 
-                <GlobalButton size="full" type="outline" class="mt-4 lg:w-fit" @click="showChatTranscriptModal = true">{{
+                <GlobalButton size="full" type="outline-solid" class="mt-4 lg:w-fit" @click="showChatTranscriptModal = true">{{
                     t("button_seeMessagesTranscript")
                 }}</GlobalButton>
             </div>
