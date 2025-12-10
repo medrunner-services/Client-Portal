@@ -173,6 +173,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
 			classes.push("mt-0.5 mb-0.5");
 	}
 	else {
+		classes.push("self-start");
 		if (isMessageChain(messageIndex) === "top") {
 			if (messageIndex === 0)
 				classes.push("mt-0");
@@ -208,7 +209,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
 			v-else
 			:key="message.id"
 			class="
-				relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1
+				relative flex max-w-[80%] flex-col rounded-lg border border-gray-200 px-2 pb-1
 				lg:px-4
 				dark:border-gray-700
 			"

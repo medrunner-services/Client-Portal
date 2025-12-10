@@ -165,7 +165,7 @@ async function sendDetails(): Promise<void> {
 				<li
 					class="
 						flex items-center
-						after:mx-6 after:hidden after:h-1 after:w-12 after:border after:border-b after:border-gray-200
+						after:mx-6 after:hidden after:h-0 after:w-12 after:border after:border-b after:border-gray-200
 						sm:after:inline-block sm:after:content-['']
 						xl:after:mx-10
 						dark:text-red-700 dark:after:border-gray-700
@@ -200,7 +200,7 @@ async function sendDetails(): Promise<void> {
 				<li
 					class="
 						flex items-center
-						after:mx-6 after:hidden after:h-1 after:w-12 after:border after:border-b after:border-gray-200 after:content-['']
+						after:mx-6 after:hidden after:h-0 after:w-12 after:border after:border-b after:border-gray-200 after:content-['']
 						sm:after:inline-block
 						xl:after:mx-10
 						dark:after:border-gray-700
