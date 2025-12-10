@@ -20,72 +20,93 @@ const cancelingEmergency = ref(false);
 const errorCancelingEmergency = ref("");
 
 const selectOptions = [
-    { value: "", label: t("tracking_selectAReason"), hidden: true },
-    { value: CancellationReason.RESCUED, label: getCancelReasonString(CancellationReason.RESCUED) },
-    {
-        value: CancellationReason.SUCCUMBED_TO_WOUNDS,
-        label: getCancelReasonString(CancellationReason.SUCCUMBED_TO_WOUNDS),
-    },
-    {
-        value: CancellationReason.SERVER_ERROR,
-        label: getCancelReasonString(CancellationReason.SERVER_ERROR),
-    },
-    {
-        value: CancellationReason.RESPAWNED,
-        label: getCancelReasonString(CancellationReason.RESPAWNED),
-    },
-    {
-        value: CancellationReason.OTHER,
-        label: getCancelReasonString(CancellationReason.OTHER),
-    },
+	{ value: "", label: t("tracking_selectAReason"), hidden: true },
+	{ value: CancellationReason.RESCUED, label: getCancelReasonString(CancellationReason.RESCUED) },
+	{
+		value: CancellationReason.SUCCUMBED_TO_WOUNDS,
+		label: getCancelReasonString(CancellationReason.SUCCUMBED_TO_WOUNDS),
+	},
+	{
+		value: CancellationReason.SERVER_ERROR,
+		label: getCancelReasonString(CancellationReason.SERVER_ERROR),
+	},
+	{
+		value: CancellationReason.RESPAWNED,
+		label: getCancelReasonString(CancellationReason.RESPAWNED),
+	},
+	{
+		value: CancellationReason.OTHER,
+		label: getCancelReasonString(CancellationReason.OTHER),
+	},
 ];
 
 async function cancelEmergency() {
-    cancelingEmergency.value = true;
-    errorCancelingEmergency.value = "";
+	cancelingEmergency.value = true;
+	errorCancelingEmergency.value = "";
 
-    try {
-        if (inputCancelReason.value) {
-            await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
-        } else {
-            new Error();
-        }
+	try {
+		if (inputCancelReason.value) {
+			await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
+		}
+		else {
+			throw new Error("missing cancel reason");
+		}
 
-        document.body.style.overflow = "auto";
-        emit("emergencyCanceled");
-    } catch (error: any) {
-        errorCancelingEmergency.value = errorString(error.statusCode);
-    }
-    cancelingEmergency.value = false;
+		document.body.style.overflow = "auto";
+		emit("emergencyCanceled");
+	}
+	catch (error: any) {
+		errorCancelingEmergency.value = errorString(error.statusCode);
+	}
+	cancelingEmergency.value = false;
 }
 </script>
 
 <template>
-    <ModalContainer v-slot="modalContainer" :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')">
-        <div>
-            <p class="text-gray-500 dark:text-gray-400">{{ t("tracking_cancelEmergencyModalSubTitle") }}</p>
+	<ModalContainer v-slot="modalContainer" :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')">
+		<div>
+			<p
+				class="
+					text-gray-500
+					dark:text-gray-400
+				"
+			>
+				{{ t("tracking_cancelEmergencyModalSubTitle") }}
+			</p>
 
-            <form @submit.prevent="cancelEmergency()">
-                <GlobalSelectInput
-                    v-model="inputCancelReason"
-                    class="mt-4"
-                    :options="selectOptions"
-                    :label="t('tracking_labelCancelEmergency')"
-                    :required="true"
-                />
+			<form @submit.prevent="cancelEmergency()">
+				<GlobalSelectInput
+					v-model="inputCancelReason"
+					class="mt-4"
+					:options="selectOptions"
+					:label="t('tracking_labelCancelEmergency')"
+					:required="true"
+				/>
 
-                <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" icon="cancel">{{
-                        t("tracking_cancelButton")
-                    }}</GlobalButton>
-                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
-                        {{ t("tracking_backCancelButton") }}</GlobalButton
-                    >
-                </div>
-                <GlobalErrorText v-if="errorCancelingEmergency" :text="errorCancelingEmergency" :icon="false" class="mt-2 text-sm font-semibold" />
-            </form>
-        </div>
-    </ModalContainer>
+				<div
+					class="
+						mt-8 gap-2
+						lg:flex
+					"
+				>
+					<GlobalButton :loading="cancelingEmergency" :submit="true" size="full" icon="cancel">
+						{{
+							t("tracking_cancelButton")
+						}}
+					</GlobalButton>
+					<GlobalButton
+						type="secondary" size="full" class="
+							mt-2
+							lg:mt-0
+						" @click="modalContainer.close()"
+					>
+						{{ t("tracking_backCancelButton") }}
+					</GlobalButton>
+				</div>
+				<GlobalErrorText v-if="errorCancelingEmergency" :text="errorCancelingEmergency" :icon="false" class="mt-2 text-sm font-semibold" />
+			</form>
+		</div>
+	</ModalContainer>
 </template>
 
 <style scoped></style>

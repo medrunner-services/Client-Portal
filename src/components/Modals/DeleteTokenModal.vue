@@ -10,7 +10,7 @@ import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
-    token: ApiToken;
+	token: ApiToken;
 }
 const props = defineProps<Props>();
 const emit = defineEmits(["tokenDeleted", "close"]);
@@ -21,37 +21,57 @@ const deletingToken = ref(false);
 const errorDeletingToken = ref("");
 
 async function deleteToken(): Promise<void> {
-    errorDeletingToken.value = "";
-    deletingToken.value = true;
+	errorDeletingToken.value = "";
+	deletingToken.value = true;
 
-    try {
-        await userStore.deleteApiToken(props.token.id);
-        document.body.style.overflow = "auto";
-        emit("tokenDeleted", props.token.id);
-    } catch (error: any) {
-        errorDeletingToken.value = errorString(error.statusCode);
-    }
+	try {
+		await userStore.deleteApiToken(props.token.id);
+		document.body.style.overflow = "auto";
+		emit("tokenDeleted", props.token.id);
+	}
+	catch (error: any) {
+		errorDeletingToken.value = errorString(error.statusCode);
+	}
 
-    deletingToken.value = false;
+	deletingToken.value = false;
 }
 </script>
 
 <template>
-    <ModalContainer v-slot="modalContainer" :title="t('developer_deleteTokenTitle')" @close="emit('close')">
-        <div>
-            <p class="text-gray-500 dark:text-gray-400">
-                {{ t("developer_deleteTokenSubtitle") }}
-            </p>
+	<ModalContainer v-slot="modalContainer" :title="t('developer_deleteTokenTitle')" @close="emit('close')">
+		<div>
+			<p
+				class="
+					text-gray-500
+					dark:text-gray-400
+				"
+			>
+				{{ t("developer_deleteTokenSubtitle") }}
+			</p>
 
-            <div class="mt-8 gap-2 lg:flex">
-                <GlobalButton :loading="deletingToken" size="full" @click="deleteToken()"> {{ t("developer_deleteTokenButton") }}</GlobalButton>
-                <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">{{
-                    t("tracking_backCancelButton")
-                }}</GlobalButton>
-            </div>
-            <GlobalErrorText v-if="errorDeletingToken" :text="errorDeletingToken" :icon="false" class="mt-2 text-sm font-semibold" />
-        </div>
-    </ModalContainer>
+			<div
+				class="
+					mt-8 gap-2
+					lg:flex
+				"
+			>
+				<GlobalButton :loading="deletingToken" size="full" @click="deleteToken()">
+					{{ t("developer_deleteTokenButton") }}
+				</GlobalButton>
+				<GlobalButton
+					type="secondary" size="full" class="
+						mt-2
+						lg:mt-0
+					" @click="modalContainer.close()"
+				>
+					{{
+						t("tracking_backCancelButton")
+					}}
+				</GlobalButton>
+			</div>
+			<GlobalErrorText v-if="errorDeletingToken" :text="errorDeletingToken" :icon="false" class="mt-2 text-sm font-semibold" />
+		</div>
+	</ModalContainer>
 </template>
 
 <style scoped></style>

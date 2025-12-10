@@ -1,33 +1,55 @@
-import pluginVue from "eslint-plugin-vue";
-import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
-import prettierConfig from "@vue/eslint-config-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import antfu from "@antfu/eslint-config";
+import betterTW from "eslint-plugin-better-tailwindcss";
 
-export default defineConfigWithVueTs(pluginVue.configs["flat/recommended"], vueTsConfigs.recommendedTypeChecked, [
-    {
-        files: ["*.vue", "**/*.vue", "*.ts", "**/*.ts"],
-        languageOptions: {
-            ecmaVersion: 2022,
-            sourceType: "module",
-            parserOptions: {
-                parser: "@typescript-eslint/parser",
-            },
-        },
-        plugins: {
-            "simple-import-sort": simpleImportSort,
-        },
-        rules: {
-            "simple-import-sort/imports": "error",
-            "simple-import-sort/exports": "error",
-            "@typescript-eslint/no-explicit-any": "off",
-            "no-irregular-whitespace": "off",
-            "vue/no-v-html": "off",
-            "vue/require-default-prop": "off",
-            "@typescript-eslint/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
-            "@typescript-eslint/only-throw-error": "off",
-            "@typescript-eslint/no-misused-promises": "off",
-        },
-    },
-    prettierConfig,
-    { ignores: [".node_modules/", "**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js"] },
-]);
+export default antfu(
+	{
+		ignores: ["**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js", "*.yaml", "src/locales/*"],
+		vue: true,
+		typescript: {
+			overrides: {
+				"ts/no-explicit-any": "off",
+				"no-irregular-whitespace": "off",
+				"vue/no-v-html": "off",
+				"vue/require-default-prop": "off",
+				"ts/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
+				"ts/only-throw-error": "off",
+				"ts/no-misused-promises": "off",
+				"unused-imports/no-unused-vars": "off",
+				"antfu/no-top-level-await": "off",
+				"no-unmodified-loop-condition": "off",
+				"no-useless-catch": "off",
+				"no-throw-literal": "off",
+				"import/no-mutable-exports": "off",
+				"node/prefer-global/process": "off",
+			},
+		},
+		pnpm: false,
+		stylistic: {
+			quotes: "double",
+			indent: "tab",
+			semi: true,
+			commaStyle: "last",
+		},
+	},
+	{
+		plugins: {
+			"better-tailwindcss": betterTW,
+		},
+		settings: {
+			"better-tailwindcss": {
+				entryPoint: "src/assets/main.css",
+			},
+		},
+		rules: {
+			...betterTW.configs.recommended.rules,
+			"better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {
+				printWidth: 250,
+				indent: "tab",
+				lineBreakStyle: "unix",
+			}],
+			"better-tailwindcss/no-unregistered-classes": "off",
+			"better-tailwindcss/enforce-consistent-important-position": "error",
+			"better-tailwindcss/no-deprecated-classes": "warn",
+		},
+	},
+);
