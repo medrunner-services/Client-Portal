@@ -49,7 +49,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
 		<button
 			ref="selectorParent"
 			class="
-				flex w-full items-center justify-between rounded-sm py-2 pr-4 pl-3
+				flex w-full cursor-pointer items-center justify-between rounded-sm py-2 pr-4 pl-3
 				lg:w-auto lg:border-0 lg:p-0 lg:hover:bg-transparent lg:dark:hover:bg-transparent
 			"
 			@click="showDropdown = !showDropdown"
