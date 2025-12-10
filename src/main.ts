@@ -2,7 +2,6 @@ import { ApmVuePlugin } from "@elastic/apm-rum-vue";
 
 import { createPinia } from "pinia";
 import { createApp } from "vue";
-import VueApexCharts from "vue3-apexcharts";
 import { LocalStorageItems } from "@/@types/types.ts";
 
 import { i18n } from "@/i18n";
@@ -46,7 +45,6 @@ await (async () => {
 
 	app.use(router);
 	app.use(i18n);
-	app.use(VueApexCharts as any); // related issue https://github.com/apexcharts/vue3-apexcharts/issues/141
 	app.use(ApmVuePlugin, {
 		router,
 		config: {

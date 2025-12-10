@@ -1,16 +1,7 @@
 <script setup lang="ts">
-import type { LineSeriesOption } from "echarts/charts";
-import type { GridComponentOption, TooltipComponentOption } from "echarts/components";
-import type { ComposeOption, EChartsInitOpts } from "echarts/core";
-import type { EchartLoadingOptions } from "@/@types/types.ts";
-import { LineChart } from "echarts/charts";
-import { GridComponent, TooltipComponent } from "echarts/components";
-import { use } from "echarts/core";
-import { SVGRenderer } from "echarts/renderers";
 import { computed, onMounted, ref, watch } from "vue";
-import VChart from "vue-echarts";
-
 import { useI18n } from "vue-i18n";
+
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
@@ -18,95 +9,85 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
+const { t, locale } = useI18n();
+
 const userStore = useUserStore();
 const logicStore = useLogicStore();
-const { t, locale } = useI18n();
-use([TooltipComponent, GridComponent, LineChart, SVGRenderer]);
-
-type ChartOptions = ComposeOption<TooltipComponentOption | GridComponentOption | LineSeriesOption>;
 
 const daySelect = ref(7);
-const loading = ref(false);
-
-const initOptions: EChartsInitOpts = {
-	locale: locale.value,
-	renderer: "svg",
-};
-
-const loadingOptions: EchartLoadingOptions = {
-	text: "",
-	color: "#AA0000",
-	// TODO: change color
-	maskColor: logicStore.darkMode ? "rgba(29, 39, 53, 0.9)" : "rgba(255, 255, 255, 0.8)",
-	spinnerRadius: 15,
-};
-
-const chartOptions = ref<ChartOptions>({
-	color: ["#AA0000"],
-	backgroundColor: "transparent",
-	grid: {
-		left: 0,
-		right: 0,
-		bottom: 0,
+const chartOptions = ref<any>({
+	chart: {
+		height: "100%",
+		width: "100%",
+		type: "area",
+		fontFamily: "Inter, sans-serif",
+		dropShadow: {
+			enabled: false,
+		},
+		toolbar: {
+			show: false,
+		},
 	},
 	tooltip: {
-		trigger: "axis",
-		axisPointer: {
-			type: "cross",
-			label: {
-				backgroundColor: "#6a7985",
+		enabled: true,
+		followCursor: false,
+		theme: "light",
+		x: {
+			show: false,
+		},
+		y: {
+			formatter(value: any) {
+				return value;
 			},
 		},
 	},
-	xAxis: {
-		type: "category",
-		boundaryGap: false,
-		animation: false,
+	fill: {
+		type: "gradient",
+		gradient: {
+			opacityFrom: 0.55,
+			opacityTo: 0,
+			shade: "#AA0000",
+			gradientToColors: ["#AA0000"],
+		},
 	},
-	yAxis: {
-		type: "value",
+	dataLabels: {
+		enabled: false,
+	},
+	stroke: {
+		width: 6,
+	},
+	grid: {
 		show: false,
-		minInterval: 1,
-		axisPointer: {
-			snap: true,
+		strokeDashArray: 4,
+		padding: {
+			left: 2,
+			right: 2,
+			top: 0,
 		},
 	},
-	series: {
-		name: t("home_emergencies"),
-		type: "line",
-		smooth: true,
-		smoothMonotone: "x",
-		lineStyle: {
-			width: 4,
-			color: "#AA0000",
-			cap: "round",
+	xaxis: {
+		categories: [""],
+		labels: {
+			show: false,
 		},
-		showSymbol: false,
-		areaStyle: {
-			opacity: 1,
-			color: {
-				type: "linear",
-				x: 0,
-				y: 0,
-				x2: 0,
-				y2: 1,
-				colorStops: [
-					{
-						offset: 0,
-						color: "rgba(170, 0, 0, 0.7)",
-					},
-					{
-						offset: 1,
-						color: "rgba(170, 0, 0, 0.1)",
-					},
-				],
-			},
+		axisBorder: {
+			show: false,
 		},
-		emphasis: {
-			focus: "series",
+		axisTicks: {
+			show: false,
 		},
+	},
+	yaxis: {
+		show: false,
 	},
 });
+const chartSeries = ref([
+	{
+		name: "Emergencies",
+		data: [0, 0, 0, 0, 0, 0, 0],
+		color: "#AA0000",
+	},
+]);
 
 const emergenciesPerDay = ref<number[]>([]);
 const dateLabels = ref<string[]>([]);
@@ -122,33 +103,35 @@ onMounted(async () => {
 	await fetchMissionsForPeriod();
 	generateDateLabels();
 
-	updateChartSeries();
+	chartSeries.value[0].name = t("home_emergencies");
+	chartSeries.value[0].data = emergenciesPerDay.value;
+	chartOptions.value.xaxis.categories = dateLabels.value;
+
+	if (logicStore.darkMode) {
+		chartOptions.value.tooltip.theme = "dark";
+	}
 });
 
 watch(locale, () => {
 	generateDateLabels();
 
-	updateChartSeries();
+	chartSeries.value[0].name = t("home_emergencies");
+	chartOptions.value = {
+		...chartOptions.value,
+		...{
+			xaxis: {
+				categories: dateLabels.value,
+			},
+		},
+	};
 });
-
-function updateChartSeries() {
-	if (chartOptions.value.series && !Array.isArray(chartOptions.value.series)) {
-		chartOptions.value.series.data = emergenciesPerDay.value;
-		chartOptions.value.series.name = t("home_emergencies");
-	}
-
-	if (chartOptions.value.xAxis && !Array.isArray(chartOptions.value.xAxis)) {
-		// @ts-expect-error - xAxis.data does exist on the type
-		chartOptions.value.xAxis.data = dateLabels.value;
-	}
-}
 
 function isWithinLastPeriod(timestamp: string) {
 	const date = new Date(timestamp);
 	return date >= oldestDateNeeded.value;
 }
 
-function initializeMissionsPerDay() {
+function initializeEmergenciesPerDay() {
 	for (let i = 0; i < daySelect.value; i++) {
 		emergenciesPerDay.value.push(0);
 	}
@@ -199,13 +182,12 @@ function generateDateLabels() {
 
 async function fetchMissionsForPeriod() {
 	errorLoading.value = "";
-	loading.value = true;
 
 	let paginationToken;
 	const limit = 50;
 
 	oldestDateNeeded.value.setDate(oldestDateNeeded.value.getDate() - daySelect.value);
-	initializeMissionsPerDay();
+	initializeEmergenciesPerDay();
 
 	try {
 		do {
@@ -228,9 +210,6 @@ async function fetchMissionsForPeriod() {
 	catch (error: any) {
 		errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
 	}
-	finally {
-		loading.value = false;
-	}
 }
 
 async function changePeriod() {
@@ -241,7 +220,16 @@ async function changePeriod() {
 	await fetchMissionsForPeriod();
 	generateDateLabels();
 
-	updateChartSeries();
+	chartSeries.value[0].data = emergenciesPerDay.value;
+
+	chartOptions.value = {
+		...chartOptions.value,
+		...{
+			xaxis: {
+				categories: dateLabels.value,
+			},
+		},
+	};
 }
 </script>
 
@@ -288,23 +276,10 @@ async function changePeriod() {
 			</div>
 
 			<div class="mt-4 w-full justify-center">
-				<VChart
-					class="chart"
-					:init-options="initOptions"
-					:option="chartOptions"
-					:loading-options="loadingOptions"
-					:loading="loading"
-					:autoresize="true"
-					:theme="logicStore.darkMode ? 'dark' : 'light'"
-				/>
+				<apexchart type="area" height="250" style="width: 100%" :options="chartOptions" :series="chartSeries" />
 			</div>
 		</div>
 	</GlobalCard>
 </template>
 
-<style scoped>
-.chart {
-    height: 300px;
-    width: 100%;
-}
-</style>
+<style scoped></style>
