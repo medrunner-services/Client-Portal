@@ -45,7 +45,7 @@ export default antfu(
 			"better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {
 				printWidth: 250,
 				indent: "tab",
-				lineBreakStyle: "windows",
+				lineBreakStyle: "unix",
 			}],
 			"better-tailwindcss/no-unregistered-classes": "off",
 			"better-tailwindcss/enforce-consistent-important-position": "error",
