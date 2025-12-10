@@ -36,8 +36,7 @@ const initOptions: EChartsInitOpts = {
 const loadingOptions: EchartLoadingOptions = {
 	text: "",
 	color: "#AA0000",
-	// TODO: change color
-	maskColor: logicStore.darkMode ? "rgba(29, 39, 53, 0.9)" : "rgba(255, 255, 255, 0.8)",
+	maskColor: logicStore.darkMode ? "rgba(29, 39, 53, 0.8)" : "rgba(255, 255, 255, 0.8)",
 	spinnerRadius: 15,
 };
 
