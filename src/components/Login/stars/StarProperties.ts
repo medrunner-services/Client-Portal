@@ -1,6 +1,6 @@
 export default interface StarProperties {
-	color: string;
-	edgeColor: string;
-	radius: number;
-	luminosity: number;
+    color: string;
+    edgeColor: string;
+    radius: number;
+    luminosity: number;
 }

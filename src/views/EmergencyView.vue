@@ -35,134 +35,134 @@ const respondingTeamNumber = ref(0);
 const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
 
 onMounted(async () => {
-	if (userStore.user.activeEmergency) {
-		loadingEmergency.value = true;
+    if (userStore.user.activeEmergency) {
+        loadingEmergency.value = true;
 
-		try {
-			emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-			emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
-			respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
-			if (emergencyStore.trackedEmergency.status === MissionStatus.RECEIVED)
-				displayFormDetails.value = true;
-		}
-		catch (error: any) {
-			errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
-		}
+        try {
+            emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+            emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
+            respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
+            if (emergencyStore.trackedEmergency.status === MissionStatus.RECEIVED)
+                displayFormDetails.value = true;
+        }
+        catch (error: any) {
+            errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
+        }
 
-		loadingEmergency.value = false;
-	}
+        loadingEmergency.value = false;
+    }
 
-	ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
-		try {
-			const newEmergency = await emergencyStore.fetchEmergency(message.id);
+    ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
+        try {
+            const newEmergency = await emergencyStore.fetchEmergency(message.id);
 
-			if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
-				emergencyStore.trackedEmergency = newEmergency;
-				oldEmergencyStatus.value = newEmergency.status;
-				displayFormDetails.value = true;
-			}
-		}
-		catch (_e) {
-			alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-		}
-	});
+            if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
+                emergencyStore.trackedEmergency = newEmergency;
+                oldEmergencyStatus.value = newEmergency.status;
+                displayFormDetails.value = true;
+            }
+        }
+        catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+        }
+    });
 
-	ws.on("EmergencyUpdate", async (message: WebSocketMessage) => {
-		try {
-			const updatedEmergency = await emergencyStore.fetchEmergency(message.id);
+    ws.on("EmergencyUpdate", async (message: WebSocketMessage) => {
+        try {
+            const updatedEmergency = await emergencyStore.fetchEmergency(message.id);
 
-			if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
-				emergencyStore.trackedEmergency = updatedEmergency;
+            if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
+                emergencyStore.trackedEmergency = updatedEmergency;
 
-				if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
-					emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(updatedEmergency.id);
-					respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
-				}
+                if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
+                    emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(updatedEmergency.id);
+                    respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
+                }
 
-				if (
-					updatedEmergency.status !== MissionStatus.RECEIVED
-					&& oldEmergencyStatus.value !== updatedEmergency.status
-					&& userStore.syncedSettings.emergencyUpdateNotification
-				) {
-					await sendBrowserNotification(
-						getEmergencyStatusTitle(updatedEmergency.status),
-						`emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
-						getEmergencyStatusSubtitle(updatedEmergency.status),
-						() => {
-							window.focus();
-							void router.push({ name: "emergency" });
-						},
-					);
-				}
+                if (
+                    updatedEmergency.status !== MissionStatus.RECEIVED
+                    && oldEmergencyStatus.value !== updatedEmergency.status
+                    && userStore.syncedSettings.emergencyUpdateNotification
+                ) {
+                    await sendBrowserNotification(
+                        getEmergencyStatusTitle(updatedEmergency.status),
+                        `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
+                        getEmergencyStatusSubtitle(updatedEmergency.status),
+                        () => {
+                            window.focus();
+                            void router.push({ name: "emergency" });
+                        },
+                    );
+                }
 
-				oldEmergencyStatus.value = updatedEmergency.status;
-			}
-		}
-		catch (_e) {
-			alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-		}
-	});
+                oldEmergencyStatus.value = updatedEmergency.status;
+            }
+        }
+        catch (_e) {
+            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+        }
+    });
 
-	ws.onreconnected(async () => {
-		if (userStore.user.activeEmergency) {
-			try {
-				emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-			}
-			catch (error: any) {
-				errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
-			}
-		}
-	});
+    ws.onreconnected(async () => {
+        if (userStore.user.activeEmergency) {
+            try {
+                emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+            }
+            catch (error: any) {
+                errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
+            }
+        }
+    });
 });
 </script>
 
 <template>
-	<div
-		class="
-			content-container flex flex-col gap-10
-			xl:flex-row
-		"
-	>
-		<div class="xl:w-1/2">
-			<div v-if="errorLoadingEmergency || userStore.isBlocked">
-				<div class="min-h-11">
-					<h2 class="font-Mohave text-2xl font-semibold uppercase">
-						{{ t("home_OngoingEmergency") }}
-					</h2>
-				</div>
+    <div
+        class="
+            content-container flex flex-col gap-10
+            xl:flex-row
+        "
+    >
+        <div class="xl:w-1/2">
+            <div v-if="errorLoadingEmergency || userStore.isBlocked">
+                <div class="min-h-11">
+                    <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                        {{ t("home_OngoingEmergency") }}
+                    </h2>
+                </div>
 
-				<GlobalCard class="mt-8">
-					<div class="flex w-full items-center justify-center py-[4.65rem]">
-						<GlobalErrorText :text="userStore.isBlocked ? t('error_blockedUser') : errorLoadingEmergency" />
-					</div>
-				</GlobalCard>
-			</div>
-			<div v-else-if="emergencyStore.trackedEmergency">
-				<EmergencyDetailsForm
-					v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
-					@submitted-details="displayFormDetails = false"
-				/>
-				<EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
-				<EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
-			</div>
+                <GlobalCard class="mt-8">
+                    <div class="flex w-full items-center justify-center py-[4.65rem]">
+                        <GlobalErrorText :text="userStore.isBlocked ? t('error_blockedUser') : errorLoadingEmergency" />
+                    </div>
+                </GlobalCard>
+            </div>
+            <div v-else-if="emergencyStore.trackedEmergency">
+                <EmergencyDetailsForm
+                    v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
+                    @submitted-details="displayFormDetails = false"
+                />
+                <EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
+                <EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
+            </div>
 
-			<EmergencyReportForm v-else />
-		</div>
+            <EmergencyReportForm v-else />
+        </div>
 
-		<div class="xl:w-1/2">
-			<div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
-				<div class="min-h-11">
-					<h2 class="font-Mohave text-2xl font-semibold uppercase">
-						{{ t("tracking_chatTitle") }}
-					</h2>
-				</div>
+        <div class="xl:w-1/2">
+            <div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
+                <div class="min-h-11">
+                    <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                        {{ t("tracking_chatTitle") }}
+                    </h2>
+                </div>
 
-				<EmergencyChatBox class="mt-8" />
-			</div>
+                <EmergencyChatBox class="mt-8" />
+            </div>
 
-			<div v-else>
-				<ServiceStatus />
-			</div>
-		</div>
-	</div>
+            <div v-else>
+                <ServiceStatus />
+            </div>
+        </div>
+    </div>
 </template>

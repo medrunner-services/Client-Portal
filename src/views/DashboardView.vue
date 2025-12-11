@@ -24,44 +24,44 @@ const { t } = useI18n();
 const displayRateEmergencyModal = ref(false);
 
 onMounted(() => {
-	if (route.query.rateemergency) {
-		displayRateEmergencyModal.value = true;
+    if (route.query.rateemergency) {
+        displayRateEmergencyModal.value = true;
 
-		clearURLParams();
-	}
+        clearURLParams();
+    }
 });
 
 function handleRatedEmergency() {
-	displayRateEmergencyModal.value = false;
-	alertStore.newAlert(AlertColors.GREEN, t("home_rateEmergencySuccess"));
+    displayRateEmergencyModal.value = false;
+    alertStore.newAlert(AlertColors.GREEN, t("home_rateEmergencySuccess"));
 }
 </script>
 
 <template>
-	<div
-		class="
-			content-container flex flex-col gap-10
-			xl:flex-row
-		"
-	>
-		<div class="xl:w-1/2">
-			<BlockedUserCTA v-if="userStore.isBlocked" />
-			<UnlinkedUserCTA v-else-if="!userStore.user.rsiHandle" />
-			<CTAEmergency v-else />
-			<HistoryTable class="mt-4" />
-		</div>
+    <div
+        class="
+            content-container flex flex-col gap-10
+            xl:flex-row
+        "
+    >
+        <div class="xl:w-1/2">
+            <BlockedUserCTA v-if="userStore.isBlocked" />
+            <UnlinkedUserCTA v-else-if="!userStore.user.rsiHandle" />
+            <CTAEmergency v-else />
+            <HistoryTable class="mt-4" />
+        </div>
 
-		<div class="xl:w-1/2">
-			<ChartEmergencyBreakdown />
-			<ChartEmergencySuccessRate class="mt-4" />
-			<ChartEmergencyNumberPerWeek class="mt-4" />
-		</div>
+        <div class="xl:w-1/2">
+            <ChartEmergencyBreakdown />
+            <ChartEmergencySuccessRate class="mt-4" />
+            <ChartEmergencyNumberPerWeek class="mt-4" />
+        </div>
 
-		<RateEmergencyModal
-			v-if="displayRateEmergencyModal"
-			:emergency-id="route.query.rateemergency as string"
-			@close="displayRateEmergencyModal = false"
-			@rated-emergency="handleRatedEmergency()"
-		/>
-	</div>
+        <RateEmergencyModal
+            v-if="displayRateEmergencyModal"
+            :emergency-id="route.query.rateemergency as string"
+            @close="displayRateEmergencyModal = false"
+            @rated-emergency="handleRatedEmergency()"
+        />
+    </div>
 </template>

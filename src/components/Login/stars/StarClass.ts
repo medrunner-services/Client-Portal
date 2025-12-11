@@ -1,45 +1,45 @@
 import type StarProperties from "@/components/Login/stars/StarProperties";
 
 class StarClass {
-	constructor(
-		private readonly color: string,
-		private readonly minRadius: number,
-		private readonly maxRadius: number,
-		private readonly minLuminosity: number,
-		private readonly maxLuminosity: number,
-	) {}
+    constructor(
+        private readonly color: string,
+        private readonly minRadius: number,
+        private readonly maxRadius: number,
+        private readonly minLuminosity: number,
+        private readonly maxLuminosity: number,
+    ) {}
 
-	public generate(): StarProperties {
-		const color = this.color;
-		const radius = Math.random() * (this.maxRadius - this.minRadius) + this.minRadius;
-		const luminosity = Math.random() * (this.maxLuminosity - this.minLuminosity) + this.minLuminosity;
+    public generate(): StarProperties {
+        const color = this.color;
+        const radius = Math.random() * (this.maxRadius - this.minRadius) + this.minRadius;
+        const luminosity = Math.random() * (this.maxLuminosity - this.minLuminosity) + this.minLuminosity;
 
-		return {
-			color,
-			edgeColor: AdjustShadeRgb(-0.4, color),
-			radius,
-			luminosity,
-		};
-	}
+        return {
+            color,
+            edgeColor: AdjustShadeRgb(-0.4, color),
+            radius,
+            luminosity,
+        };
+    }
 }
 
 // yup https://stackoverflow.com/a/13542669
 // I did my best to make it readable
 export function AdjustShadeRgb(amount: number, inStr: string): string {
-	const [r, g, b, a] = inStr.split(",");
-	const amountIsNegative = amount < 0;
-	const base = amountIsNegative ? 0 : amount * 255 ** 2;
-	const scalar = 1 - Math.abs(amount);
-	return (
-		`rgb${
-			a ? "a(" : "("
-		}${Math.round((scalar * Number.parseInt(r[3] === "a" ? r.slice(5) : r.slice(4)) ** 2 + base) ** 0.5)
-		},${
-			Math.round((scalar * Number.parseInt(g) ** 2 + base) ** 0.5)
-		},${
-			Math.round((scalar * Number.parseInt(b) ** 2 + base) ** 0.5)
-		}${a ? `,${a}` : ")"}`
-	);
+    const [r, g, b, a] = inStr.split(",");
+    const amountIsNegative = amount < 0;
+    const base = amountIsNegative ? 0 : amount * 255 ** 2;
+    const scalar = 1 - Math.abs(amount);
+    return (
+        `rgb${
+            a ? "a(" : "("
+        }${Math.round((scalar * Number.parseInt(r[3] === "a" ? r.slice(5) : r.slice(4)) ** 2 + base) ** 0.5)
+        },${
+            Math.round((scalar * Number.parseInt(g) ** 2 + base) ** 0.5)
+        },${
+            Math.round((scalar * Number.parseInt(b) ** 2 + base) ** 0.5)
+        }${a ? `,${a}` : ")"}`
+    );
 }
 
 // data from https://en.wikipedia.org/wiki/Stellar_classification
@@ -52,37 +52,37 @@ const typeKStar = new StarClass("rgb(255,218,181)", 0.7, 0.96, 0.08, 0.6); // 12
 const typeMStar = new StarClass("rgb(255,181,108)", 0.5, 0.7, 0.05, 0.08); // 76%
 
 function randomStarClass(): StarClass {
-	const r = Math.random();
-	if (r < 0.76) {
-		return typeMStar;
-	}
+    const r = Math.random();
+    if (r < 0.76) {
+        return typeMStar;
+    }
 
-	if (r < 0.88) {
-		return typeKStar;
-	}
+    if (r < 0.88) {
+        return typeKStar;
+    }
 
-	if (r < 0.956) {
-		return typeGStar;
-	}
+    if (r < 0.956) {
+        return typeGStar;
+    }
 
-	if (r < 0.986) {
-		return typeFStar;
-	}
+    if (r < 0.986) {
+        return typeFStar;
+    }
 
-	// kind of random from here on up
-	if (r < 0.995) {
-		return typeAStar;
-	}
+    // kind of random from here on up
+    if (r < 0.995) {
+        return typeAStar;
+    }
 
-	if (r < 0.9985) {
-		return typeBStar;
-	}
+    if (r < 0.9985) {
+        return typeBStar;
+    }
 
-	return typeOStar;
+    return typeOStar;
 }
 
 export function randomStar(): StarProperties {
-	const starClass = randomStarClass();
+    const starClass = randomStarClass();
 
-	return starClass.generate();
+    return starClass.generate();
 }

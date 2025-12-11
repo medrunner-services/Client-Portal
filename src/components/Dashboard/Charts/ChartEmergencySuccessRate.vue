@@ -9,40 +9,40 @@ const userStore = useUserStore();
 const { t } = useI18n();
 
 const successRate = computed(() => {
-	const total
-		= userStore.user.clientStats.missions.success
-			+ userStore.user.clientStats.missions.failed
-			+ userStore.user.clientStats.missions.aborted
-			+ userStore.user.clientStats.missions.canceled
-			+ userStore.user.clientStats.missions.serverError
-			+ userStore.user.clientStats.missions.refused;
-	const success = userStore.user.clientStats.missions.success;
+    const total
+        = userStore.user.clientStats.missions.success
+            + userStore.user.clientStats.missions.failed
+            + userStore.user.clientStats.missions.aborted
+            + userStore.user.clientStats.missions.canceled
+            + userStore.user.clientStats.missions.serverError
+            + userStore.user.clientStats.missions.refused;
+    const success = userStore.user.clientStats.missions.success;
 
-	if (total === 0)
-		return 0;
-	else return Math.round((success / total) * 1000) / 10;
+    if (total === 0)
+        return 0;
+    else return Math.round((success / total) * 1000) / 10;
 });
 </script>
 
 <template>
-	<GlobalCard class="text-center">
-		<p
-			class="
-				font-Mohave text-4xl font-bold text-gray-900 uppercase
-				dark:text-white
-			"
-		>
-			{{ successRate > 0 ? `${successRate}%` : t("home_noData") }}
-		</p>
-		<p
-			class="
-				font-Mohave text-lg text-gray-500
-				dark:text-gray-400
-			"
-		>
-			{{ t("home_emergencySuccessRate") }}
-		</p>
-	</GlobalCard>
+    <GlobalCard class="text-center">
+        <p
+            class="
+                font-Mohave text-4xl font-bold text-gray-900 uppercase
+                dark:text-white
+            "
+        >
+            {{ successRate > 0 ? `${successRate}%` : t("home_noData") }}
+        </p>
+        <p
+            class="
+                font-Mohave text-lg text-gray-500
+                dark:text-gray-400
+            "
+        >
+            {{ t("home_emergencySuccessRate") }}
+        </p>
+    </GlobalCard>
 </template>
 
 <style scoped></style>
