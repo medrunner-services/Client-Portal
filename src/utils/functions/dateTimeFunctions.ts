@@ -32,7 +32,7 @@ export function timestampToHours(timestamp: number | string): string {
 
     if (now.getFullYear() === date.getFullYear()) {
         if (now.getMonth() === date.getMonth() && now.getDate() === date.getDate()) {
-            return date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+            return date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: userStore.syncedSettings.hour12FormatingPreference,
