@@ -378,6 +378,8 @@
     "user_timeFormatSetting24h": "24t",
     "user_timeFormatSetting12h": "12t (AM/PM)",
     "user_analyticsUpdatedNotification": "Analytics-innstillingen er oppdatert, du må laste inn siden på nytt for at endringene skal tre i kraft!",
+    "user_dateFormatSetting": "Date Format",
+    "user_dateFormatSettingHelper": "Override the date formatting to a specific language, or automatic (follows your selected language preference).",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
     "404_backToHomepage": "Tilbake til hjemmesiden"

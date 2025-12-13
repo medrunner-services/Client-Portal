@@ -378,6 +378,8 @@
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (am/pm)",
     "user_analyticsUpdatedNotification": "Analytics-instellingen zijn bijgewerkt. U moet de pagina opnieuw laden om de wijzigingen door te voeren!",
+    "user_dateFormatSetting": "Date Format",
+    "user_dateFormatSettingHelper": "Override the date formatting to a specific language, or automatic (follows your selected language preference).",
     "404_somethingMissing": "Er ontbreekt iets.",
     "404_helperText": "Sorry, we kunnen die pagina niet vinden. Op de startpagina vind je veel om te ontdekken.",
     "404_backToHomepage": "Terug naar Startpagina"

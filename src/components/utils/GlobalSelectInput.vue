@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { GlobalSelectOption } from "@/@types/types.ts";
 import { computed, ref } from "vue";
 
 export interface Props {
@@ -13,7 +14,7 @@ export interface Props {
     size?: "fit" | "full";
     error?: boolean;
     modelValue?: string | number | boolean | undefined;
-    options: { value: string | number | boolean | undefined; label?: string; hidden?: boolean; disabled?: boolean }[];
+    options: GlobalSelectOption[];
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg";
 }
 
@@ -73,14 +74,14 @@ const selectInputClasses = computed(() => {
 <template>
     <div
         class="flex" :class="props.inputPosition === 'column' ? 'flex-col' : `
-            flex-col
+            flex-col gap-8
             sm:flex-row sm:justify-between
         `"
     >
         <div
             v-if="props.label"
-            class="mb-2 flex"
-            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.labelSize === 'small' ? 'text-sm' : '']"
+            class="flex"
+            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.labelSize === 'small' ? 'text-sm' : 'mb-2']"
         >
             <label
                 class="

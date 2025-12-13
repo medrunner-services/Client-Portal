@@ -32,7 +32,7 @@ export function timestampToHours(timestamp: number | string): string {
 
     if (now.getFullYear() === date.getFullYear()) {
         if (now.getMonth() === date.getMonth() && now.getDate() === date.getDate()) {
-            return date.toLocaleTimeString(locale.value, {
+            return date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: userStore.syncedSettings.hour12FormatingPreference,
@@ -40,7 +40,7 @@ export function timestampToHours(timestamp: number | string): string {
         }
         else {
             return date
-                .toLocaleDateString(locale.value, {
+                .toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     month: "2-digit",
                     day: "2-digit",
                     hour: "2-digit",
@@ -52,7 +52,7 @@ export function timestampToHours(timestamp: number | string): string {
     }
     else {
         return date
-            .toLocaleDateString(locale.value, {
+            .toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
@@ -68,7 +68,7 @@ export function timestampToDate(timestamp: number | string): string {
     const { locale } = i18n.global;
     const userStore = useUserStore();
 
-    return new Date(timestamp).toLocaleDateString(locale.value, {
+    return new Date(timestamp).toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -80,7 +80,7 @@ export function timestampToFullDate(timestamp: number | string): string {
     const { locale } = i18n.global;
     const userStore = useUserStore();
 
-    return new Date(timestamp).toLocaleDateString(locale.value, {
+    return new Date(timestamp).toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
         weekday: "long",
         year: "numeric",
         month: "long",

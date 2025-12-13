@@ -378,6 +378,8 @@
     "user_timeFormatSetting24h": "24h",
     "user_timeFormatSetting12h": "12h (AM/PM)",
     "user_analyticsUpdatedNotification": "Analytics setting updated, you need to reload the page for the changes to take effect!",
+    "user_dateFormatSetting": "Date Format",
+    "user_dateFormatSettingHelper": "Override the date formatting to a specific language, or automatic (follows your selected language preference).",
     "404_somethingMissing": "Something's missing.",
     "404_helperText": "Sorry, we can't find that page. You'll find lots to explore on the home page.",
     "404_backToHomepage": "Back to home page"

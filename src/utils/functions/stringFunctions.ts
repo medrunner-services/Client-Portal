@@ -116,28 +116,28 @@ export function parseMarkdown(text: string) {
 
         switch (format) {
             case "d":
-                dateString = date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                 });
                 break;
             case "D":
-                dateString = date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                 });
                 break;
             case "t":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                     hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "T":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
@@ -145,7 +145,7 @@ export function parseMarkdown(text: string) {
                 });
                 break;
             case "f":
-                dateString = date.toLocaleString(locale.value, {
+                dateString = date.toLocaleString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
@@ -155,7 +155,7 @@ export function parseMarkdown(text: string) {
                 });
                 break;
             case "F":
-                dateString = date.toLocaleString(locale.value, {
+                dateString = date.toLocaleString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
@@ -168,14 +168,14 @@ export function parseMarkdown(text: string) {
                 // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
                 // This is so the discord bot shows the reactive time and the portal the static time format we want
             case "R":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     hour: "numeric",
                     minute: "2-digit",
                     hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             default:
-                dateString = date.toLocaleDateString(locale.value, {
+                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",

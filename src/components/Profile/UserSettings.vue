@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import type { GlobalSelectOption } from "@/@types/types.ts";
+import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 
+import { useRoute } from "vue-router";
 import { AlertColors, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -12,10 +13,11 @@ import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
 import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
-const { t } = useI18n();
+const { t, availableLocales } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
@@ -23,8 +25,17 @@ const route = useRoute();
 
 const updateNotificationError = ref("");
 const updateHourFormatingError = ref("");
+const updateDateFormatingError = ref("");
 const resetSettingsError = ref("");
 const isResettingSettings = ref(false);
+const dateFormatOptions = ref<GlobalSelectOption[]>([]);
+
+onMounted(() => {
+    dateFormatOptions.value.push({ value: undefined, label: t("user_timeFormatSettingAutomatic") });
+    for (const language of availableLocales) {
+        dateFormatOptions.value.push({ value: language, label: getLanguageString(language) });
+    }
+});
 
 async function updateGlobalNotificationPerms(): Promise<void> {
     updateNotificationError.value = "";
@@ -96,10 +107,20 @@ async function updateMessageNotification() {
 async function updateHourFormatingPreference() {
     try {
         updateHourFormatingError.value = "";
-        await userStore.setSettings({ hourFormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
+        await userStore.setSettings({ hour12FormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
     }
     catch (error: any) {
         updateHourFormatingError.value = errorString(error.statusCode);
+    }
+}
+
+async function updateDateFormatingPreference() {
+    try {
+        updateDateFormatingError.value = "";
+        await userStore.setSettings({ dateFormatingPreference: userStore.syncedSettings.dateFormatingPreference });
+    }
+    catch (error: any) {
+        updateDateFormatingError.value = errorString(error.statusCode);
     }
 }
 
@@ -164,7 +185,8 @@ async function resetSettings() {
                 emergencyUpdateNotification: null,
                 chatMessageNotification: null,
                 globalAnalytics: null,
-                hourFormatingPreference: null,
+                hour12FormatingPreference: null,
+                dateFormatingPreference: null,
             });
         }
     }
@@ -178,6 +200,7 @@ async function resetSettings() {
         userStore.syncedSettings.chatMessageNotification = MessageNotification.ALL;
         userStore.syncedSettings.globalAnalytics = true;
         userStore.syncedSettings.hour12FormatingPreference = undefined;
+        userStore.syncedSettings.dateFormatingPreference = undefined;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
 
@@ -233,6 +256,7 @@ async function resetSettings() {
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
                             :helper="t('user_helperNotificationEmergencyUpdateSetting')"
+                            class="mt-1"
                             @input-click="updateEmergencyUpdateNotification()"
                         >
                             {{ t("user_notificationEmergencyUpdateSetting") }}
@@ -244,6 +268,7 @@ async function resetSettings() {
                             :helper="t('user_helperNotificationChatMessageSetting')"
                             helper-type="text"
                             input-position="row"
+                            class="mt-1"
                             label-size="small"
                             input-size="small"
                             :options="[
@@ -257,6 +282,7 @@ async function resetSettings() {
                             v-model="userStore.syncedSettings.customSoundNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
+                            class="mt-1"
                             :helper="t('user_helperNotificationCustomSoundSetting')"
                             @input-click="updateCustomSoundNotification()"
                         >
@@ -285,6 +311,26 @@ async function resetSettings() {
                             class="text-sm"
                             weight="font-medium"
                             :text="updateHourFormatingError"
+                        />
+                    </div>
+
+                    <div class="mt-2">
+                        <GlobalSelectInput
+                            v-model="userStore.syncedSettings.dateFormatingPreference"
+                            :label="t('user_dateFormatSetting')"
+                            :helper="t('user_dateFormatSettingHelper')"
+                            helper-type="text"
+                            input-position="row"
+                            input-size="small"
+                            :options="dateFormatOptions"
+                            @change="updateDateFormatingPreference()"
+                        />
+                        <GlobalErrorText
+                            v-if="updateDateFormatingError"
+                            :icon="false"
+                            class="text-sm"
+                            weight="font-medium"
+                            :text="updateDateFormatingError"
                         />
                     </div>
                 </div>

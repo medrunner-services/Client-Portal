@@ -21,6 +21,7 @@ export interface SyncedSettings {
     selectedLanguage: string;
     lastConfirmedWarningId: string;
     hour12FormatingPreference?: boolean;
+    dateFormatingPreference?: string;
 }
 
 export enum WSState {
@@ -61,4 +62,11 @@ export interface EchartLoadingOptions {
     spinnerRadius?: number;
     lineWidth?: number;
     zlevel?: number;
+}
+
+export interface GlobalSelectOption {
+    value: string | number | boolean | undefined;
+    label?: string;
+    hidden?: boolean;
+    disabled?: boolean;
 }
