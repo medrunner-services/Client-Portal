@@ -314,9 +314,9 @@ async function resetSettings() {
                             input-size="small"
                             :options="[
                                 { value: DateFormatingSetting.AUTO, label: t('user_timeFormatSettingAutomatic') },
-                                { value: DateFormatingSetting.DMY, label: t('DD/MM/YYYY') },
-                                { value: DateFormatingSetting.YMD, label: t('YYYY/MM/DD') },
-                                { value: DateFormatingSetting.MDY, label: t('MM/DD/YYYY') },
+                                { value: DateFormatingSetting.DMY, label: t('user_dateFormatSettingDMY') },
+                                { value: DateFormatingSetting.YMD, label: t('user_dateFormatSettingYMD') },
+                                { value: DateFormatingSetting.MDY, label: t('user_dateFormatSettingMDY') },
                             ]"
                             @change="updateDateFormatingPreference()"
                         />
