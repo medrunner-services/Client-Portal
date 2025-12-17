@@ -11,6 +11,7 @@ export interface Props {
     inputPosition?: "row" | "column";
     inputSize?: "small" | "large";
     labelSize?: "small" | "large";
+    labelClasses?: string;
     size?: "fit" | "full";
     error?: boolean;
     modelValue?: string | number | boolean | undefined;
@@ -80,8 +81,8 @@ const selectInputClasses = computed(() => {
     >
         <div
             v-if="props.label"
-            class="flex"
-            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.labelSize === 'small' ? 'text-sm' : 'mb-2']"
+            class="mb-2 flex"
+            :class="[props.helperType === 'text' ? 'flex-col' : 'items-center', props.labelSize === 'small' ? 'text-sm' : '', props.labelClasses]"
         >
             <label
                 class="

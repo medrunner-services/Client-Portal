@@ -261,6 +261,7 @@ async function resetSettings() {
                             class="mt-1"
                             label-size="small"
                             input-size="small"
+                            label-classes="mb-0!"
                             :options="[
                                 { value: MessageNotification.ALL, label: t('user_notificationChatMessageSettingAll') },
                                 { value: MessageNotification.PING, label: t('user_notificationChatMessageSettingPing') },
