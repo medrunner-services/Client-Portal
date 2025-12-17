@@ -3,8 +3,7 @@ import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n.ts";
-import { useUserStore } from "@/stores/userStore.ts";
-import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
+import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
     const memberIdToNameMap: any = {};
@@ -64,9 +63,6 @@ export function errorString(errorCode: number, customMessage?: string): string {
 }
 
 export function parseMarkdown(text: string) {
-    const { locale } = i18n.global;
-    const userStore = useUserStore();
-
     const mdIt = MarkdownIt({
         html: true,
         linkify: true,
@@ -116,66 +112,62 @@ export function parseMarkdown(text: string) {
 
         switch (format) {
             case "d":
-                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+
+                dateString = toUserDateString(date, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                 });
                 break;
             case "D":
-                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                 });
                 break;
             case "t":
-                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "T":
-                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "f":
-                dateString = date.toLocaleString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             case "F":
-                dateString = date.toLocaleString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
                 // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
                 // This is so the discord bot shows the reactive time and the portal the static time format we want
             case "R":
-                dateString = date.toLocaleTimeString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
                 });
                 break;
             default:
-                dateString = date.toLocaleDateString(userStore.syncedSettings.dateFormatingPreference ?? locale.value, {
+                dateString = toUserDateString(date, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",

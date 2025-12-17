@@ -379,7 +379,10 @@
     "user_timeFormatSetting12h": "12h (AM/PM)",
     "user_analyticsUpdatedNotification": "Paramètre d'analyse d'audiences mis à jour, vous devez recharger la page pour que les modifications prennent effet !",
     "user_dateFormatSetting": "Format des dates",
-    "user_dateFormatSettingHelper": "Remplacez le formatage de la date par celui d'une langue spécifique ou gardez le formatage automatique (selon la langue que vous avez sélectionnée).",
+    "user_dateFormatSettingHelper": "Remplacez le formatage de la date par un format spécifique ou gardez le formatage automatique (selon la langue que vous avez sélectionnée).",
+    "user_dateFormatSettingDMY": "JJ/MM/AAAA",
+    "user_dateFormatSettingYMD": "AAAA/MM/JJ",
+    "user_dateFormatSettingMDY": "MM/JJ/AAAA",
     "404_somethingMissing": "Il manque quelque chose.",
     "404_helperText": "Désolé, nous ne trouvons pas cette page. Vous trouverez beaucoup de choses à explorer sur la page d'accueil.",
     "404_backToHomepage": "Retour à la page d'accueil"

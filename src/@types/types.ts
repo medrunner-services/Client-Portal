@@ -21,7 +21,7 @@ export interface SyncedSettings {
     selectedLanguage: string;
     lastConfirmedWarningId: string;
     hour12FormatingPreference?: boolean;
-    dateFormatingPreference?: string;
+    dateFormatingPreference: DateFormatingSetting;
 }
 
 export enum WSState {
@@ -69,4 +69,11 @@ export interface GlobalSelectOption {
     label?: string;
     hidden?: boolean;
     disabled?: boolean;
+}
+
+export enum DateFormatingSetting {
+    AUTO,
+    DMY,
+    YMD,
+    MDY,
 }

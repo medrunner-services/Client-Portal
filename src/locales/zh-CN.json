@@ -379,7 +379,10 @@
     "user_timeFormatSetting12h": "12小时制（上午/下午）",
     "user_analyticsUpdatedNotification": "分析设置更新后，需要重新加载页面才能使更改生效！",
     "user_dateFormatSetting": "Date Format",
-    "user_dateFormatSettingHelper": "Override the date formatting to a specific language, or automatic (follows your selected language preference).",
+    "user_dateFormatSettingHelper": "Override the date formatting to a specific format, or automatic (follows your selected language preference).",
+    "user_dateFormatSettingDMY": "DD/MM/YYYY",
+    "user_dateFormatSettingYMD": "YYYY/MM/DD",
+    "user_dateFormatSettingMDY": "MM/DD/YYYY",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
     "404_backToHomepage": "返回主页"

@@ -1,9 +1,16 @@
-import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person, PromotionalCode } from "@medrunner/api-client";
+import type {
+    ApiToken,
+    BlockedStatus,
+    ClientHistory,
+    PaginatedResponse,
+    Person,
+    PromotionalCode,
+} from "@medrunner/api-client";
 import type { SyncedSettings } from "@/@types/types.ts";
 import { defineStore } from "pinia";
 
 import { computed, ref } from "vue";
-import { LocalStorageItems, MessageNotification } from "@/@types/types.ts";
+import { DateFormatingSetting, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 import { api } from "@/utils/medrunnerClient";
 
@@ -20,6 +27,7 @@ export const useUserStore = defineStore("user", () => {
         globalAnalytics: true,
         selectedLanguage: "",
         lastConfirmedWarningId: "",
+        dateFormatingPreference: DateFormatingSetting.AUTO,
     });
     const redeemedCodes = ref<PromotionalCode[]>([]);
 

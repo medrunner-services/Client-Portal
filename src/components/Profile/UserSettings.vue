@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { GlobalSelectOption } from "@/@types/types.ts";
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useRoute } from "vue-router";
-import { AlertColors, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
+import { AlertColors, DateFormatingSetting, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
@@ -13,11 +12,10 @@ import GlobalToggle from "@/components/utils/GlobalToggle.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
 import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
-const { t, availableLocales } = useI18n();
+const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
 const alertStore = useAlertStore();
@@ -28,14 +26,6 @@ const updateHourFormatingError = ref("");
 const updateDateFormatingError = ref("");
 const resetSettingsError = ref("");
 const isResettingSettings = ref(false);
-const dateFormatOptions = ref<GlobalSelectOption[]>([]);
-
-onMounted(() => {
-    dateFormatOptions.value.push({ value: undefined, label: t("user_timeFormatSettingAutomatic") });
-    for (const language of availableLocales) {
-        dateFormatOptions.value.push({ value: language, label: getLanguageString(language) });
-    }
-});
 
 async function updateGlobalNotificationPerms(): Promise<void> {
     updateNotificationError.value = "";
@@ -200,7 +190,7 @@ async function resetSettings() {
         userStore.syncedSettings.chatMessageNotification = MessageNotification.ALL;
         userStore.syncedSettings.globalAnalytics = true;
         userStore.syncedSettings.hour12FormatingPreference = undefined;
-        userStore.syncedSettings.dateFormatingPreference = undefined;
+        userStore.syncedSettings.dateFormatingPreference = DateFormatingSetting.AUTO;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
 
@@ -322,7 +312,12 @@ async function resetSettings() {
                             helper-type="text"
                             input-position="row"
                             input-size="small"
-                            :options="dateFormatOptions"
+                            :options="[
+                                { value: DateFormatingSetting.AUTO, label: t('user_timeFormatSettingAutomatic') },
+                                { value: DateFormatingSetting.DMY, label: t('DD/MM/YYYY') },
+                                { value: DateFormatingSetting.YMD, label: t('YYYY/MM/DD') },
+                                { value: DateFormatingSetting.MDY, label: t('MM/DD/YYYY') },
+                            ]"
                             @change="updateDateFormatingPreference()"
                         />
                         <GlobalErrorText

@@ -379,7 +379,10 @@
     "user_timeFormatSetting12h": "12h (AM/PM)",
     "user_analyticsUpdatedNotification": "Analytics 設定更新後，您需要重新載入頁面才能讓變更生效！",
     "user_dateFormatSetting": "Date Format",
-    "user_dateFormatSettingHelper": "Override the date formatting to a specific language, or automatic (follows your selected language preference).",
+    "user_dateFormatSettingHelper": "Override the date formatting to a specific format, or automatic (follows your selected language preference).",
+    "user_dateFormatSettingDMY": "DD/MM/YYYY",
+    "user_dateFormatSettingYMD": "YYYY/MM/DD",
+    "user_dateFormatSettingMDY": "MM/DD/YYYY",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
     "404_backToHomepage": "回到首頁"
