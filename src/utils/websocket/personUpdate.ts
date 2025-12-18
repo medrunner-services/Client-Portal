@@ -1,4 +1,3 @@
-import type { SyncedSettings } from "@/@types/types.ts";
 import { AlertColors } from "@/@types/types.ts";
 import { i18n } from "@/i18n.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
@@ -19,8 +18,12 @@ export async function personUpdate() {
 
         userStore.user = newUser;
 
-        if (userStore.user.clientPortalPreferencesBlob)
-            userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+        if (userStore.user.clientPortalPreferencesBlob) {
+            userStore.syncedSettings = {
+                ...userStore.syncedSettings,
+                ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
+            };
+        }
     }
     catch (_e) {
         alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);

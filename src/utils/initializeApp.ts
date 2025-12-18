@@ -1,5 +1,4 @@
 import type { Deployment } from "@medrunner/api-client";
-import type { SyncedSettings } from "@/@types/types.ts";
 
 import { HubConnectionState } from "@microsoft/signalr";
 import { WSState } from "@/@types/types.ts";
@@ -38,7 +37,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             userStore.isAuthenticated = true;
 
             if (userStore.user.clientPortalPreferencesBlob) {
-                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+                userStore.syncedSettings = {
+                    ...userStore.syncedSettings,
+                    ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
+                };
             }
         }
         catch (_e: any) {
@@ -86,8 +88,12 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             logicStore.currentWSState = WSState.HEALTHY;
 
             userStore.user = await userStore.fetchUser();
-            if (userStore.user.clientPortalPreferencesBlob)
-                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+            if (userStore.user.clientPortalPreferencesBlob) {
+                userStore.syncedSettings = {
+                    ...userStore.syncedSettings,
+                    ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
+                };
+            }
         });
 
         ws.onreconnecting((error) => {

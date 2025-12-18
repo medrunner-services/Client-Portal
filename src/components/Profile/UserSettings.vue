@@ -204,8 +204,10 @@ async function resetSettings() {
         userStore.syncedSettings.shortDateFormatPreference = false;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
+        logicStore.isDebugLoggerEnabled = false;
 
         localStorage.removeItem(LocalStorageItems.DARK_MODE);
+        localStorage.removeItem(LocalStorageItems.IS_DISCORD_OPEN_WEB);
         localStorage.removeItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED);
 
         if (logicStore.darkMode) {

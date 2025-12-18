@@ -28,6 +28,7 @@ export const useUserStore = defineStore("user", () => {
         selectedLanguage: "",
         lastConfirmedWarningId: "",
         dateFormatingPreference: DateFormatingSetting.AUTO,
+        shortDateFormatPreference: false,
     });
     const redeemedCodes = ref<PromotionalCode[]>([]);
 
