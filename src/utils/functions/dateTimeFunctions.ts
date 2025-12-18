@@ -9,6 +9,13 @@ export function toUserDateString(date: Date, dateFormatOptions: Intl.DateTimeFor
     if (!dateFormatOptions.hour12)
         dateFormatOptions.hour12 = userStore.syncedSettings.hour12FormatingPreference;
 
+    if (userStore.syncedSettings.shortDateFormatPreference && dateFormatOptions.year)
+        dateFormatOptions.year = "2-digit";
+    if (userStore.syncedSettings.shortDateFormatPreference && dateFormatOptions.month)
+        dateFormatOptions.month = "numeric";
+    if (userStore.syncedSettings.shortDateFormatPreference && dateFormatOptions.day)
+        dateFormatOptions.day = "numeric";
+
     if (userStore.syncedSettings.dateFormatingPreference !== DateFormatingSetting.AUTO && !forceLocalFormat) {
         const formatter = new Intl.DateTimeFormat(locale.value, dateFormatOptions);
         const parts = formatter.formatToParts(date);

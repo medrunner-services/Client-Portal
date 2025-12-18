@@ -22,8 +22,7 @@ const alertStore = useAlertStore();
 const route = useRoute();
 
 const updateNotificationError = ref("");
-const updateHourFormatingError = ref("");
-const updateDateFormatingError = ref("");
+const updateDateTimeFormatingError = ref("");
 const resetSettingsError = ref("");
 const isResettingSettings = ref(false);
 
@@ -96,21 +95,31 @@ async function updateMessageNotification() {
 
 async function updateHourFormatingPreference() {
     try {
-        updateHourFormatingError.value = "";
+        updateDateTimeFormatingError.value = "";
         await userStore.setSettings({ hour12FormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
     }
     catch (error: any) {
-        updateHourFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = errorString(error.statusCode);
     }
 }
 
 async function updateDateFormatingPreference() {
     try {
-        updateDateFormatingError.value = "";
+        updateDateTimeFormatingError.value = "";
         await userStore.setSettings({ dateFormatingPreference: userStore.syncedSettings.dateFormatingPreference });
     }
     catch (error: any) {
-        updateDateFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = errorString(error.statusCode);
+    }
+}
+
+async function updateShortDateFormatPreference() {
+    try {
+        await userStore.setSettings({ shortDateFormatPreference: !userStore.syncedSettings.shortDateFormatPreference });
+    }
+    catch (error: any) {
+        userStore.syncedSettings.shortDateFormatPreference = !userStore.syncedSettings.shortDateFormatPreference;
+        updateDateTimeFormatingError.value = errorString(error.statusCode);
     }
 }
 
@@ -177,6 +186,7 @@ async function resetSettings() {
                 globalAnalytics: null,
                 hour12FormatingPreference: null,
                 dateFormatingPreference: null,
+                shortDateFormatPreference: null,
             });
         }
     }
@@ -191,6 +201,7 @@ async function resetSettings() {
         userStore.syncedSettings.globalAnalytics = true;
         userStore.syncedSettings.hour12FormatingPreference = undefined;
         userStore.syncedSettings.dateFormatingPreference = DateFormatingSetting.AUTO;
+        userStore.syncedSettings.shortDateFormatPreference = false;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
 
@@ -281,53 +292,86 @@ async function resetSettings() {
                         </GlobalToggle>
                     </div>
 
+                    <!-- TODO: localization -->
                     <div class="mt-4">
-                        <GlobalSelectInput
-                            v-model="userStore.syncedSettings.hour12FormatingPreference"
-                            :label="t('user_timeFormatSetting')"
-                            :helper="t('user_timeFormatSettingHelper')"
-                            helper-type="text"
-                            input-position="row"
-                            input-size="small"
-                            :options="[
-                                { value: undefined, label: t('user_timeFormatSettingAutomatic') },
-                                { value: false, label: t('user_timeFormatSetting24h') },
-                                { value: true, label: t('user_timeFormatSetting12h') },
-                            ]"
-                            @change="updateHourFormatingPreference()"
-                        />
-                        <GlobalErrorText
-                            v-if="updateHourFormatingError"
-                            :icon="false"
-                            class="text-sm"
-                            weight="font-medium"
-                            :text="updateHourFormatingError"
-                        />
-                    </div>
+                        <div>
+                            <p
+                                class="
+                                    font-medium text-gray-900
+                                    dark:text-white
+                                "
+                            >
+                                Date and Time formats
+                            </p>
+                            <p
+                                class="
+                                    text-xs text-gray-500
+                                    dark:text-gray-400
+                                "
+                            >
+                                Override the date and time formatting independent of the chosen language.
+                            </p>
+                        </div>
 
-                    <div class="mt-2">
-                        <GlobalSelectInput
-                            v-model="userStore.syncedSettings.dateFormatingPreference"
-                            :label="t('user_dateFormatSetting')"
-                            :helper="t('user_dateFormatSettingHelper')"
-                            helper-type="text"
-                            input-position="row"
-                            input-size="small"
-                            :options="[
-                                { value: DateFormatingSetting.AUTO, label: t('user_timeFormatSettingAutomatic') },
-                                { value: DateFormatingSetting.DMY, label: t('user_dateFormatSettingDMY') },
-                                { value: DateFormatingSetting.YMD, label: t('user_dateFormatSettingYMD') },
-                                { value: DateFormatingSetting.MDY, label: t('user_dateFormatSettingMDY') },
-                            ]"
-                            @change="updateDateFormatingPreference()"
-                        />
                         <GlobalErrorText
-                            v-if="updateDateFormatingError"
+                            v-if="updateDateTimeFormatingError"
                             :icon="false"
                             class="text-sm"
                             weight="font-medium"
-                            :text="updateDateFormatingError"
+                            :text="updateDateTimeFormatingError"
                         />
+                        <div
+                            class="
+                                ml-4
+                                md:ml-8
+                            "
+                        >
+                            <GlobalSelectInput
+                                v-model="userStore.syncedSettings.hour12FormatingPreference"
+                                :label="t('user_timeFormatSetting')"
+                                :helper="t('user_timeFormatSettingHelper')"
+                                helper-type="text"
+                                input-position="row"
+                                input-size="small"
+                                label-size="small"
+                                label-classes="mb-0!"
+                                :options="[
+                                    { value: undefined, label: t('user_timeFormatSettingAutomatic') },
+                                    { value: false, label: t('user_timeFormatSetting24h') },
+                                    { value: true, label: t('user_timeFormatSetting12h') },
+                                ]"
+                                class="mt-1"
+                                @change="updateHourFormatingPreference()"
+                            />
+                            <GlobalSelectInput
+                                v-model="userStore.syncedSettings.dateFormatingPreference"
+                                :label="t('user_dateFormatSetting')"
+                                :helper="t('user_dateFormatSettingHelper')"
+                                class="mt-1"
+                                helper-type="text"
+                                input-position="row"
+                                input-size="small"
+                                label-size="small"
+                                label-classes="mb-0!"
+                                :options="[
+                                    { value: DateFormatingSetting.AUTO, label: t('user_timeFormatSettingAutomatic') },
+                                    { value: DateFormatingSetting.DMY, label: t('user_dateFormatSettingDMY') },
+                                    { value: DateFormatingSetting.YMD, label: t('user_dateFormatSettingYMD') },
+                                    { value: DateFormatingSetting.MDY, label: t('user_dateFormatSettingMDY') },
+                                ]"
+                                @change="updateDateFormatingPreference()"
+                            />
+                            <!-- TODO: localization -->
+                            <GlobalToggle
+                                v-model="userStore.syncedSettings.shortDateFormatPreference"
+                                size="small"
+                                :helper="t('Use the shortest date format with one digit for days and months and two digits for years (D/M/YY)')"
+                                class="mt-1"
+                                @input-click="updateShortDateFormatPreference()"
+                            >
+                                {{ t("Short date") }}
+                            </GlobalToggle>
+                        </div>
                     </div>
                 </div>
 
@@ -335,7 +379,7 @@ async function resetSettings() {
                     v-model="logicStore.darkMode"
                     :helper="t('user_helperDarkModeSetting')"
                     side="right"
-                    class="mt-2"
+                    class="mt-4"
                     @input-click="updateDarkMode()"
                 >
                     {{ t("user_darkModeSetting") }}

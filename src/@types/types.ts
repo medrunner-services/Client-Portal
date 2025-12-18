@@ -22,6 +22,7 @@ export interface SyncedSettings {
     lastConfirmedWarningId: string;
     hour12FormatingPreference?: boolean;
     dateFormatingPreference: DateFormatingSetting;
+    shortDateFormatPreference: boolean;
 }
 
 export enum WSState {
