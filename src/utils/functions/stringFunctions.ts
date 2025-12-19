@@ -130,14 +130,14 @@ export function parseMarkdown(text: string) {
                 dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                });
+                }, false, true);
                 break;
             case "T":
                 dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
-                });
+                }, false, true);
                 break;
             case "f":
                 dateString = toUserDateString(date, {
@@ -146,7 +146,7 @@ export function parseMarkdown(text: string) {
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                });
+                }, false, true);
                 break;
             case "F":
                 dateString = toUserDateString(date, {
@@ -156,7 +156,7 @@ export function parseMarkdown(text: string) {
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                });
+                }, false, true);
                 break;
                 // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
                 // This is so the discord bot shows the reactive time and the portal the static time format we want
@@ -164,7 +164,7 @@ export function parseMarkdown(text: string) {
                 dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                });
+                }, false, true);
                 break;
             default:
                 dateString = toUserDateString(date, {

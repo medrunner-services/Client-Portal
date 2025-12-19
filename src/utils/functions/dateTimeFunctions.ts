@@ -30,17 +30,20 @@ export function toUserDateString(date: Date, dateFormatOptions: Intl.DateTimeFor
             case DateFormatingSetting.DMY:
                 if (year)
                     dateString = `${day}${separator}${month}${separator}${year}`;
-                else dateString = `${day}${separator}${month}`;
+                else if (day && month)
+                    dateString = `${day}${separator}${month}`;
                 break;
             case DateFormatingSetting.YMD:
                 if (year)
                     dateString = `${year}${separator}${month}${separator}${day}`;
-                else dateString = `${month}${separator}${day}`;
+                else if (day && month)
+                    dateString = `${month}${separator}${day}`;
                 break;
             case DateFormatingSetting.MDY:
                 if (year)
                     dateString = `${month}${separator}${day}${separator}${year}`;
-                else dateString = `${month}${separator}${day}`;
+                else if (day && month)
+                    dateString = `${month}${separator}${day}`;
                 break;
         }
         if (showTime) {
@@ -52,7 +55,9 @@ export function toUserDateString(date: Date, dateFormatOptions: Intl.DateTimeFor
                 ? parts.slice(firstTimePart).map(part => part.value).join("")
                 : "";
 
-            return `${dateString} ${timeString}`;
+            if (dateString)
+                return `${dateString} ${timeString}`;
+            else return timeString;
         }
         else {
             return dateString;
