@@ -30,6 +30,8 @@ module.exports = {
     target: (name, semver) => {
         if (name.startsWith("@medrunner"))
             return "@beta";
+        if (name === "@types/node")
+            return "minor";
         return "latest";
     },
 };
