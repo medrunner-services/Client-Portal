@@ -61,7 +61,7 @@ onMounted(async () => {
                             <div class="col-span-5">
                                 {{ t("profile_code") }}
                             </div>
-                            <div class="col-span-3">
+                            <div class="col-span-7">
                                 {{ t("profile_event") }}
                             </div>
                         </div>
@@ -94,7 +94,7 @@ onMounted(async () => {
                                         {{ code.id }}
                                     </div>
 
-                                    <div class="col-span-3">
+                                    <div class="col-span-7">
                                         <p>{{ getCodeTypeString(code.type) }}</p>
                                     </div>
                                 </div>
