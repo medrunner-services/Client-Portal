@@ -21,7 +21,7 @@ importers:
         specifier: 4.1.18
         version: 4.1.18(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
       '@vueform/multiselect':
-        specifier: ^2.6.11
+        specifier: 2.6.11
         version: 2.6.11
       autosize:
         specifier: 6.0.1
