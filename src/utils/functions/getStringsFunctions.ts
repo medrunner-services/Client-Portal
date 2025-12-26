@@ -1,4 +1,11 @@
-import { CancellationReason, CodeType, MissionStatus, ResponseRating, ThreatLevel } from "@medrunner/api-client";
+import {
+    CancellationReason,
+    CodeType,
+    MissionStatus,
+    ResponseRating,
+    ThreatLevel,
+    TokenScope,
+} from "@medrunner/api-client";
 
 import { i18n } from "@/i18n.ts";
 
@@ -167,5 +174,35 @@ export function getEmergencyStatusSubtitle(status: number): string {
             return t("tracking_statusTextServerError");
         default:
             return "Unknown";
+    }
+}
+
+// TODO: localization
+export function getTokenScopeString(scope: TokenScope): string {
+    const { t } = i18n.global;
+    switch (scope) {
+        case TokenScope.CLIENT_READ:
+            return "Client Read";
+        case TokenScope.CLIENT_WRITE:
+            return "Client Write";
+        case TokenScope.CLIENT_PROFILE_READ:
+            return "Client Profile Read";
+        case TokenScope.CLIENT_PROFILE_WRITE:
+            return "Client Profile Write";
+        case TokenScope.CLIENT_ORGSETTINGS_READ:
+            return "Public Organization Settings Read";
+        case TokenScope.STAFF_READ:
+            return "Staff Read";
+        case TokenScope.STAFF_WRITE:
+            return "Staff Write";
+        case TokenScope.STAFF_PROFILE_READ:
+            return "Staff Profile Read";
+        case TokenScope.STAFF_PROFILE_WRITE:
+            return "Staff Profile Write";
+        case TokenScope.STAFF_ORGSETTINGS_READ:
+            return "Staff Organization Settings And Statistics Read";
+
+        default:
+            return t("history_unknown");
     }
 }

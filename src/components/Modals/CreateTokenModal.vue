@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { PersonType, TokenScope } from "@medrunner/api-client";
+import Multiselect from "@vueform/multiselect";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -9,7 +11,9 @@ import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { getTokenScopeString } from "@/utils/functions/getStringsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { multiSelectInputDefaultClasses } from "@/utils/globalVars.ts";
 
 const emit = defineEmits(["tokenCreated", "close"]);
 const userStore = useUserStore();
@@ -17,11 +21,54 @@ const { t } = useI18n();
 
 const inputName = ref("");
 const inputDate = ref("");
+const inputScopes = ref<TokenScope[]>([]);
 
 const createdToken = ref("");
 const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const isCopied = ref(false);
+
+// TODO: localization
+const scopesOptions = computed(() => {
+    if (userStore.user.personType === PersonType.CLIENT) {
+        return [
+            {
+                label: "Client Scopes",
+                options: [
+                    { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
+                    { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
+                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
+                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
+                    { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
+                ],
+            },
+        ];
+    }
+    else {
+        return [
+            {
+                label: "Client Scopes",
+                options: [
+                    { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
+                    { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
+                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
+                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
+                    { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
+                ],
+            },
+            {
+                label: "Staff Scopes",
+                options: [
+                    { label: getTokenScopeString(TokenScope.STAFF_READ), value: TokenScope.STAFF_READ },
+                    { label: getTokenScopeString(TokenScope.STAFF_WRITE), value: TokenScope.STAFF_WRITE },
+                    { label: getTokenScopeString(TokenScope.STAFF_PROFILE_READ), value: TokenScope.STAFF_PROFILE_READ },
+                    { label: getTokenScopeString(TokenScope.STAFF_PROFILE_WRITE), value: TokenScope.STAFF_PROFILE_WRITE },
+                    { label: getTokenScopeString(TokenScope.STAFF_ORGSETTINGS_READ), value: TokenScope.STAFF_ORGSETTINGS_READ },
+                ],
+            },
+        ];
+    }
+});
 
 const getModalTitle = computed(() => {
     if (createdToken.value)
@@ -51,18 +98,19 @@ async function copyAndClose() {
 }
 
 async function createToken() {
-    if (!inputName.value || isInvalidTokenName)
+    if (!inputName.value || isInvalidTokenName.value || inputScopes.value.length < 1) {
         return;
+    }
 
     submittingNewToken.value = true;
     errorCreationToken.value = "";
 
     try {
         if (inputDate.value) {
-            createdToken.value = await userStore.createApiToken(inputName.value, new Date(inputDate.value));
+            createdToken.value = await userStore.createApiToken(inputName.value, inputScopes.value, new Date(inputDate.value));
         }
         else {
-            createdToken.value = await userStore.createApiToken(inputName.value);
+            createdToken.value = await userStore.createApiToken(inputName.value, inputScopes.value);
         }
         submittingNewToken.value = false;
         document.body.style.overflow = "auto";
@@ -70,8 +118,13 @@ async function createToken() {
     }
     catch (error: any) {
         submittingNewToken.value = false;
-
-        errorCreationToken.value = errorString(error.statusCode);
+        // TODO: localization
+        if (error.statusCode === 422)
+            errorCreationToken.value = errorString(error.statusCode, t("Maximum number of API tokens reached"));
+        if (error.statusCode === 400)
+            errorCreationToken.value = errorString(error.statusCode, t("Invalid scopes selected"));
+        else
+            errorCreationToken.value = errorString(error.statusCode);
     }
 }
 </script>
@@ -162,6 +215,30 @@ async function createToken() {
                     :min="new Date().toISOString().split('T')[0]"
                     :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
                 />
+
+                <!--  TODO: localization  -->
+                <div class="mt-4">
+                    <label
+                        class="
+                            block text-sm font-medium text-gray-900
+                            dark:text-white
+                        "
+                    >
+                        {{ t("Token Scopes") }}
+                    </label>
+
+                    <Multiselect
+                        v-model="inputScopes"
+                        mode="tags"
+                        :required="true"
+                        :close-on-select="false"
+                        :groups="true"
+                        :options="scopesOptions"
+                        :placeholder="t('Select scopes...')"
+                        :classes="multiSelectInputDefaultClasses"
+                        class="mt-2"
+                    />
+                </div>
 
                 <div
                     class="

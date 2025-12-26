@@ -10,6 +10,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 
 const displayCreateTokenModal = ref(false);
+const disableTokenCreation = ref(false);
 </script>
 
 <template>
@@ -44,7 +45,7 @@ const displayCreateTokenModal = ref(false);
                 </a>
             </div>
 
-            <GlobalButton :disabled="userStore.isBlocked" icon="plus" @click="displayCreateTokenModal = true">
+            <GlobalButton :disabled="userStore.isBlocked || disableTokenCreation" icon="plus" @click="displayCreateTokenModal = true">
                 {{
                     t("developer_createTokenButton")
                 }}
@@ -52,7 +53,7 @@ const displayCreateTokenModal = ref(false);
         </div>
 
         <div class="mt-4">
-            <TokenTable :display-create-token-modal="displayCreateTokenModal" @close-create-token-modal="displayCreateTokenModal = false" />
+            <TokenTable :display-create-token-modal="displayCreateTokenModal" @close-create-token-modal="displayCreateTokenModal = false" @disable-token-creation="disableTokenCreation = true" />
         </div>
     </div>
 </template>

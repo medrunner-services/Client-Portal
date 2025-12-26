@@ -11,7 +11,7 @@ import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const props = defineProps<Props>();
-const emit = defineEmits(["closeCreateTokenModal"]);
+const emit = defineEmits(["closeCreateTokenModal", "disableTokenCreation"]);
 const { t } = useI18n();
 const userStore = useUserStore();
 
@@ -21,6 +21,7 @@ export interface Props {
 const loadingTokens = ref(false);
 const loadingTokensError = ref("");
 const userTokens = ref<ApiToken[]>([]);
+const parentRowsDiv = ref<HTMLDivElement | null>(null);
 
 onMounted(async () => {
     await getTokens();
@@ -37,6 +38,10 @@ async function getTokens(): Promise<void> {
     }
     finally {
         loadingTokens.value = false;
+
+        if (userTokens.value.length >= 10) {
+            emit("disableTokenCreation");
+        }
     }
 }
 
@@ -67,7 +72,7 @@ function deletedToken(id: string): void {
                             dark:bg-gray-700 dark:text-gray-400
                         "
                     >
-                        <div class="col-span-5">
+                        <div class="col-span-5 col-start-2">
                             {{ t("developer_tokenListName") }}
                         </div>
                         <div class="col-span-3">
@@ -83,11 +88,12 @@ function deletedToken(id: string): void {
                     <div v-else-if="loadingTokens" class="flex h-56 w-full items-center justify-center">
                         <GlobalLoader width="w-8" height="h-8" text-size="text-md" spacing="mb-4" />
                     </div>
-                    <div v-else-if="userTokens.length > 0">
+                    <div v-else-if="userTokens.length > 0" ref="parentRowsDiv">
                         <TokenTableRow
                             v-for="token in userTokens"
                             :key="token.id"
                             :token="token"
+                            :parent-div="parentRowsDiv"
                             @token-deleted="
                                 (id) => {
                                     deletedToken(id);

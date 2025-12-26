@@ -34,6 +34,7 @@ export function initializeApi() {
 }
 
 export async function initializeWebsocket() {
+    // @ts-expect-error - Correct type, bug in signalr package 8.0.17
     ws = await api.websocket.initialize();
     await ws.start();
 }

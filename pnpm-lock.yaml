@@ -15,11 +15,14 @@ importers:
         specifier: 11.0.3
         version: 11.0.3(@vue/compiler-dom@3.5.26)(eslint@9.39.2(jiti@2.6.1))(rollup@4.53.3)(typescript@5.9.3)(vue-i18n@11.2.7(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       '@medrunner/api-client':
-        specifier: 0.7.0-beta.5
-        version: 0.7.0-beta.5
+        specifier: 0.7.0-beta.10
+        version: 0.7.0-beta.10
       '@tailwindcss/vite':
         specifier: 4.1.18
         version: 4.1.18(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.8.2))
+      '@vueform/multiselect':
+        specifier: ^2.6.11
+        version: 2.6.11
       autosize:
         specifier: 6.0.1
         version: 6.0.1
@@ -688,8 +691,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@medrunner/api-client@0.7.0-beta.5':
-    resolution: {integrity: sha512-kW/zA57lSFcot7ikCXw0ex3awQyAviBb7e/+I/74fcEZqO/d/OROn3XKZrPOIz0TRnw0cH+P9+0sLtPfyKGnBw==}
+  '@medrunner/api-client@0.7.0-beta.10':
+    resolution: {integrity: sha512-NcSe0buBmP8K78LvGCHeJH6PNd4ntePc/Tp32K1aC+enRfhwKQOLDPNPXuOnM+ZrKX5OVqfwzGqHK/L6CS5pmQ==}
 
   '@microsoft/signalr@8.0.17':
     resolution: {integrity: sha512-5pM6xPtKZNJLO0Tq5nQasVyPFwi/WBY3QB5uc/v3dIPTpS1JXQbaXAQAPxFoQ5rTBFE094w8bbqkp17F9ReQvA==}
@@ -1272,6 +1275,9 @@ packages:
         optional: true
       vue:
         optional: true
+
+  '@vueform/multiselect@2.6.11':
+    resolution: {integrity: sha512-iG4TGfqE3baftbSGF0PhoS+xZOCnV0ChkDo9rwhJ/Qi2YlCdb6tyQCjvyug3jnzncga8+d85kx0WvG7rDYFqiA==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3343,7 +3349,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@medrunner/api-client@0.7.0-beta.5':
+  '@medrunner/api-client@0.7.0-beta.10':
     dependencies:
       '@microsoft/signalr': 8.0.17
       axios: 1.13.2
@@ -3938,6 +3944,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
       vue: 3.5.26(typescript@5.9.3)
+
+  '@vueform/multiselect@2.6.11': {}
 
   abort-controller@3.0.0:
     dependencies:

@@ -5,6 +5,7 @@ import type {
     PaginatedResponse,
     Person,
     PromotionalCode,
+    TokenScope,
 } from "@medrunner/api-client";
 import type { SyncedSettings } from "@/@types/types.ts";
 import { defineStore } from "pinia";
@@ -114,8 +115,8 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
-    async function createApiToken(name: string, expirationDate?: Date): Promise<string> {
-        const response = await api.auth.createApiToken({ name, expirationDate });
+    async function createApiToken(name: string, scopes: TokenScope[], expirationDate?: Date): Promise<string> {
+        const response = await api.auth.createApiToken({ name, scopes, expirationDate });
 
         if (response.success && response.data) {
             return response.data;
