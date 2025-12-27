@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     outlineBorderColor: "border-primary-600 dark:border-red-700",
     outlineTextColor: "text-primary-600 dark:text-red-700",
-    outlineHoverColor: "hover:bg-gray-50 dark:hover:bg-gray-700",
+    outlineHoverColor: "hover:bg-gray-50 dark:hover:bg-gray-800",
 });
 
 const { t } = useI18n();

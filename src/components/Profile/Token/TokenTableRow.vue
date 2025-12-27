@@ -164,10 +164,20 @@ function handleClickOutside(event: MouseEvent) {
         >
             <div class="flex flex-wrap gap-2">
                 <GlobalCard v-for="scope in props.token.scopes" :key="scope" border-color="gray" class="w-fit p-2!">
-                    <p class="font-medium text-gray-900">
+                    <p
+                        class="
+                            font-medium text-gray-900
+                            dark:text-gray-50
+                        "
+                    >
                         {{ getTokenScopeString(scope) }}
                     </p>
-                    <p class="mt-1 text-xs text-gray-400">
+                    <p
+                        class="
+                            mt-1 text-xs text-gray-400
+                            dark:text-gray-500
+                        "
+                    >
                         {{ scope }}
                     </p>
                 </GlobalCard>

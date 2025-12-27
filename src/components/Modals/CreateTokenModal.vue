@@ -208,14 +208,6 @@ async function createToken() {
                 />
                 <GlobalErrorText v-if="isInvalidTokenName" class="mt-1 text-sm" :icon="false" :text="t('error_tokenNameTooLong')" />
 
-                <GlobalDateInput
-                    v-model="inputDate"
-                    class="mt-4"
-                    :label="t('developer_createTokenFormExpirationDate')"
-                    :min="new Date().toISOString().split('T')[0]"
-                    :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
-                />
-
                 <!--  TODO: localization  -->
                 <div class="mt-4">
                     <label
@@ -224,7 +216,7 @@ async function createToken() {
                             dark:text-white
                         "
                     >
-                        {{ t("Token Scopes") }}
+                        {{ t("Scopes") }}*
                     </label>
 
                     <Multiselect
@@ -239,6 +231,14 @@ async function createToken() {
                         class="mt-2"
                     />
                 </div>
+
+                <GlobalDateInput
+                    v-model="inputDate"
+                    class="mt-4"
+                    :label="t('developer_createTokenFormExpirationDate')"
+                    :min="new Date().toISOString().split('T')[0]"
+                    :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
+                />
 
                 <div
                     class="

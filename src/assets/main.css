@@ -32,5 +32,5 @@ body {
 }
 
 .content-container {
-    @apply mx-auto max-w-[1920px] px-4;
+    @apply mx-auto max-w-480 px-4;
 }

@@ -26,6 +26,11 @@ export default {
                 Mohave: ["Mohave", "sans-serif"],
                 Inter: ["Inter", "sans-serif"],
             },
+            backgroundImage: {
+                "light-arrow-pattern": "url('/icons/chevron-down-light.svg')",
+                "dark-arrow-pattern": "url('/icons/chevron-down-dark.svg')",
+                "cross-pattern": "url('/icons/icon-cross-light.svg')",
+            },
             typography: (theme) => ({
                 DEFAULT: {
                     css: {
