@@ -177,7 +177,6 @@ export function getEmergencyStatusSubtitle(status: number): string {
     }
 }
 
-// TODO: localization
 export function getTokenScopeString(scope: TokenScope): string {
     const { t } = i18n.global;
     switch (scope) {

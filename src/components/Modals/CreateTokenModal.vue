@@ -28,7 +28,6 @@ const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const isCopied = ref(false);
 
-// TODO: localization
 const scopesOptions = computed(() => {
     if (userStore.user.personType === PersonType.CLIENT) {
         return [
@@ -118,11 +117,10 @@ async function createToken() {
     }
     catch (error: any) {
         submittingNewToken.value = false;
-        // TODO: localization
         if (error.statusCode === 422)
-            errorCreationToken.value = errorString(error.statusCode, t("Maximum number of API tokens reached"));
+            errorCreationToken.value = errorString(error.statusCode, t("error_maxApiTokens"));
         if (error.statusCode === 400)
-            errorCreationToken.value = errorString(error.statusCode, t("Invalid scopes selected"));
+            errorCreationToken.value = errorString(error.statusCode, t("error_invalidTokenScope"));
         else
             errorCreationToken.value = errorString(error.statusCode);
     }
@@ -208,7 +206,6 @@ async function createToken() {
                 />
                 <GlobalErrorText v-if="isInvalidTokenName" class="mt-1 text-sm" :icon="false" :text="t('error_tokenNameTooLong')" />
 
-                <!--  TODO: localization  -->
                 <div class="mt-4">
                     <label
                         class="
@@ -216,7 +213,7 @@ async function createToken() {
                             dark:text-white
                         "
                     >
-                        {{ t("Scopes") }}*
+                        {{ t("profile_tokenScopes") }}*
                     </label>
 
                     <Multiselect
@@ -226,7 +223,7 @@ async function createToken() {
                         :close-on-select="false"
                         :groups="true"
                         :options="scopesOptions"
-                        :placeholder="t('Select scopes...')"
+                        :placeholder="t('profile_tokenScopeSelectPlaceholder')"
                         :classes="multiSelectInputDefaultClasses"
                         class="mt-2"
                     />

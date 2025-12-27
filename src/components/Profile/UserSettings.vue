@@ -294,7 +294,6 @@ async function resetSettings() {
                         </GlobalToggle>
                     </div>
 
-                    <!-- TODO: localization -->
                     <div class="mt-4">
                         <div>
                             <p
@@ -303,7 +302,7 @@ async function resetSettings() {
                                     dark:text-white
                                 "
                             >
-                                Date and Time formats
+                                {{ t("profile_dateTimeFormats") }}
                             </p>
                             <p
                                 class="
@@ -311,7 +310,7 @@ async function resetSettings() {
                                     dark:text-gray-400
                                 "
                             >
-                                Override the date and time formatting independent of the chosen language.
+                                {{ t("profile_dateTimeFormatsHelper") }}
                             </p>
                         </div>
 
@@ -363,15 +362,15 @@ async function resetSettings() {
                                 ]"
                                 @change="updateDateFormatingPreference()"
                             />
-                            <!-- TODO: localization -->
+
                             <GlobalToggle
                                 v-model="userStore.syncedSettings.shortDateFormatPreference"
                                 size="small"
-                                :helper="t('Use the shortest date format with one digit for days and months and two digits for years (D/M/YY)')"
+                                :helper="t('profile_shortDateSettingHelper')"
                                 class="mt-1"
                                 @input-click="updateShortDateFormatPreference()"
                             >
-                                {{ t("Short date") }}
+                                {{ t("profile_shortDateSettingTitle") }}
                             </GlobalToggle>
                         </div>
                     </div>
