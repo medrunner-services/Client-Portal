@@ -75,8 +75,8 @@ const selectInputClasses = computed(() => {
 <template>
     <div
         class="flex" :class="props.inputPosition === 'column' ? 'flex-col' : `
-            flex-col gap-8
-            sm:flex-row sm:justify-between
+            justify-between gap-2
+            lg:gap-8
         `"
     >
         <div
