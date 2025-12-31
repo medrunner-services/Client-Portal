@@ -3,6 +3,7 @@ import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n.ts";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
@@ -63,6 +64,8 @@ export function errorString(errorCode: number, customMessage?: string): string {
 }
 
 export function parseMarkdown(text: string) {
+    const logicStore = useLogicStore();
+
     const mdIt = MarkdownIt({
         html: true,
         linkify: true,
@@ -81,6 +84,16 @@ export function parseMarkdown(text: string) {
             };
 
     mdIt.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+        const hrefIndex = tokens[idx].attrIndex("href");
+
+        if (hrefIndex >= 0) {
+            const href = tokens[idx].attrs![hrefIndex][1];
+
+            if (!logicStore.isDiscordOpenWeb && (href.startsWith("https://discord.com") || href.startsWith("http://discord.com"))) {
+                tokens[idx].attrs![hrefIndex][1] = href.replace(/^https?/, "discord");
+            }
+        }
+
         tokens[idx].attrSet("target", "_blank");
 
         return defaultRender(tokens, idx, options, env, self);
