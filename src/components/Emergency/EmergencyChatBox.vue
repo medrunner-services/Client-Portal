@@ -152,6 +152,9 @@ async function sendMessage() {
     }
     finally {
         sendingMessage.value = false;
+        await nextTick(() => {
+            messageInputRef.value?.focus();
+        });
     }
 }
 
