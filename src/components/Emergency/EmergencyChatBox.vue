@@ -132,9 +132,10 @@ async function sendMessage() {
         return;
     errorSendingMessage.value = "";
 
-    try {
-        const messageTime = new Date().toISOString();
+    const messageTime = new Date().toISOString();
+    let tempMessageIndex = -1;
 
+    try {
         if (emergencyStore.trackedEmergency) {
             if (editingMessageId.value) {
                 if (originalEditedMessage.value === inputMessage.value) {
@@ -163,12 +164,13 @@ async function sendMessage() {
                     created: messageTime,
                 });
 
+                tempMessageIndex = emergencyStore.trackedEmergencyMessages.findIndex(message => message.created === messageTime);
+
                 const newMessage = await emergencyStore.sendEmergencyMessage({
                     emergencyId: emergencyStore.trackedEmergency.id,
                     contents: messageContent,
                 });
 
-                const tempMessageIndex = emergencyStore.trackedEmergencyMessages.findIndex(message => message.created === messageTime);
                 const networkMessageIndex = emergencyStore.trackedEmergencyMessages.findIndex(message => message.id === newMessage.id);
 
                 if (networkMessageIndex !== -1)
@@ -179,15 +181,16 @@ async function sendMessage() {
         }
         else {
             alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
-            const tempMessageIndex = emergencyStore.trackedEmergencyMessages.findIndex(message => message.created === messageTime);
-            if (tempMessageIndex !== -1) {
-                if ("error" in emergencyStore.trackedEmergencyMessages[tempMessageIndex])
-                    emergencyStore.trackedEmergencyMessages[tempMessageIndex].error = true;
-            }
         }
     }
     catch (error: any) {
         errorSendingMessage.value = errorString(error.statusCode);
+
+        if (tempMessageIndex !== -1) {
+            const tempMessage = emergencyStore.trackedEmergencyMessages[tempMessageIndex];
+            if ("error" in tempMessage)
+                tempMessage.error = true;
+        }
     }
     finally {
         await nextTick(() => {
