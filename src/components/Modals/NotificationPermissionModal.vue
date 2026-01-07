@@ -51,6 +51,23 @@ async function disableNotifications() {
         emit("close");
     }
 }
+
+function getArrowPositions(): string {
+    const userAgent = navigator.userAgent;
+
+    if (userAgent.includes("Edg/"))
+        return "left: 40px; top: 40px;";
+    if (userAgent.includes("OPR/") || userAgent.includes("Opera/"))
+        return "left: 40px; top: 40px;";
+    if (userAgent.includes("Firefox"))
+        return "left: 180px; top: 40px;";
+    if (userAgent.includes("Safari"))
+        return "left: 40px; top: 40px;";
+    if (userAgent.includes("Chrome"))
+        return "left: 40px; top: 40px;";
+
+    return "left: 40px; top: 40px;";
+}
 </script>
 
 <template>
@@ -127,8 +144,8 @@ async function disableNotifications() {
                 </div>
             </div>
 
-            <div v-if="waitingForPermission" class="flashing-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16">
+            <div v-if="waitingForPermission" class="flashing-arrow" :style="getArrowPositions()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svg-arrow size-16">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>
             </div>
@@ -137,7 +154,7 @@ async function disableNotifications() {
 </template>
 
 <style scoped>
-.flashing-circle {
+.flashing-arrow {
     position: fixed;
     z-index: 50;
     top: 40px;
@@ -147,6 +164,10 @@ async function disableNotifications() {
     color: white;
     border-radius: 50%;
     animation: flash 1.5s infinite;
+}
+
+.svg-arrow {
+    filter: drop-shadow(3px 2px 4px rgb(0 0 0 / 0.5));
 }
 
 @keyframes flash {
