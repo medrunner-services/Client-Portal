@@ -56,7 +56,7 @@ function getArrowPositions(): string {
     const userAgent = navigator.userAgent;
 
     if (userAgent.includes("Edg/"))
-        return "left: 40px; top: 40px;";
+        return "right: 160px; top: 20px; rotate: -90deg;";
     if (userAgent.includes("OPR/") || userAgent.includes("Opera/"))
         return "left: 40px; top: 40px;";
     if (userAgent.includes("Firefox"))
@@ -157,8 +157,6 @@ function getArrowPositions(): string {
 .flashing-arrow {
     position: fixed;
     z-index: 50;
-    top: 40px;
-    left: 40px;
     width: 50px;
     height: 50px;
     color: white;
