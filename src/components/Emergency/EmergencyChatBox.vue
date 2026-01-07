@@ -7,21 +7,27 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { AlertColors, MessageNotification } from "@/@types/types.ts";
 import ChatMessagesContainer from "@/components/Emergency/ChatMessagesContainer.vue";
+import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 
+const props = withDefaults(defineProps<Props>(), {
+    isPopupWindow: false,
+});
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const router = useRouter();
 const alertStore = useAlertStore();
+const logicStore = useLogicStore();
 
 const inputMessage = ref("");
 const sendingMessage = ref(false);
@@ -30,6 +36,11 @@ const errorLoadingMessages = ref("");
 const editingMessageId = ref<string | undefined>();
 const originalEditedMessage = ref<string>();
 const messageInputRef = ref<InstanceType<typeof GlobalTextInput>>();
+let chatPopOutWindow: Window | null = null;
+
+export interface Props {
+    isPopupWindow?: boolean;
+}
 
 onMounted(async () => {
     try {
@@ -196,25 +207,95 @@ async function editLastMessage() {
         await handleEditMessage(lastMessage.id, lastMessage.contents);
     }
 }
+
+function popOutChatWindow() {
+    chatPopOutWindow = window.open(`/popout/chat`, "ChatPopup", "width=900,height=900,popup=true");
+    logicStore.isChatHidden = true;
+
+    if (chatPopOutWindow) {
+        const checkWindowClosed = setInterval(() => {
+            if (chatPopOutWindow && chatPopOutWindow.closed) {
+                logicStore.isChatHidden = false;
+                clearInterval(checkWindowClosed);
+            }
+        }, 1000);
+    }
+}
 </script>
 
 <template>
-    <div>
+    <div :class="props.isPopupWindow ? 'h-full' : ''">
+        <div v-if="!props.isPopupWindow" class="mb-8 flex min-h-11 items-center justify-between">
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                {{ t("tracking_chatTitle") }}
+            </h2>
+            <svg
+                v-if="!logicStore.isChatHidden"
+                class="
+                    size-6 cursor-pointer text-gray-900
+                    dark:text-white
+                "
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                @click="popOutChatWindow"
+            >
+                <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M18 14v4.833A1.166 1.166 0 0 1 16.833 20H5.167A1.167 1.167 0 0 1 4 18.833V7.167A1.166 1.166 0 0 1 5.167 6h4.618m4.447-2H20v5.768m-7.889 2.121 7.778-7.778"
+                />
+            </svg>
+        </div>
+
         <GlobalCard
-            class="
+            class="" :class="props.isPopupWindow ? 'h-full' : `
                 p-3!
                 lg:p-6!
-            "
+            `"
         >
             <div v-if="errorLoadingMessages" class="flex w-full items-center justify-center">
                 <GlobalErrorText :text="errorLoadingMessages" />
             </div>
 
-            <div v-else-if="emergencyStore.trackedEmergency">
+            <div v-else-if="logicStore.isChatHidden" class="flex w-full flex-col items-center justify-center gap-4">
+                <div class="flex items-center font-semibold">
+                    <svg
+                        class="
+                            mr-4 h-5 w-5 text-gray-900
+                            dark:text-white
+                        "
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm9.4-5.5a1 1 0 1 0 0 2 1 1 0 1 0 0-2ZM10 10a1 1 0 1 0 0 2h1v3h-1a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2h-1v-4c0-.6-.4-1-1-1h-2Z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+
+                    <p>{{ t("tracking_infoPopOutChat") }}</p>
+                </div>
+
+                <GlobalButton @click="logicStore.isChatHidden = false">
+                    {{ t("tracking_showChat") }}
+                </GlobalButton>
+            </div>
+
+            <div v-else-if="emergencyStore.trackedEmergency" :class="props.isPopupWindow ? 'flex h-full flex-col' : ''">
                 <ChatMessagesContainer
                     :messages="emergencyStore.trackedEmergencyMessages"
                     :emergency-members="emergencyStore.trackedEmergency.respondingTeam.allMembers"
                     :user="userStore.user"
+                    :is-popup-window="props.isPopupWindow"
                     @edit-message="(id, content) => handleEditMessage(id, content)"
                     @delete-message="(id) => handleDeleteMessage(id)"
                 />

@@ -72,7 +72,7 @@ function reloadPage() {
         <GlobalAlert v-if="alertStore.showAlert" />
 
         <AlertBanner
-            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
+            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout' && showWSAlertBanner"
             icon="warning"
             :message="getWSAlertBannerMessage"
             :show-button="logicStore.currentWSState !== WSState.RECONNECTING"
@@ -101,13 +101,13 @@ function reloadPage() {
         >
             <NavbarContainer
                 v-if="
-                    route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404'
+                    route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404' && route.name !== 'chat-popout'
                 "
                 :class="isLoadingPage ? 'invisible' : ''"
             />
 
             <AlertBanner
-                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showMOTDAlertBanner"
+                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout' && showMOTDAlertBanner"
                 :message="logicStore!.medrunnerSettings!.messageOfTheDay!.message"
                 :show-button="true"
                 :button-function="
@@ -129,14 +129,14 @@ function reloadPage() {
                 v-else
                 class="w-full grow"
                 :class="
-                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
+                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' || route.name === 'chat-popout'
                         ? 'my-0'
                         : showMOTDAlertBanner
                             ? 'mt-6 mb-14'
                             : 'my-14'
                 "
             />
-            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
+            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout'" />
         </div>
 
         <NotificationPermissionModal v-if="logicStore.showNotificationPermissionModal" @close="logicStore.showNotificationPermissionModal = false" />

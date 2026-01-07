@@ -151,13 +151,7 @@ onMounted(async () => {
 
         <div class="xl:w-1/2">
             <div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
-                <div class="min-h-11">
-                    <h2 class="font-Mohave text-2xl font-semibold uppercase">
-                        {{ t("tracking_chatTitle") }}
-                    </h2>
-                </div>
-
-                <EmergencyChatBox class="mt-8" />
+                <EmergencyChatBox />
             </div>
 
             <div v-else>

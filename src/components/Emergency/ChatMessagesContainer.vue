@@ -16,12 +16,14 @@ export interface Props {
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
     user: Person;
+    isPopupWindow?: boolean;
     editingMessageId?: string;
     isTranscript?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     keepScrollPosition: false,
+    isPopupWindow: false,
     isTranscript: false,
 });
 const emit = defineEmits<{
@@ -197,7 +199,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
 </script>
 
 <template>
-    <div id="chatBox" ref="chatBox" class="flex h-[45vh] flex-col overflow-y-scroll">
+    <div id="chatBox" ref="chatBox" :class="props.isPopupWindow ? 'h-full' : 'h-[45vh]'" class="flex flex-col overflow-y-scroll">
         <GlobalErrorText v-if="props.errorLoadingAdditionalMessages" class="flex justify-center py-4" :text="props.errorLoadingAdditionalMessages" />
         <div v-if="messages.length === 0" class="relative top-1/2">
             <p class="text-center">

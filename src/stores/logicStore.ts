@@ -16,6 +16,7 @@ export const useLogicStore = defineStore("logic", () => {
     const currentWSState = ref(WSState.HEALTHY);
     const wsManualReconnect = ref(false);
     const isFirstInstance = ref(true);
+    const isChatHidden = ref(false);
     const sentNotificationTags = ref<Set<string>>(new Set());
     const showNewUpdateBanner = ref(false);
     const errorInitializingApp = ref("");
@@ -103,6 +104,7 @@ export const useLogicStore = defineStore("logic", () => {
         wsManualReconnect,
         medrunnerStaffPortalUrl,
         isFirstInstance,
+        isChatHidden,
         sentNotificationTags,
         showNewUpdateBanner,
     };

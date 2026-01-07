@@ -107,6 +107,12 @@ export const router = createRouter({
             beforeEnter: to => isUserComplete(to, true),
         },
         {
+            path: "/popout/chat",
+            name: "chat-popout",
+            component: () => import("@/views/ChatPopupView.vue"),
+            beforeEnter: to => isUserAuthenticated(to, true),
+        },
+        {
             path: "/profile",
             name: "profile",
             component: () => import("@/views/ProfileView.vue"),
