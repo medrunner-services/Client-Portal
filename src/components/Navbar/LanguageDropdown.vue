@@ -71,7 +71,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
             v-if="showDropdown"
             ref="selectorDiv"
             class="
-                absolute top-14 left-1/2 z-10 w-44 -translate-x-1/2 transform rounded-lg border border-gray-200 bg-white font-normal shadow-lg
+                absolute top-14 left-1/2 z-10 w-56 -translate-x-1/2 transform rounded-lg border border-gray-200 bg-white font-normal shadow-lg
                 dark:border-gray-700 dark:bg-gray-700 dark:shadow-gray-900
             "
         >

@@ -13,7 +13,7 @@ export function getLanguageString(languageLocal: string): string {
     const { t } = i18n.global;
     switch (languageLocal) {
         case "en-US":
-            return "English";
+            return "English (US)";
         case "fr-FR":
             return "Français";
         case "de-DE":
@@ -34,6 +34,8 @@ export function getLanguageString(languageLocal: string): string {
             return "简体中文";
         case "no-NO":
             return "Norsk";
+        case "en-GB":
+            return "English (GB)";
         default:
             return t("history_unknown");
     }
