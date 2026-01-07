@@ -8,14 +8,15 @@ import type {
     ResponseRating,
     TeamDetailsResponse,
 } from "@medrunner/api-client";
+import type { TrackedChatMessageItem } from "@/@types/types.ts";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
+import { ref } from "vue";
 import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
     const trackedEmergency = ref<Emergency>();
-    const trackedEmergencyMessages = ref<ChatMessage[]>([]);
+    const trackedEmergencyMessages = ref<TrackedChatMessageItem[]>([]);
     const trackedEmergencyTeamDetails = ref<TeamDetailsResponse>();
     const isTrackedEmergencyCanceled = ref(false);
 
@@ -96,10 +97,13 @@ export const useEmergencyStore = defineStore("emergency", () => {
         }
     }
 
-    async function sendEmergencyMessage(chatMessageRequest: ChatMessageRequest): Promise<void> {
+    async function sendEmergencyMessage(chatMessageRequest: ChatMessageRequest): Promise<ChatMessage> {
         const response = await api.chatMessage.sendMessage(chatMessageRequest);
 
-        if (!response.success) {
+        if (response.success && response.data) {
+            return response.data;
+        }
+        else {
             throw response;
         }
     }

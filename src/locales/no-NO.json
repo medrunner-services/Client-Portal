@@ -31,6 +31,7 @@
     "error_reasonTooLong": "Årsaken kan ikke være lengre enn 1024 tegn.",
     "error_maxApiTokens": "Maximum number of API tokens reached",
     "error_invalidTokenScope": "Invalid scopes selected",
+    "error_sendingMessage": "An error occurred sending this message",
     "form_confirm": "Bekreft",
     "form_edit": "Rediger",
     "form_system": "Solsystem",

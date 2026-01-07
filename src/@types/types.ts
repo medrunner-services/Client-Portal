@@ -1,3 +1,5 @@
+import type { ChatMessage } from "@medrunner/api-client";
+
 export enum MessageNotification {
     ALL,
     PING,
@@ -78,3 +80,10 @@ export enum DateFormatingSetting {
     YMD,
     MDY,
 }
+
+export interface LocalChatMessage extends ChatMessage {
+    local: boolean;
+    error: boolean;
+}
+
+export type TrackedChatMessageItem = LocalChatMessage | ChatMessage;

@@ -31,6 +31,7 @@
     "error_reasonTooLong": "The reason cannot be longer than 1024 characters.",
     "error_maxApiTokens": "Maximum number of API tokens reached",
     "error_invalidTokenScope": "Invalid scopes selected",
+    "error_sendingMessage": "An error occurred sending this message",
     "form_confirm": "Confirm",
     "form_edit": "Edit",
     "form_system": "System",

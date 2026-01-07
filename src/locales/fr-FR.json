@@ -31,6 +31,7 @@
     "error_reasonTooLong": "Le motif ne peut pas dépasser 1024 caractères.",
     "error_maxApiTokens": "Nombre maximum de jetons d'API atteint",
     "error_invalidTokenScope": "Champs d'applications invalides",
+    "error_sendingMessage": "Une erreur s'est produite lors de l'envoi de ce message",
     "form_confirm": "Confirmer",
     "form_edit": "Modifier",
     "form_system": "Système",

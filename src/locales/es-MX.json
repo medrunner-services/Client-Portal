@@ -31,6 +31,7 @@
     "error_reasonTooLong": "El razón no puede tener más de 1024 caracteres.",
     "error_maxApiTokens": "Maximum number of API tokens reached",
     "error_invalidTokenScope": "Invalid scopes selected",
+    "error_sendingMessage": "An error occurred sending this message",
     "form_confirm": "Confirmar",
     "form_edit": "Modificar",
     "form_system": "Sistema planetario",

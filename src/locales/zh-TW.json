@@ -31,6 +31,7 @@
     "error_reasonTooLong": "原因不能超過 1024 個字元。",
     "error_maxApiTokens": "Maximum number of API tokens reached",
     "error_invalidTokenScope": "Invalid scopes selected",
+    "error_sendingMessage": "An error occurred sending this message",
     "form_confirm": "確認",
     "form_edit": "編輯",
     "form_system": "所在星系",

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
+import type { Person, TeamMember } from "@medrunner/api-client";
+import type { TrackedChatMessageItem } from "@/@types/types.ts";
 import { computed, onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
 
+import { useI18n } from "vue-i18n";
 import ChatMessageToolbar from "@/components/Emergency/ChatMessageToolbar.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
@@ -11,7 +12,7 @@ import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
-    messages: ChatMessage[];
+    messages: TrackedChatMessageItem[];
     emergencyMembers: TeamMember[];
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
@@ -80,17 +81,17 @@ onMounted(() => {
     }
 });
 
-const sortedMessages = computed<ChatMessage[]>(() => {
+const sortedMessages = computed<TrackedChatMessageItem[]>(() => {
     return [...props.messages].filter(obj => obj.contents !== undefined).sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
 });
 
-function parseChatMessageString(message: ChatMessage): string {
+function parseChatMessageString(message: TrackedChatMessageItem): string {
     const htmlMessage = parseMarkdown(message.contents);
 
     return replaceAtMentions(htmlMessage, message.senderId, true, props.emergencyMembers, props.user);
 }
 
-function getMessageAuthor(message: ChatMessage): string {
+function getMessageAuthor(message: TrackedChatMessageItem): string {
     let author;
     const teamMember = props.emergencyMembers.find(staff => staff.id === message.senderId);
 
@@ -139,19 +140,29 @@ function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
     }
 }
 
-function truncatedMessage(message: ChatMessage): string {
+function truncatedMessage(message: TrackedChatMessageItem): string {
     const parsedMessage = parseChatMessageString(message);
     return message.contents.length > 500 ? `${parsedMessage.substring(0, 500)}...` : parsedMessage;
 }
 
-function messageClasses(message: ChatMessage, messageIndex: number): string {
+function messageClasses(message: TrackedChatMessageItem, messageIndex: number): string {
     const classes: string[] = [];
 
     if (isMessageAuthor(message.senderId)) {
         classes.push("self-end lg:mr-6");
-        if (message.deleted)
+        if ("local" in message && message.local) {
+            if (message.error)
+                classes.push("bg-red-900/50 text-white");
+            else
+                classes.push("bg-primary-600/50 text-white");
+        }
+
+        else if (message.deleted) {
             classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
-        else classes.push("bg-primary-600 text-white");
+        }
+        else {
+            classes.push("bg-primary-600 text-white");
+        }
 
         if (messageIndex === 0)
             classes.push("mt-6");
@@ -216,8 +227,8 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 dark:border-gray-700
             "
             :class="messageClasses(message, index)"
-            @mouseenter="hoveredMessageId = message.id"
-            @mouseleave="hoveredMessageId = undefined"
+            @mouseenter="'local' in message ? null : hoveredMessageId = message.id"
+            @mouseleave="'local' in message ? null : hoveredMessageId = undefined"
         >
             <p
                 v-if="!isMessageAuthor(message.senderId) && (!isMessageChain(index) || isMessageChain(index) === 'top')"
@@ -256,11 +267,18 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <div class="mt-1 ml-auto flex gap-2 text-xs">
+                <div class="mt-1 ml-auto flex items-center gap-2 text-xs">
                     <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">
                         ({{ t("tracking_edited") }})
                     </p>
+
                     <GlobalLocalizedDate :date="message.created" format="toHours" />
+
+                    <div v-if="'error' in message && message.error" :title="t('error_sendingMessage')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                    </div>
                 </div>
             </div>
 
