@@ -1,7 +1,7 @@
 {
     "name": "client-portal",
     "type": "module",
-    "version": "2.9.3",
+    "version": "2.10.0",
     "private": false,
     "packageManager": "pnpm@10.26.2",
     "scripts": {
@@ -22,7 +22,7 @@
     "dependencies": {
         "@elastic/apm-rum-vue": "2.1.10",
         "@intlify/unplugin-vue-i18n": "11.0.3",
-        "@medrunner/api-client": "0.7.0-beta.10",
+        "@medrunner/api-client": "0.7.0-beta.12",
         "@tailwindcss/vite": "4.1.18",
         "@vueform/multiselect": "2.6.11",
         "autosize": "6.0.1",
@@ -34,27 +34,27 @@
         "vue": "3.5.26",
         "vue-echarts": "8.0.1",
         "vue-eslint-parser": "10.2.0",
-        "vue-i18n": "11.2.7",
+        "vue-i18n": "11.2.8",
         "vue-router": "4.6.4"
     },
     "devDependencies": {
-        "@antfu/eslint-config": "6.7.3",
+        "@antfu/eslint-config": "7.0.1",
         "@tailwindcss/forms": "0.5.11",
         "@tailwindcss/typography": "0.5.19",
-        "@tsconfig/node24": "24.0.3",
+        "@tsconfig/node24": "24.0.4",
         "@types/autosize": "4.0.3",
         "@types/markdown-it": "14.1.2",
-        "@types/node": "24.10.4",
+        "@types/node": "24.10.9",
         "@vitejs/plugin-vue": "6.0.3",
         "@vue/tsconfig": "0.8.1",
         "dotenv": "17.2.3",
         "eslint": "9.39.2",
-        "eslint-plugin-better-tailwindcss": "3.8.0",
+        "eslint-plugin-better-tailwindcss": "4.0.1",
         "npm-run-all2": "8.0.4",
         "tailwindcss": "4.1.18",
         "typescript": "5.9.3",
-        "vite": "7.3.0",
-        "vue-tsc": "3.2.1",
+        "vite": "7.3.1",
+        "vue-tsc": "3.2.2",
         "yauzl": "3.2.0"
     }
 }
