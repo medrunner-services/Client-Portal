@@ -31,7 +31,7 @@
     "error_reasonTooLong": "Der Grund darf nicht länger als 1024 Zeichen sein.",
     "error_maxApiTokens": "Maximale Anzahl von API-Tokens erreicht",
     "error_invalidTokenScope": "Ungültige Anwendungsbereiche ausgewählt",
-    "error_sendingMessage": "An error occurred sending this message",
+    "error_sendingMessage": "Beim Senden der Nachricht ist ein Fehler aufgetreten",
     "form_confirm": "Bestätigen",
     "form_edit": "Bearbeiten",
     "form_system": "Sternensystem",
