@@ -140,9 +140,9 @@ async function goToLinkPage() {
         <div v-if="isCodeRedeemed">
             <div class="mt-12 mb-8 flex flex-col items-center">
                 <div>
-                    <div class="h-24 w-24 rounded-full bg-green-300 p-8 shadow-md">
+                    <div class="size-24 rounded-full bg-green-300 p-8 shadow-md">
                         <svg
-                            class="h-full w-full text-green-600"
+                            class="size-full text-green-600"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -193,7 +193,8 @@ async function goToLinkPage() {
                             block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
                             focus:border-gray-500 focus:ring-gray-500
                             md:p-2.5
-                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
                         "
                         :class="isCompleteCodeValid ? `
                             border-gray-300
@@ -221,7 +222,8 @@ async function goToLinkPage() {
                             block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
                             focus:border-gray-500 focus:ring-gray-500
                             md:p-2.5
-                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
                         "
                         :class="isCompleteCodeValid ? `
                             border-gray-300
@@ -249,7 +251,8 @@ async function goToLinkPage() {
                             block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
                             focus:border-gray-500 focus:ring-gray-500
                             md:p-2.5
-                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
                         "
                         :class="isCompleteCodeValid ? `
                             border-gray-300
@@ -277,7 +280,8 @@ async function goToLinkPage() {
                             block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
                             focus:border-gray-500 focus:ring-gray-500
                             md:p-2.5
-                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
                         "
                         :class="isCompleteCodeValid ? `
                             border-gray-300

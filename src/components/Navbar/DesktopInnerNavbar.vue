@@ -61,7 +61,7 @@ const showCodeRedeemModal = ref(false);
                 <p class="cursor-pointer">{{ t("navbar_staffPortal") }}</p>
                 <svg
                     class="
-                        h-4 w-4 cursor-pointer text-gray-900
+                        size-4 cursor-pointer text-gray-900
                         dark:text-white
                     "
                     aria-hidden="true"
@@ -86,7 +86,7 @@ const showCodeRedeemModal = ref(false);
             <RouterLink to="/profile">
                 <svg
                     class="
-                        h-5 w-5 text-gray-800
+                        size-5 text-gray-800
                         dark:text-gray-50
                     "
                     aria-hidden="true"

@@ -108,9 +108,9 @@ const showSuccessRate = computed(() => {
                 <h2 class="font-Mohave text-2xl font-semibold uppercase">
                     {{ t("home_OngoingEmergency") }}
                 </h2>
-                <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75" />
-                    <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600" />
+                <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex size-3">
+                    <span class="absolute inline-flex size-full animate-ping rounded-full bg-primary-600 opacity-75" />
+                    <span class="relative inline-flex size-3 rounded-full bg-primary-600" />
                 </span>
             </div>
         </div>
@@ -231,7 +231,7 @@ const showSuccessRate = computed(() => {
                         "
                     >
                         <div class="flex gap-2">
-                            <img :src="`/icons/classIcon_${responderClass[0].class}.svg`" alt="Class icon" class="h-7 w-7">
+                            <img :src="`/icons/classIcon_${responderClass[0].class}.svg`" alt="Class icon" class="size-7">
                             <p class="text-lg font-semibold">
                                 {{ getClassString(responderClass[0].class) }}
                             </p>
@@ -286,7 +286,7 @@ const showSuccessRate = computed(() => {
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 16 16"
                                 fill="currentColor"
-                                class="h-4 w-4"
+                                class="size-4"
                             >
                                 <path
                                     d="M5.5 3.5A1.5 1.5 0 0 1 7 2h2.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 1 .439 1.061V9.5A1.5 1.5 0 0 1 12 11V8.621a3 3 0 0 0-.879-2.121L9 4.379A3 3 0 0 0 6.879 3.5H5.5Z"
@@ -296,7 +296,7 @@ const showSuccessRate = computed(() => {
                                 />
                             </svg>
 
-                            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
+                            <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                 <path
                                     fill-rule="evenodd"
                                     d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"

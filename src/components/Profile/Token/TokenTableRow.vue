@@ -56,10 +56,11 @@ function handleClickOutside(event: MouseEvent) {
     <div
         ref="rowParent"
         class="
-            grid cursor-pointer grid-cols-12 items-center border-b px-3 py-3
+            grid cursor-pointer grid-cols-12 items-center border-b p-3
             last:border-b-0
             hover:bg-gray-200
-            dark:border-gray-700 dark:hover:bg-gray-700
+            dark:border-gray-700
+            dark:hover:bg-gray-700
         "
         :class="showDetails ? `
             bg-gray-200
@@ -70,7 +71,7 @@ function handleClickOutside(event: MouseEvent) {
         <div class="px-1">
             <svg
                 class="
-                    h-3 w-3 text-gray-500
+                    size-3 text-gray-500
                     dark:text-gray-400
                 "
                 :class="showDetails ? `

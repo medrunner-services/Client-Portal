@@ -46,7 +46,7 @@ export default antfu(
                 printWidth: 250,
                 indent: 4,
             }],
-            "better-tailwindcss/no-unregistered-classes": "off",
+            "better-tailwindcss/no-unknown-classes": "off",
             "better-tailwindcss/enforce-consistent-important-position": "error",
             "better-tailwindcss/no-deprecated-classes": "warn",
         },

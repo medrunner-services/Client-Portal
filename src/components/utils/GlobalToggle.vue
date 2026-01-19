@@ -40,7 +40,9 @@ const value = computed({
                             peer-focus:ring-4 peer-focus:ring-primary-300 peer-focus:outline-hidden
                             after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:transition-all after:content-['']
                             peer-checked:after:translate-x-full peer-checked:after:border-white
-                            dark:border-gray-600 dark:peer-checked:bg-primary-600 dark:peer-focus:ring-primary-300
+                            dark:border-gray-600
+                            dark:peer-checked:bg-primary-600
+                            dark:peer-focus:ring-primary-300
                         "
                         :class="
                             props.disabled
@@ -48,7 +50,8 @@ const value = computed({
                                     bg-gray-100
                                     peer-checked:bg-gray-100/75
                                     after:border-gray-200 after:bg-gray-50
-                                    dark:bg-gray-600 dark:peer-checked:bg-gray-600/50
+                                    dark:bg-gray-600
+                                    dark:peer-checked:bg-gray-600/50
                                 `
                                 : `
                                     bg-gray-200

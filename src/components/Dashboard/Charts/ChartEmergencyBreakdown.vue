@@ -241,7 +241,7 @@ function downplaySegment(segmentName: string) {
                     @mouseleave="downplaySegment(getLabel(key))"
                 >
                     <div
-                        class="pi mr-2 h-3 w-3 rounded-full" :style="`background-color: ${getLabelColor(key)}`"
+                        class="pi mr-2 size-3 rounded-full" :style="`background-color: ${getLabelColor(key)}`"
                     />
                     <div
                         class="

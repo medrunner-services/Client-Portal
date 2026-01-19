@@ -7,7 +7,7 @@ const { t } = useI18n();
 </script>
 
 <template>
-    <main class="flex h-full w-full flex-col items-center justify-center text-center">
+    <main class="flex size-full flex-col items-center justify-center text-center">
         <p class="font-Mohave text-8xl font-bold text-primary-600">
             404
         </p>

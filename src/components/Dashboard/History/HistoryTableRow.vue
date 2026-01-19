@@ -106,7 +106,8 @@ async function addTextToClipboard(text: string) {
                 grid cursor-pointer grid-cols-7 items-center border-b py-3
                 hover:bg-gray-200
                 md:grid-cols-10
-                dark:border-gray-700 dark:hover:bg-gray-700
+                dark:border-gray-700
+                dark:hover:bg-gray-700
             "
             :class="showDetails ? `
                 bg-gray-200
@@ -117,7 +118,7 @@ async function addTextToClipboard(text: string) {
             <div class="px-3">
                 <svg
                     class="
-                        h-3 w-3 text-gray-500
+                        size-3 text-gray-500
                         dark:text-gray-400
                     "
                     :class="showDetails ? `
@@ -190,7 +191,7 @@ async function addTextToClipboard(text: string) {
                             "
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
-                                <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <svg class="size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                     <path
                                         d="M15 18h-2v-3.333a2 2 0 0 0-.4-1.2L10.45 10.6a1 1 0 0 1 0-1.2l2.15-2.867a2 2 0 0 0 .4-1.2V2h2a1 1 0 1 0 0-2H1a1 1 0 0 0 0 2h2v3.333a2 2 0 0 0 .4 1.2L5.55 9.4a1 1 0 0 1 0 1.2L3.4 13.467a2 2 0 0 0-.4 1.2V18H1a1 1 0 0 0 0 2h14a1 1 0 0 0 0-2Z"
                                     />
@@ -199,7 +200,7 @@ async function addTextToClipboard(text: string) {
                             <p
                                 v-if="props.emergency.acceptedOn || props.emergency.completedOn"
                                 class="
-                                    absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900
+                                    absolute left-1/2 ml-3 -translate-1/2 transform font-semibold text-gray-900
                                     dark:text-white
                                 "
                             >
@@ -219,7 +220,7 @@ async function addTextToClipboard(text: string) {
                             "
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
-                                <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
+                                <svg class="size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 19">
                                     <path
                                         d="M15 1.943v12.114a1 1 0 0 1-1.581.814L8 11V5l5.419-3.871A1 1 0 0 1 15 1.943ZM7 4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2v5a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V4ZM4 17v-5h1v5H4ZM16 5.183v5.634a2.984 2.984 0 0 0 0-5.634Z"
                                     />
@@ -228,7 +229,7 @@ async function addTextToClipboard(text: string) {
                             <p
                                 v-if="props.emergency.completedOn"
                                 class="
-                                    absolute left-1/2 ml-3 -translate-x-1/2 -translate-y-1/2 transform font-semibold text-gray-900
+                                    absolute left-1/2 ml-3 -translate-1/2 transform font-semibold text-gray-900
                                     dark:text-white
                                 "
                             >
@@ -239,7 +240,7 @@ async function addTextToClipboard(text: string) {
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
                                 <svg
                                     v-if="props.emergency.status === MissionStatus.SUCCESS"
-                                    class="h-3 w-3"
+                                    class="size-3"
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -257,7 +258,7 @@ async function addTextToClipboard(text: string) {
                                     v-else-if="
                                         [MissionStatus.CREATED, MissionStatus.RECEIVED, MissionStatus.IN_PROGRESS].includes(props.emergency.status)
                                     "
-                                    class="h-3 w-3"
+                                    class="size-3"
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor"
@@ -267,7 +268,7 @@ async function addTextToClipboard(text: string) {
                                         d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
                                     />
                                 </svg>
-                                <svg v-else class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <svg v-else class="size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                     <path
                                         stroke="currentColor"
                                         stroke-linecap="round"
@@ -547,7 +548,7 @@ async function addTextToClipboard(text: string) {
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 16 16"
                                     fill="currentColor"
-                                    class="h-4 w-4"
+                                    class="size-4"
                                 >
                                     <path
                                         d="M5.5 3.5A1.5 1.5 0 0 1 7 2h2.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 1 .439 1.061V9.5A1.5 1.5 0 0 1 12 11V8.621a3 3 0 0 0-.879-2.121L9 4.379A3 3 0 0 0 6.879 3.5H5.5Z"
@@ -557,7 +558,7 @@ async function addTextToClipboard(text: string) {
                                     />
                                 </svg>
 
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="h-4 w-4">
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                     <path
                                         fill-rule="evenodd"
                                         d="M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z"

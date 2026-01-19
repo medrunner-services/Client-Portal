@@ -48,7 +48,7 @@ const showHelper = ref(false);
                 <svg
                     v-if="helper"
                     class="
-                        ml-2 h-4 w-4 cursor-pointer text-gray-400
+                        ml-2 size-4 cursor-pointer text-gray-400
                         hover:text-gray-500
                     "
                     aria-hidden="true"
@@ -89,7 +89,8 @@ const showHelper = ref(false);
                 class="
                     w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400
                     focus:border-gray-500 focus:ring-gray-500
-                    dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400
+                    dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                    dark:focus:border-gray-400 dark:focus:ring-gray-400
                 "
                 :placeholder="props.placeholder"
                 :disabled="props.disabled"

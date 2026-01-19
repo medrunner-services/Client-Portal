@@ -38,7 +38,7 @@ onMounted(async () => {
         <EmergencyChatBox :is-popup-window="true" class="grow overflow-auto" />
     </div>
 
-    <div v-else class="flex h-full w-full flex-col items-center justify-center text-center">
+    <div v-else class="flex size-full flex-col items-center justify-center text-center">
         <p class="mt-4 text-3xl font-bold">
             {{ t("tracking_waitingNewEmergency") }}
         </p>

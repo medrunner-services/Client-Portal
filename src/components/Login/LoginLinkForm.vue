@@ -92,7 +92,7 @@ async function disconnectUser(): Promise<void> {
             <svg
                 v-if="!isIdCopied"
                 class="
-                    ml-4 h-6 w-6 cursor-pointer text-gray-800
+                    ml-4 size-6 cursor-pointer text-gray-800
                     dark:text-white
                 "
                 aria-hidden="true"
@@ -109,7 +109,7 @@ async function disconnectUser(): Promise<void> {
             <svg
                 v-else
                 class="
-                    ml-4 h-6 w-6 text-gray-800
+                    ml-4 size-6 text-gray-800
                     dark:text-white
                 "
                 aria-hidden="true"

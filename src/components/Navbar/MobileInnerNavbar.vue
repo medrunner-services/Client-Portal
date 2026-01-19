@@ -71,7 +71,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                 <svg
                     v-if="!showMenu"
                     class="
-                        h-5 w-5 cursor-pointer text-gray-900
+                        size-5 cursor-pointer text-gray-900
                         dark:text-white
                     "
                     aria-hidden="true"
@@ -85,7 +85,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                 <svg
                     v-else
                     class="
-                        h-4 w-4 cursor-pointer text-gray-900
+                        size-4 cursor-pointer text-gray-900
                         dark:text-white
                     "
                     aria-hidden="true"
@@ -177,7 +177,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                         <p class="cursor-pointer">{{ t("navbar_staffPortal") }}</p>
                         <svg
                             class="
-                                h-4 w-4 cursor-pointer text-gray-900
+                                size-4 cursor-pointer text-gray-900
                                 dark:text-white
                             "
                             aria-hidden="true"
@@ -204,12 +204,12 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     />
                     <div class="flex cursor-pointer items-center justify-between rounded-sm p-4" @click="showLanguageMenu = !showLanguageMenu">
                         <div class="flex">
-                            <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-4 h-6 w-6">
+                            <img :src="`/icons/flags/${locale}.svg`" alt="Flag" class="mr-4 size-6">
                             {{ getLanguageString(locale) }}
                         </div>
 
                         <svg
-                            class="h-3 w-3 -rotate-90"
+                            class="size-3 -rotate-90"
                             :class="showLanguageMenu ? 'rotate-180' : ''"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
@@ -228,7 +228,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
                     <RouterLink to="/profile" class="flex cursor-pointer items-center p-4" @click="switchNavMenuSate()">
                         <svg
                             class="
-                                h-5 w-5 text-gray-800
+                                size-5 text-gray-800
                                 dark:text-gray-50
                             "
                             aria-hidden="true"
@@ -263,13 +263,13 @@ async function changeLanguage(newLocal: string): Promise<void> {
                             v-for="language in availableLocales"
                             :key="language"
                             class="
-                                flex cursor-pointer items-center rounded-lg px-2 py-2
+                                flex cursor-pointer items-center rounded-lg p-2
                                 hover:bg-gray-100
                                 dark:hover:bg-gray-600 dark:hover:text-white
                             "
                             @click="changeLanguage(language)"
                         >
-                            <img :src="`/icons/flags/${language}.svg`" alt="Flag" class="mr-6 h-6 w-6">
+                            <img :src="`/icons/flags/${language}.svg`" alt="Flag" class="mr-6 size-6">
                             <p>{{ getLanguageString(language) }}</p>
                         </li>
                     </ul>

@@ -297,7 +297,7 @@ function popOutChatWindow() {
                 <div class="flex items-center font-semibold">
                     <svg
                         class="
-                            mr-4 h-5 w-5 text-gray-900
+                            mr-4 size-5 text-gray-900
                             dark:text-white
                         "
                         aria-hidden="true"
@@ -387,7 +387,7 @@ function popOutChatWindow() {
                             "
                         >
                             <svg
-                                class="h-5 w-5 rotate-90"
+                                class="size-5 rotate-90"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"

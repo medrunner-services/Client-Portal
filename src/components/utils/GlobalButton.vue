@@ -34,7 +34,7 @@ const { t } = useI18n();
         <button
             :type="props.submit ? 'submit' : 'button'"
             class="
-                flex cursor-pointer items-center justify-center rounded-lg border px-2.5 py-2.5 text-sm font-medium
+                flex cursor-pointer items-center justify-center rounded-lg border p-2.5 text-sm font-medium
                 focus:outline-hidden
                 disabled:cursor-not-allowed disabled:opacity-50 disabled:select-none
                 sm:px-5
@@ -56,7 +56,7 @@ const { t } = useI18n();
                 <svg
                     aria-hidden="true"
                     role="status"
-                    class="mr-3 inline h-4 w-4 animate-spin"
+                    class="mr-3 inline size-4 animate-spin"
                     :class="{
                         'text-white': props.type === 'primary',
                         'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -81,7 +81,7 @@ const { t } = useI18n();
                 <span v-if="props.icon" :class="props.iconPosition === 'right' ? 'ml-4' : 'mr-4'">
                     <svg
                         v-if="props.icon === 'link'"
-                        class="h-3.5 w-3.5"
+                        class="size-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -103,7 +103,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'pencil'"
-                        class="h-3.5 w-3.5"
+                        class="size-3.5"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -120,7 +120,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'logout'"
-                        class="h-5 w-5"
+                        class="size-5"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -139,7 +139,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'plus'"
-                        class="h-4 w-4"
+                        class="size-4"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -155,7 +155,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'cross'"
-                        class="h-4 w-4"
+                        class="size-4"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -177,7 +177,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'arrowLeft'"
-                        class="h-4 w-4"
+                        class="size-4"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',
@@ -193,7 +193,7 @@ const { t } = useI18n();
 
                     <svg
                         v-else-if="props.icon === 'cancel'"
-                        class="h-4 w-4"
+                        class="size-4"
                         :class="{
                             'text-white': props.type === 'primary',
                             'text-primary-600 dark:text-primary-400': props.type === 'outline-solid',

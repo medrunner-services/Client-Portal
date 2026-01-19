@@ -228,7 +228,7 @@ const isInvalidRSIHandle = computed(() => {
                                 dark:border-gray-600 dark:bg-gray-700 dark:text-white
                             "
                         >
-                            <img class="mr-2 h-9 w-9" :src="badge.icon" alt="Badge">
+                            <img class="mr-2 size-9" :src="badge.icon" alt="Badge">
                             <p class="font-Mohave text-lg font-semibold">
                                 {{ badge.name }}
                             </p>

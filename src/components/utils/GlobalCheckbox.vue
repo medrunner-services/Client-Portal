@@ -39,9 +39,10 @@ const value = computed({
                     :disabled="props.disabled"
                     :required="props.required"
                     class="
-                        h-4 w-4 cursor-pointer rounded-sm border-gray-300 bg-gray-100 text-primary-600
+                        size-4 cursor-pointer rounded-sm border-gray-300 bg-gray-100 text-primary-600
                         focus:ring-2 focus:ring-primary-300
-                        dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-400
+                        dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800
+                        dark:focus:ring-primary-400
                     "
                     :class="props.centerCheckbox ? '' : 'mt-0.5'"
                     @click="$emit('inputClick')"

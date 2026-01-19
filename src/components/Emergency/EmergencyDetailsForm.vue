@@ -132,9 +132,9 @@ async function sendDetails(): Promise<void> {
             <h2 class="font-Mohave text-2xl font-semibold uppercase">
                 {{ t("home_OngoingEmergency") }}
             </h2>
-            <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75" />
-                <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600" />
+            <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex size-3">
+                <span class="absolute inline-flex size-full animate-ping rounded-full bg-primary-600 opacity-75" />
+                <span class="relative inline-flex size-3 rounded-full bg-primary-600" />
             </span>
         </div>
 
@@ -168,21 +168,24 @@ async function sendDetails(): Promise<void> {
                         after:mx-6 after:hidden after:h-0 after:w-12 after:border after:border-b after:border-gray-200
                         sm:after:inline-block sm:after:content-['']
                         xl:after:mx-10
-                        dark:text-red-700 dark:after:border-gray-700
+                        dark:text-red-700
+                        dark:after:border-gray-700
                     "
                 >
                     <div
                         class="
                             flex items-center text-primary-600
                             after:mx-2 after:font-light after:text-gray-200 after:content-['/']
-                            sm:block sm:after:hidden
-                            dark:text-red-700 dark:after:text-gray-500
+                            sm:block
+                            sm:after:hidden
+                            dark:text-red-700
+                            dark:after:text-gray-500
                         "
                     >
                         <svg
                             class="
-                                mr-2 h-4 w-4
-                                sm:mx-auto sm:mb-2 sm:h-6 sm:w-6
+                                mr-2 size-4
+                                sm:mx-auto sm:mb-2 sm:size-6
                             "
                             fill="currentColor"
                             viewBox="0 0 20 20"
@@ -210,7 +213,8 @@ async function sendDetails(): Promise<void> {
                         class="
                             flex items-center
                             after:mx-2 after:font-light after:text-gray-200 after:content-['/']
-                            sm:block sm:after:hidden
+                            sm:block
+                            sm:after:hidden
                             dark:after:text-gray-500
                         "
                         :class="currentFormPart >= 2 ? `
@@ -221,8 +225,8 @@ async function sendDetails(): Promise<void> {
                         <svg
                             v-if="currentFormPart >= 2"
                             class="
-                                mr-2 h-4 w-4
-                                sm:mx-auto sm:mb-2 sm:h-6 sm:w-6
+                                mr-2 size-4
+                                sm:mx-auto sm:mb-2 sm:size-6
                             "
                             fill="currentColor"
                             viewBox="0 0 20 20"
@@ -257,8 +261,8 @@ async function sendDetails(): Promise<void> {
                     <svg
                         v-if="currentFormPart >= 3"
                         class="
-                            mr-2 h-4 w-4
-                            sm:mx-auto sm:mb-2 sm:h-6 sm:w-6
+                            mr-2 size-4
+                            sm:mx-auto sm:mb-2 sm:size-6
                         "
                         fill="currentColor"
                         viewBox="0 0 20 20"
@@ -490,7 +494,7 @@ async function sendDetails(): Promise<void> {
                 <div class="mt-1 flex justify-end">
                     <svg
                         class="
-                            h-4 w-4 cursor-pointer text-gray-800
+                            size-4 cursor-pointer text-gray-800
                             dark:text-white
                         "
                         aria-hidden="true"
@@ -505,7 +509,7 @@ async function sendDetails(): Promise<void> {
                     <svg
                         v-if="inputPartyDetails.length > 1"
                         class="
-                            ml-4 h-4 w-4 cursor-pointer text-gray-800
+                            ml-4 size-4 cursor-pointer text-gray-800
                             dark:text-white
                         "
                         aria-hidden="true"

@@ -34,7 +34,7 @@ watchEffect(() => {
         <div class="flex items-center p-4">
             <svg
                 v-if="alertStore.icon === 'info'"
-                class="h-4 w-4 shrink-0"
+                class="size-4 shrink-0"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -49,9 +49,10 @@ watchEffect(() => {
                 v-if="alertStore.isCloseable"
                 type="button"
                 class="
-                    -mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg p-1.5
+                    -m-1.5 ml-auto inline-flex size-8 items-center justify-center rounded-lg p-1.5
                     focus:ring-2
-                    dark:bg-gray-900 dark:hover:bg-gray-700
+                    dark:bg-gray-900
+                    dark:hover:bg-gray-700
                 "
                 :class="{
                     'bg-red-50 text-red-500 hover:bg-red-200 focus:ring-red-400 dark:text-red-400': alertStore.color === AlertColors.RED,
@@ -62,7 +63,7 @@ watchEffect(() => {
                 }"
                 @click="alertStore.closeAlert()"
             >
-                <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <svg class="size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path
                         stroke="currentColor"
                         stroke-linecap="round"

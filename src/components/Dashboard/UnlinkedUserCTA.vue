@@ -12,7 +12,7 @@ const { t } = useI18n();
         <div class="flex gap-4">
             <div>
                 <svg
-                    class="mt-0.5 h-5 w-5 text-red-600"
+                    class="mt-0.5 size-5 text-red-600"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"

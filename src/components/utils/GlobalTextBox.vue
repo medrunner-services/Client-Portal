@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
     >
         <svg
             v-if="icon === 'warning'"
-            class="me-2 inline h-5 w-5 shrink-0"
+            class="me-2 inline size-5 shrink-0"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"

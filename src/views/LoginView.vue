@@ -63,7 +63,7 @@ function getErrorText(): string {
             :star-size="logicStore.loginAnimationStarSize"
         />
 
-        <div class="content-container flex h-full w-full items-center">
+        <div class="content-container flex size-full items-center">
             <div
                 class="
                     z-10 w-full rounded-lg bg-white
@@ -85,7 +85,7 @@ function getErrorText(): string {
                             <svg
                                 v-if="showSettings"
                                 class="
-                                    h-5 w-5 cursor-pointer text-gray-800
+                                    size-5 cursor-pointer text-gray-800
                                     dark:text-white
                                 "
                                 aria-hidden="true"
@@ -105,7 +105,7 @@ function getErrorText(): string {
                             <svg
                                 v-else
                                 class="
-                                    h-5 w-5 cursor-pointer text-gray-800
+                                    size-5 cursor-pointer text-gray-800
                                     dark:text-white
                                 "
                                 aria-hidden="true"

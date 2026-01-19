@@ -24,7 +24,7 @@ const disableTokenCreation = ref(false);
                 <a href="https://medrunner.dev" target="_blank" :title="t('developer_APIDocumentation')">
                     <svg
                         class="
-                            h-4 w-4 cursor-pointer text-gray-900
+                            size-4 cursor-pointer text-gray-900
                             dark:text-white
                         "
                         aria-hidden="true"

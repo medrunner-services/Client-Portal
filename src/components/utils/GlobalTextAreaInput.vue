@@ -105,7 +105,7 @@ const selectInputClasses = computed(() => {
                 <svg
                     v-if="helper"
                     class="
-                        ml-2 h-4 w-4 cursor-pointer text-gray-400
+                        ml-2 size-4 cursor-pointer text-gray-400
                         hover:text-gray-500
                     "
                     aria-hidden="true"

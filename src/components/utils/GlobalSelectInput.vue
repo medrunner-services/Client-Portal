@@ -95,7 +95,7 @@ const selectInputClasses = computed(() => {
                 <svg
                     v-if="helper"
                     class="
-                        ml-2 h-4 w-4 cursor-pointer text-gray-400
+                        ml-2 size-4 cursor-pointer text-gray-400
                         hover:text-gray-500
                     "
                     aria-hidden="true"
@@ -142,7 +142,8 @@ const selectInputClasses = computed(() => {
                 block cursor-pointer border border-gray-300 bg-gray-50 text-sm text-gray-900
                 focus:border-gray-500 focus:ring-gray-500
                 disabled:cursor-not-allowed
-                dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-gray-400 dark:focus:ring-gray-400
+                dark:border-gray-600 dark:bg-gray-700 dark:text-white
+                dark:focus:border-gray-400 dark:focus:ring-gray-400
             "
             :class="selectInputClasses"
             @change="$emit('change')"

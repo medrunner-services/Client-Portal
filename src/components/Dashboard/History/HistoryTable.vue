@@ -304,7 +304,8 @@ async function nextPage(): Promise<void> {
                                     ml-0 flex h-full w-20 cursor-pointer items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-500 select-none
                                     hover:bg-gray-100
                                     md:w-24
-                                    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700
+                                    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400
+                                    dark:hover:bg-gray-700
                                 "
                                 :class="
                                     page <= 0 ? `
@@ -320,10 +321,11 @@ async function nextPage(): Promise<void> {
                         <button :disabled="!loaded" @click="nextPage()">
                             <span
                                 class="
-                                    flex h-full w-20 cursor-pointer items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm leading-tight text-gray-500 select-none
+                                    flex h-full w-20 cursor-pointer items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm/tight text-gray-500 select-none
                                     hover:bg-gray-100
                                     md:w-24
-                                    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700
+                                    dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400
+                                    dark:hover:bg-gray-700
                                 "
                                 :class="
                                     isLastPageHistory

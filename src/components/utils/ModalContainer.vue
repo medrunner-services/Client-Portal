@@ -37,7 +37,7 @@ function closeModal() {
                     <svg
                         v-if="props.userCloseModal"
                         class="
-                            ml-auto h-3 w-3 cursor-pointer text-gray-800
+                            ml-auto size-3 cursor-pointer text-gray-800
                             dark:text-white
                         "
                         aria-hidden="true"
