@@ -5,12 +5,16 @@ export interface Props {
     errorText?: string;
     modelValue?: boolean;
     disabled?: boolean;
+    centerCheckbox?: boolean;
+    required?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     side: "right",
     size: "large",
     disabled: false,
+    centerCheckbox: true,
+    required: false,
 });
 
 const emit = defineEmits(["update:modelValue", "inputClick"]);
@@ -28,16 +32,18 @@ const value = computed({
 <template>
     <div>
         <div class="flex flex-row">
-            <div class="mb-4 flex items-center">
+            <div class="mb-4 flex" :class="props.centerCheckbox ? 'items-center' : ''">
                 <input
                     v-model="value"
                     type="checkbox"
                     :disabled="props.disabled"
+                    :required="props.required"
                     class="
                         h-4 w-4 cursor-pointer rounded-sm border-gray-300 bg-gray-100 text-primary-600
                         focus:ring-2 focus:ring-primary-300
                         dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-primary-400
                     "
+                    :class="props.centerCheckbox ? '' : 'mt-0.5'"
                     @click="$emit('inputClick')"
                 >
                 <label

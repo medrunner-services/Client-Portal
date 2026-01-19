@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalCheckbox from "@/components/utils/GlobalCheckbox.vue";
 import GlobalDateInput from "@/components/utils/GlobalDateInput.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
@@ -22,6 +23,7 @@ const { t } = useI18n();
 const inputName = ref("");
 const inputDate = ref("");
 const inputScopes = ref<TokenScope[]>([]);
+const inputRulesCheckbox = ref(false);
 
 const createdToken = ref("");
 const errorCreationToken = ref("");
@@ -29,44 +31,33 @@ const submittingNewToken = ref(false);
 const isCopied = ref(false);
 
 const scopesOptions = computed(() => {
-    if (userStore.user.personType === PersonType.CLIENT) {
-        return [
-            {
-                label: "Client Scopes",
-                options: [
-                    { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
-                    { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
-                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
-                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
-                    { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
-                ],
-            },
-        ];
+    const tokenScopes = [
+        {
+            label: "Client Scopes",
+            options: [
+                { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
+                { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
+                { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
+                { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
+                { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
+            ],
+        },
+    ];
+
+    if (userStore.user.personType === PersonType.STAFF) {
+        tokenScopes.push({
+            label: "Staff Scopes",
+            options: [
+                { label: getTokenScopeString(TokenScope.STAFF_READ), value: TokenScope.STAFF_READ },
+                { label: getTokenScopeString(TokenScope.STAFF_WRITE), value: TokenScope.STAFF_WRITE },
+                { label: getTokenScopeString(TokenScope.STAFF_PROFILE_READ), value: TokenScope.STAFF_PROFILE_READ },
+                { label: getTokenScopeString(TokenScope.STAFF_PROFILE_WRITE), value: TokenScope.STAFF_PROFILE_WRITE },
+                { label: getTokenScopeString(TokenScope.STAFF_ORGSETTINGS_READ), value: TokenScope.STAFF_ORGSETTINGS_READ },
+            ],
+        });
     }
-    else {
-        return [
-            {
-                label: "Client Scopes",
-                options: [
-                    { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
-                    { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
-                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
-                    { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
-                    { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
-                ],
-            },
-            {
-                label: "Staff Scopes",
-                options: [
-                    { label: getTokenScopeString(TokenScope.STAFF_READ), value: TokenScope.STAFF_READ },
-                    { label: getTokenScopeString(TokenScope.STAFF_WRITE), value: TokenScope.STAFF_WRITE },
-                    { label: getTokenScopeString(TokenScope.STAFF_PROFILE_READ), value: TokenScope.STAFF_PROFILE_READ },
-                    { label: getTokenScopeString(TokenScope.STAFF_PROFILE_WRITE), value: TokenScope.STAFF_PROFILE_WRITE },
-                    { label: getTokenScopeString(TokenScope.STAFF_ORGSETTINGS_READ), value: TokenScope.STAFF_ORGSETTINGS_READ },
-                ],
-            },
-        ];
-    }
+
+    return tokenScopes;
 });
 
 const getModalTitle = computed(() => {
@@ -97,7 +88,7 @@ async function copyAndClose() {
 }
 
 async function createToken() {
-    if (!inputName.value || isInvalidTokenName.value || inputScopes.value.length < 1) {
+    if (!inputName.value || isInvalidTokenName.value || inputScopes.value.length < 1 || !inputRulesCheckbox.value) {
         return;
     }
 
@@ -236,6 +227,23 @@ async function createToken() {
                     :min="new Date().toISOString().split('T')[0]"
                     :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
                 />
+
+                <!--  TODO: localization  -->
+                <div class="mt-4">
+                    <GlobalCheckbox v-model="inputRulesCheckbox" :center-checkbox="false" :required="true">
+                        <div>
+                            <p>I agree with the following rules:</p>
+                            <ul class="mt-1 list-disc pl-3 font-normal">
+                                <li>No data creation, deletion or modification for testing purposes;</li>
+                                <li>You may not use Medrunner branding or trademarks without prior written approval;</li>
+                                <li>You may not perform load testing, stress testing, or any actions that could impact service availability or be considered like abuse of the API without prior approval;</li>
+                                <li>Do not expose your API token in client-side applications or share it with others;</li>
+                                <li>You may not use the API to provide a paid service;</li>
+                                <li>You understand Medrunner may revoke your API access at any time for violations of these terms.</li>
+                            </ul>
+                        </div>
+                    </GlobalCheckbox>
+                </div>
 
                 <div
                     class="
