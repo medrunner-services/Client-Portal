@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import autosize from "autosize";
 import { computed, onMounted, onUpdated, ref } from "vue";
+import GlobalTooltip from "@/components/utils/GlobalTooltip.vue";
 
 export interface Props {
     disabled?: boolean;
