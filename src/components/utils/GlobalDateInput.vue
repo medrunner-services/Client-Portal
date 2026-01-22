@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
+import GlobalTooltip from "@/components/utils/GlobalTooltip.vue";
 
 export interface Props {
     disabled?: boolean;
@@ -30,8 +31,6 @@ const value = computed({
         emit("update:modelValue", value);
     },
 });
-
-const showHelper = ref(false);
 </script>
 
 <template>
@@ -44,40 +43,7 @@ const showHelper = ref(false);
                 "
             >{{ props.label }}<span v-if="props.required">*</span></label>
 
-            <div class="relative">
-                <svg
-                    v-if="helper"
-                    class="
-                        ml-2 size-4 cursor-pointer text-gray-400
-                        hover:text-gray-500
-                    "
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    @mouseenter="showHelper = true"
-                    @mouseleave="showHelper = false"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clip-rule="evenodd"
-                    />
-                </svg>
-
-                <div
-                    v-if="showHelper"
-                    role="tooltip"
-                    class="
-                        absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-xs
-                        dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400
-                    "
-                >
-                    <div class="px-3 py-2">
-                        <p>{{ props.helper }}</p>
-                    </div>
-                </div>
-            </div>
+            <GlobalTooltip v-if="props.helper" :content="props.helper" />
         </div>
 
         <div class="relative">
