@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChatMessage, TeamMember } from "@medrunner/api-client";
+import type { ChatMessage, Responder } from "@medrunner/api-client";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -20,7 +20,7 @@ const emergencyStore = useEmergencyStore();
 
 export interface Props {
     emergencyId: string;
-    respondingTeam: TeamMember[];
+    respondingTeam: Responder[];
 }
 
 const chatMessages = ref<ChatMessage[]>([]);

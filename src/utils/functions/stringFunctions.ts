@@ -1,4 +1,4 @@
-import type { Person, TeamMember } from "@medrunner/api-client";
+import type { Person, Responder } from "@medrunner/api-client";
 import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
@@ -6,7 +6,7 @@ import { i18n } from "@/i18n.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
-export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
+export function replaceAtMentions(message: string, senderId: string, html: boolean, members: Responder[], user: Person): string {
     const memberIdToNameMap: any = {};
     members.forEach((member) => {
         memberIdToNameMap[member.discordId] = member.rsiHandle;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Person, TeamMember } from "@medrunner/api-client";
+import type { Person, Responder } from "@medrunner/api-client";
 import type { TrackedChatMessageItem } from "@/@types/types.ts";
 import { computed, onMounted, ref } from "vue";
 
@@ -13,7 +13,7 @@ import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFuncti
 
 export interface Props {
     messages: TrackedChatMessageItem[];
-    emergencyMembers: TeamMember[];
+    emergencyMembers: Responder[];
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
     user: Person;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Level, TeamMember } from "@medrunner/api-client";
+import type { Level, Responder } from "@medrunner/api-client";
 import { Class } from "@medrunner/api-client";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -23,8 +23,8 @@ const displayCancelEmergencyModal = ref(false);
 const showMissionDebugInfo = ref(false);
 const isEmergencyIDCopied = ref(false);
 
-function responderTeamToClassTeam(array: TeamMember[]): Record<number, TeamMember[]> {
-    const transformedObj: Record<number, TeamMember[]> = {};
+function responderTeamToClassTeam(array: Responder[]): Record<number, Responder[]> {
+    const transformedObj: Record<number, Responder[]> = {};
 
     array.forEach((TeamMember) => {
         const { class: classValue } = TeamMember;
