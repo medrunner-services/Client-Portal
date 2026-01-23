@@ -103,9 +103,9 @@ async function addTextToClipboard(text: string) {
         <div
             ref="rowParent"
             class="
-                grid cursor-pointer grid-cols-7 items-center border-b py-3
+                grid cursor-pointer grid-cols-12 items-center gap-y-3 border-b py-3
                 hover:bg-gray-200
-                md:grid-cols-10
+                md:grid-cols-24
                 dark:border-gray-700
                 dark:hover:bg-gray-700
             "
@@ -115,7 +115,7 @@ async function addTextToClipboard(text: string) {
             ` : ''"
             @click="showDetails = !showDetails"
         >
-            <div class="px-3">
+            <div class="col-span-1 flex items-center justify-center">
                 <svg
                     class="
                         size-3 text-gray-500
@@ -141,18 +141,34 @@ async function addTextToClipboard(text: string) {
             </div>
             <div
                 class="
-                    col-span-4 font-medium text-gray-900
-                    md:col-span-3 md:col-start-2
+                    col-span-7 pl-1 font-medium text-gray-900
+                    md:col-span-10 md:col-start-3
                     dark:text-white
                 "
             >
                 {{ props.emergency.missionName ?? t("tracking_unknown") }}
             </div>
-            <GlobalLocalizedDate class="col-span-2" :date="props.emergency.created" format="toDate" />
+            <div
+                class="
+                    col-span-4 justify-self-end
+                    md:col-span-4 md:hidden md:justify-self-auto
+                "
+            >
+                <div class="mr-2 w-fit rounded-sm px-1.5 py-0.5 text-xs font-medium" :class="getStatusColor(props.emergency.status)">
+                    {{ getStatusString(props.emergency.status) }}
+                </div>
+            </div>
+            <GlobalLocalizedDate
+                class="
+                    col-span-9 col-start-6 mr-2 justify-self-end
+                    md:col-span-4 md:col-start-auto md:mr-0 md:justify-self-auto
+                "
+                :date="props.emergency.created" format="toDate"
+            />
             <div
                 class="
                     col-span-2 hidden font-medium text-gray-900
-                    md:block
+                    md:col-span-4 md:block
                     dark:text-white
                 "
             >
@@ -161,7 +177,7 @@ async function addTextToClipboard(text: string) {
             <div
                 class="
                     col-span-2 hidden
-                    md:block
+                    md:col-span-4 md:block
                 "
             >
                 <div class="mr-2 w-fit rounded-sm px-2.5 py-0.5 text-xs font-medium" :class="getStatusColor(props.emergency.status)">
@@ -187,7 +203,8 @@ async function addTextToClipboard(text: string) {
                         <li
                             class="
                                 relative flex w-full items-center
-                                after:mx-6 after:inline-block after:w-full after:border after:border-b-2 after:border-primary-600 after:content-['']
+                                after:mx-3 after:inline-block after:w-full after:border after:border-b-2 after:border-primary-600 after:content-['']
+                                md:after:mx-6
                             "
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
@@ -200,7 +217,8 @@ async function addTextToClipboard(text: string) {
                             <p
                                 v-if="props.emergency.acceptedOn || props.emergency.completedOn"
                                 class="
-                                    absolute left-1/2 ml-3 -translate-1/2 transform font-semibold text-gray-900
+                                    absolute left-1/2 ml-3 -translate-1/2 transform text-xs font-semibold text-gray-900
+                                    sm:text-sm
                                     dark:text-white
                                 "
                             >
@@ -216,7 +234,8 @@ async function addTextToClipboard(text: string) {
                             v-if="props.emergency.acceptedOn"
                             class="
                                 relative flex w-full items-center
-                                after:mx-6 after:inline-block after:w-full after:border after:border-b-2 after:border-primary-600 after:content-['']
+                                after:mx-3 after:inline-block after:w-full after:border after:border-b-2 after:border-primary-600 after:content-['']
+                                md:after:mx-6
                             "
                         >
                             <div class="rounded-full bg-primary-100 p-2 text-primary-600">
@@ -229,7 +248,8 @@ async function addTextToClipboard(text: string) {
                             <p
                                 v-if="props.emergency.completedOn"
                                 class="
-                                    absolute left-1/2 ml-3 -translate-1/2 transform font-semibold text-gray-900
+                                    absolute left-1/2 ml-3 -translate-1/2 transform text-xs font-semibold text-gray-900
+                                    sm:text-sm
                                     dark:text-white
                                 "
                             >

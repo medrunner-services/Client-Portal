@@ -11,6 +11,7 @@ import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
+import { Breakpoint, useBreakpoint } from "@/composables/breakpoints.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
@@ -21,6 +22,7 @@ const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
 const alertStore = useAlertStore();
 const { t } = useI18n();
+const currentBreakpoint = useBreakpoint();
 
 const parentRowsDiv = ref<HTMLDivElement | null>(null);
 
@@ -105,7 +107,12 @@ const isLastPageHistory = computed(() => {
 });
 
 const heightLoader = computed(() => {
-    return `${45 * pageSize.value}px`;
+    if (currentBreakpoint.value >= Breakpoint.MD) {
+        return `${45 * pageSize.value}px`;
+    }
+    else {
+        return `${77 * pageSize.value}px`;
+    }
 });
 
 async function bulkLoadEmergencies(history: ClientHistory[]): Promise<Emergency[]> {
@@ -188,34 +195,39 @@ async function nextPage(): Promise<void> {
                 >
                     <div
                         class="
-                            grid grid-cols-7 rounded-t-lg bg-gray-50 py-3 font-Mohave font-semibold text-gray-500 uppercase
-                            md:grid-cols-10
+                            grid grid-cols-12 rounded-t-lg bg-gray-50 py-3 font-Mohave font-semibold text-gray-500 uppercase
+                            md:grid-cols-24
                             dark:bg-gray-700 dark:text-gray-400
                         "
                     >
                         <div
                             class="
-                                col-span-4 col-start-2
-                                md:col-span-3 md:col-start-2
+                                col-span-7 col-start-2 pl-1
+                                md:col-span-10 md:col-start-3
                             "
                         >
                             {{ t("history_emergencyName") }}
                         </div>
-                        <div class="col-span-2">
+                        <div
+                            class="
+                                col-span-2 hidden
+                                md:col-span-4 md:block
+                            "
+                        >
                             {{ t("history_date") }}
                         </div>
                         <div
                             class="
                                 col-span-2 hidden
-                                md:block
+                                md:col-span-4 md:block
                             "
                         >
                             {{ t("history_location") }}
                         </div>
                         <div
                             class="
-                                col-span-2 hidden
-                                md:block
+                                col-span-4 mr-2 justify-self-end
+                                md:col-span-4 md:mr-0 md:justify-self-auto
                             "
                         >
                             {{ t("history_status") }}
@@ -235,7 +247,12 @@ async function nextPage(): Promise<void> {
                     </div>
                 </div>
             </div>
-            <div class="flex items-center justify-between p-4">
+            <div
+                class="
+                    flex items-center justify-between p-2
+                    md:p-4
+                "
+            >
                 <div
                     class="
                         flex items-center text-xs
@@ -253,6 +270,7 @@ async function nextPage(): Promise<void> {
                     </p>
                     <GlobalSelectInput
                         v-model="pageSize"
+                        input-size="small"
                         :options="[{ value: 5 }, { value: 10 }, { value: 20 }, { value: 30 }, { value: 50 }, { value: 75 }, { value: 100 }]"
                     />
                     <div
@@ -264,7 +282,8 @@ async function nextPage(): Promise<void> {
                     >
                         <p
                             class="
-                                text-sm font-normal text-gray-500
+                                text-xs font-normal text-gray-500
+                                md:text-sm
                                 dark:text-gray-400
                             "
                         >
@@ -301,9 +320,9 @@ async function nextPage(): Promise<void> {
                         <button :disabled="!loaded" @click="previousPage()">
                             <span
                                 class="
-                                    ml-0 flex h-full w-20 cursor-pointer items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-500 select-none
+                                    ml-0 flex h-full w-16 cursor-pointer items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-xs/tight text-gray-500 select-none
                                     hover:bg-gray-100
-                                    md:w-24
+                                    md:w-24 md:text-sm
                                     dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400
                                     dark:hover:bg-gray-700
                                 "
@@ -321,9 +340,9 @@ async function nextPage(): Promise<void> {
                         <button :disabled="!loaded" @click="nextPage()">
                             <span
                                 class="
-                                    flex h-full w-20 cursor-pointer items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-sm/tight text-gray-500 select-none
+                                    flex h-full w-16 cursor-pointer items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 text-xs/tight text-gray-500 select-none
                                     hover:bg-gray-100
-                                    md:w-24
+                                    md:w-24 md:text-sm
                                     dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400
                                     dark:hover:bg-gray-700
                                 "
