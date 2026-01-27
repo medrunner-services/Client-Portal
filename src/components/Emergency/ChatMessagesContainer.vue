@@ -245,7 +245,7 @@ function messageClasses(message: TrackedChatMessageItem, messageIndex: number): 
                     dark:prose-invert dark:text-white
                 "
                 :class="[
-                    { 'markdown-extras text-right prose-invert': isMessageAuthor(message.senderId) },
+                    { 'markdown-extras prose-invert': isMessageAuthor(message.senderId) },
                     { 'text-gray-900 italic': message.deleted },
                 ]"
                 v-html="
