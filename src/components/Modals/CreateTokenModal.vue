@@ -228,7 +228,6 @@ async function createToken() {
                     :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
                 />
 
-                <!--  TODO: localization  -->
                 <div class="mt-4">
                     <GlobalCheckbox v-model="inputRulesCheckbox" :center-checkbox="false" :required="true">
                         <div>
