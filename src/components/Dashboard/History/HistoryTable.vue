@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ClientHistory, Emergency } from "@medrunner/api-client";
+import type { Emergency } from "@medrunner/api-client";
 import type { WebSocketMessage } from "@/@types/types.ts";
 import { MissionStatus } from "@medrunner/api-client";
 import { computed, onMounted, ref, watch } from "vue";
@@ -29,7 +29,9 @@ const parentRowsDiv = ref<HTMLDivElement | null>(null);
 const activePage = ref<Emergency[]>([]);
 const pageSize = ref(Number.parseInt(localStorage.getItem(LocalStorageItems.SELECTED_PAGE_SIZE) ?? "10") ?? 10);
 const page = ref(0);
+const totalFetchedEmergencies = ref(0);
 const paginationToken = ref<string | undefined>();
+const ascendingOrder = ref(false);
 
 const loadedHistory = ref<Emergency[]>([]);
 const errorLoadingHistory = ref("");
@@ -90,10 +92,7 @@ onMounted(async () => {
 
 watch(pageSize, async (newPageSize, oldPageSize) => {
     if (loadedHistory.value.length < newPageSize && loadedHistory.value.length >= oldPageSize) {
-        loaded.value = false;
-        loadedHistory.value = [];
-        paginationToken.value = undefined;
-        await loadHistory();
+        await reloadHistory();
     }
     else {
         setActivePageFromCache(0);
@@ -115,9 +114,12 @@ const heightLoader = computed(() => {
     }
 });
 
-async function bulkLoadEmergencies(history: ClientHistory[]): Promise<Emergency[]> {
-    const historyArray = history.map(h => h.emergencyId);
-    return await emergencyStore.fetchEmergencies(historyArray);
+async function reloadHistory() {
+    loaded.value = false;
+    loadedHistory.value = [];
+    paginationToken.value = undefined;
+    page.value = 0;
+    await loadHistory();
 }
 
 function setActivePageFromCache(startIndex: number) {
@@ -129,13 +131,13 @@ async function loadHistory() {
     errorLoadingHistory.value = "";
 
     try {
-        const historyResponse = await userStore.fetchUserEmergencyHistory(pageSize.value, paginationToken.value);
+        const historyResponse = await userStore.fetchUserClientEmergencyHistory(pageSize.value, paginationToken.value, ascendingOrder.value);
 
         if (historyResponse.data.length > 0) {
             paginationToken.value = historyResponse.paginationToken;
-            const emergencies = await bulkLoadEmergencies(historyResponse.data);
+            totalFetchedEmergencies.value = historyResponse.totalCount;
 
-            loadedHistory.value.push(...emergencies);
+            loadedHistory.value.push(...historyResponse.data);
             setActivePageFromCache(0);
         }
     }
@@ -176,6 +178,12 @@ async function previousPage(): Promise<void> {
 async function nextPage(): Promise<void> {
     await loadDataForPage(1);
 }
+
+async function toggleOrder(): Promise<void> {
+    ascendingOrder.value = !ascendingOrder.value;
+
+    await reloadHistory();
+}
 </script>
 
 <template>
@@ -210,11 +218,30 @@ async function nextPage(): Promise<void> {
                         </div>
                         <div
                             class="
-                                col-span-2 hidden
-                                md:col-span-4 md:block
+                                col-span-2 hidden items-center justify-between pr-2
+                                md:col-span-4 md:flex md:pr-4
                             "
                         >
-                            {{ t("history_date") }}
+                            <p>{{ t("history_date") }}</p>
+                            <div class="flex items-center justify-between gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                                </svg>
+
+                                <svg
+                                    v-if="!ascendingOrder"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20" fill="currentColor" class="size-4 cursor-pointer" @click="toggleOrder()"
+                                >
+                                    <path fill-rule="evenodd" d="M2.24 6.8a.75.75 0 0 0 1.06-.04l1.95-2.1v8.59a.75.75 0 0 0 1.5 0V4.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L2.2 5.74a.75.75 0 0 0 .04 1.06Zm8 6.4a.75.75 0 0 0-.04 1.06l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75a.75.75 0 0 0-1.5 0v8.59l-1.95-2.1a.75.75 0 0 0-1.06-.04Z" clip-rule="evenodd" />
+                                </svg>
+                                <svg
+                                    v-else
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="mr-0.5 size-3.5 cursor-pointer text-gray-900" @click="toggleOrder()"
+                                >>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                                </svg>
+                            </div>
                         </div>
                         <div
                             class="
@@ -226,11 +253,36 @@ async function nextPage(): Promise<void> {
                         </div>
                         <div
                             class="
-                                col-span-4 mr-2 justify-self-end
-                                md:col-span-4 md:mr-0 md:justify-self-auto
+                                col-span-4 mr-2 flex items-center justify-between gap-4 justify-self-end
+                                md:col-span-4 md:mr-0 md:gap-0 md:justify-self-auto md:pr-4
                             "
                         >
-                            {{ t("history_status") }}
+                            <p>{{ t("history_status") }}</p>
+                            <div class="flex items-center justify-between gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                                </svg>
+
+                                <svg
+                                    v-if="!ascendingOrder"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20" fill="currentColor" class="
+                                        size-4 cursor-pointer
+                                        md:hidden
+                                    " @click="toggleOrder()"
+                                >
+                                    <path fill-rule="evenodd" d="M2.24 6.8a.75.75 0 0 0 1.06-.04l1.95-2.1v8.59a.75.75 0 0 0 1.5 0V4.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L2.2 5.74a.75.75 0 0 0 .04 1.06Zm8 6.4a.75.75 0 0 0-.04 1.06l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75a.75.75 0 0 0-1.5 0v8.59l-1.95-2.1a.75.75 0 0 0-1.06-.04Z" clip-rule="evenodd" />
+                                </svg>
+                                <svg
+                                    v-else
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="
+                                        mr-0.5 size-3.5 cursor-pointer text-gray-900
+                                        md:hidden
+                                    " @click="toggleOrder()"
+                                >>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                     <div v-if="errorLoadingHistory" class="flex h-[14.063rem] w-full items-center justify-center">
@@ -298,9 +350,9 @@ async function nextPage(): Promise<void> {
                                     : page * pageSize + activePage.length
                             }}</span>
                                 <span v-else-if="activePage.length === 0">0</span>
-                                <span v-else-if="userStore.totalNumberOfEmergencies >= loadedHistory.length">{{
-                                    page * pageSize + activePage.length > userStore.totalNumberOfEmergencies
-                                        ? userStore.totalNumberOfEmergencies
+                                <span v-else-if="totalFetchedEmergencies >= loadedHistory.length">{{
+                                    page * pageSize + activePage.length > totalFetchedEmergencies
+                                        ? totalFetchedEmergencies
                                         : page * pageSize + activePage.length
                                 }}</span><span v-else>{{ page * pageSize + activePage.length }}</span></span>
                             {{ t("history_of") }}
@@ -310,7 +362,7 @@ async function nextPage(): Promise<void> {
                                     dark:text-white
                                 "
                             >{{
-                                userStore.totalNumberOfEmergencies >= loadedHistory.length ? userStore.totalNumberOfEmergencies : loadedHistory.length
+                                totalFetchedEmergencies
                             }}</span>
                         </p>
                     </div>

@@ -2,6 +2,8 @@ import type {
     ApiToken,
     BlockedStatus,
     ClientHistory,
+    Emergency,
+    MissionStatus,
     PaginatedResponse,
     Person,
     PromotionalCode,
@@ -104,6 +106,17 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function fetchUserClientEmergencyHistory(limit: number = 20, paginationToken?: string, ascending?: boolean, status?: MissionStatus[], startDate?: string, endDate?: string): Promise<PaginatedResponse<Emergency>> {
+        const response = await api.emergency.getClientEmergencies(status, startDate, endDate, ascending, limit, paginationToken);
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+        else {
+            throw response;
+        }
+    }
+
     async function fetchUserApiTokens(): Promise<ApiToken[]> {
         const response = await api.auth.getApiTokens();
 
@@ -189,6 +202,7 @@ export const useUserStore = defineStore("user", () => {
         fetchUser,
         fetchUserBlocklistStatus,
         fetchUserEmergencyHistory,
+        fetchUserClientEmergencyHistory,
         fetchUserApiTokens,
         createApiToken,
         deleteApiToken,
