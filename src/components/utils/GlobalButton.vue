@@ -12,6 +12,7 @@ export interface Props {
     outlineBorderColor?: string;
     outlineTextColor?: string;
     outlineHoverColor?: string;
+    textSize?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -24,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
     outlineBorderColor: "border-primary-600 dark:border-red-700",
     outlineTextColor: "text-primary-600 dark:text-red-700",
     outlineHoverColor: "hover:bg-gray-50 dark:hover:bg-gray-800",
+    textSize: "text-sm",
 });
 
 const { t } = useI18n();
@@ -34,7 +36,7 @@ const { t } = useI18n();
         <button
             :type="props.submit ? 'submit' : 'button'"
             class="
-                flex cursor-pointer items-center justify-center rounded-lg border p-2.5 text-sm font-medium
+                flex cursor-pointer items-center justify-center rounded-lg border p-2.5 font-medium
                 focus:outline-hidden
                 disabled:cursor-not-allowed disabled:opacity-50 disabled:select-none
                 sm:px-5
@@ -49,6 +51,7 @@ const { t } = useI18n();
                 [props.outlineHoverColor]: props.type === 'outline-solid',
                 'cursor-progress': props.loading,
                 'w-full': props.size === 'full',
+                [props.textSize]: true,
             }"
             :disabled="props.loading || props.disabled"
         >

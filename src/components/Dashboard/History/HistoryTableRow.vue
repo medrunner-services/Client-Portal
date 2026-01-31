@@ -8,7 +8,13 @@ import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 import { getTimeDifferenceString } from "@/utils/functions/dateTimeFunctions.ts";
-import { getCancelReasonString, getRatingString, getStatusString, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
+import {
+    getCancelReasonString,
+    getRatingString,
+    getStatusColor,
+    getStatusString,
+    getThreatString,
+} from "@/utils/functions/getStringsFunctions.ts";
 
 const props = defineProps<{
     parentDiv: HTMLDivElement | null;
@@ -65,29 +71,6 @@ const teamLeader = computed(() => {
         return "";
     }
 });
-
-function getStatusColor(id: MissionStatus): string {
-    switch (id) {
-        case MissionStatus.SUCCESS:
-            return "bg-emerald-100 text-emerald-800";
-        case MissionStatus.FAILED:
-            return "bg-red-100 text-red-800";
-        case MissionStatus.NO_CONTACT:
-            return "bg-blue-100 text-blue-800";
-        case MissionStatus.CANCELED:
-            return "bg-orange-100 text-orange-800";
-        case MissionStatus.REFUSED:
-            return "bg-violet-100 text-violet-800";
-        case MissionStatus.ABORTED:
-            return "bg-teal-100 text-teal-800";
-        case MissionStatus.SERVER_ERROR:
-            return "bg-pink-100 text-pink-800";
-        case MissionStatus.CREATED || MissionStatus.RECEIVED || MissionStatus.IN_PROGRESS:
-            return "bg-slate-100 text-slate-800";
-        default:
-            return "bg-gray-100 text-gray-800";
-    }
-}
 
 async function addTextToClipboard(text: string) {
     await navigator.clipboard.writeText(text);

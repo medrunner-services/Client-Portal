@@ -229,7 +229,7 @@ async function createToken() {
                 />
 
                 <div class="mt-4">
-                    <GlobalCheckbox v-model="inputRulesCheckbox" :center-checkbox="false" :required="true">
+                    <GlobalCheckbox v-model="inputRulesCheckbox" :center-checkbox="false" :required="true" class="mb-4">
                         <div>
                             <p>I agree with the following rules:</p>
                             <ul class="mt-1 list-disc pl-3 font-normal">

@@ -32,7 +32,7 @@ const value = computed({
 <template>
     <div>
         <div class="flex flex-row">
-            <div class="mb-4 flex" :class="props.centerCheckbox ? 'items-center' : ''">
+            <div class="flex" :class="props.centerCheckbox ? 'items-center' : ''">
                 <input
                     v-model="value"
                     type="checkbox"

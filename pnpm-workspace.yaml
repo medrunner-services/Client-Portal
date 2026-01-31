@@ -1,3 +1,4 @@
-shamefullyHoist: true
 onlyBuiltDependencies:
   - esbuild
+
+shamefullyHoist: true

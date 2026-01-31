@@ -2,16 +2,19 @@
 import type { Emergency } from "@medrunner/api-client";
 import type { WebSocketMessage } from "@/@types/types.ts";
 import { MissionStatus } from "@medrunner/api-client";
-import { computed, onMounted, ref, watch } from "vue";
-
+import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { AlertColors, LocalStorageItems } from "@/@types/types.ts";
+import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.vue";
+import HistoryStatusFilter from "@/components/Dashboard/History/HistoryStatusFilter.vue";
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
+import HistoryMobileFiltersModal from "@/components/Modals/HistoryMobileFiltersModal.vue";
 import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { Breakpoint, useBreakpoint } from "@/composables/breakpoints.ts";
+import { useClickOutside } from "@/composables/clickOutside.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
@@ -31,12 +34,24 @@ const pageSize = ref(Number.parseInt(localStorage.getItem(LocalStorageItems.SELE
 const page = ref(0);
 const totalFetchedEmergencies = ref(0);
 const paginationToken = ref<string | undefined>();
-const ascendingOrder = ref(false);
 
 const loadedHistory = ref<Emergency[]>([]);
 const errorLoadingHistory = ref("");
 const loaded = ref(false);
 const displayWarningNoContactModal = ref(false);
+
+const ascendingOrder = ref(false);
+const showStatusFilter = ref(false);
+const statusFilterRef = useTemplateRef("statusFilterRef");
+const filteredStatuses = ref<MissionStatus[]>(Object.values(MissionStatus).filter(value => typeof value === "number"));
+const showDateFilter = ref(false);
+const dateFilterRef = useTemplateRef("dateFilterRef");
+const filterStartDate = ref<string>("");
+const filterEndDate = ref<string>("");
+const displayMobileFilterModal = ref(false);
+
+useClickOutside(statusFilterRef, () => showStatusFilter.value = false);
+useClickOutside(dateFilterRef, () => showDateFilter.value = false);
 
 onMounted(async () => {
     await loadHistory();
@@ -131,7 +146,7 @@ async function loadHistory() {
     errorLoadingHistory.value = "";
 
     try {
-        const historyResponse = await userStore.fetchUserClientEmergencyHistory(pageSize.value, paginationToken.value, ascendingOrder.value);
+        const historyResponse = await userStore.fetchUserClientEmergencyHistory(pageSize.value, paginationToken.value, ascendingOrder.value, filteredStatuses.value, filterStartDate.value?.toString(), filterEndDate.value?.toString());
 
         if (historyResponse.data.length > 0) {
             paginationToken.value = historyResponse.paginationToken;
@@ -184,6 +199,29 @@ async function toggleOrder(): Promise<void> {
 
     await reloadHistory();
 }
+
+async function updateStatusFilter(newStatus: MissionStatus[]): Promise<void> {
+    displayMobileFilterModal.value = false;
+    showStatusFilter.value = false;
+    filteredStatuses.value = newStatus;
+
+    await reloadHistory();
+}
+
+async function updateDateFilter(newStartDate: string, newEndDate: string): Promise<void> {
+    displayMobileFilterModal.value = false;
+    showDateFilter.value = false;
+    filterStartDate.value = newStartDate;
+    filterEndDate.value = newEndDate;
+
+    await reloadHistory();
+}
+
+function handleFilterClick() {
+    if (currentBreakpoint.value >= Breakpoint.MD)
+        showStatusFilter.value = !showStatusFilter.value;
+    else displayMobileFilterModal.value = true;
+}
 </script>
 
 <template>
@@ -223,10 +261,28 @@ async function toggleOrder(): Promise<void> {
                             "
                         >
                             <p>{{ t("history_date") }}</p>
-                            <div class="flex items-center justify-between gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer">
+                            <div class="relative flex items-center justify-between gap-1">
+                                <svg v-if="filterStartDate || filterEndDate" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 cursor-pointer text-gray-900" @click="showDateFilter = !showDateFilter">
+                                    <path fill-rule="evenodd" d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z" clip-rule="evenodd" />
+                                </svg>
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer" @click="showDateFilter = !showDateFilter">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                                 </svg>
+
+                                <div
+                                    v-if="showDateFilter"
+                                    ref="dateFilterRef"
+                                    class="
+                                        absolute top-6 -left-2 z-50 w-44 rounded-lg border border-gray-200 bg-gray-50 p-3 shadow-md
+                                        dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900
+                                    "
+                                >
+                                    <HistoryDateFilter
+                                        :current-start="filterStartDate"
+                                        :current-end="filterEndDate"
+                                        @update-filter="(start, end) => updateDateFilter(start, end)"
+                                    />
+                                </div>
 
                                 <svg
                                     v-if="!ascendingOrder"
@@ -258,8 +314,15 @@ async function toggleOrder(): Promise<void> {
                             "
                         >
                             <p>{{ t("history_status") }}</p>
-                            <div class="flex items-center justify-between gap-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer">
+                            <div class="relative flex items-center justify-between gap-1">
+                                <svg
+                                    v-if="filteredStatuses.length < 10 || (currentBreakpoint <= Breakpoint.MD && (filterStartDate || filterEndDate))" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="
+                                        size-4 cursor-pointer text-gray-900
+                                    " @click="handleFilterClick()"
+                                >
+                                    <path fill-rule="evenodd" d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z" clip-rule="evenodd" />
+                                </svg>
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer" @click="handleFilterClick()">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
                                 </svg>
 
@@ -282,6 +345,21 @@ async function toggleOrder(): Promise<void> {
                                 >>
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
                                 </svg>
+
+                                <div
+                                    v-if="showStatusFilter"
+                                    ref="statusFilterRef"
+                                    class="
+                                        absolute top-6 -right-2 z-50 w-36 rounded-lg border border-gray-200 bg-gray-50 p-3 shadow-md
+                                        xl:right-auto xl:-left-2
+                                        dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900
+                                    "
+                                >
+                                    <HistoryStatusFilter
+                                        :current-status="filteredStatuses"
+                                        @update-filter="(newStatus) => updateStatusFilter(newStatus)"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -416,6 +494,17 @@ async function toggleOrder(): Promise<void> {
             </div>
         </div>
 
+        <HistoryMobileFiltersModal
+            v-if="displayMobileFilterModal"
+            :current-start="filterStartDate"
+            :current-end="filterEndDate"
+            :current-status="filteredStatuses"
+            @update-status-filter="newStatus => updateStatusFilter(newStatus)"
+            @update-date-filter="(start, end) => updateDateFilter(start, end)"
+            @close="displayMobileFilterModal = false"
+        />
+
+        <!--    TODO: fix this that appears when using the No Contact filter    -->
         <WarningNoContactModal
             v-if="displayWarningNoContactModal"
             :emergency-id="loadedHistory[0].id"

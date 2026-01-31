@@ -49,7 +49,7 @@ async function confirmRules() {
                 }}
             </p>
 
-            <GlobalCheckbox v-model="checkboxValue" class="mt-8">
+            <GlobalCheckbox v-model="checkboxValue" class="mt-8 mb-4">
                 {{ t("tracking_emergencyRulesModalHideLater") }}
             </GlobalCheckbox>
 
