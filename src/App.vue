@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { MissionStatus } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { RouterView, useRoute, useRouter } from "vue-router";
 
+import { RouterView, useRoute, useRouter } from "vue-router";
 import { WSState } from "@/@types/types.ts";
 import GlobalFooter from "@/components/GlobalFooter.vue";
 import NotificationPermissionModal from "@/components/Modals/NotificationPermissionModal.vue";
+import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import AlertBanner from "@/components/Navbar/AlertBanner.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalAlert from "@/components/utils/GlobalAlert.vue";
@@ -13,6 +15,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
+import { useUserStore } from "@/stores/userStore";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 
 const route = useRoute();
@@ -20,9 +23,12 @@ const router = useRouter();
 const { t } = useI18n();
 const alertStore = useAlertStore();
 const logicStore = useLogicStore();
+const userStore = useUserStore();
 
 const isLoadingPage = ref(true);
 const errorLoadingPage = ref(false);
+const displayWarningNoContactModal = ref(false);
+const warningEmergencyID = ref("");
 
 onMounted(async () => {
     isLoadingPage.value = true;
@@ -36,6 +42,8 @@ onMounted(async () => {
     finally {
         isLoadingPage.value = false;
     }
+
+    await checkWarningEmergency();
 });
 
 const showMOTDAlertBanner = computed(() => {
@@ -64,6 +72,19 @@ const getWSAlertBannerMessage = computed(() => {
 function reloadPage() {
     void stopWebsocket();
     window.location.reload();
+}
+
+async function checkWarningEmergency() {
+    const lastConfirmedEmergencyWarning = userStore.syncedSettings.lastConfirmedWarningId;
+    const warningEmergency = await userStore.fetchUserClientEmergencyHistory(1, undefined, undefined, [MissionStatus.NO_CONTACT]);
+
+    if (
+        warningEmergency.data.length > 0
+        && warningEmergency.data[0].id !== lastConfirmedEmergencyWarning
+    ) {
+        warningEmergencyID.value = warningEmergency.data[0].id;
+        displayWarningNoContactModal.value = true;
+    }
 }
 </script>
 
@@ -140,6 +161,12 @@ function reloadPage() {
         </div>
 
         <NotificationPermissionModal v-if="logicStore.showNotificationPermissionModal" @close="logicStore.showNotificationPermissionModal = false" />
+
+        <WarningNoContactModal
+            v-if="displayWarningNoContactModal"
+            :emergency-id="warningEmergencyID"
+            @close="displayWarningNoContactModal = false"
+        />
     </div>
 </template>
 

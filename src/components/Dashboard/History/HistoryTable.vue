@@ -9,7 +9,6 @@ import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.
 import HistoryStatusFilter from "@/components/Dashboard/History/HistoryStatusFilter.vue";
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
 import HistoryMobileFiltersModal from "@/components/Modals/HistoryMobileFiltersModal.vue";
-import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
@@ -38,7 +37,6 @@ const paginationToken = ref<string | undefined>();
 const loadedHistory = ref<Emergency[]>([]);
 const errorLoadingHistory = ref("");
 const loaded = ref(false);
-const displayWarningNoContactModal = ref(false);
 
 const ascendingOrder = ref(false);
 const showStatusFilter = ref(false);
@@ -57,16 +55,6 @@ onMounted(async () => {
     await loadHistory();
     activePage.value = [...loadedHistory.value];
     loaded.value = true;
-
-    const lastConfirmedEmergencyWarning = userStore.syncedSettings.lastConfirmedWarningId;
-
-    if (
-        loadedHistory.value.length > 0
-        && loadedHistory.value[0].status === MissionStatus.NO_CONTACT
-        && loadedHistory.value[0].id !== lastConfirmedEmergencyWarning
-    ) {
-        displayWarningNoContactModal.value = true;
-    }
 
     ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
         try {
@@ -502,13 +490,6 @@ function handleFilterClick() {
             @update-status-filter="newStatus => updateStatusFilter(newStatus)"
             @update-date-filter="(start, end) => updateDateFilter(start, end)"
             @close="displayMobileFilterModal = false"
-        />
-
-        <!--    TODO: fix this that appears when using the No Contact filter    -->
-        <WarningNoContactModal
-            v-if="displayWarningNoContactModal"
-            :emergency-id="loadedHistory[0].id"
-            @close="displayWarningNoContactModal = false"
         />
     </div>
 </template>
