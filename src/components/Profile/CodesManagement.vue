@@ -18,7 +18,8 @@ const errorLoadingCodes = ref("");
 onMounted(async () => {
     loadingCodes.value = true;
     try {
-        userStore.redeemedCodes = await fetchAllPaginatedResponse(userStore.fetchUserRedeemedCodes);
+        const response = await fetchAllPaginatedResponse(userStore.fetchUserRedeemedCodes);
+        userStore.redeemedCodes = response.data;
     }
     catch (error: any) {
         errorLoadingCodes.value = errorString(error.statusCode);

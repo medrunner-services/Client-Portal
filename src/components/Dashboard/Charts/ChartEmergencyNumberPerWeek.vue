@@ -16,6 +16,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { fetchAllPaginatedResponse } from "@/utils/functions/fetchFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
@@ -24,9 +25,32 @@ const { t, locale } = useI18n();
 use([TooltipComponent, GridComponent, LineChart, SVGRenderer]);
 
 type ChartOptions = ComposeOption<TooltipComponentOption | GridComponentOption | LineSeriesOption>;
+type GroupingMode = "daily" | "weekly" | "monthly";
 
 const daySelect = ref(7);
 const loading = ref(false);
+const isAnimationEnabled = ref(true);
+
+const groupingMode = computed<GroupingMode>(() => {
+    if (daySelect.value < 60)
+        return "daily";
+    if (daySelect.value < 180)
+        return "weekly";
+    return "monthly";
+});
+
+const getChartTitle = computed(() => {
+    switch (groupingMode.value) {
+        case "daily":
+            return t("home_emergenciesPerDay");
+        case "weekly":
+            return t("home_emergenciesPerWeek");
+        case "monthly":
+            return t("home_emergenciesPerMonth");
+        default:
+            return t("home_emergenciesPerDay");
+    }
+});
 
 const initOptions: EChartsInitOpts = {
     locale: locale.value,
@@ -43,6 +67,9 @@ const loadingOptions: EchartLoadingOptions = {
 const chartOptions = ref<ChartOptions>({
     color: ["#AA0000"],
     backgroundColor: "transparent",
+    stateAnimation: {
+        duration: 0,
+    },
     grid: {
         left: 0,
         right: 0,
@@ -107,15 +134,12 @@ const chartOptions = ref<ChartOptions>({
     },
 });
 
-const emergenciesPerDay = ref<number[]>([]);
+const emergenciesPerPeriod = ref<number[]>([]);
 const dateLabels = ref<string[]>([]);
 const errorLoading = ref("");
+const totalNumberOfEmergencies = ref(0);
 
 const oldestDateNeeded = ref(new Date());
-
-const totalNumberOfEmergencies = computed(() => {
-    return emergenciesPerDay.value.reduce((sum, current) => sum + current, 0);
-});
 
 onMounted(async () => {
     await fetchMissionsForPeriod();
@@ -132,7 +156,12 @@ watch(locale, () => {
 
 function updateChartSeries() {
     if (chartOptions.value.series && !Array.isArray(chartOptions.value.series)) {
-        chartOptions.value.series.data = emergenciesPerDay.value;
+        if (!isAnimationEnabled.value) {
+            chartOptions.value.series.animation = false;
+        }
+        isAnimationEnabled.value = false;
+
+        chartOptions.value.series.data = emergenciesPerPeriod.value;
         chartOptions.value.series.name = t("home_emergencies");
     }
 
@@ -142,39 +171,90 @@ function updateChartSeries() {
     }
 }
 
-function isWithinLastPeriod(timestamp: string) {
-    const date = new Date(timestamp);
-    return date >= oldestDateNeeded.value;
-}
+function getNumberOfPeriods(): number {
+    const mode = groupingMode.value;
 
-function initializeMissionsPerDay() {
-    for (let i = 0; i < daySelect.value; i++) {
-        emergenciesPerDay.value.push(0);
+    if (mode === "daily") {
+        return daySelect.value;
+    }
+    else if (mode === "weekly") {
+        return Math.ceil(daySelect.value / 7);
+    }
+    else {
+        return Math.ceil(daySelect.value / 30);
     }
 }
 
-function incrementDayCount(timestamp: string) {
-    const emergencyDate = new Date(timestamp);
-    emergencyDate.setHours(0, 0, 0, 0);
-
+function getPeriodStartDate(periodIndex: number): Date {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const mode = groupingMode.value;
 
-    const dayDifference = Math.ceil(Math.abs(today.getTime() - emergencyDate.getTime()) / (1000 * 3600 * 24));
-    if (dayDifference < daySelect.value) {
-        emergenciesPerDay.value[dayDifference]++;
+    if (mode === "daily") {
+        const date = new Date(today);
+        date.setDate(date.getDate() - periodIndex);
+        return date;
+    }
+    else if (mode === "weekly") {
+        const date = new Date(today);
+        date.setDate(date.getDate() - (periodIndex * 7));
+        return date;
+    }
+    else {
+        const date = new Date(today);
+        date.setMonth(date.getMonth() - periodIndex);
+        return date;
+    }
+}
+
+function getPeriodIndexForDate(emergencyDate: Date): number {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    emergencyDate.setHours(0, 0, 0, 0);
+
+    const mode = groupingMode.value;
+    const dayDifference = Math.ceil((today.getTime() - emergencyDate.getTime()) / (1000 * 3600 * 24));
+
+    if (mode === "daily") {
+        return dayDifference;
+    }
+    else if (mode === "weekly") {
+        return Math.floor(dayDifference / 7);
+    }
+    else {
+        return (today.getFullYear() - emergencyDate.getFullYear()) * 12
+            + (today.getMonth() - emergencyDate.getMonth());
     }
 }
 
 function generateDateLabels() {
     const labels = [];
-    const today = new Date();
+    const numPeriods = getNumberOfPeriods();
+    const mode = groupingMode.value;
 
-    for (let i = daySelect.value - 1; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
+    for (let i = numPeriods - 1; i >= 0; i--) {
+        const date = getPeriodStartDate(i);
 
-        if (daySelect.value < 360) {
+        if (mode === "daily") {
+            if (daySelect.value < 360) {
+                labels.push(
+                    date.toLocaleDateString(locale.value, {
+                        month: "2-digit",
+                        day: "2-digit",
+                    }),
+                );
+            }
+            else {
+                labels.push(
+                    date.toLocaleDateString(locale.value, {
+                        month: "2-digit",
+                        day: "2-digit",
+                        year: "numeric",
+                    }),
+                );
+            }
+        }
+        else if (mode === "weekly") {
             labels.push(
                 date.toLocaleDateString(locale.value, {
                     month: "2-digit",
@@ -185,8 +265,7 @@ function generateDateLabels() {
         else {
             labels.push(
                 date.toLocaleDateString(locale.value, {
-                    month: "2-digit",
-                    day: "2-digit",
+                    month: "short",
                     year: "numeric",
                 }),
             );
@@ -196,33 +275,41 @@ function generateDateLabels() {
     dateLabels.value = labels;
 }
 
+function initializePeriodsData() {
+    const numPeriods = getNumberOfPeriods();
+    emergenciesPerPeriod.value = Array.from({ length: numPeriods }, () => 0);
+}
+
+function incrementPeriodCount(timestamp: string) {
+    const emergencyDate = new Date(timestamp);
+    const periodIndex = getPeriodIndexForDate(emergencyDate);
+    const numPeriods = getNumberOfPeriods();
+
+    if (periodIndex >= 0 && periodIndex < numPeriods) {
+        emergenciesPerPeriod.value[periodIndex]++;
+    }
+}
+
 async function fetchMissionsForPeriod() {
     errorLoading.value = "";
     loading.value = true;
 
-    let paginationToken;
-    const limit = 50;
-
     oldestDateNeeded.value.setDate(oldestDateNeeded.value.getDate() - daySelect.value);
-    initializeMissionsPerDay();
+    initializePeriodsData();
 
     try {
-        do {
-            const response = await userStore.fetchUserEmergencyHistory(limit, paginationToken);
-            const recentEmergencies = response.data.filter(emergency => isWithinLastPeriod(emergency.created));
+        const recentEmergencies = await fetchAllPaginatedResponse(
+            userStore.fetchUserClientEmergencyHistory,
+            undefined,
+            undefined,
+            oldestDateNeeded.value.toISOString(),
+            new Date().toISOString(),
+        );
 
-            recentEmergencies.forEach(emergency => incrementDayCount(emergency.created));
+        totalNumberOfEmergencies.value = recentEmergencies.totalCount;
+        recentEmergencies.data.forEach(emergency => incrementPeriodCount(emergency.created));
 
-            if (recentEmergencies.length > 0) {
-                const oldestFetchedEmergencyTimestamp = response.data[response.data.length - 1].created;
-                paginationToken = isWithinLastPeriod(oldestFetchedEmergencyTimestamp) ? response.paginationToken : undefined;
-            }
-            else {
-                paginationToken = undefined;
-            }
-        } while (paginationToken);
-
-        emergenciesPerDay.value.reverse();
+        emergenciesPerPeriod.value.reverse();
     }
     catch (error: any) {
         errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
@@ -233,7 +320,7 @@ async function fetchMissionsForPeriod() {
 }
 
 async function changePeriod() {
-    emergenciesPerDay.value = [];
+    emergenciesPerPeriod.value = [];
     oldestDateNeeded.value = new Date();
     dateLabels.value = [];
 
@@ -251,9 +338,10 @@ async function changePeriod() {
         </div>
 
         <div v-else>
+            <!--  TODO: Add a range date selector (limit to a year back) alongside the pre-defined day selector  -->
             <div class="flex items-center justify-between">
                 <p class="font-Mohave text-2xl font-semibold uppercase">
-                    {{ t("home_emergencies") }}
+                    {{ getChartTitle }}
                 </p>
                 <GlobalSelectInput
                     v-model="daySelect"
@@ -262,6 +350,8 @@ async function changePeriod() {
                         { value: 30, label: t('home_day', { number: 30 }, 30) },
                         { value: 60, label: t('home_day', { number: 60 }, 60) },
                         { value: 90, label: t('home_day', { number: 90 }, 90) },
+                        { value: 180, label: t('home_day', { number: 180 }, 180) },
+                        { value: 365, label: t('home_day', { number: 365 }, 365) },
                     ]"
                     @change="changePeriod()"
                 />
