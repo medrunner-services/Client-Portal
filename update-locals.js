@@ -1,4 +1,5 @@
 /* eslint no-console: "off" */
+/* eslint node/prefer-global/process: "off" */
 
 import fs from "node:fs";
 import path from "node:path";
@@ -9,15 +10,16 @@ import yauzl from "yauzl";
 dotenv.config({ path: ".env.development" });
 
 async function downloadLocals() {
-    console.log("📦 Generating bundle...");
     let responseBundle;
     let responseDownload;
+    let languagesStats;
+
     try {
+        console.log("📦 Generating bundle...");
         responseBundle = await fetch("https://medrunner.crowdin.com/api/v2/projects/2/bundles/6/exports", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                // eslint-disable-next-line node/prefer-global/process -- Global rule not working for some reason
                 "Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
             },
         });
@@ -29,6 +31,24 @@ async function downloadLocals() {
 
     const parsedResponse = await responseBundle.json();
 
+    try {
+        console.log("📊 Downloading languages stats...");
+        const response = await fetch("https://medrunner.crowdin.com/api/v2/projects/2/languages/progress?limit=50", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
+            },
+        });
+
+        languagesStats = await response.json();
+    }
+    catch (e) {
+        console.log("❌ Error downloading languages stats");
+        console.log(JSON.stringify(e));
+    }
+
+    console.log("⏳ Waiting for 5 seconds for Crowdin servers...");
     await new Promise(resolve => setTimeout(resolve, 5000));
 
     try {
@@ -39,7 +59,6 @@ async function downloadLocals() {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    // eslint-disable-next-line node/prefer-global/process -- Global rule not working for some reason
                     "Authorization": `Bearer ${process.env.CROWDIN_TOKEN}`,
                 },
             },
@@ -104,7 +123,26 @@ async function downloadLocals() {
         });
     });
 
-    await fs.unlinkSync("src/locales/newLocales.zip");
+    fs.unlinkSync("src/locales/newLocales.zip");
+
+    console.log("🗑 Removing unfinished translations...");
+    languagesStats.data.forEach((language) => {
+        if (language.data.translationProgress < (process.env.INCOMPLETE_TRANSLATION_THRESHOLD && 75) && language.data.language.locale !== "en-US") {
+            console.log(`   🚮 Removing ${language.data.language.name} translation!`);
+            fs.unlinkSync(path.join(`src/locales/${language.data.language.locale}.json`));
+        }
+    });
+
+    const tableData = languagesStats.data
+        .sort((a, b) => b.data.translationProgress - a.data.translationProgress)
+        .map(language => ({
+            "Language": language.data.language.name,
+            "Locale": language.data.language.locale,
+            "Translation %": `${language.data.translationProgress}%`,
+            "Status": language.data.translationProgress < (process.env.INCOMPLETE_TRANSLATION_THRESHOLD && 75) ? "❌" : language.data.translationProgress < 90 ? "⚠️" : language.data.translationProgress < 95 ? "🆗" : "✅",
+        }));
+
+    console.table(tableData);
 }
 
 downloadLocals().then(() => console.log("🚀 Done!"));
