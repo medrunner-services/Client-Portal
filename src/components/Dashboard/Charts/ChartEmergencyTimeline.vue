@@ -1,21 +1,35 @@
 <script setup lang="ts">
+import type { Emergency } from "@medrunner/api-client";
 import type { LineSeriesOption } from "echarts/charts";
 import type { GridComponentOption, TooltipComponentOption } from "echarts/components";
 import type { ComposeOption, EChartsInitOpts } from "echarts/core";
 import type { EchartLoadingOptions } from "@/@types/types.ts";
+import {
+    addDays,
+    addMonths,
+    addWeeks,
+    differenceInDays,
+    eachDayOfInterval,
+    eachMonthOfInterval,
+    eachWeekendOfInterval,
+    endOfDay,
+    isWithinInterval,
+} from "date-fns";
+import { millisecondsInDay } from "date-fns/constants";
 import { LineChart } from "echarts/charts";
 import { GridComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
+
 import { computed, onMounted, ref, watch } from "vue";
 import VChart from "vue-echarts";
-
 import { useI18n } from "vue-i18n";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 import { fetchAllPaginatedResponse } from "@/utils/functions/fetchFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
@@ -27,14 +41,24 @@ use([TooltipComponent, GridComponent, LineChart, SVGRenderer]);
 type ChartOptions = ComposeOption<TooltipComponentOption | GridComponentOption | LineSeriesOption>;
 type GroupingMode = "daily" | "weekly" | "monthly";
 
-const daySelect = ref(7);
 const loading = ref(false);
 const isAnimationEnabled = ref(true);
+const errorLoading = ref("");
+const daySelector = ref(7);
+
+const emergenciesPerPeriod = ref<number[]>([]);
+const dateLabels = ref<string[]>([]);
+const totalNumberOfEmergencies = ref(0);
+const startDate = ref(new Date(Date.now() - (millisecondsInDay * 7)));
+const endDate = ref(new Date());
+const periodDates = ref<Date[]>([]);
 
 const groupingMode = computed<GroupingMode>(() => {
-    if (daySelect.value < 60)
+    const dayDifference = differenceInDays(endDate.value, startDate.value);
+
+    if (dayDifference < 60)
         return "daily";
-    if (daySelect.value < 180)
+    if (dayDifference < 179)
         return "weekly";
     return "monthly";
 });
@@ -134,26 +158,6 @@ const chartOptions = ref<ChartOptions>({
     },
 });
 
-const emergenciesPerPeriod = ref<number[]>([]);
-const dateLabels = ref<string[]>([]);
-const errorLoading = ref("");
-const totalNumberOfEmergencies = ref(0);
-
-const oldestDateNeeded = ref(new Date());
-
-onMounted(async () => {
-    await fetchMissionsForPeriod();
-    generateDateLabels();
-
-    updateChartSeries();
-});
-
-watch(locale, () => {
-    generateDateLabels();
-
-    updateChartSeries();
-});
-
 function updateChartSeries() {
     if (chartOptions.value.series && !Array.isArray(chartOptions.value.series)) {
         if (!isAnimationEnabled.value) {
@@ -171,92 +175,44 @@ function updateChartSeries() {
     }
 }
 
-function getNumberOfPeriods(): number {
-    const mode = groupingMode.value;
-
-    if (mode === "daily") {
-        return daySelect.value;
-    }
-    else if (mode === "weekly") {
-        return Math.ceil(daySelect.value / 7);
-    }
-    else {
-        return Math.ceil(daySelect.value / 30);
-    }
-}
-
-function getPeriodStartDate(periodIndex: number): Date {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const mode = groupingMode.value;
-
-    if (mode === "daily") {
-        const date = new Date(today);
-        date.setDate(date.getDate() - periodIndex);
-        return date;
-    }
-    else if (mode === "weekly") {
-        const date = new Date(today);
-        date.setDate(date.getDate() - (periodIndex * 7));
-        return date;
-    }
-    else {
-        const date = new Date(today);
-        date.setMonth(date.getMonth() - periodIndex);
-        return date;
-    }
-}
-
-function getPeriodIndexForDate(emergencyDate: Date): number {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    emergencyDate.setHours(0, 0, 0, 0);
-
-    const mode = groupingMode.value;
-    const dayDifference = Math.ceil((today.getTime() - emergencyDate.getTime()) / (1000 * 3600 * 24));
-
-    if (mode === "daily") {
-        return dayDifference;
-    }
-    else if (mode === "weekly") {
-        return Math.floor(dayDifference / 7);
-    }
-    else {
-        return (today.getFullYear() - emergencyDate.getFullYear()) * 12
-            + (today.getMonth() - emergencyDate.getMonth());
+function generatePeriodDates() {
+    switch (groupingMode.value) {
+        case "daily":
+            periodDates.value = eachDayOfInterval({
+                start: startDate.value,
+                end: endDate.value,
+            });
+            break;
+        case "weekly":
+            periodDates.value = eachWeekendOfInterval({
+                start: startDate.value,
+                end: endDate.value,
+            });
+            break;
+        case "monthly":
+            periodDates.value = eachMonthOfInterval({
+                start: startDate.value,
+                end: endDate.value,
+            });
+            break;
     }
 }
 
 function generateDateLabels() {
     const labels = [];
-    const numPeriods = getNumberOfPeriods();
-    const mode = groupingMode.value;
 
-    for (let i = numPeriods - 1; i >= 0; i--) {
-        const date = getPeriodStartDate(i);
-
-        if (mode === "daily") {
-            if (daySelect.value < 360) {
-                labels.push(
-                    date.toLocaleDateString(locale.value, {
-                        month: "2-digit",
-                        day: "2-digit",
-                    }),
-                );
-            }
-            else {
-                labels.push(
-                    date.toLocaleDateString(locale.value, {
-                        month: "2-digit",
-                        day: "2-digit",
-                        year: "numeric",
-                    }),
-                );
-            }
-        }
-        else if (mode === "weekly") {
+    for (const date of periodDates.value) {
+        if (groupingMode.value === "daily") {
             labels.push(
-                date.toLocaleDateString(locale.value, {
+                toUserDateString(date, {
+                    month: "2-digit",
+                    day: "2-digit",
+                }),
+            );
+        }
+        else if (groupingMode.value === "weekly") {
+            labels.push(
+                toUserDateString(date, {
                     month: "2-digit",
                     day: "2-digit",
                 }),
@@ -264,7 +220,7 @@ function generateDateLabels() {
         }
         else {
             labels.push(
-                date.toLocaleDateString(locale.value, {
+                toUserDateString(date, {
                     month: "short",
                     year: "numeric",
                 }),
@@ -275,41 +231,51 @@ function generateDateLabels() {
     dateLabels.value = labels;
 }
 
-function initializePeriodsData() {
-    const numPeriods = getNumberOfPeriods();
-    emergenciesPerPeriod.value = Array.from({ length: numPeriods }, () => 0);
-}
+function generateChartData(emergencies: Emergency[]): number[] {
+    const graphData = Array.from({ length: periodDates.value.length }, () => 0);
 
-function incrementPeriodCount(timestamp: string) {
-    const emergencyDate = new Date(timestamp);
-    const periodIndex = getPeriodIndexForDate(emergencyDate);
-    const numPeriods = getNumberOfPeriods();
+    for (const emergency of emergencies) {
+        for (let i = 0; i < periodDates.value.length; i++) {
+            let periodEnd = periodDates.value[i + 1];
+            if (i === periodDates.value.length - 1) {
+                switch (groupingMode.value) {
+                    case "daily":
+                        periodEnd = addDays(periodDates.value[i], 1);
+                        break;
+                    case "weekly":
+                        periodEnd = addWeeks(periodDates.value[i], 1);
+                        break;
+                    case "monthly":
+                        periodEnd = addMonths(periodDates.value[i], 1);
+                        break;
+                }
+            }
 
-    if (periodIndex >= 0 && periodIndex < numPeriods) {
-        emergenciesPerPeriod.value[periodIndex]++;
+            if (isWithinInterval(emergency.created, { start: periodDates.value[i], end: periodEnd })) {
+                graphData[i]++;
+                break;
+            }
+        }
     }
+
+    return graphData;
 }
 
-async function fetchMissionsForPeriod() {
+async function fetchMissions() {
     errorLoading.value = "";
     loading.value = true;
 
-    oldestDateNeeded.value.setDate(oldestDateNeeded.value.getDate() - daySelect.value);
-    initializePeriodsData();
-
     try {
-        const recentEmergencies = await fetchAllPaginatedResponse(
+        const response = await fetchAllPaginatedResponse(
             userStore.fetchUserClientEmergencyHistory,
             undefined,
             undefined,
-            oldestDateNeeded.value.toISOString(),
-            new Date().toISOString(),
+            startDate.value.toISOString(),
+            endOfDay(endDate.value).toISOString(),
         );
 
-        totalNumberOfEmergencies.value = recentEmergencies.totalCount;
-        recentEmergencies.data.forEach(emergency => incrementPeriodCount(emergency.created));
-
-        emergenciesPerPeriod.value.reverse();
+        totalNumberOfEmergencies.value = response.totalCount;
+        emergenciesPerPeriod.value = generateChartData(response.data);
     }
     catch (error: any) {
         errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
@@ -319,14 +285,28 @@ async function fetchMissionsForPeriod() {
     }
 }
 
-async function changePeriod() {
-    emergenciesPerPeriod.value = [];
-    oldestDateNeeded.value = new Date();
-    dateLabels.value = [];
+onMounted(async () => {
+    startDate.value.setHours(0, 0, 0, 0);
+    endDate.value.setHours(0, 0, 0, 0);
 
-    await fetchMissionsForPeriod();
+    generatePeriodDates();
     generateDateLabels();
+    await fetchMissions();
+    updateChartSeries();
+});
 
+watch(locale, () => {
+    generateDateLabels();
+    updateChartSeries();
+});
+
+async function updateDaySelector() {
+    startDate.value = new Date(Date.now() - (millisecondsInDay * daySelector.value));
+    endDate.value = new Date();
+
+    generatePeriodDates();
+    generateDateLabels();
+    await fetchMissions();
     updateChartSeries();
 }
 </script>
@@ -344,7 +324,7 @@ async function changePeriod() {
                     {{ getChartTitle }}
                 </p>
                 <GlobalSelectInput
-                    v-model="daySelect"
+                    v-model="daySelector"
                     :options="[
                         { value: 7, label: t('home_day', { number: 7 }, 7) },
                         { value: 30, label: t('home_day', { number: 30 }, 30) },
@@ -353,11 +333,11 @@ async function changePeriod() {
                         { value: 180, label: t('home_day', { number: 180 }, 180) },
                         { value: 365, label: t('home_day', { number: 365 }, 365) },
                     ]"
-                    @change="changePeriod()"
+                    @change="updateDaySelector()"
                 />
             </div>
 
-            <div class="mt-8">
+            <div class="mt-6">
                 <p
                     class="
                         font-Mohave text-4xl font-bold text-gray-900
@@ -376,7 +356,7 @@ async function changePeriod() {
                 </p>
             </div>
 
-            <div class="mt-4 w-full justify-center">
+            <div class="w-full justify-center">
                 <VChart
                     class="chart"
                     :init-options="initOptions"

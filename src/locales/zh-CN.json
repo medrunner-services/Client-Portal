@@ -269,6 +269,7 @@
     "home_emergenciesPerDay": "Emergencies per day",
     "home_emergenciesPerWeek": "Emergencies per week",
     "home_emergenciesPerMonth": "Emergencies per month",
+    "home_emergencies": "Emergencies",
     "login_logInButton": "通过 Discord 登录",
     "login_registerButton": "通过 Discord 注册",
     "login_welcomeBack": "欢迎",
