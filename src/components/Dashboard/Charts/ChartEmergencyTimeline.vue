@@ -286,13 +286,7 @@ async function fetchMissions() {
 }
 
 onMounted(async () => {
-    startDate.value.setHours(0, 0, 0, 0);
-    endDate.value.setHours(0, 0, 0, 0);
-
-    generatePeriodDates();
-    generateDateLabels();
-    await fetchMissions();
-    updateChartSeries();
+    await updateDaySelector();
 });
 
 watch(locale, () => {
@@ -303,6 +297,9 @@ watch(locale, () => {
 async function updateDaySelector() {
     startDate.value = new Date(Date.now() - (millisecondsInDay * daySelector.value));
     endDate.value = new Date();
+
+    startDate.value.setHours(0, 0, 0, 0);
+    endDate.value.setHours(0, 0, 0, 0);
 
     generatePeriodDates();
     generateDateLabels();
@@ -319,6 +316,7 @@ async function updateDaySelector() {
 
         <div v-else>
             <!--  TODO: Add a range date selector (limit to a year back) alongside the pre-defined day selector  -->
+            <!--  TODO: Custom tooltip with "Checkboxes" to select to choose the days or dual date input with a save button   -->
             <div class="flex items-center justify-between">
                 <p class="font-Mohave text-2xl font-semibold uppercase">
                     {{ getChartTitle }}
