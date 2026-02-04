@@ -21,10 +21,9 @@ const endDate = ref<string>(props.currentEnd ?? "");
 
 <template>
     <div class="font-Inter normal-case">
-        <!-- TODO: localization -->
         <GlobalDateInput
             v-model="startDate"
-            label="Start date"
+            :label="t('home_startDate')"
             :max="endDate || new Date().toISOString().split('T')[0]"
             size="small"
         />
@@ -32,7 +31,7 @@ const endDate = ref<string>(props.currentEnd ?? "");
         <GlobalDateInput
             v-model="endDate"
             class="mt-3"
-            label="End date"
+            :label="t('home_endDate')"
             :min="startDate || ''"
             :max="new Date().toISOString().split('T')[0]"
             size="small"

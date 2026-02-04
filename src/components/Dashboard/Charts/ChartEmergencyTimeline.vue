@@ -21,12 +21,14 @@ import { GridComponent, TooltipComponent } from "echarts/components";
 import { use } from "echarts/core";
 import { SVGRenderer } from "echarts/renderers";
 
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import VChart from "vue-echarts";
 import { useI18n } from "vue-i18n";
+import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
+import { useClickOutside } from "@/composables/clickOutside.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
@@ -44,7 +46,11 @@ type GroupingMode = "daily" | "weekly" | "monthly";
 const loading = ref(false);
 const isAnimationEnabled = ref(true);
 const errorLoading = ref("");
+const showDateSelector = ref(false);
 const daySelector = ref(7);
+const startDateSelector = ref<string | undefined>();
+const endDateSelector = ref<string | undefined>();
+const dateSelectorRef = useTemplateRef("dateSelector");
 
 const emergenciesPerPeriod = ref<number[]>([]);
 const dateLabels = ref<string[]>([]);
@@ -52,6 +58,8 @@ const totalNumberOfEmergencies = ref(0);
 const startDate = ref(new Date(Date.now() - (millisecondsInDay * 7)));
 const endDate = ref(new Date());
 const periodDates = ref<Date[]>([]);
+
+useClickOutside(dateSelectorRef, () => showDateSelector.value = false);
 
 const groupingMode = computed<GroupingMode>(() => {
     const dayDifference = differenceInDays(endDate.value, startDate.value);
@@ -286,7 +294,7 @@ async function fetchMissions() {
 }
 
 onMounted(async () => {
-    await updateDaySelector();
+    await updateDateSelector();
 });
 
 watch(locale, () => {
@@ -294,9 +302,27 @@ watch(locale, () => {
     updateChartSeries();
 });
 
-async function updateDaySelector() {
-    startDate.value = new Date(Date.now() - (millisecondsInDay * daySelector.value));
-    endDate.value = new Date();
+async function updateDateSelector(params?: { start: string; end: string }) {
+    showDateSelector.value = false;
+
+    if (params && params.start && params.end) {
+        daySelector.value = -1;
+        startDateSelector.value = params.start;
+        endDateSelector.value = params.end;
+
+        startDate.value = new Date(params.start);
+        endDate.value = new Date(params.end);
+    }
+    else {
+        startDateSelector.value = undefined;
+        endDateSelector.value = undefined;
+
+        if (daySelector.value === -1)
+            daySelector.value = 7;
+
+        startDate.value = new Date(Date.now() - (millisecondsInDay * daySelector.value));
+        endDate.value = new Date();
+    }
 
     startDate.value.setHours(0, 0, 0, 0);
     endDate.value.setHours(0, 0, 0, 0);
@@ -315,24 +341,72 @@ async function updateDaySelector() {
         </div>
 
         <div v-else>
-            <!--  TODO: Add a range date selector (limit to a year back) alongside the pre-defined day selector  -->
-            <!--  TODO: Custom tooltip with "Checkboxes" to select to choose the days or dual date input with a save button   -->
-            <div class="flex items-center justify-between">
+            <div class="relative flex items-center justify-between">
                 <p class="font-Mohave text-2xl font-semibold uppercase">
                     {{ getChartTitle }}
                 </p>
-                <GlobalSelectInput
-                    v-model="daySelector"
-                    :options="[
-                        { value: 7, label: t('home_day', { number: 7 }, 7) },
-                        { value: 30, label: t('home_day', { number: 30 }, 30) },
-                        { value: 60, label: t('home_day', { number: 60 }, 60) },
-                        { value: 90, label: t('home_day', { number: 90 }, 90) },
-                        { value: 180, label: t('home_day', { number: 180 }, 180) },
-                        { value: 365, label: t('home_day', { number: 365 }, 365) },
-                    ]"
-                    @change="updateDaySelector()"
-                />
+
+                <button
+                    class="
+                        flex w-fit cursor-pointer items-center justify-between rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900
+                        focus:border-gray-500 focus:ring-1 focus:ring-gray-500
+                        disabled:cursor-not-allowed
+                        dark:border-gray-600 dark:bg-gray-700 dark:text-white
+                        dark:focus:border-gray-400 dark:focus:ring-gray-400
+                    "
+                    @click="showDateSelector = !showDateSelector"
+                >
+                    <span
+                        class="
+                            min-w-16 text-left
+                            sm:pr-8
+                        "
+                    >{{ daySelector < 0 ? t("home_custom") : t('home_day', { number: daySelector }, daySelector) }}</span>
+                    <svg
+                        class="size-2.5 text-gray-500"
+                        :class="showDateSelector ? 'rotate-180' : ''"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 10 6"
+                    >
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+
+                <div
+                    v-if="showDateSelector"
+                    ref="dateSelector"
+                    class="
+                        absolute top-12 right-0 z-50 inline-block rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm shadow-sm
+                        max-[362px]:top-14
+                        dark:border-gray-600 dark:bg-gray-700
+                    "
+                >
+                    <GlobalSelectInput
+                        v-model="daySelector"
+                        input-size="small"
+                        :options="[
+                            { value: 7, label: t('home_day', { number: 7 }, 7) },
+                            { value: 30, label: t('home_day', { number: 30 }, 30) },
+                            { value: 60, label: t('home_day', { number: 60 }, 60) },
+                            { value: 90, label: t('home_day', { number: 90 }, 90) },
+                            { value: 180, label: t('home_day', { number: 180 }, 180) },
+                            { value: 365, label: t('home_day', { number: 365 }, 365) },
+                            { value: -1, label: t('home_custom') },
+                        ]"
+                        @change="updateDateSelector()"
+                    />
+
+                    <hr class="my-2">
+
+                    <HistoryDateFilter
+                        class="mt-2"
+                        :current-start="startDateSelector"
+                        :current-end="endDateSelector"
+                        @update-filter="(start, end) => updateDateSelector({ start, end })"
+                    />
+                </div>
             </div>
 
             <div class="mt-6">
