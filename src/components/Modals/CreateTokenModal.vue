@@ -233,7 +233,9 @@ async function createToken() {
                         <div>
                             <p>I agree with the following rules:</p>
                             <ul class="mt-1 list-disc pl-3 font-normal">
-                                <li>No data creation, deletion or modification for testing purposes;</li>
+                                <li class="underline">
+                                    No data creation, deletion or modification for testing purposes;
+                                </li>
                                 <li>You may not use Medrunner branding or trademarks without prior written approval;</li>
                                 <li>You may not perform load testing, stress testing, or any actions that could impact service availability or be considered like abuse of the API without prior approval;</li>
                                 <li>Do not expose your API token in client-side applications or share it with others;</li>
