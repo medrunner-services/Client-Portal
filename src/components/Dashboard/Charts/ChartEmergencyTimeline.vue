@@ -398,7 +398,12 @@ async function updateDateSelector(params?: { start: string; end: string }) {
                         @change="updateDateSelector()"
                     />
 
-                    <hr class="my-2">
+                    <hr
+                        class="
+                            my-3
+                            dark:border-gray-500
+                        "
+                    >
 
                     <HistoryDateFilter
                         class="mt-2"
