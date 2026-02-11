@@ -33,11 +33,21 @@ function emitDateUpdate(start: string, end: string): void {
 <template>
     <ModalContainer :title="t('history_filterModalTitle')" @close="emit('close')">
         <div>
-            <HistoryStatusFilter
-                class="mt-6"
-                :current-status="props.currentStatus"
-                @update-filter="(newStatus) => emitStatusUpdate(newStatus)"
-            />
+            <div class="mt-6">
+                <p
+                    class="text-center font-semibold text-primary-600"
+                >
+                    {{ t("history_status") }}
+                </p>
+
+                <HistoryStatusFilter
+                    class="mt-3"
+                    :current-status="props.currentStatus"
+                    @update-filter="(newStatus) => emitStatusUpdate(newStatus)"
+                />
+            </div>
+
+            <hr class="my-4">
 
             <HistoryDateFilter
                 class="mt-4"
