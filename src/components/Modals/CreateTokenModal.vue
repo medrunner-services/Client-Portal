@@ -83,7 +83,6 @@ async function copyToken() {
 async function copyAndClose() {
     await navigator.clipboard.writeText(createdToken.value);
 
-    document.body.style.overflow = "auto";
     emit("close");
 }
 
@@ -103,7 +102,6 @@ async function createToken() {
             createdToken.value = await userStore.createApiToken(inputName.value, inputScopes.value);
         }
         submittingNewToken.value = false;
-        document.body.style.overflow = "auto";
         emit("tokenCreated");
     }
     catch (error: any) {

@@ -26,7 +26,6 @@ async function deleteToken(): Promise<void> {
 
     try {
         await userStore.deleteApiToken(props.token.id);
-        document.body.style.overflow = "auto";
         emit("tokenDeleted", props.token.id);
     }
     catch (error: any) {

@@ -27,7 +27,6 @@ async function confirmWarning() {
     }
 
     isConfirming.value = false;
-    document.body.style.overflow = "auto";
     emit("close");
 }
 </script>

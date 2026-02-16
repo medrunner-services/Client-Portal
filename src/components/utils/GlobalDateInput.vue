@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onBeforeUnmount, ref, useTemplateRef } from "vue";
 import GlobalTooltip from "@/components/utils/GlobalTooltip.vue";
 
 export interface Props {
@@ -13,6 +13,7 @@ export interface Props {
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
     min?: string;
     max?: string;
+    timeSensitivity?: "days" | "minutes";
     size?: "small" | "large";
 }
 
@@ -20,10 +21,15 @@ const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
     radius: "rounded-lg",
+    timeSensitivity: "days",
     size: "large",
 });
 
 const emit = defineEmits(["update:modelValue"]);
+const dateInputRef = useTemplateRef("dateInput");
+const isValid = ref(true);
+const isFocused = ref(false);
+let intervalId: number | null = null;
 
 const value = computed({
     get() {
@@ -32,6 +38,38 @@ const value = computed({
     set(value) {
         emit("update:modelValue", value);
     },
+});
+
+function checkValidity() {
+    if (dateInputRef.value) {
+        isValid.value = dateInputRef.value.validity.valid;
+    }
+}
+
+function handleFocus() {
+    isFocused.value = true;
+    if (!intervalId) {
+        intervalId = window.setInterval(checkValidity, 200);
+    }
+}
+
+function handleBlur() {
+    isFocused.value = false;
+    if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = null;
+    }
+    checkValidity();
+}
+
+onBeforeUnmount(() => {
+    if (intervalId) {
+        window.clearInterval(intervalId);
+    }
+});
+
+defineExpose({
+    isValid,
 });
 </script>
 
@@ -51,20 +89,28 @@ const value = computed({
 
         <div class="relative">
             <input
+                ref="dateInput"
                 v-model="value"
-                type="date"
+                :type="props.timeSensitivity === 'minutes' ? 'datetime-local' : 'date'"
                 :min="props.min"
                 :max="props.max"
                 class="
-                    w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 text-gray-900 placeholder-gray-400
+                    w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50
+                    invalid:border-red-600 invalid:text-red-600
                     focus:border-gray-500 focus:ring-gray-500
-                    dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                    dark:border-gray-600 dark:bg-gray-700
+                    dark:invalid:border-red-500 dark:invalid:text-red-500
                     dark:focus:border-gray-400 dark:focus:ring-gray-400
                 "
-                :class="props.size === 'large' ? 'p-2.5 text-sm' : 'p-2 text-xs'"
+                :class="[props.size === 'large' ? 'p-2.5 text-sm' : 'p-2 text-xs', value ? `
+                    text-gray-900
+                    dark:text-white
+                ` : `text-gray-400`]"
                 :placeholder="props.placeholder"
                 :disabled="props.disabled"
                 :required="props.required"
+                @focus="handleFocus"
+                @blur="handleBlur"
             >
         </div>
     </div>

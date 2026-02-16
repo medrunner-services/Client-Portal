@@ -29,7 +29,6 @@ async function deleteAccount(): Promise<void> {
         errorDeletingAccount.value = errorString(error.statusCode);
     }
     finally {
-        document.body.style.overflow = "auto";
         await userStore.disconnectUser();
         deletingAccount.value = false;
     }

@@ -20,12 +20,10 @@ const emit = defineEmits<{
 const { t } = useI18n();
 
 function emitStatusUpdate(newStatus: MissionStatus[]): void {
-    document.body.style.overflow = "auto";
     emit("updateStatusFilter", newStatus);
 }
 
 function emitDateUpdate(start: string, end: string): void {
-    document.body.style.overflow = "auto";
     emit("updateDateFilter", start, end);
 }
 </script>

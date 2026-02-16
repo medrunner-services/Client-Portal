@@ -45,7 +45,6 @@ async function rateEmergency() {
     try {
         await emergencyStore.rateCompletedEmergency(props.emergencyId, inputRating.value, inputRemarks.value);
 
-        document.body.style.overflow = "auto";
         emit("ratedEmergency");
     }
     catch (error: any) {

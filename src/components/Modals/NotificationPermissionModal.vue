@@ -47,7 +47,6 @@ async function disableNotifications() {
     }
     finally {
         disablingNotifications.value = false;
-        document.body.style.overflow = "auto";
         emit("close");
     }
 }

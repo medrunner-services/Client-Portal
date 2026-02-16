@@ -28,7 +28,6 @@ async function confirmRules() {
     }
 
     isConfirming.value = false;
-    document.body.style.overflow = "auto";
     emit("confirmed");
 }
 </script>

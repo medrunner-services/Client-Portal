@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
+
 const props = withDefaults(defineProps<Props>(), {
     userCloseModal: true,
 });
@@ -7,11 +10,22 @@ export interface Props {
     title: string;
     userCloseModal?: boolean;
 }
+const logicStore = useLogicStore();
 
-document.body.style.overflow = "hidden";
+onMounted(() => {
+    document.body.style.overflow = "hidden";
+    logicStore.openedModalCounter++;
+});
+
+onUnmounted(() => {
+    logicStore.openedModalCounter--;
+
+    if (logicStore.openedModalCounter <= 0) {
+        document.body.style.overflow = "auto";
+    }
+});
 
 function closeModal() {
-    document.body.style.overflow = "auto";
     emit("close");
 }
 </script>
@@ -20,7 +34,7 @@ function closeModal() {
     <teleport to="#modals">
         <div
             class="fixed top-0 right-0 left-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
-            @mousedown.self="props.userCloseModal ? closeModal() : null"
+            @mousedown.self="props.userCloseModal ? closeModal() : undefined"
         >
             <div
                 class="

@@ -9,7 +9,6 @@ const emit = defineEmits(["ignoreDetails", "close"]);
 const { t } = useI18n();
 
 function ignoreDetails() {
-    document.body.style.overflow = "auto";
     emit("ignoreDetails");
 }
 </script>

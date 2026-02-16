@@ -21,6 +21,7 @@ export const useLogicStore = defineStore("logic", () => {
     const showNewUpdateBanner = ref(false);
     const errorInitializingApp = ref("");
     const warningNoContactId = ref();
+    const openedModalCounter = ref(0);
 
     const isLoginAnimationAllowed = ref(
         localStorage.getItem(LocalStorageItems.LOGIN_ANIMATION)
@@ -109,5 +110,6 @@ export const useLogicStore = defineStore("logic", () => {
         isChatHidden,
         sentNotificationTags,
         showNewUpdateBanner,
+        openedModalCounter,
     };
 });

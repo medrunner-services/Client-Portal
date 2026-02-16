@@ -1,4 +1,4 @@
-import type { ChatMessage } from "@medrunner/api-client";
+import type { ChatMessage, Class, MissionStatus } from "@medrunner/api-client";
 
 export enum MessageNotification {
     ALL,
@@ -87,3 +87,7 @@ export interface LocalChatMessage extends ChatMessage {
 }
 
 export type TrackedChatMessageItem = LocalChatMessage | ChatMessage;
+
+export type HistoryFilterStatus = MissionStatus.SUCCESS | MissionStatus.FAILED | MissionStatus.SERVER_ERROR | MissionStatus.ABORTED | MissionStatus.REFUSED | MissionStatus.NO_CONTACT | MissionStatus.CANCELED;
+
+export type HistoryFilterClass = Class.MEDIC | Class.SECURITY | Class.PILOT | Class.LEAD | Class.QRF | Class.DISPATCH | Class.DISPATCH_LEAD | Class.DISPATCH_TRAINEE | Class.DISPATCH_OBSERVER;

@@ -52,7 +52,6 @@ async function cancelEmergency() {
             throw new Error("missing cancel reason");
         }
 
-        document.body.style.overflow = "auto";
         emit("emergencyCanceled");
     }
     catch (error: any) {
