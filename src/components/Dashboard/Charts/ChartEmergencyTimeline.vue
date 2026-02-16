@@ -409,6 +409,7 @@ async function updateDateSelector(params?: { start: string; end: string }) {
                         class="mt-2"
                         :current-start="startDateSelector"
                         :current-end="endDateSelector"
+                        :require-range="true"
                         @update-filter="(start, end) => updateDateSelector({ start, end })"
                     />
                 </div>

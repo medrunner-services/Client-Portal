@@ -1,30 +1,37 @@
 <script setup lang="ts">
-import type { MissionStatus } from "@medrunner/api-client";
+import type { HistoryFilterStatus } from "@/@types/types.ts";
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.vue";
 import HistoryStatusFilter from "@/components/Dashboard/History/HistoryStatusFilter.vue";
+import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 
 const props = defineProps<{
-    currentStatus: MissionStatus[];
+    currentStatus: HistoryFilterStatus[];
     currentStart?: string;
     currentEnd?: string;
 }>();
 
 const emit = defineEmits<{
-    updateDateFilter: [start: string, end: string];
-    updateStatusFilter: [status: MissionStatus[]];
+    updateFilters: [start: string, end: string, status: HistoryFilterStatus[]];
     close: [];
 }>();
 
 const { t } = useI18n();
 
-function emitStatusUpdate(newStatus: MissionStatus[]): void {
-    emit("updateStatusFilter", newStatus);
+const selectedStatus = ref<HistoryFilterStatus[]>([...props.currentStatus]);
+const selectedStartDate = ref<string>(props.currentStart ?? "");
+const selectedEndDate = ref<string>(props.currentEnd ?? "");
+
+function handleUpdate() {
+    emit("updateFilters", selectedStartDate.value, selectedEndDate.value, selectedStatus.value);
 }
 
-function emitDateUpdate(start: string, end: string): void {
-    emit("updateDateFilter", start, end);
+function resetAll() {
+    selectedStatus.value = [];
+    selectedStartDate.value = "";
+    selectedEndDate.value = "";
 }
 </script>
 
@@ -33,26 +40,44 @@ function emitDateUpdate(start: string, end: string): void {
         <div>
             <div class="mt-6">
                 <p
-                    class="text-center font-semibold text-primary-600"
+                    class="text-center font-semibold"
+                >
+                    {{ t("history_date") }}
+
+                    <HistoryDateFilter
+                        v-model:selected-start-date="selectedStartDate"
+                        v-model:selected-end-date="selectedEndDate"
+                        class="mt-3"
+                        :hide-apply-button="true"
+                    />
+                </p>
+            </div>
+
+            <hr class="my-4">
+
+            <div>
+                <p
+                    class="text-center font-semibold"
                 >
                     {{ t("history_status") }}
                 </p>
 
                 <HistoryStatusFilter
+                    v-model="selectedStatus"
                     class="mt-3"
-                    :current-status="props.currentStatus"
-                    @update-filter="(newStatus) => emitStatusUpdate(newStatus)"
+                    :hide-apply-button="true"
                 />
             </div>
 
-            <hr class="my-4">
-
-            <HistoryDateFilter
-                class="mt-4"
-                :current-start="props.currentStart"
-                :current-end="props.currentEnd"
-                @update-filter="(start, end) => emitDateUpdate(start, end)"
-            />
+            <GlobalButton class="mt-8 w-full font-Inter text-xs" size="full" text-size="text-xs" @click="handleUpdate()">
+                {{ t("history_saveFilter") }}
+            </GlobalButton>
+            <p
+                class="mt-2 cursor-pointer text-center font-Inter text-xs font-semibold text-primary-600 normal-case underline underline-offset-2"
+                @click="resetAll()"
+            >
+                {{ t("history_clearAll") }}
+            </p>
         </div>
     </ModalContainer>
 </template>

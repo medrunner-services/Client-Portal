@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Emergency } from "@medrunner/api-client";
-import type { WebSocketMessage } from "@/@types/types.ts";
-import { MissionStatus } from "@medrunner/api-client";
+import type { HistoryFilterStatus, WebSocketMessage } from "@/@types/types.ts";
 import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { AlertColors, LocalStorageItems } from "@/@types/types.ts";
@@ -9,6 +8,7 @@ import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.
 import HistoryStatusFilter from "@/components/Dashboard/History/HistoryStatusFilter.vue";
 import HistoryTableRow from "@/components/Dashboard/History/HistoryTableRow.vue";
 import HistoryMobileFiltersModal from "@/components/Modals/HistoryMobileFiltersModal.vue";
+import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
@@ -41,7 +41,7 @@ const loaded = ref(false);
 const ascendingOrder = ref(false);
 const showStatusFilter = ref(false);
 const statusFilterRef = useTemplateRef("statusFilterRef");
-const filteredStatuses = ref<MissionStatus[]>(Object.values(MissionStatus).filter(value => typeof value === "number"));
+const filteredStatuses = ref<HistoryFilterStatus[]>([]);
 const showDateFilter = ref(false);
 const dateFilterRef = useTemplateRef("dateFilterRef");
 const filterStartDate = ref<string>("");
@@ -136,13 +136,11 @@ async function loadHistory() {
     try {
         const historyResponse = await userStore.fetchUserClientEmergencyHistory(pageSize.value, paginationToken.value, ascendingOrder.value, filteredStatuses.value, filterStartDate.value?.toString(), filterEndDate.value?.toString());
 
-        if (historyResponse.data.length > 0) {
-            paginationToken.value = historyResponse.paginationToken;
-            totalFetchedEmergencies.value = historyResponse.totalCount;
+        paginationToken.value = historyResponse.paginationToken;
+        totalFetchedEmergencies.value = historyResponse.totalCount;
 
-            loadedHistory.value.push(...historyResponse.data);
-            setActivePageFromCache(0);
-        }
+        loadedHistory.value.push(...historyResponse.data);
+        setActivePageFromCache(0);
     }
     catch (error: any) {
         errorLoadingHistory.value = errorString(error.statusCode, t("error_loadingData"));
@@ -188,8 +186,7 @@ async function toggleOrder(): Promise<void> {
     await reloadHistory();
 }
 
-async function updateStatusFilter(newStatus: MissionStatus[]): Promise<void> {
-    displayMobileFilterModal.value = false;
+async function updateStatusFilter(newStatus: HistoryFilterStatus[]): Promise<void> {
     showStatusFilter.value = false;
     filteredStatuses.value = newStatus;
 
@@ -197,7 +194,6 @@ async function updateStatusFilter(newStatus: MissionStatus[]): Promise<void> {
 }
 
 async function updateDateFilter(newStartDate: string, newEndDate: string): Promise<void> {
-    displayMobileFilterModal.value = false;
     showDateFilter.value = false;
     filterStartDate.value = newStartDate;
     filterEndDate.value = newEndDate;
@@ -205,15 +201,92 @@ async function updateDateFilter(newStartDate: string, newEndDate: string): Promi
     await reloadHistory();
 }
 
-function handleFilterClick() {
-    if (currentBreakpoint.value >= Breakpoint.MD)
-        showStatusFilter.value = !showStatusFilter.value;
-    else displayMobileFilterModal.value = true;
+async function updateAllFilters(newStartDate: string, newEndDate: string, newStatus: HistoryFilterStatus[]): Promise<void> {
+    displayMobileFilterModal.value = false;
+
+    filterStartDate.value = newStartDate;
+    filterEndDate.value = newEndDate;
+    filteredStatuses.value = newStatus;
+
+    await reloadHistory();
 }
+
+const hasFilters = computed(() => {
+    return filterStartDate.value || filterEndDate.value || (filteredStatuses.value.length > 0 && filteredStatuses.value.length < 7);
+});
 </script>
 
 <template>
     <div class="w-full">
+        <div
+            class="
+                mb-2 flex items-center justify-between gap-2
+                md:hidden
+            "
+        >
+            <GlobalButton
+                :type="ascendingOrder ? 'primary' : 'outline-solid'"
+                padding-class="p-1.5"
+                @click="toggleOrder()"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <svg
+                        v-if="!ascendingOrder"
+                        class="size-4 cursor-pointer"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20" fill="currentColor"
+                    >
+                        <path fill-rule="evenodd" d="M2.24 6.8a.75.75 0 0 0 1.06-.04l1.95-2.1v8.59a.75.75 0 0 0 1.5 0V4.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L2.2 5.74a.75.75 0 0 0 .04 1.06Zm8 6.4a.75.75 0 0 0-.04 1.06l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75a.75.75 0 0 0-1.5 0v8.59l-1.95-2.1a.75.75 0 0 0-1.06-.04Z" clip-rule="evenodd" />
+                    </svg>
+                    <svg
+                        v-else
+                        class="size-3.5 cursor-pointer text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="3"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+                    </svg>
+
+                    <p>
+                        {{ t("history_sortByDate") }}
+                    </p>
+                </div>
+            </GlobalButton>
+
+            <GlobalButton
+                :type="hasFilters ? 'primary' : 'outline-solid'"
+                padding-class="p-1.5"
+                @click="displayMobileFilterModal = true"
+            >
+                <div class="flex items-center justify-between gap-2">
+                    <p>{{ t("history_filters") }}</p>
+                    <svg
+                        v-if="hasFilters"
+                        class="size-4 cursor-pointer text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                    >
+                        <path fill-rule="evenodd" d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z" clip-rule="evenodd" />
+                    </svg>
+                    <svg
+                        v-else
+                        class="size-4 cursor-pointer"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
+                    </svg>
+                </div>
+            </GlobalButton>
+        </div>
+
         <div
             class="
                 rounded-lg shadow-md
@@ -310,38 +383,22 @@ function handleFilterClick() {
                             "
                         >
                             <p>{{ t("history_status") }}</p>
-                            <div class="relative flex items-center justify-between gap-1">
+                            <div
+                                class="
+                                    relative hidden items-center justify-between gap-1
+                                    md:flex
+                                "
+                            >
                                 <svg
-                                    v-if="filteredStatuses.length < 10 || (currentBreakpoint <= Breakpoint.MD && (filterStartDate || filterEndDate))" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="
+                                    v-if="(filteredStatuses.length > 0 && filteredStatuses.length < 7)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="
                                         size-4 cursor-pointer text-gray-900
                                         dark:text-gray-300
-                                    " @click="handleFilterClick()"
+                                    " @click="showStatusFilter = !showStatusFilter"
                                 >
                                     <path fill-rule="evenodd" d="M3.792 2.938A49.069 49.069 0 0 1 12 2.25c2.797 0 5.54.236 8.209.688a1.857 1.857 0 0 1 1.541 1.836v1.044a3 3 0 0 1-.879 2.121l-6.182 6.182a1.5 1.5 0 0 0-.439 1.061v2.927a3 3 0 0 1-1.658 2.684l-1.757.878A.75.75 0 0 1 9.75 21v-5.818a1.5 1.5 0 0 0-.44-1.06L3.13 7.938a3 3 0 0 1-.879-2.121V4.774c0-.897.64-1.683 1.542-1.836Z" clip-rule="evenodd" />
                                 </svg>
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer" @click="handleFilterClick()">
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 cursor-pointer" @click="showStatusFilter = !showStatusFilter">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-                                </svg>
-
-                                <svg
-                                    v-if="!ascendingOrder"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor" class="
-                                        size-4 cursor-pointer
-                                        md:hidden
-                                    " @click="toggleOrder()"
-                                >
-                                    <path fill-rule="evenodd" d="M2.24 6.8a.75.75 0 0 0 1.06-.04l1.95-2.1v8.59a.75.75 0 0 0 1.5 0V4.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0L2.2 5.74a.75.75 0 0 0 .04 1.06Zm8 6.4a.75.75 0 0 0-.04 1.06l3.25 3.5a.75.75 0 0 0 1.1 0l3.25-3.5a.75.75 0 1 0-1.1-1.02l-1.95 2.1V6.75a.75.75 0 0 0-1.5 0v8.59l-1.95-2.1a.75.75 0 0 0-1.06-.04Z" clip-rule="evenodd" />
-                                </svg>
-                                <svg
-                                    v-else
-                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="
-                                        mr-0.5 size-3.5 cursor-pointer text-gray-900
-                                        md:hidden
-                                        dark:text-gray-300
-                                    " @click="toggleOrder()"
-                                >>
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
                                 </svg>
 
                                 <div
@@ -497,8 +554,7 @@ function handleFilterClick() {
             :current-start="filterStartDate"
             :current-end="filterEndDate"
             :current-status="filteredStatuses"
-            @update-status-filter="newStatus => updateStatusFilter(newStatus)"
-            @update-date-filter="(start, end) => updateDateFilter(start, end)"
+            @update-filters="(start, end, status) => updateAllFilters(start, end, status)"
             @close="displayMobileFilterModal = false"
         />
     </div>

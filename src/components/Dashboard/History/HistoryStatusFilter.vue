@@ -1,32 +1,44 @@
 <script setup lang="ts">
+import type { HistoryFilterStatus } from "@/@types/types.ts";
 import { MissionStatus } from "@medrunner/api-client";
-import { ref } from "vue";
+import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCheckbox from "@/components/utils/GlobalCheckbox.vue";
 import { getStatusColor, getStatusString } from "@/utils/functions/getStringsFunctions.ts";
 
 const props = defineProps<{
-    currentStatus: MissionStatus[];
+    currentStatus?: HistoryFilterStatus[];
+    hideApplyButton?: boolean;
 }>();
 
 const emit = defineEmits<{
-    updateFilter: [status: MissionStatus[]];
+    updateFilter: [status: HistoryFilterStatus[]];
 }>();
+
+const selectedStatus = defineModel<HistoryFilterStatus[]>({ default: [] });
+
+onMounted(() => {
+    if (props.currentStatus)
+        selectedStatus.value = [...props.currentStatus];
+});
 
 const { t } = useI18n();
 
-const availableStatus: MissionStatus[] = [MissionStatus.SUCCESS, MissionStatus.FAILED, MissionStatus.SERVER_ERROR, MissionStatus.CANCELED, MissionStatus.ABORTED, MissionStatus.REFUSED, MissionStatus.NO_CONTACT, MissionStatus.CREATED, MissionStatus.RECEIVED, MissionStatus.IN_PROGRESS];
-const selectedStatus = ref<MissionStatus[]>([...props.currentStatus]);
+const availableStatus: HistoryFilterStatus[] = [MissionStatus.SUCCESS, MissionStatus.FAILED, MissionStatus.SERVER_ERROR, MissionStatus.ABORTED, MissionStatus.REFUSED, MissionStatus.NO_CONTACT, MissionStatus.CANCELED];
 
-function toggleStatus(status: MissionStatus) {
+function toggleStatus(status: HistoryFilterStatus) {
     const index = selectedStatus.value.indexOf(status);
     if (index > -1) {
-        selectedStatus.value.splice(index, 1);
+        selectedStatus.value = selectedStatus.value.filter(s => s !== status);
     }
     else {
-        selectedStatus.value.push(status);
+        selectedStatus.value = [...selectedStatus.value, status];
     }
+}
+
+function resetStatus() {
+    selectedStatus.value = [];
 }
 </script>
 
@@ -49,15 +61,15 @@ function toggleStatus(status: MissionStatus) {
             </div>
         </GlobalCheckbox>
 
-        <GlobalButton class="mt-4 w-full font-Inter text-xs" size="full" text-size="text-xs" @click="emit('updateFilter', selectedStatus)">
+        <GlobalButton v-if="!props.hideApplyButton" class="mt-4 w-full font-Inter text-xs" size="full" text-size="text-xs" @click="emit('updateFilter', selectedStatus)">
             {{ t("history_saveFilter") }}
         </GlobalButton>
 
         <p
             class="mt-1 cursor-pointer text-center font-Inter text-xs font-semibold text-primary-600 normal-case underline underline-offset-2"
-            @click="emit('updateFilter', availableStatus)"
+            @click="resetStatus()"
         >
-            {{ t("history_reset") }}
+            {{ t("history_clear") }}
         </p>
     </div>
 </template>
