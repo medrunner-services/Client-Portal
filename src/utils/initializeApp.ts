@@ -1,4 +1,5 @@
 import type { Deployment } from "@medrunner/api-client";
+import { MissionStatus } from "@medrunner/api-client";
 
 import { HubConnectionState } from "@microsoft/signalr";
 import { WSState } from "@/@types/types.ts";
@@ -54,6 +55,21 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         }
         catch (error: any) {
             logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[blockCheck]" }));
+        }
+
+        try {
+            const lastConfirmedEmergencyWarning = userStore.syncedSettings.lastConfirmedWarningId;
+            const warningEmergency = await userStore.fetchUserClientEmergencyHistory(1, undefined, undefined, [MissionStatus.NO_CONTACT]);
+
+            if (
+                warningEmergency.data.length > 0
+                && warningEmergency.data[0].id !== lastConfirmedEmergencyWarning
+            ) {
+                logicStore.warningNoContactId = warningEmergency.data[0].id;
+            }
+        }
+        catch (_e) {
+            return;
         }
     }
 
