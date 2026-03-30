@@ -190,10 +190,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
             </p>
             <p
                 class="prose mt-1 break-words dark:prose-invert dark:text-white"
-                :class="[
-                    { 'markdown-extras prose-invert': isMessageAuthor(message.senderId) },
-                    { 'italic text-gray-900': message.deleted },
-                ]"
+                :class="[{ 'markdown-extras prose-invert': isMessageAuthor(message.senderId) }, { 'italic text-gray-900': message.deleted }]"
                 v-html="
                     message.deleted
                         ? t('tracking_chatMessageDeleted')
