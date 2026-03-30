@@ -117,6 +117,8 @@
     "formDetailed_ASDLocationLazarus": "Lazarus",
     "formDetailed_ASDLocationFarro": "Farro",
     "formDetailed_ASDLocationOnyx": "Onyx",
+    "formDetailed_locationTypeQVBreakerStation": "QV Breaker Station",
+    "formDetailed_locationTypeQVServiceStation": "QV Service Station",
     "tracking_messageReceived": "Bericht ontvangen",
     "tracking_helpOnTheWay": "Hulp is onderweg",
     "tracking_operationSuccessful": "Operatie succesvol",
