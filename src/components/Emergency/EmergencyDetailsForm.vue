@@ -337,6 +337,8 @@ async function sendDetails(): Promise<void> {
                         { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                         { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                         { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
+                        { value: 'QV Station', label: t('formDetailed_locationTypeQVServiceStation') },
+                        { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
                         { value: 'Other', label: t('formDetailed_locationTypeOther') },
                     ]"
                     :label="t('formDetailed_locationType')"
