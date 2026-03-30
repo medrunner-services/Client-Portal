@@ -36,6 +36,8 @@ export function getLanguageString(languageLocal: string): string {
             return "Norsk";
         case "en-GB":
             return "English (GB)";
+        case "cs-CZ":
+            return "Česko";
         default:
             return t("history_unknown");
     }
