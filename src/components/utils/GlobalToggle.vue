@@ -38,7 +38,7 @@ const value = computed({
                             peer h-6 w-11 rounded-full
                             peer-checked:bg-primary-600
                             peer-focus:ring-4 peer-focus:ring-primary-300 peer-focus:outline-hidden
-                            after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:transition-all after:content-['']
+                            after:absolute after:top-[2px] after:left-[2px] after:size-5 after:rounded-full after:border after:transition-all after:content-['']
                             peer-checked:after:translate-x-full peer-checked:after:border-white
                             dark:border-gray-600
                             dark:peer-checked:bg-primary-600

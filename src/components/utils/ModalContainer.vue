@@ -33,7 +33,7 @@ function closeModal() {
 <template>
     <teleport to="#modals">
         <div
-            class="fixed top-0 right-0 left-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
+            class="fixed inset-x-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
             @mousedown.self="props.userCloseModal ? closeModal() : undefined"
         >
             <div
