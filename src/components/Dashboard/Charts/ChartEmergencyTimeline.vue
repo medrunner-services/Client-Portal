@@ -240,7 +240,7 @@ function generateDateLabels() {
 }
 
 function generateChartData(emergencies: Emergency[]): number[] {
-    const graphData = Array.from({ length: periodDates.value.length }, () => 0);
+    const graphData = Array.from<number>({ length: periodDates.value.length }).fill(0);
 
     for (const emergency of emergencies) {
         for (let i = 0; i < periodDates.value.length; i++) {
@@ -410,7 +410,7 @@ async function updateDateSelector(params?: { start: string; end: string }) {
                         :current-start="startDateSelector"
                         :current-end="endDateSelector"
                         :require-range="true"
-                        @update-filter="(start, end) => updateDateSelector({ start, end })"
+                        @update-filter="(start: string, end: string) => updateDateSelector({ start, end })"
                     />
                 </div>
             </div>

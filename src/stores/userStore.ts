@@ -17,6 +17,8 @@ import { DateFormatingSetting, LocalStorageItems, MessageNotification } from "@/
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 import { api } from "@/utils/medrunnerClient";
 
+const rsiUsernameRegex = /.*\/citizens\/([^/]+).*/;
+
 export const useUserStore = defineStore("user", () => {
     const user = ref<Person>({} as Person);
     const isAuthenticated = ref(false);
@@ -60,7 +62,7 @@ export const useUserStore = defineStore("user", () => {
     async function linkUser(username: string): Promise<Person> {
         let linkUsername = username;
         if (username.includes("https://robertsspaceindustries.com/citizens/")) {
-            linkUsername = username.replace(/.*\/citizens\/([^/]+).*/, "$1");
+            linkUsername = username.replace(rsiUsernameRegex, "$1");
         }
 
         const response = await api.client.linkClient(linkUsername);

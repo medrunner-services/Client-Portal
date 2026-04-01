@@ -74,6 +74,8 @@ async function addTextToClipboard(text: string) {
     }, 2000);
 }
 
+const teamStringRegex = /, ([^,]*)$/;
+
 const getAssignedTeamsString = computed(() => {
     if (emergencyStore.trackedEmergency && emergencyStore.trackedEmergency.respondingTeams.length > 0) {
         const teamNames = emergencyStore.trackedEmergency.respondingTeams
@@ -81,7 +83,7 @@ const getAssignedTeamsString = computed(() => {
             .sort((a, b) => a.teamName.localeCompare(b.teamName))
             .map(team => team.teamName);
 
-        const teamNamesString = teamNames.join(", ").replace(/, ([^,]*)$/, " and $1");
+        const teamNamesString = teamNames.join(", ").replace(teamStringRegex, " and $1");
 
         return t(
             "teams_assignedTo",

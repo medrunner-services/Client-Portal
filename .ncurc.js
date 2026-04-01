@@ -12,7 +12,7 @@ module.exports = {
      @param upgradedVersion  The upgraded version number returned by the registry.
      @returns                A predefined group name ('major' | 'minor' | 'patch' | 'majorVersionZero' | 'none') or a custom string to create your own group.
      */
-    // eslint-disable-next-line unused-imports/no-unused-vars -- We keep the unsued variables for readability and ease of use.
+    // eslint-disable-next-line unused-imports/no-unused-vars -- Keep for documentation.
     groupFunction: (name, defaultGroup, currentSpec, upgradedSpec, upgradedVersion) => {
         if (name.startsWith("@medrunner")) {
             return "Medrunner Packages";
@@ -26,12 +26,13 @@ module.exports = {
       (See: https://git.coolaj86.com/coolaj86/semver-utils.js#semverutils-parse-semverstring)
      @returns        One of the valid target values (specified in the table above).
      */
-    // eslint-disable-next-line unused-imports/no-unused-vars -- We keep the unsued variables for readability and ease of use.
+    // We return greatest and not latest to make cooldown work with the latest version that is old enough
+    // eslint-disable-next-line unused-imports/no-unused-vars -- Keep for documentation.
     target: (name, semver) => {
         if (name.startsWith("@medrunner"))
             return "@beta";
         if (name === "@types/node")
             return "minor";
-        return "latest";
+        return "greatest";
     },
 };

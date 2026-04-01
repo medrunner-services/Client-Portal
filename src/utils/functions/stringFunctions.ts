@@ -6,6 +6,12 @@ import { i18n } from "@/i18n.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
+const discordTagRegex = /@\d+/g;
+const wrappedDiscordTagRegex = /<@(\d+)>/g;
+const httpProtocolRegex = /^https?/;
+const newLineCharacterRegex = /\\n/g;
+const hammerTimeRegex = /<t:(\d+):([A-Za-z])>/g;
+
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: Responder[], user: Person): string {
     const memberIdToNameMap: any = {};
     members.forEach((member) => {
@@ -26,13 +32,13 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
                     user.rsiHandle
                 }</span>`,
             )
-            .replace(/@\d+/g, (match) => {
+            .replace(discordTagRegex, (match) => {
                 const memberId = match.substring(1);
                 return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
             });
     }
     else {
-        return message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`).replace(/<@(\d+)>/g, (match, memberId) => {
+        return message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`).replace(wrappedDiscordTagRegex, (match, memberId) => {
             return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
         });
     }
@@ -90,7 +96,7 @@ export function parseMarkdown(text: string) {
             const href = tokens[idx].attrs![hrefIndex][1];
 
             if (!logicStore.isDiscordOpenWeb && (href.startsWith("https://discord.com") || href.startsWith("http://discord.com"))) {
-                tokens[idx].attrs![hrefIndex][1] = href.replace(/^https?/, "discord");
+                tokens[idx].attrs![hrefIndex][1] = href.replace(httpProtocolRegex, "discord");
             }
         }
 
@@ -117,7 +123,7 @@ export function parseMarkdown(text: string) {
         return defaultRender(tokens, idx, options, env, self);
     };
 
-    const manipulatedText = text.replace(/\\n/g, "<br>").replace(/<t:(\d+):([A-Za-z])>/g, (match, timestamp, format) => {
+    const manipulatedText = text.replace(newLineCharacterRegex, "<br>").replace(hammerTimeRegex, (match, timestamp, format) => {
         if (typeof timestamp !== "string" || typeof format !== "string")
             return timestamp;
         const date = new Date(Number.parseInt(timestamp) * 1000);

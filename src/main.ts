@@ -21,7 +21,7 @@ await (async () => {
     let apiInitialized = false;
     const refreshTokenExpiration = localStorage.getItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION) ?? undefined;
 
-    if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > new Date().getTime()) {
+    if (refreshTokenExpiration && new Date(refreshTokenExpiration).getTime() > Date.now()) {
         try {
             initializeApi();
             apiInitialized = true;

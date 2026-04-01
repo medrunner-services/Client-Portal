@@ -107,10 +107,12 @@ function focusNextInput(event: KeyboardEvent) {
     }
 }
 
+const pasteDataRegex = /[-\s]/g;
+
 function handlePaste(event: ClipboardEvent) {
     event.preventDefault();
     let pasteData = event.clipboardData?.getData("text") || "";
-    pasteData = pasteData.replace(/[-\s]/g, "");
+    pasteData = pasteData.replace(pasteDataRegex, "");
 
     const inputs = [codeValuePart1, codeValuePart2, codeValuePart3, codeValuePart4];
     const inputsField = [inputCodePart1.value, inputCodePart2.value, inputCodePart3.value, inputCodePart4.value];
