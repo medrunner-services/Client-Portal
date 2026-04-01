@@ -2,3 +2,4 @@ onlyBuiltDependencies:
   - esbuild
 
 shamefullyHoist: true
+savePrefix: ""
