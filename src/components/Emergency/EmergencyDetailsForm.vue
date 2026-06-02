@@ -17,6 +17,7 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { AlertColors, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { lineReturnRegex } from "@/utils/globalVars.ts";
 
 const { t } = useI18n();
 const emergencyStore = useEmergencyStore();
@@ -35,6 +36,8 @@ const inputExactLocation = ref("");
 const inputInjury = ref("");
 const inputCrimestat = ref("");
 const inputLocationType = ref("");
+const inputLocationASDFacilityType = ref("");
+const inputLocationQVStationType = ref("");
 const inputCrimestatDetails = ref("");
 const inputDeathHours = ref<number | undefined>(undefined);
 const inputDeathMinutes = ref<number | undefined>(undefined);
@@ -58,6 +61,18 @@ function confirmedRules(): void {
     displayRulesModal.value = false;
 }
 
+function getInputLocationString() {
+    if (!inputLocationType.value) return "Unknown";
+
+    if (inputLocationASDFacilityType.value) {
+        return `${inputLocationType.value} (${inputLocationASDFacilityType.value})`;
+    } else if (inputLocationQVStationType.value) {
+        return `${inputLocationType.value} (${inputLocationQVStationType.value})`;
+    } else {
+        return inputLocationType.value;
+    }
+}
+
 async function sendDetails(): Promise<void> {
     try {
         if (!emergencyStore.trackedEmergency) {
@@ -66,18 +81,18 @@ async function sendDetails(): Promise<void> {
         }
         submittingDetails.value = true;
         await emergencyStore.sendEmergencyMessage({
-            emergencyId: emergencyStore.trackedEmergency!.id,
+            emergencyId: emergencyStore.trackedEmergency.id,
             contents: `## Emergency details from Client\n\n
-            _The client's situation is:_  **${inputSituation.value ? inputSituation.value : "Unknown"}**\n
-            _The client type of location is:_  **${inputLocationType.value ? inputLocationType.value : "Unknown"}**\n
-            _The client exact location is:_  **${inputExactLocation.value ? inputExactLocation.value : "Unknown"}**\n
-            _Client ship:_  **${inputShip.value ? inputShip.value : "Unknown"}**\n
+            _The client's situation is:_  **${inputSituation.value || "Unknown"}**\n
+            _The client type of location is:_  **${getInputLocationString()}**\n
+            _The client exact location is:_  **${inputExactLocation.value || "Unknown"}**\n
+            _Client ship:_  **${inputShip.value || "Unknown"}**\n
             _Client death:_  **${
                 inputDeathHours.value || inputDeathMinutes.value
                     ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:R>`
                     : "Unknown"
             }**\n
-            _Is the client injured:_  **${inputInjury.value ? inputInjury.value : "Unknown"}**\n
+            _Is the client injured:_  **${inputInjury.value || "Unknown"}**\n
             _Has the client sent an IG beacon?_  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**${
                 inputBeaconPlayer.value ? `\n\nName: ${inputBeaconPlayer.value}` : ""
             }\n${inputBeaconDistance.value ? `Distance: ${inputBeaconDistance.value}` : ""}\n
@@ -87,10 +102,10 @@ async function sendDetails(): Promise<void> {
             _Are there enemies nearby?_  **${inputEnemies.value === true ? "Yes" : inputEnemies.value === false ? "No" : "Unknown"}**${
                 inputEnemiesDetails.value ? `\n\n${inputEnemiesDetails.value}` : ""
             }\n
-            _Does the client have CrimeStat?_  **${inputCrimestat.value ? inputCrimestat.value : "Unknown"}**${
+            _Does the client have CrimeStat?_  **${inputCrimestat.value || "Unknown"}**${
                 inputCrimestatDetails.value ? `\n\n${inputCrimestatDetails.value}` : ""
             }\n
-            _Remarks:_\n\n${inputRemarks.value ? inputRemarks.value : "None"}`,
+            _Remarks:_${inputRemarks.value ? `\n>${inputRemarks.value.replace(lineReturnRegex, "\n")}` : "  <em>None provided</em>"}`,
         });
 
         currentFormPart.value = 1;
@@ -113,6 +128,8 @@ async function sendDetails(): Promise<void> {
         inputCrimestatDetails.value = "";
         inputShip.value = "";
         inputLocationType.value = "";
+        inputLocationASDFacilityType.value = "";
+        inputLocationQVStationType.value = "";
 
         emit("submittedDetails");
     } catch (error: any) {
@@ -128,13 +145,13 @@ async function sendDetails(): Promise<void> {
         <div class="flex min-h-11 items-center">
             <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
             <span v-if="logicStore.currentWSState === WSState.HEALTHY" class="relative mb-[0.35rem] ml-5 flex h-3 w-3">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-600 opacity-75"></span>
-                <span class="relative inline-flex h-3 w-3 rounded-full bg-primary-600"></span>
+                <span class="bg-primary-600 absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"></span>
+                <span class="bg-primary-600 relative inline-flex h-3 w-3 rounded-full"></span>
             </span>
         </div>
 
         <GlobalCard class="mt-8">
-            <p class="font-Mohave text-3xl font-bold text-primary-600 dark:text-red-700">
+            <p class="font-Mohave text-primary-600 text-3xl font-bold dark:text-red-700">
                 {{ t("formDetailed_infoCardTitle") }}
             </p>
 
@@ -144,12 +161,12 @@ async function sendDetails(): Promise<void> {
         </GlobalCard>
 
         <div class="mt-8">
-            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 dark:text-gray-400 sm:text-base lg:mb-8">
+            <ol class="mb-6 flex items-center text-center text-sm font-medium text-gray-500 sm:text-base lg:mb-8 dark:text-gray-400">
                 <li
-                    class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 dark:text-red-700 dark:after:border-gray-700 sm:after:inline-block sm:after:content-[''] xl:after:mx-10"
+                    class="flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-1 after:border-b after:border-gray-200 sm:after:inline-block sm:after:content-[''] xl:after:mx-10 dark:text-red-700 dark:after:border-gray-700"
                 >
                     <div
-                        class="flex items-center text-primary-600 after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:text-red-700 dark:after:text-gray-500 sm:block sm:after:hidden"
+                        class="text-primary-600 flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] sm:block sm:after:hidden dark:text-red-700 dark:after:text-gray-500"
                     >
                         <svg
                             class="mr-2 h-4 w-4 sm:mx-auto sm:mb-2 sm:h-6 sm:w-6"
@@ -167,10 +184,10 @@ async function sendDetails(): Promise<void> {
                     </div>
                 </li>
                 <li
-                    class="after:border-1 flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-b after:border-gray-200 after:content-[''] dark:after:border-gray-700 sm:after:inline-block xl:after:mx-10"
+                    class="flex items-center after:mx-6 after:hidden after:h-1 after:w-12 after:border-1 after:border-b after:border-gray-200 after:content-[''] sm:after:inline-block xl:after:mx-10 dark:after:border-gray-700"
                 >
                     <div
-                        class="flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] dark:after:text-gray-500 sm:block sm:after:hidden"
+                        class="flex items-center after:mx-2 after:font-light after:text-gray-200 after:content-['/'] sm:block sm:after:hidden dark:after:text-gray-500"
                         :class="currentFormPart >= 2 ? 'text-primary-600 dark:text-red-700' : ''"
                     >
                         <svg
@@ -240,27 +257,53 @@ async function sendDetails(): Promise<void> {
                 :helper="t('formDetailed_helpInjury')"
             />
 
-            <GlobalSelectInput
-                v-model="inputLocationType"
-                class="w-full"
-                :options="[
-                    { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
-                    { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
-                    { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
-                    { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
-                    { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
-                    { value: 'Orbital Laser Platform', label: t('formDetailed_locationTypeOLP') },
-                    { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
-                    { value: 'Space', label: t('formDetailed_locationTypeSpace') },
-                    { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
-                    { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
-                    { value: 'QV Station', label: t('formDetailed_locationTypeQVServiceStation') },
-                    { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
-                    { value: 'Other', label: t('formDetailed_locationTypeOther') },
-                ]"
-                :label="t('formDetailed_locationType')"
-                :helper="t('formDetailed_helpLocationType')"
-            />
+            <div>
+                <GlobalSelectInput
+                    v-model="inputLocationType"
+                    class="w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectLocationType'), hidden: true },
+                        { value: 'Bunker', label: t('formDetailed_locationTypeBunker') },
+                        { value: 'Outpost', label: t('formDetailed_locationTypeOutpost') },
+                        { value: 'Distribution Center', label: t('formDetailed_locationTypeDistributionCenter') },
+                        { value: 'Contested Zones', label: t('formDetailed_locationTypeContestedZones') },
+                        { value: 'Orbital Laser Platform', label: t('formDetailed_locationTypeOLP') },
+                        { value: 'Platform Alignment Facility', label: t('formDetailed_locationTypePAF') },
+                        { value: 'Space', label: t('formDetailed_locationTypeSpace') },
+                        { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
+                        { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
+                        { value: 'QV Station', label: t('formDetailed_locationTypeQVStation') },
+                        { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
+                        { value: 'Other', label: t('formDetailed_locationTypeOther') },
+                    ]"
+                    :label="t('formDetailed_locationType')"
+                    :helper="t('formDetailed_helpLocationType')"
+                />
+
+                <GlobalSelectInput
+                    v-if="inputLocationType && inputLocationType === 'ASD Facility'"
+                    v-model="inputLocationASDFacilityType"
+                    class="mt-2 w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectASDLocationType'), hidden: true },
+                        { value: 'Lazarus', label: t('formDetailed_ASDLocationLazarus') },
+                        { value: 'Farro', label: t('formDetailed_ASDLocationFarro') },
+                        { value: 'Onyx', label: t('formDetailed_ASDLocationOnyx') },
+                    ]"
+                />
+
+                <GlobalSelectInput
+                    v-else-if="inputLocationType && inputLocationType === 'QV Station'"
+                    v-model="inputLocationQVStationType"
+                    class="mt-2 w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectQVLocationType'), hidden: true },
+                        { value: 'Logistics Station', label: t('formDetailed_locationTypeQVLogisticsStation') },
+                        { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
+                        { value: 'Extraction Station', label: t('formDetailed_locationTypeQVExtractionStation') },
+                    ]"
+                />
+            </div>
 
             <GlobalTextInput
                 v-model="inputExactLocation"
@@ -340,7 +383,7 @@ async function sendDetails(): Promise<void> {
                     class="mt-2 w-full"
                     :placeholder="t('formDetailed_placeholderBeaconDistance')"
                 />
-                <p v-if="inputBeacon" class="mt-2 text-sm font-medium text-primary-600 dark:text-red-700">
+                <p v-if="inputBeacon" class="text-primary-600 mt-2 text-sm font-medium dark:text-red-700">
                     {{ t("formDetailed_beaconCancelMessage") }}
                 </p>
             </div>
