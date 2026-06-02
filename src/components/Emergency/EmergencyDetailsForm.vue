@@ -52,8 +52,6 @@ const inputRemarks = ref("");
 const formErrorMessage = ref("");
 const submittingDetails = ref(false);
 
-
-
 onMounted(() => {
     if (!userStore.syncedSettings.hideEmergencyRulesModal)
         displayRulesModal.value = true;
