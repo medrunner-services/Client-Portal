@@ -3,3 +3,6 @@ savePrefix: ""
 confirmModulesPurge: true
 allowBuilds:
   esbuild: true
+  wrangler: true
+  workerd: true
+  sharp: true
