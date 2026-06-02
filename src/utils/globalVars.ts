@@ -61,3 +61,4 @@ export const multiSelectInputDefaultClasses = {
 
 export const discordIdRegex = /^\d{17,20}$/;
 export const rsiHandleRegex = /^\S{3,64}$/;
+export const lineReturnRegex = /[\r\n]+/g;

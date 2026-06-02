@@ -17,6 +17,7 @@ import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { lineReturnRegex } from "@/utils/globalVars.ts";
 
 const emit = defineEmits(["submittedDetails"]);
 const { t } = useI18n();
@@ -51,7 +52,7 @@ const inputRemarks = ref("");
 const formErrorMessage = ref("");
 const submittingDetails = ref(false);
 
-const lineReturnRegex = /[\r\n]+/g;
+
 
 onMounted(() => {
     if (!userStore.syncedSettings.hideEmergencyRulesModal)
@@ -133,6 +134,8 @@ async function sendDetails(): Promise<void> {
         inputCrimestatDetails.value = "";
         inputShip.value = "";
         inputLocationType.value = "";
+        inputLocationASDFacilityType.value = "";
+        inputLocationQVStationType.value = "";
 
         emit("submittedDetails");
     }
