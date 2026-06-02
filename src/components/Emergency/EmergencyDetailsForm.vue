@@ -35,6 +35,7 @@ const inputInjury = ref("");
 const inputCrimestat = ref("");
 const inputLocationType = ref("");
 const inputLocationASDFacilityType = ref("");
+const inputLocationQVStationType = ref("");
 const inputCrimestatDetails = ref("");
 const inputDeathHours = ref<number | undefined>(undefined);
 const inputDeathMinutes = ref<number | undefined>(undefined);
@@ -50,6 +51,8 @@ const inputRemarks = ref("");
 const formErrorMessage = ref("");
 const submittingDetails = ref(false);
 
+const lineReturnRegex = /[\r\n]+/g;
+
 onMounted(() => {
     if (!userStore.syncedSettings.hideEmergencyRulesModal)
         displayRulesModal.value = true;
@@ -59,6 +62,21 @@ function confirmedRules(): void {
     displayRulesModal.value = false;
 }
 
+function getInputLocationString() {
+    if (!inputLocationType.value)
+        return "Unknown";
+
+    if (inputLocationASDFacilityType.value) {
+        return `${inputLocationType.value} (${inputLocationASDFacilityType.value})`;
+    }
+    else if (inputLocationQVStationType.value) {
+        return `${inputLocationType.value} (${inputLocationQVStationType.value})`;
+    }
+    else {
+        return inputLocationType.value;
+    }
+}
+
 async function sendDetails(): Promise<void> {
     try {
         if (!emergencyStore.trackedEmergency) {
@@ -66,19 +84,20 @@ async function sendDetails(): Promise<void> {
             return;
         }
         submittingDetails.value = true;
+
         await emergencyStore.sendEmergencyMessage({
             emergencyId: emergencyStore.trackedEmergency.id,
             contents: `## Emergency details from Client\n\n
-            _The client's situation is:_  **${inputSituation.value ?? "Unknown"}**\n
-            _The client type of location is:_  **${inputLocationType.value && inputLocationASDFacilityType.value ? `${inputLocationType.value} (${inputLocationASDFacilityType.value})` : (inputLocationType.value ?? "Unknown")}**\n
-            _The client exact location is:_  **${inputExactLocation.value ?? "Unknown"}**\n
-            _Client ship:_  **${inputShip.value ?? "Unknown"}**\n
+            _The client's situation is:_  **${inputSituation.value || "Unknown"}**\n
+            _The client type of location is:_  **${getInputLocationString()}**\n
+            _The client exact location is:_  **${inputExactLocation.value || "Unknown"}**\n
+            _Client ship:_  **${inputShip.value || "Unknown"}**\n
             _Client death:_  **${
                 inputDeathHours.value || inputDeathMinutes.value
                     ? `<t:${Math.round(Date.now() / 1000) + (inputDeathHours.value ?? 0) * 3600 + (inputDeathMinutes.value ?? 0) * 60}:R>`
                     : "Unknown"
             }**\n
-            _Is the client injured:_  **${inputInjury.value ?? "Unknown"}**\n
+            _Is the client injured:_  **${inputInjury.value || "Unknown"}**\n
             _Has the client sent an IG beacon?_  **${inputBeacon.value === true ? "Yes" : inputBeacon.value === false ? "No" : "Unknown"}**${
                 inputBeaconPlayer.value ? `\n\nName: ${inputBeaconPlayer.value}` : ""
             }\n${inputBeaconDistance.value ? `Distance: ${inputBeaconDistance.value}` : ""}\n
@@ -88,10 +107,10 @@ async function sendDetails(): Promise<void> {
             _Are there enemies nearby?_  **${inputEnemies.value === true ? "Yes" : inputEnemies.value === false ? "No" : "Unknown"}**${
                 inputEnemiesDetails.value ? `\n\n${inputEnemiesDetails.value}` : ""
             }\n
-            _Does the client have CrimeStat?_  **${inputCrimestat.value ?? "Unknown"}**${
+            _Does the client have CrimeStat?_  **${inputCrimestat.value || "Unknown"}**${
                 inputCrimestatDetails.value ? `\n\n${inputCrimestatDetails.value}` : ""
             }\n
-            _Remarks:_\n\n${inputRemarks.value ?? "None"}`,
+            _Remarks:_${inputRemarks.value ? `\n>${inputRemarks.value.replace(lineReturnRegex, "\n")}` : "  <em>None provided</em>"}`,
         });
 
         currentFormPart.value = 1;
@@ -337,7 +356,7 @@ async function sendDetails(): Promise<void> {
                         { value: 'Space', label: t('formDetailed_locationTypeSpace') },
                         { value: 'Surface', label: t('formDetailed_locationTypeSurface') },
                         { value: 'ASD Facility', label: t('formDetailed_locationTypeASDFacility') },
-                        { value: 'QV Station', label: t('formDetailed_locationTypeQVServiceStation') },
+                        { value: 'QV Station', label: t('formDetailed_locationTypeQVStation') },
                         { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
                         { value: 'Other', label: t('formDetailed_locationTypeOther') },
                     ]"
@@ -354,6 +373,18 @@ async function sendDetails(): Promise<void> {
                         { value: 'Lazarus', label: t('formDetailed_ASDLocationLazarus') },
                         { value: 'Farro', label: t('formDetailed_ASDLocationFarro') },
                         { value: 'Onyx', label: t('formDetailed_ASDLocationOnyx') },
+                    ]"
+                />
+
+                <GlobalSelectInput
+                    v-else-if="inputLocationType && inputLocationType === 'QV Station'"
+                    v-model="inputLocationQVStationType"
+                    class="mt-2 w-full"
+                    :options="[
+                        { value: '', label: t('formDetailed_selectQVLocationType'), hidden: true },
+                        { value: 'Logistics Station', label: t('formDetailed_locationTypeQVLogisticsStation') },
+                        { value: 'Breaker Station', label: t('formDetailed_locationTypeQVBreakerStation') },
+                        { value: 'Extraction Station', label: t('formDetailed_locationTypeQVExtractionStation') },
                     ]"
                 />
             </div>
