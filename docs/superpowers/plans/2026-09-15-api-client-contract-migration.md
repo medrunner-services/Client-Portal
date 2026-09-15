@@ -188,7 +188,7 @@ git commit -m "fix: submit alert location IDs" \
 - Modify: `src/components/Emergency/EmergencyTracking.vue`
 - Modify: `src/components/Dashboard/History/HistoryTableRow.vue`
 - Modify: `D:/Git/github/medrunner-services/infra-aspire/ref/api/BusinessLogic/Repositories/EmergencyRepository.cs`
-- Modify: `D:/Git/github/medrunner-services/infra-aspire/ref/api/BusinessLogicTest/Repositories/Emergency/CreateTests.cs`
+- Modify: `D:/Git/github/medrunner-services/infra-aspire/ref/api/BusinessLogicTest/Repositories/Emergency/CreateEmergencyTests.cs`
 
 **Interfaces:**
 - Consumes: `Emergency.locationId`, `Emergency.system`, and `findLocationPath`.
