@@ -44,6 +44,14 @@ it("returns only enabled non-root locations that are visible and serviceable", (
     ]);
 });
 
+it("provides the selected option's stable ID for an emergency request", () => {
+    const [selectedOption] = locationFunctions?.getSelectableAlertLocations(locations) ?? [];
+
+    expect(selectedOption?.label).toContain("Daymar");
+    expect(selectedOption?.id).toBe("daymar");
+    expect(selectedOption?.id).not.toBe("Daymar");
+});
+
 it("finds an inactive historical location without applying submission filters", () => {
     expect(locationFunctions?.findLocationPath(locations, "retired-moon")?.map(location => location.name))
         .toEqual(["Stanton", "Crusader", "Retired Moon"]);

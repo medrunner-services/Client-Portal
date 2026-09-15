@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { CreateEmergencyRequest, Location, SpaceLocation } from "@medrunner/api-client";
-import { computed, onMounted, ref } from "vue";
+import type { CreateEmergencyRequest } from "@medrunner/api-client";
+import { ThreatLevel } from "@medrunner/api-client";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
@@ -11,6 +12,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { getSelectableAlertLocations } from "@/utils/functions/locationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
@@ -20,12 +22,9 @@ const { t } = useI18n();
 
 const formSubmittingEmergency = ref(false);
 const formErrorMessage = ref("");
-const inputSystem = ref("");
-const inputPlanet = ref("");
-const inputLocation = ref("");
+const inputLocationId = ref("");
 const inputThreatLevel = ref("");
 const inputRSIHandle = ref("");
-const locationsInformation = ref<SpaceLocation[]>([]);
 
 const isEmergenciesDisabled = computed(() => {
     if (!logicStore.medrunnerSettings)
@@ -43,129 +42,44 @@ const isEmergenciesDisabled = computed(() => {
     }
 });
 
-const getSystem = computed(() => {
-    const systems: any = [{ value: "", label: t("form_selectSystem"), hidden: true }];
+const selectableLocations = computed(() => {
+    const locations = logicStore.medrunnerSettings?.locationSettings.locations ?? [];
 
-    if (locationsInformation.value.length !== 0) {
-        locationsInformation.value
-            .filter(location => location.enabled)
-            .forEach((system) => {
-                systems.push({
-                    value: system.name,
-                });
-            });
-    }
-
-    return systems;
-});
-
-const getPlanets = computed(() => {
-    const planets: any = [{ value: "", label: t("form_selectAPlanet"), hidden: true }];
-
-    if (inputSystem.value) {
-        const indexSystem = locationsInformation.value
-            .filter(location => location.enabled)
-            .findIndex(system => system.name === inputSystem.value);
-
-        if (indexSystem !== -1) {
-            locationsInformation.value[indexSystem].children
-                .filter(location => location.enabled)
-                .forEach((planet) => {
-                    planets.push({
-                        value: planet.name,
-                    });
-                });
-        }
-    }
-
-    return planets;
-});
-
-const getLocations = computed(() => {
-    const locations: any = [{ value: "", label: t("form_selectAMoon") }];
-
-    if (inputPlanet.value && inputSystem.value) {
-        const indexSystem = locationsInformation.value
-            .filter(location => location.enabled)
-            .findIndex(system => system.name === inputSystem.value);
-        if (indexSystem === -1)
-            return locations;
-
-        const indexPlanet = locationsInformation.value[indexSystem].children
-            .filter(location => location.enabled)
-            .findIndex(planet => planet.name === inputPlanet.value);
-
-        if (indexPlanet !== -1) {
-            locationsInformation.value[indexSystem].children[indexPlanet].children
-                .filter(location => location.enabled)
-                .forEach((location) => {
-                    locations.push({
-                        value: location.name,
-                    });
-                });
-        }
-    }
-
-    return locations;
-});
-
-onMounted(() => {
-    if (logicStore.medrunnerSettings)
-        locationsInformation.value = logicStore.medrunnerSettings.locationSettings.locations;
-
-    if (getSystem.value.length === 2)
-        inputSystem.value = getSystem.value[1].value;
-    if (getPlanets.value.length === 2)
-        inputPlanet.value = getPlanets.value[1].value;
+    return [
+        { value: "", label: t("form_selectAMoon"), hidden: true },
+        ...getSelectableAlertLocations(locations).map(option => ({
+            value: option.id,
+            label: option.label,
+        })),
+    ];
 });
 
 async function submitEmergency() {
-    if (!inputSystem.value || !inputPlanet.value || !inputThreatLevel.value) {
+    if (!inputLocationId.value || !inputThreatLevel.value) {
         formErrorMessage.value = t("error_missingFields");
         return;
     }
     try {
         formSubmittingEmergency.value = true;
 
-        const formLocation: Location = {
-            system: inputSystem.value,
-            subsystem: inputPlanet.value,
-            tertiaryLocation: inputLocation.value,
-        };
-        if (formLocation.tertiaryLocation === "")
-            delete formLocation.tertiaryLocation;
-
         const payload: CreateEmergencyRequest = {
-            location: formLocation,
+            locationId: inputLocationId.value,
             threatLevel: Number.parseInt(inputThreatLevel.value),
+            rsiHandle: inputRSIHandle.value || null,
         };
-        if (inputRSIHandle.value)
-            payload.rsiHandle = inputRSIHandle.value;
 
         const response = await emergencyStore.createEmergency(payload);
 
         userStore.user.activeEmergency = response.id;
 
         formSubmittingEmergency.value = false;
-        inputSystem.value = "Stanton";
-        inputPlanet.value = "";
-        inputLocation.value = "";
+        inputLocationId.value = "";
         inputThreatLevel.value = "";
     }
     catch (error: any) {
         formSubmittingEmergency.value = false;
         formErrorMessage.value = errorString(error.statusCode);
     }
-}
-
-function clearPlanetsLocations(planets: boolean, locations: boolean) {
-    if (planets) {
-        if (getPlanets.value.length === 2)
-            inputPlanet.value = getPlanets.value[1].value;
-        else inputPlanet.value = "";
-    }
-    if (locations)
-        inputLocation.value = "";
 }
 </script>
 
@@ -208,33 +122,12 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                 "
             >
                 <GlobalSelectInput
-                    v-model="inputSystem"
+                    v-model="inputLocationId"
                     class="w-full"
-                    :options="getSystem"
+                    :options="selectableLocations"
                     :required="true"
-                    :disabled="getSystem.length <= 2 || isEmergenciesDisabled"
-                    :label="t('form_system')"
-                    :helper="t('form_helpSystem')"
-                    @change="clearPlanetsLocations(true, true)"
-                />
-
-                <GlobalSelectInput
-                    v-model="inputPlanet"
-                    class="w-full"
-                    :options="getPlanets"
-                    :required="true"
-                    :disabled="!inputSystem || getPlanets.length <= 2 || isEmergenciesDisabled"
-                    :label="t('form_subSystem')"
-                    :helper="t('form_helpSubSystem')"
-                    @change="clearPlanetsLocations(false, true)"
-                />
-
-                <GlobalSelectInput
-                    v-model="inputLocation"
-                    class="w-full"
-                    :options="getLocations"
-                    :disabled="!inputPlanet || getLocations.length === 1 || isEmergenciesDisabled"
-                    :label="t('form_moon')"
+                    :disabled="selectableLocations.length === 1 || isEmergenciesDisabled"
+                    :label="t('history_location')"
                     :helper="t('form_helpMoon')"
                 />
 
@@ -244,10 +137,10 @@ function clearPlanetsLocations(planets: boolean, locations: boolean) {
                     :disabled="isEmergenciesDisabled"
                     :options="[
                         { value: '', label: t('form_assessTheThreat'), hidden: true },
-                        { value: '0', label: t('form_unknownThreat') },
-                        { value: '1', label: t('form_lowThreat') },
-                        { value: '2', label: t('form_mediumThreat') },
-                        { value: '3', label: t('form_highThreat') },
+                        { value: ThreatLevel.UNKNOWN.toString(), label: t('form_unknownThreat') },
+                        { value: ThreatLevel.LOW.toString(), label: t('form_lowThreat') },
+                        { value: ThreatLevel.MEDIUM.toString(), label: t('form_mediumThreat') },
+                        { value: ThreatLevel.HIGH.toString(), label: t('form_highThreat') },
                     ]"
                     :required="true"
                     :label="t('form_threatLevel')"
