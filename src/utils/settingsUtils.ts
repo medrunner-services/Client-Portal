@@ -4,6 +4,7 @@ import { LocalStorageItems } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
+import { requireResponseData } from "@/utils/functions/apiResponseFunctions.ts";
 import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { api } from "@/utils/medrunnerClient";
 
@@ -106,7 +107,7 @@ export async function initializeMedrunnerSettings() {
     if (userStore.isAuthenticated) {
         try {
             const response = await api.orgSettings.getPublicSettings();
-            logicStore.medrunnerSettings = response.data;
+            logicStore.medrunnerSettings = requireResponseData(response);
         }
         catch (_e) {
 

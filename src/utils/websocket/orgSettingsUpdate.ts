@@ -2,6 +2,7 @@ import { AlertColors } from "@/@types/types.ts";
 import { i18n } from "@/i18n.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
+import { requireResponseData } from "@/utils/functions/apiResponseFunctions.ts";
 import { api } from "@/utils/medrunnerClient.ts";
 
 export async function orgSettingsUpdate() {
@@ -11,7 +12,7 @@ export async function orgSettingsUpdate() {
 
     try {
         const response = await api.orgSettings.getPublicSettings();
-        logicStore.medrunnerSettings = response.data;
+        logicStore.medrunnerSettings = requireResponseData(response);
     }
     catch (_e) {
         alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
