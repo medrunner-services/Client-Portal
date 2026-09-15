@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import type { CreateEmergencyRequest } from "@medrunner/api-client";
 import { ThreatLevel } from "@medrunner/api-client";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
 import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
@@ -12,6 +11,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { submitEmergencyRequest } from "@/utils/functions/emergencyRequestFunctions.ts";
 import { getSelectableAlertLocations } from "@/utils/functions/locationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
@@ -46,12 +46,21 @@ const selectableLocations = computed(() => {
     const locations = logicStore.medrunnerSettings?.locationSettings.locations ?? [];
 
     return [
-        { value: "", label: t("form_selectAMoon"), hidden: true },
+        { value: "", label: t("formDetailed_placeholderLocation"), hidden: true },
         ...getSelectableAlertLocations(locations).map(option => ({
             value: option.id,
             label: option.label,
         })),
     ];
+});
+
+watch(selectableLocations, (options) => {
+    if (
+        inputLocationId.value
+        && !options.some(option => option.value === inputLocationId.value)
+    ) {
+        inputLocationId.value = "";
+    }
 });
 
 async function submitEmergency() {
@@ -62,13 +71,23 @@ async function submitEmergency() {
     try {
         formSubmittingEmergency.value = true;
 
-        const payload: CreateEmergencyRequest = {
-            locationId: inputLocationId.value,
-            threatLevel: Number.parseInt(inputThreatLevel.value),
-            rsiHandle: inputRSIHandle.value || null,
-        };
+        const currentLocations = logicStore.medrunnerSettings?.locationSettings.locations ?? [];
+        const response = await submitEmergencyRequest(
+            currentLocations,
+            {
+                locationId: inputLocationId.value,
+                threatLevel: inputThreatLevel.value,
+                rsiHandle: inputRSIHandle.value,
+            },
+            payload => emergencyStore.createEmergency(payload),
+        );
 
-        const response = await emergencyStore.createEmergency(payload);
+        if (!response) {
+            formSubmittingEmergency.value = false;
+            formErrorMessage.value = t("error_missingFields");
+            inputLocationId.value = "";
+            return;
+        }
 
         userStore.user.activeEmergency = response.id;
 
@@ -128,7 +147,7 @@ async function submitEmergency() {
                     :required="true"
                     :disabled="selectableLocations.length === 1 || isEmergenciesDisabled"
                     :label="t('history_location')"
-                    :helper="t('form_helpMoon')"
+                    :helper="t('formDetailed_helpLocation')"
                 />
 
                 <GlobalSelectInput
