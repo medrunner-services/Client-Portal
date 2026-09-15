@@ -33,15 +33,15 @@ function closeModal() {
 <template>
     <teleport to="#modals">
         <div
-            class="fixed inset-x-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
+            class="fixed inset-x-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/60 py-24"
             @mousedown.self="props.userCloseModal ? closeModal() : undefined"
         >
             <div
                 class="
-                    content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg bg-white p-4 shadow-sm
+                    content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-md
                     lg:w-1/2
                     2xl:w-1/3
-                    dark:bg-gray-800
+                    dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-800
                 "
             >
                 <div class="flex w-full justify-between">

@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
     <div
         class="
-            rounded-lg border-gray-200 p-4 shadow-md
+            rounded-lg border-gray-200 bg-gray-50 p-4 shadow-md
             md:p-6
             dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900
         "

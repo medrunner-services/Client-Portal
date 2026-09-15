@@ -6,8 +6,8 @@ import MobileInnerNavbar from "@/components/Navbar/MobileInnerNavbar.vue";
 <template>
     <nav
         class="
-            bg-white shadow-md
-            dark:bg-gray-800 dark:shadow-gray-900
+            border-b border-gray-300 bg-gray-50 shadow-sm
+            dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900
         "
     >
         <div class="mx-auto font-medium">

@@ -10,8 +10,8 @@ const logicStore = useLogicStore();
 <template>
     <div
         class="
-            border-t border-t-primary-600 py-4
-            dark:border-t-gray-500
+            border-t border-t-gray-300 bg-gray-50 py-4
+            dark:border-gray-700 dark:bg-[#1D2735]
         "
     >
         <div
@@ -28,7 +28,7 @@ const logicStore = useLogicStore();
                     class="
                         mt-3 cursor-pointer text-sm text-gray-900 underline underline-offset-2
                         lg:mt-0 lg:ml-4
-                        dark:text-gray-50
+                        dark:text-gray-400
                     "
                 >
                     <a href="https://www.medrunner.space/legal-information" target="_blank">{{ t("user_privacyPolicyLink") }}</a>
@@ -38,7 +38,7 @@ const logicStore = useLogicStore();
                     class="
                         mt-3 cursor-pointer text-sm text-gray-900 underline underline-offset-2
                         lg:mt-0 lg:ml-4
-                        dark:text-gray-50
+                        dark:text-gray-400
                     "
                 >
                     <a href="https://www.medrunner.space/" target="_blank">medrunner.space</a>

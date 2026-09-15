@@ -41,8 +41,8 @@ onMounted(async () => {
         <div class="w-full">
             <div
                 class="
-                    rounded-lg shadow-md
-                    dark:bg-gray-800 dark:shadow-gray-900
+                    rounded-lg border border-gray-200 bg-gray-50 shadow-md
+                    dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-900
                 "
             >
                 <div>
