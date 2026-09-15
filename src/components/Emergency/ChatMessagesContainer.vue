@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Person, Responder } from "@medrunner/api-client";
 import type { TrackedChatMessageItem } from "@/@types/types.ts";
+import { Class } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 
 import { useI18n } from "vue-i18n";
@@ -112,6 +113,11 @@ function isMessageAuthor(id: string): boolean {
     return id === props.user.id;
 }
 
+function isOfficialMessage(message: TrackedChatMessageItem): boolean {
+    return message.senderId !== props.user.id
+        || message.senderClass !== Class.NONE;
+}
+
 function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
     if (sortedMessages.value.length <= 1) {
         return false;
@@ -148,20 +154,20 @@ function truncatedMessage(message: TrackedChatMessageItem): string {
 function messageClasses(message: TrackedChatMessageItem, messageIndex: number): string {
     const classes: string[] = [];
 
-    if (isMessageAuthor(message.senderId)) {
+    if (!isOfficialMessage(message)) {
         classes.push("self-end lg:mr-6");
         if ("local" in message && message.local) {
             if (message.error)
                 classes.push("bg-red-900/50 text-white");
             else
-                classes.push("bg-primary-600/50 text-white");
+                classes.push("bg-gray-600/25 text-white");
         }
 
         else if (message.deleted) {
             classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
         }
         else {
-            classes.push("bg-primary-600 text-white");
+            classes.push("bg-gray-600 text-white");
         }
 
         if (messageIndex === 0)
@@ -186,7 +192,7 @@ function messageClasses(message: TrackedChatMessageItem, messageIndex: number): 
             classes.push("mt-0.5 mb-0.5");
     }
     else {
-        classes.push("self-start");
+        classes.push("self-start bg-primary-600");
         if (isMessageChain(messageIndex) === "top") {
             if (messageIndex === 0)
                 classes.push("mt-0");
