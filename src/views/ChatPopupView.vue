@@ -25,7 +25,7 @@ onMounted(async () => {
         }
     }
     catch (error: any) {
-        errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
+        errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
     }
     finally {
         isLoadingEmergency.value = false;

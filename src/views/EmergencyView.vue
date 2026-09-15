@@ -46,7 +46,7 @@ onMounted(async () => {
                 displayFormDetails.value = true;
         }
         catch (error: any) {
-            errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
+            errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
         }
 
         loadingEmergency.value = false;
@@ -109,7 +109,7 @@ onMounted(async () => {
                 emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
             }
             catch (error: any) {
-                errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
+                errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
             }
         }
     });

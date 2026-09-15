@@ -47,7 +47,7 @@ onMounted(async () => {
         emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency!.id)).data;
     }
     catch (error: any) {
-        errorLoadingMessages.value = errorString(error.statusCode);
+        errorLoadingMessages.value = errorString(error);
     }
 
     ws.on("ChatMessageCreate", async (message: WebSocketMessage) => {
@@ -180,7 +180,7 @@ async function sendMessage() {
         }
     }
     catch (error: any) {
-        errorSendingMessage.value = errorString(error.statusCode);
+        errorSendingMessage.value = errorString(error);
 
         if (tempMessageIndex !== -1) {
             const tempMessage = emergencyStore.trackedEmergencyMessages[tempMessageIndex];
@@ -200,7 +200,7 @@ async function handleDeleteMessage(id: string) {
         await emergencyStore.deleteEmergencyMessage(id);
     }
     catch (error: any) {
-        alertStore.newAlert(AlertColors.YELLOW, errorString(error.statusCode, t("error_deletingChatMessage")));
+        alertStore.newAlert(AlertColors.YELLOW, errorString(error, t("error_deletingChatMessage")));
     }
 }
 

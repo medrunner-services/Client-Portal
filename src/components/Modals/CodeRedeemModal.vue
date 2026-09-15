@@ -74,10 +74,10 @@ async function redeemCode() {
         submittingNewCode.value = false;
 
         if (error.statusCode === 404)
-            errorRedeemingCode.value = errorString(error.statusCode, t("error_codeNotFound"));
+            errorRedeemingCode.value = errorString(error, t("error_codeNotFound"));
         else if (error.statusCode === 409)
-            errorRedeemingCode.value = errorString(error.statusCode, t("error_codeRedeemed"));
-        else errorRedeemingCode.value = errorString(error.statusCode);
+            errorRedeemingCode.value = errorString(error, t("error_codeRedeemed"));
+        else errorRedeemingCode.value = errorString(error);
     }
 }
 

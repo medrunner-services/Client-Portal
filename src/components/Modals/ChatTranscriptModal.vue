@@ -38,7 +38,7 @@ onMounted(async () => {
         paginationToken.value = normalizePaginationToken(response.paginationToken);
     }
     catch (error: any) {
-        errorLoadingMessages.value = errorString(error.statusCode);
+        errorLoadingMessages.value = errorString(error);
     }
     finally {
         loadingChatMessages.value = false;
@@ -56,7 +56,7 @@ async function loadAdditionalMessages(): Promise<void> {
             else paginationToken.value = undefined;
         }
         catch (error: any) {
-            errorLoadingAdditionalMessages.value = errorString(error.statusCode);
+            errorLoadingAdditionalMessages.value = errorString(error);
         }
     }
 }

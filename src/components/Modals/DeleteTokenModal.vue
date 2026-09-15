@@ -29,7 +29,7 @@ async function deleteToken(): Promise<void> {
         emit("tokenDeleted", props.token.id);
     }
     catch (error: any) {
-        errorDeletingToken.value = errorString(error.statusCode);
+        errorDeletingToken.value = errorString(error);
     }
 
     deletingToken.value = false;

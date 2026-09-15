@@ -107,11 +107,11 @@ async function createToken() {
     catch (error: any) {
         submittingNewToken.value = false;
         if (error.statusCode === 422)
-            errorCreationToken.value = errorString(error.statusCode, t("error_maxApiTokens"));
+            errorCreationToken.value = errorString(error, t("error_maxApiTokens"));
         if (error.statusCode === 400)
-            errorCreationToken.value = errorString(error.statusCode, t("error_invalidTokenScope"));
+            errorCreationToken.value = errorString(error, t("error_invalidTokenScope"));
         else
-            errorCreationToken.value = errorString(error.statusCode);
+            errorCreationToken.value = errorString(error);
     }
 }
 </script>

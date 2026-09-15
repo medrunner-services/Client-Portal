@@ -48,7 +48,7 @@ async function rateEmergency() {
         emit("ratedEmergency");
     }
     catch (error: any) {
-        errorRatingEmergency.value = errorString(error.statusCode);
+        errorRatingEmergency.value = errorString(error);
     }
     finally {
         loadingRatingRequest.value = false;

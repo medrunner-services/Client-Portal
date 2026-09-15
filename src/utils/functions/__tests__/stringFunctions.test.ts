@@ -1,8 +1,8 @@
-import type { Person, Responder } from "@medrunner/api-client";
+import type { ApiResponse, Person, Responder } from "@medrunner/api-client";
 import { AccountDeactivationReason, Class, PersonType, UserRoles } from "@medrunner/api-client";
 import { expect, it } from "vitest";
 
-import { replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
+import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 const userWithoutRsiHandle: Person = {
     id: "client",
@@ -38,6 +38,32 @@ it("does not create a literal null mention for a user without an RSI handle", ()
 
     expect(replaceAtMentions("hello <@123>", "staff", false, [], userWithoutRsiHandle))
         .toBe("hello <@123>");
+});
+
+it("uses a ProblemDetails title for a generic API failure", () => {
+    const error: ApiResponse = {
+        success: false,
+        statusCode: 422,
+        problemDetails: {
+            title: "The selected location cannot receive emergency reports",
+            status: 422,
+        },
+    };
+
+    expect(errorString(error)).toBe("The selected location cannot receive emergency reports (422)");
+});
+
+it("preserves an explicit local message over an API problem title", () => {
+    const error: ApiResponse = {
+        success: false,
+        statusCode: 403,
+        problemDetails: {
+            title: "You do not have permission to perform this action",
+            status: 403,
+        },
+    };
+
+    expect(errorString(error, "Your account is blocked")).toBe("Your account is blocked (403)");
 });
 
 it("matches a non-null RSI handle literally in HTML messages", () => {

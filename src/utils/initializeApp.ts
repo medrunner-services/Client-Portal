@@ -54,7 +54,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                 userStore.isBlocked = true;
         }
         catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[blockCheck]" }));
+            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[blockCheck]" }));
         }
 
         try {
@@ -83,7 +83,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             initializeAnalytics();
         }
         catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[initializeSettings]" }));
+            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[initializeSettings]" }));
         }
     }
 

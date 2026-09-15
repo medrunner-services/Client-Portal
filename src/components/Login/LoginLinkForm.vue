@@ -46,22 +46,22 @@ async function submittingLinkForm(): Promise<void> {
     }
     catch (error: any) {
         if (error.statusCode === 403) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_noIdRsiBio"));
+            formErrorMessage.value = errorString(error, t("error_noIdRsiBio"));
             formErrorHelper.value = t("error_noIdRsiBioHelper");
         }
         else if (error.statusCode === 404) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_unknownRsiAccount"));
+            formErrorMessage.value = errorString(error, t("error_unknownRsiAccount"));
             formErrorHelper.value = t("error_unknownRsiAccountHelper");
         }
         else if (error.statusCode === 409) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_rsiNewAccountLinked"));
+            formErrorMessage.value = errorString(error, t("error_rsiNewAccountLinked"));
             formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
         }
         else if (error.statusCode === 503) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_externalAuthServiceDown"));
+            formErrorMessage.value = errorString(error, t("error_externalAuthServiceDown"));
         }
         else {
-            formErrorMessage.value = errorString(error.statusCode);
+            formErrorMessage.value = errorString(error);
         }
     }
     finally {

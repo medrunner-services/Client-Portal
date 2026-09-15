@@ -48,7 +48,7 @@ async function updateGlobalNotificationPerms(): Promise<void> {
             }
             catch (error: any) {
                 logicStore.isNotificationGranted = false;
-                updateNotificationError.value = errorString(error.statusCode);
+                updateNotificationError.value = errorString(error);
             }
         }
     }
@@ -59,7 +59,7 @@ async function updateGlobalNotificationPerms(): Promise<void> {
         }
         catch (error: any) {
             logicStore.isNotificationGranted = !newNotificationState;
-            updateNotificationError.value = errorString(error.statusCode);
+            updateNotificationError.value = errorString(error);
         }
     }
 }
@@ -70,7 +70,7 @@ async function updateCustomSoundNotification() {
     }
     catch (error: any) {
         userStore.syncedSettings.customSoundNotification = !userStore.syncedSettings.customSoundNotification;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 }
 
@@ -80,7 +80,7 @@ async function updateEmergencyUpdateNotification() {
     }
     catch (error: any) {
         userStore.syncedSettings.emergencyUpdateNotification = !userStore.syncedSettings.emergencyUpdateNotification;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 }
 
@@ -89,7 +89,7 @@ async function updateMessageNotification() {
         await userStore.setSettings({ chatMessageNotification: userStore.syncedSettings.chatMessageNotification });
     }
     catch (error: any) {
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 }
 
@@ -99,7 +99,7 @@ async function updateHourFormatingPreference() {
         await userStore.setSettings({ hour12FormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
     }
     catch (error: any) {
-        updateDateTimeFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = errorString(error);
     }
 }
 
@@ -109,7 +109,7 @@ async function updateDateFormatingPreference() {
         await userStore.setSettings({ dateFormatingPreference: userStore.syncedSettings.dateFormatingPreference });
     }
     catch (error: any) {
-        updateDateTimeFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = errorString(error);
     }
 }
 
@@ -119,7 +119,7 @@ async function updateShortDateFormatPreference() {
     }
     catch (error: any) {
         userStore.syncedSettings.shortDateFormatPreference = !userStore.syncedSettings.shortDateFormatPreference;
-        updateDateTimeFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = errorString(error);
     }
 }
 
@@ -156,7 +156,7 @@ async function updateAnalytics(): Promise<void> {
     }
     catch (error: any) {
         userStore.syncedSettings.globalAnalytics = !newAnalyticsState;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 
     alertStore.newAlert(AlertColors.BLUE, t("user_analyticsUpdatedNotification"));
@@ -191,7 +191,7 @@ async function resetSettings() {
         }
     }
     catch (error: any) {
-        resetSettingsError.value = errorString(error.statusCode);
+        resetSettingsError.value = errorString(error);
     }
     finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";

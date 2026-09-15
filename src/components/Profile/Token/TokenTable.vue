@@ -34,7 +34,7 @@ async function getTokens(): Promise<void> {
         userTokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
     }
     catch (error: any) {
-        loadingTokensError.value = errorString(error.statusCode);
+        loadingTokensError.value = errorString(error);
     }
     finally {
         loadingTokens.value = false;

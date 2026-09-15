@@ -138,7 +138,7 @@ async function sendDetails(): Promise<void> {
         emit("submittedDetails");
     }
     catch (error: any) {
-        formErrorMessage.value = errorString(error.statusCode);
+        formErrorMessage.value = errorString(error);
     }
     finally {
         submittingDetails.value = false;

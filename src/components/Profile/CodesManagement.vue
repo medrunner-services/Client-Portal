@@ -22,7 +22,7 @@ onMounted(async () => {
         userStore.redeemedCodes = response.data;
     }
     catch (error: any) {
-        errorLoadingCodes.value = errorString(error.statusCode);
+        errorLoadingCodes.value = errorString(error);
     }
     finally {
         loadingCodes.value = false;

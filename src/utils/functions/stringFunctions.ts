@@ -1,4 +1,4 @@
-import type { Person, Responder } from "@medrunner/api-client";
+import type { ApiResponse, Person, Responder } from "@medrunner/api-client";
 import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
@@ -68,11 +68,18 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
     }
 }
 
-export function errorString(errorCode: number, customMessage?: string): string {
+/** Formats an API failure for display while preserving explicit local messages. */
+export function errorString(error: ApiResponse | number | undefined, customMessage?: string): string {
     const { t } = i18n.global;
+    const response = typeof error === "object" ? error : undefined;
+    const errorCode = typeof error === "number" ? error : response?.statusCode;
+    const problemTitle = response?.problemDetails?.title?.trim();
 
     if (customMessage) {
         return `${customMessage} (${errorCode ?? "internal"})`;
+    }
+    else if (problemTitle) {
+        return `${problemTitle} (${errorCode ?? "internal"})`;
     }
     else {
         let defaultMessage = t("error_generic");

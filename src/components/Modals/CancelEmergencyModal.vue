@@ -55,7 +55,7 @@ async function cancelEmergency() {
         emit("emergencyCanceled");
     }
     catch (error: any) {
-        errorCancelingEmergency.value = errorString(error.statusCode);
+        errorCancelingEmergency.value = errorString(error);
     }
     cancelingEmergency.value = false;
 }

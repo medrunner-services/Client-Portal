@@ -51,14 +51,14 @@ async function updateUsername() {
         }
         catch (error: any) {
             if (error.statusCode === 451)
-                errorUpdatingUsername.value = errorString(error.statusCode, t("error_blockedUser"));
+                errorUpdatingUsername.value = errorString(error, t("error_blockedUser"));
             else if (error.statusCode === 403)
-                errorUpdatingUsername.value = errorString(error.statusCode, t("error_noIdRsiBio"));
+                errorUpdatingUsername.value = errorString(error, t("error_noIdRsiBio"));
             else if (error.statusCode === 404)
-                errorUpdatingUsername.value = errorString(error.statusCode, t("error_unknownRsiAccount"));
+                errorUpdatingUsername.value = errorString(error, t("error_unknownRsiAccount"));
             else if (error.statusCode === 409)
-                errorUpdatingUsername.value = errorString(error.statusCode, t("error_rsiAccountLinked"));
-            else errorUpdatingUsername.value = errorString(error.statusCode);
+                errorUpdatingUsername.value = errorString(error, t("error_rsiAccountLinked"));
+            else errorUpdatingUsername.value = errorString(error);
         }
 
         isUpdatingUsername.value = false;

@@ -97,7 +97,7 @@ async function submitEmergency() {
     }
     catch (error: any) {
         formSubmittingEmergency.value = false;
-        formErrorMessage.value = errorString(error.statusCode);
+        formErrorMessage.value = errorString(error);
     }
 }
 </script>

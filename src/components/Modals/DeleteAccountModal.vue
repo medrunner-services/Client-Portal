@@ -26,7 +26,7 @@ async function deleteAccount(): Promise<void> {
         await userStore.deleteAccount();
     }
     catch (error: any) {
-        errorDeletingAccount.value = errorString(error.statusCode);
+        errorDeletingAccount.value = errorString(error);
     }
     finally {
         await userStore.disconnectUser();

@@ -286,7 +286,7 @@ async function fetchMissions() {
         emergenciesPerPeriod.value = generateChartData(response.data);
     }
     catch (error: any) {
-        errorLoading.value = errorString(error.statusCode, t("error_loadingData"));
+        errorLoading.value = errorString(error, t("error_loadingData"));
     }
     finally {
         loading.value = false;

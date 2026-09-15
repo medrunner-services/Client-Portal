@@ -144,7 +144,7 @@ async function loadHistory() {
         setActivePageFromCache(0);
     }
     catch (error: any) {
-        errorLoadingHistory.value = errorString(error.statusCode, t("error_loadingData"));
+        errorLoadingHistory.value = errorString(error, t("error_loadingData"));
         loaded.value = true;
     }
 }
