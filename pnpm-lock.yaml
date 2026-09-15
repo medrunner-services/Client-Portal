@@ -15,8 +15,8 @@ importers:
         specifier: 11.2.3
         version: 11.2.3(@vue/compiler-dom@3.5.35)(eslint@10.4.1(jiti@2.6.1))(typescript@6.0.3)(vite@8.0.14(@types/node@24.12.4)(jiti@2.6.1)(yaml@2.9.0))(vue-i18n@11.4.4(vue@3.5.35(typescript@6.0.3)))(vue@3.5.35(typescript@6.0.3))
       '@medrunner/api-client':
-        specifier: 0.7.0-beta.25
-        version: 0.7.0-beta.25
+        specifier: 0.7.0-beta.26
+        version: 0.7.0-beta.26
       '@tailwindcss/vite':
         specifier: 4.3.0
         version: 4.3.0(vite@8.0.14(@types/node@24.12.4)(jiti@2.6.1)(yaml@2.9.0))
@@ -613,8 +613,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@medrunner/api-client@0.7.0-beta.25':
-    resolution: {integrity: sha512-FOvSt+8Gq8aECtzS8AJsWA4eZ8TH4WAjWv9wczp6/TGUtVp9KoKvF2zCEb+OPhpOGPIqdaiPwccI8Q7JPXG7mQ==}
+  '@medrunner/api-client@0.7.0-beta.26':
+    resolution: {integrity: sha512-e/rvWDxmQKkzgg5xbwplx+gz3vjewtDPf/9p4BrsnXoW34RSVG6cyzqy9gICgTlkh9Sj1s2mjacS44s76AYMRw==}
 
   '@microsoft/signalr@10.0.0':
     resolution: {integrity: sha512-0BRqz/uCx3JdrOqiqgFhih/+hfTERaUfCZXFB52uMaZJrKaPRzHzMuqVsJC/V3pt7NozcNXGspjKiQEK+X7P2w==}
@@ -3582,7 +3582,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@medrunner/api-client@0.7.0-beta.25':
+  '@medrunner/api-client@0.7.0-beta.26':
     dependencies:
       '@microsoft/signalr': 10.0.0
       axios: 1.17.0
