@@ -4,6 +4,7 @@ import { MissionStatus } from "@medrunner/api-client";
 import { HubConnectionState } from "@microsoft/signalr";
 import { WSState } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
+import { useEmergencyStore } from "@/stores/emergencyStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
@@ -24,6 +25,7 @@ import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
 export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
+    const emergencyStore = useEmergencyStore();
     const logicStore = useLogicStore();
     const { availableLocales, locale, t } = i18n.global;
 
@@ -109,6 +111,15 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                     ...userStore.syncedSettings,
                     ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
                 };
+            }
+
+            if (userStore.user.activeEmergency) {
+                try {
+                    emergencyStore.trackedEmergency = await emergencyStore.refreshEmergencyForEvent(userStore.user.activeEmergency);
+                }
+                catch (_error) {
+                    // Keep a recovered websocket healthy when its background detail refresh fails.
+                }
             }
         });
 

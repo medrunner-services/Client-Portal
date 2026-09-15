@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { WebSocketMessage } from "@/@types/types.ts";
 import { MissionStatus } from "@medrunner/api-client";
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import { useRouter } from "vue-router";
@@ -21,6 +21,7 @@ import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/fun
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
+import { subscribeToEmergencyEvents } from "@/utils/websocket/emergencySubscription.ts";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -33,8 +34,65 @@ const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const respondingTeamNumber = ref(0);
 const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
+let unsubscribeEmergencyEvents: (() => void) | undefined;
+
+async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
+    try {
+        const newEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
+
+        if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
+            emergencyStore.trackedEmergency = newEmergency;
+            oldEmergencyStatus.value = newEmergency.status;
+            displayFormDetails.value = true;
+        }
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
+
+async function handleEmergencyUpdate(message: WebSocketMessage): Promise<void> {
+    try {
+        const updatedEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
+
+        if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
+            emergencyStore.trackedEmergency = updatedEmergency;
+
+            if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
+                emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(updatedEmergency.id);
+                respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
+            }
+
+            if (
+                updatedEmergency.status !== MissionStatus.RECEIVED
+                && oldEmergencyStatus.value !== updatedEmergency.status
+                && userStore.syncedSettings.emergencyUpdateNotification
+            ) {
+                await sendBrowserNotification(
+                    getEmergencyStatusTitle(updatedEmergency.status),
+                    `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
+                    getEmergencyStatusSubtitle(updatedEmergency.status),
+                    () => {
+                        window.focus();
+                        void router.push({ name: "emergency" });
+                    },
+                );
+            }
+
+            oldEmergencyStatus.value = updatedEmergency.status;
+        }
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
 
 onMounted(async () => {
+    unsubscribeEmergencyEvents = subscribeToEmergencyEvents(ws, {
+        onCreate: handleEmergencyCreate,
+        onUpdate: handleEmergencyUpdate,
+    });
+
     if (userStore.user.activeEmergency) {
         loadingEmergency.value = true;
 
@@ -51,68 +109,10 @@ onMounted(async () => {
 
         loadingEmergency.value = false;
     }
+});
 
-    ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
-        try {
-            const newEmergency = await emergencyStore.fetchEmergency(message.id);
-
-            if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
-                emergencyStore.trackedEmergency = newEmergency;
-                oldEmergencyStatus.value = newEmergency.status;
-                displayFormDetails.value = true;
-            }
-        }
-        catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-        }
-    });
-
-    ws.on("EmergencyUpdate", async (message: WebSocketMessage) => {
-        try {
-            const updatedEmergency = await emergencyStore.fetchEmergency(message.id);
-
-            if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
-                emergencyStore.trackedEmergency = updatedEmergency;
-
-                if (updatedEmergency.respondingTeam.staff.length !== respondingTeamNumber.value && updatedEmergency.respondingTeam.staff.length > 0) {
-                    emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(updatedEmergency.id);
-                    respondingTeamNumber.value = updatedEmergency.respondingTeam.staff.length;
-                }
-
-                if (
-                    updatedEmergency.status !== MissionStatus.RECEIVED
-                    && oldEmergencyStatus.value !== updatedEmergency.status
-                    && userStore.syncedSettings.emergencyUpdateNotification
-                ) {
-                    await sendBrowserNotification(
-                        getEmergencyStatusTitle(updatedEmergency.status),
-                        `emergencyUpdate-${updatedEmergency.id}-${updatedEmergency.updated}`,
-                        getEmergencyStatusSubtitle(updatedEmergency.status),
-                        () => {
-                            window.focus();
-                            void router.push({ name: "emergency" });
-                        },
-                    );
-                }
-
-                oldEmergencyStatus.value = updatedEmergency.status;
-            }
-        }
-        catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-        }
-    });
-
-    ws.onreconnected(async () => {
-        if (userStore.user.activeEmergency) {
-            try {
-                emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-            }
-            catch (error: any) {
-                errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
-            }
-        }
-    });
+onBeforeUnmount(() => {
+    unsubscribeEmergencyEvents?.();
 });
 </script>
 

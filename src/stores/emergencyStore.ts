@@ -12,6 +12,7 @@ import type { TrackedChatMessageItem } from "@/@types/types.ts";
 import { defineStore } from "pinia";
 
 import { ref } from "vue";
+import { createEventRefresh } from "@/utils/functions/eventRefreshFunctions.ts";
 import { api } from "@/utils/medrunnerClient";
 
 export const useEmergencyStore = defineStore("emergency", () => {
@@ -36,6 +37,9 @@ export const useEmergencyStore = defineStore("emergency", () => {
             throw response;
         }
     }
+
+    // Websocket events for one emergency can arrive through more than one delivery path.
+    const refreshEmergencyForEvent = createEventRefresh(fetchEmergency);
 
     async function fetchEmergencies(ids: string[]): Promise<Emergency[]> {
         const response = await api.emergency.getEmergencies(ids);
@@ -142,6 +146,7 @@ export const useEmergencyStore = defineStore("emergency", () => {
         trackedEmergencyTeamDetails,
         resetTrackedEmergency,
         fetchEmergency,
+        refreshEmergencyForEvent,
         fetchEmergencies,
         fetchEmergencyTeamDetail,
         createEmergency,

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Emergency } from "@medrunner/api-client";
 import type { HistoryFilterStatus, WebSocketMessage } from "@/@types/types.ts";
-import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { AlertColors, LocalStorageItems } from "@/@types/types.ts";
 import HistoryDateFilter from "@/components/Dashboard/History/HistoryDateFilter.vue";
@@ -20,6 +20,7 @@ import { useUserStore } from "@/stores/userStore";
 import { normalizePaginationToken, normalizeTotalCount } from "@/utils/functions/apiResponseFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
+import { subscribeToEmergencyEvents } from "@/utils/websocket/emergencySubscription.ts";
 
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
@@ -48,50 +49,60 @@ const dateFilterRef = useTemplateRef("dateFilterRef");
 const filterStartDate = ref<string>("");
 const filterEndDate = ref<string>("");
 const displayMobileFilterModal = ref(false);
+let unsubscribeEmergencyEvents: (() => void) | undefined;
 
 useClickOutside(statusFilterRef, () => showStatusFilter.value = false);
 useClickOutside(dateFilterRef, () => showDateFilter.value = false);
 
+async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
+    try {
+        const newEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
+
+        if (newEmergency.clientId === userStore.user.id) {
+            loadedHistory.value.unshift(newEmergency);
+            if (page.value === 0) {
+                activePage.value = loadedHistory.value.slice(0, pageSize.value);
+            }
+        }
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
+
+async function handleEmergencyUpdate(message: WebSocketMessage): Promise<void> {
+    try {
+        const updatedEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
+
+        if (updatedEmergency.clientId === userStore.user.id) {
+            const indexLoadedHistory = loadedHistory.value.findIndex(emergency => emergency.id === updatedEmergency.id);
+            const indexActivePage = activePage.value.findIndex(emergency => emergency.id === updatedEmergency.id);
+            if (indexLoadedHistory !== -1) {
+                loadedHistory.value[indexLoadedHistory] = updatedEmergency;
+            }
+            if (indexActivePage !== -1) {
+                activePage.value[indexActivePage] = updatedEmergency;
+            }
+        }
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
+
 onMounted(async () => {
+    unsubscribeEmergencyEvents = subscribeToEmergencyEvents(ws, {
+        onCreate: handleEmergencyCreate,
+        onUpdate: handleEmergencyUpdate,
+    });
+
     await loadHistory();
     activePage.value = [...loadedHistory.value];
     loaded.value = true;
+});
 
-    ws.on("EmergencyCreate", async (message: WebSocketMessage) => {
-        try {
-            const newEmergency = await emergencyStore.fetchEmergency(message.id);
-
-            if (newEmergency.clientId === userStore.user.id) {
-                loadedHistory.value.unshift(newEmergency);
-                if (page.value === 0) {
-                    activePage.value = loadedHistory.value.slice(0, pageSize.value);
-                }
-            }
-        }
-        catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-        }
-    });
-
-    ws.on("EmergencyUpdate", async (message: WebSocketMessage) => {
-        try {
-            const updatedEmergency = await emergencyStore.fetchEmergency(message.id);
-
-            if (updatedEmergency.clientId === userStore.user.id) {
-                const indexLoadedHistory = loadedHistory.value.findIndex(emergency => emergency.id === updatedEmergency.id);
-                const indexActivePage = activePage.value.findIndex(emergency => emergency.id === updatedEmergency.id);
-                if (indexLoadedHistory !== -1) {
-                    loadedHistory.value[indexLoadedHistory] = updatedEmergency;
-                }
-                if (indexActivePage !== -1) {
-                    activePage.value[indexActivePage] = updatedEmergency;
-                }
-            }
-        }
-        catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
-        }
-    });
+onBeforeUnmount(() => {
+    unsubscribeEmergencyEvents?.();
 });
 
 watch(pageSize, async (newPageSize, oldPageSize) => {
