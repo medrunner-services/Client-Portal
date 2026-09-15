@@ -96,7 +96,7 @@ function getMessageAuthor(message: TrackedChatMessageItem): string {
     const teamMember = props.emergencyMembers.find(staff => staff.id === message.senderId);
 
     if (message.senderId === props.user.id) {
-        author = props.user.rsiHandle;
+        author = props.user.rsiHandle ?? t("tracking_chatDefaultStaffName");
     }
     else if (teamMember) {
         author = teamMember.rsiHandle;

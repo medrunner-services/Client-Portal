@@ -19,26 +19,33 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
     });
 
     if (html) {
-        return message
-            .replace(
+        let replacedMessage = message;
+
+        if (user.rsiHandle) {
+            replacedMessage = replacedMessage.replace(
                 new RegExp(`@${user.rsiHandle}`, "g"),
                 `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
                     user.rsiHandle
                 }</span>`,
-            )
-            .replace(
+            ).replace(
                 new RegExp(`@${user.discordId}`, "g"),
                 `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
                     user.rsiHandle
                 }</span>`,
-            )
-            .replace(discordTagRegex, (match) => {
-                const memberId = match.substring(1);
-                return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
-            });
+            );
+        }
+
+        return replacedMessage.replace(discordTagRegex, (match) => {
+            const memberId = match.substring(1);
+            return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
+        });
     }
     else {
-        return message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`).replace(wrappedDiscordTagRegex, (match, memberId) => {
+        const replacedMessage = user.rsiHandle
+            ? message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`)
+            : message;
+
+        return replacedMessage.replace(wrappedDiscordTagRegex, (match, memberId) => {
             return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
         });
     }

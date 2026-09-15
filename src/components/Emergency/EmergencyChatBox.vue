@@ -15,6 +15,7 @@ import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { createOptimisticClientMessage } from "@/utils/functions/chatMessageFunctions.ts";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
@@ -78,7 +79,7 @@ onMounted(async () => {
                     }
                     else if (userStore.syncedSettings.chatMessageNotification === MessageNotification.PING) {
                         if (
-                            newMessage.contents.includes(`@${userStore.user.rsiHandle}`)
+                            (Boolean(userStore.user.rsiHandle) && newMessage.contents.includes(`@${userStore.user.rsiHandle}`))
                             || newMessage.contents.includes(`@${userStore.user.discordId}`)
                         ) {
                             await sendBrowserNotification(t("tracking_newMessage"), notificationTag, bodyNotification, () => {
@@ -151,18 +152,13 @@ async function sendMessage() {
                 const messageContent = inputMessage.value;
                 inputMessage.value = "";
 
-                emergencyStore.trackedEmergencyMessages.push({
-                    local: true,
-                    error: false,
+                emergencyStore.trackedEmergencyMessages.push(createOptimisticClientMessage({
                     emergencyId: emergencyStore.trackedEmergency.id,
                     senderId: userStore.user.id,
+                    senderRsiHandle: userStore.user.rsiHandle,
                     contents: messageContent,
-                    edited: false,
-                    deleted: false,
-                    updated: messageTime,
-                    id: "",
-                    created: messageTime,
-                });
+                    timestamp: messageTime,
+                }));
 
                 tempMessageIndex = emergencyStore.trackedEmergencyMessages.findIndex(message => message.created === messageTime);
 

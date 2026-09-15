@@ -19,7 +19,7 @@ const userStore = useUserStore();
 const { t } = useI18n();
 const router = useRouter();
 
-const inputUsername = ref(userStore.user.rsiHandle);
+const inputUsername = ref(userStore.user.rsiHandle ?? "");
 const isEditingUsername = ref(false);
 const isUpdatingUsername = ref(false);
 const isLoggingOut = ref(false);
@@ -77,7 +77,7 @@ async function disconnectUser(): Promise<void> {
 
 function closeEditingUsername() {
     isEditingUsername.value = false;
-    inputUsername.value = userStore.user.rsiHandle;
+    inputUsername.value = userStore.user.rsiHandle ?? "";
     errorUpdatingUsername.value = "";
 }
 
