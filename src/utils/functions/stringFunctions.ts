@@ -11,6 +11,12 @@ const wrappedDiscordTagRegex = /<@(\d+)>/g;
 const httpProtocolRegex = /^https?/;
 const newLineCharacterRegex = /\\n/g;
 const hammerTimeRegex = /<t:(\d+):([A-Za-z])>/g;
+const regularExpressionSyntaxRegex = /[.*+?^${}()|[\]\\]/g;
+
+/** Escapes user-controlled text before interpolating it into a regular-expression pattern. */
+function escapeRegularExpression(value: string): string {
+    return value.replace(regularExpressionSyntaxRegex, match => `\\${match}`);
+}
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: Responder[], user: Person): string {
     const memberIdToNameMap: any = {};
@@ -22,16 +28,14 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
         let replacedMessage = message;
 
         if (user.rsiHandle) {
+            const highlightedMention = `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${user.rsiHandle}</span>`;
+
             replacedMessage = replacedMessage.replace(
-                new RegExp(`@${user.rsiHandle}`, "g"),
-                `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
-                    user.rsiHandle
-                }</span>`,
+                new RegExp(`@${escapeRegularExpression(user.rsiHandle)}`, "g"),
+                () => highlightedMention,
             ).replace(
                 new RegExp(`@${user.discordId}`, "g"),
-                `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
-                    user.rsiHandle
-                }</span>`,
+                () => highlightedMention,
             );
         }
 
@@ -42,7 +46,7 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
     }
     else {
         const replacedMessage = user.rsiHandle
-            ? message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`)
+            ? message.replace(new RegExp(`<@${user.discordId}>`, "g"), () => `@${user.rsiHandle}`)
             : message;
 
         return replacedMessage.replace(wrappedDiscordTagRegex, (match, memberId) => {
