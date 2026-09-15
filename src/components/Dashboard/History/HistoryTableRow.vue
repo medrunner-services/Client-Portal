@@ -506,7 +506,7 @@ async function addTextToClipboard(text: string) {
                             </p>
 
                             <div class="flex cursor-pointer gap-1" :title="t('tracking_ClickToCopy')" @click="addTextToClipboard(props.emergency.id)">
-                                <p>
+                                <p class="font-mono">
                                     {{ props.emergency.id }}
                                 </p>
 

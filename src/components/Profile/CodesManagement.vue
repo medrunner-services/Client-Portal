@@ -87,7 +87,7 @@ onMounted(async () => {
                                 >
                                     <div
                                         class="
-                                            col-span-5 font-medium text-gray-900
+                                            col-span-5 font-mono font-medium text-gray-900
                                             md:col-span-5
                                             dark:text-white
                                         "

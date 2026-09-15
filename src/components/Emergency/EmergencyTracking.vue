@@ -266,7 +266,7 @@ const trackedEmergencyLocation = computed(() => {
                             :title="t('tracking_ClickToCopy')"
                             @click="addTextToClipboard(emergencyStore.trackedEmergency.id)"
                         >
-                            <p>
+                            <p class="font-mono">
                                 {{ emergencyStore.trackedEmergency.id }}
                             </p>
 
