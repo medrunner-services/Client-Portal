@@ -12,10 +12,23 @@ const httpProtocolRegex = /^https?/;
 const newLineCharacterRegex = /\\n/g;
 const hammerTimeRegex = /<t:(\d+):([A-Za-z])>/g;
 const regularExpressionSyntaxRegex = /[.*+?^${}()|[\]\\]/g;
+const htmlMetacharacterRegex = /[&<>"']/g;
+const htmlEntities = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;",
+} as const;
 
 /** Escapes user-controlled text before interpolating it into a regular-expression pattern. */
 function escapeRegularExpression(value: string): string {
     return value.replace(regularExpressionSyntaxRegex, match => `\\${match}`);
+}
+
+/** Escapes a display value before appending it to HTML rendered with `v-html`. */
+function escapeHtml(value: string): string {
+    return value.replace(htmlMetacharacterRegex, match => htmlEntities[match as keyof typeof htmlEntities]);
 }
 
 export function replaceAtMentions(message: string, senderId: string, html: boolean, members: Responder[], user: Person): string {
@@ -28,7 +41,7 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
         let replacedMessage = message;
 
         if (user.rsiHandle) {
-            const highlightedMention = `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${user.rsiHandle}</span>`;
+            const highlightedMention = `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${escapeHtml(user.rsiHandle)}</span>`;
 
             replacedMessage = replacedMessage.replace(
                 new RegExp(`@${escapeRegularExpression(user.rsiHandle)}`, "g"),
@@ -41,7 +54,7 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
 
         return replacedMessage.replace(discordTagRegex, (match) => {
             const memberId = match.substring(1);
-            return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
+            return memberIdToNameMap[memberId] ? `@${escapeHtml(memberIdToNameMap[memberId])}` : match;
         });
     }
     else {
