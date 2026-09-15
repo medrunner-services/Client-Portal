@@ -13,6 +13,7 @@ import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
+import { findLocationPath } from "@/utils/functions/locationFunctions.ts";
 
 const emit = defineEmits(["sendNewDetails"]);
 const emergencyStore = useEmergencyStore();
@@ -101,6 +102,20 @@ const getAssignedTeamsString = computed(() => {
 const showSuccessRate = computed(() => {
     return emergencyStore.trackedEmergency && emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3;
 });
+
+const trackedEmergencyLocation = computed(() => {
+    const emergency = emergencyStore.trackedEmergency;
+
+    if (!emergency) {
+        return "";
+    }
+
+    const locationPath = emergency.locationId
+        ? findLocationPath(logicStore.medrunnerSettings?.locationSettings.locations ?? [], emergency.locationId)
+        : undefined;
+
+    return locationPath?.map(location => location.name).join(" › ") ?? emergency.system;
+});
 </script>
 
 <template>
@@ -133,7 +148,7 @@ const showSuccessRate = computed(() => {
             <div
                 class="
                     mt-6 grid grid-cols-1 gap-4
-                    lg:grid-cols-3
+                    lg:grid-cols-2
                 "
             >
                 <div
@@ -143,38 +158,10 @@ const showSuccessRate = computed(() => {
                     "
                 >
                     <p class="text-lg font-semibold">
-                        {{ t("tracking_system") }}
+                        {{ t("history_location") }}
                     </p>
                     <p class="text-lg">
-                        {{ emergencyStore.trackedEmergency.system }}
-                    </p>
-                </div>
-
-                <div
-                    class="
-                        rounded-lg bg-gray-100 p-2 shadow-sm
-                        dark:bg-gray-700
-                    "
-                >
-                    <p class="text-lg font-semibold">
-                        {{ t("tracking_subSystem") }}
-                    </p>
-                    <p class="text-lg">
-                        {{ emergencyStore.trackedEmergency.subsystem }}
-                    </p>
-                </div>
-
-                <div
-                    v-if="emergencyStore.trackedEmergency.tertiaryLocation" class="
-                        rounded-lg bg-gray-100 p-2 shadow-sm
-                        dark:bg-gray-700
-                    "
-                >
-                    <p class="text-lg font-semibold">
-                        {{ t("form_moon") }}
-                    </p>
-                    <p class="text-lg">
-                        {{ emergencyStore.trackedEmergency.tertiaryLocation }}
+                        {{ trackedEmergencyLocation }}
                     </p>
                 </div>
 

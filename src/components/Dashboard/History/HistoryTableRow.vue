@@ -7,6 +7,7 @@ import { useI18n } from "vue-i18n";
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
 import { getTimeDifferenceString } from "@/utils/functions/dateTimeFunctions.ts";
 import {
     getCancelReasonString,
@@ -15,6 +16,7 @@ import {
     getStatusString,
     getThreatString,
 } from "@/utils/functions/getStringsFunctions.ts";
+import { findLocationPath } from "@/utils/functions/locationFunctions.ts";
 
 const props = defineProps<{
     parentDiv: HTMLDivElement | null;
@@ -22,6 +24,7 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
+const logicStore = useLogicStore();
 
 const showDetails = ref(false);
 const detailsDiv = ref<HTMLDivElement | null>(null);
@@ -70,6 +73,14 @@ const teamLeader = computed(() => {
     else {
         return "";
     }
+});
+
+const emergencyLocation = computed(() => {
+    const locationPath = props.emergency.locationId
+        ? findLocationPath(logicStore.medrunnerSettings?.locationSettings.locations ?? [], props.emergency.locationId)
+        : undefined;
+
+    return locationPath?.map(location => location.name).join(" › ") ?? props.emergency.system;
 });
 
 async function addTextToClipboard(text: string) {
@@ -155,7 +166,7 @@ async function addTextToClipboard(text: string) {
                     dark:text-white
                 "
             >
-                {{ props.emergency.tertiaryLocation ?? props.emergency.subsystem }}
+                {{ emergencyLocation }}
             </div>
             <div
                 class="
@@ -343,7 +354,7 @@ async function addTextToClipboard(text: string) {
                                 dark:text-white
                             "
                         >
-                            {{ t("history_system") }}
+                            {{ t("history_location") }}
                         </p>
                         <p
                             class="
@@ -351,54 +362,7 @@ async function addTextToClipboard(text: string) {
                                 dark:text-gray-400
                             "
                         >
-                            {{ props.emergency.system }}
-                        </p>
-                    </div>
-                    <div
-                        class="
-                            flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm
-                            dark:bg-gray-700
-                        "
-                    >
-                        <p
-                            class="
-                                text mb-2 text-base font-semibold text-gray-900
-                                dark:text-white
-                            "
-                        >
-                            {{ t("history_nearestPlanet") }}
-                        </p>
-                        <p
-                            class="
-                                text text-base text-gray-500
-                                dark:text-gray-400
-                            "
-                        >
-                            {{ props.emergency.subsystem }}
-                        </p>
-                    </div>
-                    <div
-                        v-if="props.emergency.tertiaryLocation"
-                        class="
-                            flex w-full flex-col items-start justify-between rounded-lg bg-white p-3 shadow-sm
-                            dark:bg-gray-700
-                        "
-                    >
-                        <p
-                            class="
-                                text mb-2 text-base font-semibold text-gray-900
-                                dark:text-white
-                            "
-                        >
-                            {{ t("form_moon") }}
-                        </p>
-                        <p
-                            class="
-                                text text-base text-gray-500
-                                dark:text-gray-400
-                            "
-                        >
-                            {{ props.emergency.tertiaryLocation }}
+                            {{ emergencyLocation }}
                         </p>
                     </div>
                 </div>
