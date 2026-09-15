@@ -17,6 +17,7 @@ import { useClickOutside } from "@/composables/clickOutside.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { normalizePaginationToken, normalizeTotalCount } from "@/utils/functions/apiResponseFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 
@@ -136,8 +137,8 @@ async function loadHistory() {
     try {
         const historyResponse = await userStore.fetchUserClientEmergencyHistory(pageSize.value, paginationToken.value, ascendingOrder.value, filteredStatuses.value, filterStartDate.value?.toString(), filterEndDate.value?.toString());
 
-        paginationToken.value = historyResponse.paginationToken;
-        totalFetchedEmergencies.value = historyResponse.totalCount;
+        paginationToken.value = normalizePaginationToken(historyResponse.paginationToken);
+        totalFetchedEmergencies.value = normalizeTotalCount(historyResponse.totalCount);
 
         loadedHistory.value.push(...historyResponse.data);
         setActivePageFromCache(0);

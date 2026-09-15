@@ -10,6 +10,7 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { normalizePaginationToken } from "@/utils/functions/apiResponseFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const props = defineProps<Props>();
@@ -34,7 +35,7 @@ onMounted(async () => {
         loadingChatMessages.value = true;
         const response = await emergencyStore.fetchChatHistory(props.emergencyId);
         chatMessages.value = response.data;
-        paginationToken.value = response.paginationToken;
+        paginationToken.value = normalizePaginationToken(response.paginationToken);
     }
     catch (error: any) {
         errorLoadingMessages.value = errorString(error.statusCode);
@@ -49,8 +50,9 @@ async function loadAdditionalMessages(): Promise<void> {
         try {
             const response = await emergencyStore.fetchChatHistory(props.emergencyId, paginationToken.value);
             chatMessages.value = chatMessages.value.concat(response.data);
-            if (paginationToken.value !== response.paginationToken)
-                paginationToken.value = response.paginationToken;
+            const nextPaginationToken = normalizePaginationToken(response.paginationToken);
+            if (paginationToken.value !== nextPaginationToken)
+                paginationToken.value = nextPaginationToken;
             else paginationToken.value = undefined;
         }
         catch (error: any) {
