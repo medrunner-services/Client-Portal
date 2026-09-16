@@ -136,7 +136,7 @@ async function addTextToClipboard(text: string) {
             <div
                 class="
                     col-span-7 pl-1 font-medium text-gray-900
-                    md:col-span-10 md:col-start-3
+                    md:col-span-8 md:col-start-3
                     dark:text-white
                 "
             >
@@ -152,17 +152,26 @@ async function addTextToClipboard(text: string) {
                     {{ getStatusString(props.emergency.status) }}
                 </div>
             </div>
+            <div
+                class="
+                    col-span-6 col-start-2 block font-medium text-gray-900
+                    md:hidden
+                    dark:text-white
+                "
+            >
+                {{ emergencyLocation }}
+            </div>
             <GlobalLocalizedDate
                 class="
-                    col-span-9 col-start-6 mr-2 justify-self-end
+                    col-span-5 mr-2 justify-self-end
                     md:col-span-4 md:col-start-auto md:mr-0 md:justify-self-auto
                 "
                 :date="props.emergency.created" format="toDate"
             />
             <div
                 class="
-                    col-span-2 hidden font-medium text-gray-900
-                    md:col-span-4 md:block
+                    col-span-2 -my-2.5 hidden font-medium text-gray-900
+                    md:col-span-6 md:block
                     dark:text-white
                 "
             >

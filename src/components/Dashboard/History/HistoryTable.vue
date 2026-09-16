@@ -321,7 +321,7 @@ const hasFilters = computed(() => {
                     >
                         <div
                             class="
-                                col-span-7 col-start-2 pl-1
+                                col-span-5 col-start-2 pl-1
                                 md:col-span-10 md:col-start-3
                             "
                         >
