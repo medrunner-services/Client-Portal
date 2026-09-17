@@ -15,7 +15,6 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
 import { findLocationPath } from "@/utils/functions/locationFunctions.ts";
 
-const emit = defineEmits(["sendNewDetails"]);
 const emergencyStore = useEmergencyStore();
 const logicStore = useLogicStore();
 const { t } = useI18n();
@@ -311,9 +310,6 @@ const trackedEmergencyLocation = computed(() => {
                     @click="displayCancelEmergencyModal = true"
                 >
                     {{ t("tracking_cancelButton") }}
-                </GlobalButton>
-                <GlobalButton type="secondary" size="full" @click="emit('sendNewDetails')">
-                    {{ t("tracking_sendNewDetails") }}
                 </GlobalButton>
             </div>
         </GlobalCard>

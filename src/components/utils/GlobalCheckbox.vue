@@ -34,6 +34,7 @@ const value = computed({
         <div class="flex flex-row">
             <div class="flex" :class="props.centerCheckbox ? 'items-center' : ''">
                 <input
+                    id="checkbox"
                     v-model="value"
                     type="checkbox"
                     :disabled="props.disabled"
@@ -48,6 +49,7 @@ const value = computed({
                     @click="$emit('inputClick')"
                 >
                 <label
+                    for="checkbox"
                     class="
                         ms-2 text-sm font-medium text-gray-900
                         dark:text-gray-300

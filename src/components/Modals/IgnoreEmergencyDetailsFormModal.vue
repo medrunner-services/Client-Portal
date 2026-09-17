@@ -4,8 +4,14 @@ import { useI18n } from "vue-i18n";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 
-const emit = defineEmits(["ignoreDetails", "close"]);
+interface Props {
+    loading?: boolean;
+}
 
+const props = withDefaults(defineProps<Props>(), {
+    loading: false,
+});
+const emit = defineEmits(["ignoreDetails", "close"]);
 const { t } = useI18n();
 
 function ignoreDetails() {
@@ -31,14 +37,14 @@ function ignoreDetails() {
                     lg:flex
                 "
             >
-                <GlobalButton size="full" @click="ignoreDetails()">
+                <GlobalButton size="full" :loading="props.loading" @click="ignoreDetails()">
                     {{ t("form_confirm") }}
                 </GlobalButton>
                 <GlobalButton
                     type="secondary" size="full" class="
                         mt-2
                         lg:mt-0
-                    " @click="modalContainer.close()"
+                    " :disabled="props.loading" @click="modalContainer.close()"
                 >
                     {{
                         t("tracking_backCancelButton")

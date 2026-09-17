@@ -48,19 +48,19 @@ async function confirmRules() {
                 }}
             </p>
 
-            <GlobalCheckbox v-model="checkboxValue" class="mt-8 mb-4">
-                {{ t("tracking_emergencyRulesModalHideLater") }}
-            </GlobalCheckbox>
-
             <div
                 class="
-                    mt-2 gap-2
+                    mt-8 place-content-between items-center
                     lg:flex
                 "
             >
                 <GlobalButton size="full" @click="confirmRules()">
                     {{ t("form_confirm") }}
                 </GlobalButton>
+
+                <GlobalCheckbox v-model="checkboxValue" class="mt-2 mr-4">
+                    {{ t("tracking_emergencyRulesModalHideLater") }}
+                </GlobalCheckbox>
             </div>
         </div>
     </ModalContainer>

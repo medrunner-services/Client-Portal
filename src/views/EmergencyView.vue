@@ -29,7 +29,6 @@ const { t } = useI18n();
 const router = useRouter();
 const alertStore = useAlertStore();
 
-const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const respondingTeamNumber = ref(0);
@@ -43,7 +42,6 @@ async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
         if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
             emergencyStore.trackedEmergency = newEmergency;
             oldEmergencyStatus.value = newEmergency.status;
-            displayFormDetails.value = true;
         }
     }
     catch (_e) {
@@ -100,8 +98,6 @@ onMounted(async () => {
             emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
             emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
             respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
-            if (emergencyStore.trackedEmergency.status === MissionStatus.RECEIVED)
-                displayFormDetails.value = true;
         }
         catch (error: any) {
             errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
@@ -138,12 +134,15 @@ onBeforeUnmount(() => {
                 </GlobalCard>
             </div>
             <div v-else-if="emergencyStore.trackedEmergency">
+                <EmergencyTracking v-if="!emergencyStore.trackedEmergency.isComplete" />
                 <EmergencyDetailsForm
-                    v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
-                    @submitted-details="displayFormDetails = false"
+                    v-if="!emergencyStore.trackedEmergency.isComplete"
+                    class="mt-10"
                 />
-                <EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
-                <EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
+                <EmergencyCompletion
+                    v-else-if="emergencyStore.trackedEmergency.isComplete"
+                    @rated-emergency="emergencyStore.resetTrackedEmergency()"
+                />
             </div>
 
             <EmergencyReportForm v-else />
