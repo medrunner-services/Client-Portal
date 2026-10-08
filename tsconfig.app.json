@@ -7,6 +7,13 @@
         },
         "noUncheckedIndexedAccess": false
     },
-    "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
-    "exclude": ["src/**/__tests__/*"]
+    "include": [
+        "env.d.ts",
+        "src/**/*",
+        "src/**/*.vue",
+        "docs/superpowers/**/*"
+    ],
+    "exclude": [
+        "src/**/__tests__/*"
+    ]
 }
