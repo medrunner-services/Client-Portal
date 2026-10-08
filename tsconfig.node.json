@@ -4,9 +4,12 @@
         "composite": true,
         "module": "ESNext",
         "moduleResolution": "Bundler",
-        "types": ["node"]
+        "types": ["node"],
+        "allowImportingTsExtensions": true,
+        "noEmit": true
     },
     "include": [
+        "build/**/*.ts",
         "vite.config.*",
         "vitest.config.*",
         "cypress.config.*",

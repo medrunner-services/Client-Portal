@@ -22,6 +22,8 @@ Reconcile stable release history back into `main` through a manual PR. Automatic
 
 ## GitHub configuration
 
+Build versions include SemVer metadata identifying the source, such as `2.9.3+2.g28d7e96` or `2.10.0-dev.1+0.ged32d63`. CI exports the final `APP_VERSION` and uses the same value for the UI, APM, and deployment notification. Local Vite builds resolve the nearest release tag and commit, exclude prereleases in production mode, and append `.dirty` for tracked uncommitted changes. Without Git, local builds fall back to package.json. No manifest or lockfile is changed by local version resolution.
+
 Create `deploy-cf-production`, `deploy-cf-staging`, and `release` in this repository. Use **unsuffixed names**, with differing values stored in the corresponding deployment environment. Identical values may be repository/organization variables. Environments do not inherit from each other.
 
 | Variable | Value |
