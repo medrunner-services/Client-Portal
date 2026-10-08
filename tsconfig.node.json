@@ -2,11 +2,11 @@
     "extends": "@tsconfig/node24/tsconfig.json",
     "compilerOptions": {
         "composite": true,
-        "noEmit": true,
-        "allowImportingTsExtensions": true,
         "module": "ESNext",
         "moduleResolution": "Bundler",
-        "types": ["node"]
+        "types": ["node"],
+        "allowImportingTsExtensions": true,
+        "noEmit": true
     },
     "include": [
         "build/**/*.ts",
