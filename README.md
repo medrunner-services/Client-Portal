@@ -2,6 +2,10 @@
 
 This portal brings the medrunner experience to the web !
 
+## Delivery and versioning
+
+See [deployment setup and migration](docs/deployment.md) for Cloudflare Pages delivery. Production `release/stable` keeps npm; staging `main` uses pnpm.
+
 ## Project Setup
 
 ```sh
