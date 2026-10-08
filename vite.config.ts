@@ -4,8 +4,10 @@ import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 
+import { resolveBuildVersion } from "./build/version.ts";
+
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
     server: {
         port: 5174,
     },
@@ -16,11 +18,16 @@ export default defineConfig({
         }),
     ],
     define: {
-        __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+        __APP_VERSION__: JSON.stringify(
+            resolveBuildVersion({
+                cwd: fileURLToPath(new URL(".", import.meta.url)),
+                production: mode === "production",
+            }),
+        ),
     },
     resolve: {
         alias: {
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
-});
+}));

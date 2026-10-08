@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node18/tsconfig.json",
   "include": [
+    "build/**/*.ts",
     "vite.config.*",
     "vitest.config.*",
     "cypress.config.*",
@@ -9,6 +10,8 @@
   ],
   "compilerOptions": {
     "composite": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "types": ["node"]
