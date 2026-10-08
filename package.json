@@ -14,9 +14,10 @@
         "build-only": "vite build",
         "build-only:staging": "vite build --mode staging",
         "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-        "lint": "eslint --fix",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
         "prepush": "run-p --print-label --continue-on-error type-check lint",
-        "check": "pnpm run '/^(lint|type-check)$/'",
+        "check": "pnpm run lint && pnpm run type-check",
         "update-locals": "node --env-file=.env.development update-locals.js",
         "update-packages": "pnpm ncu"
     },

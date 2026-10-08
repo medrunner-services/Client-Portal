@@ -3,7 +3,7 @@ import betterTW from "eslint-plugin-better-tailwindcss";
 
 export default antfu(
     {
-        ignores: ["**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js", "*.yaml", ".github/*", "src/locales/*"],
+        ignores: ["**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js", "*.yaml", ".github/*", "src/locales/*", "docs/superpowers/**"],
         vue: true,
         typescript: {
             overrides: {

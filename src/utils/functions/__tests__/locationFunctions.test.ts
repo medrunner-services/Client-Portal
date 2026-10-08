@@ -1,25 +1,23 @@
-import { SpaceLocationType, type SpaceLocation } from "@medrunner/api-client";
+import type { SpaceLocation } from "@medrunner/api-client";
+import { SpaceLocationType } from "@medrunner/api-client";
 import { expect, it } from "vitest";
 
 const locationFunctions = await import(new URL("../locationFunctions.ts", import.meta.url).href)
     .catch(() => undefined);
 
-const location = (
-    id: string,
-    name: string,
-    children: SpaceLocation[] = [],
-    overrides: Partial<SpaceLocation> = {},
-): SpaceLocation => ({
-    id,
-    name,
-    type: SpaceLocationType.MOON,
-    children,
-    enabled: true,
-    visibleForAlertSubmissions: true,
-    alertLocation: true,
-    characteristics: [],
-    ...overrides,
-});
+function location(id: string, name: string, children: SpaceLocation[] = [], overrides: Partial<SpaceLocation> = {}): SpaceLocation {
+    return {
+        id,
+        name,
+        type: SpaceLocationType.MOON,
+        children,
+        enabled: true,
+        visibleForAlertSubmissions: true,
+        alertLocation: true,
+        characteristics: [],
+        ...overrides,
+    };
+}
 
 const locations: SpaceLocation[] = [
     location("stanton", "Stanton", [
