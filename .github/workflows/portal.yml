@@ -57,6 +57,7 @@ jobs:
       production-branch: release/stable
       source-ref: ${{ needs.release.outputs.new-tag || github.sha }}
       version: ${{ needs.release.outputs.new-version }}
+      include-commit-metadata: true
       package-manager: pnpm
       private-packages: false
       public-env-map: >-

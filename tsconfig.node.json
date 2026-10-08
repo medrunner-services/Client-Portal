@@ -2,11 +2,14 @@
     "extends": "@tsconfig/node24/tsconfig.json",
     "compilerOptions": {
         "composite": true,
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
         "module": "ESNext",
         "moduleResolution": "Bundler",
         "types": ["node"]
     },
     "include": [
+        "build/**/*.ts",
         "vite.config.*",
         "vitest.config.*",
         "cypress.config.*",
