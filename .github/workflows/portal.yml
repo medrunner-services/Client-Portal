@@ -37,6 +37,7 @@ jobs:
       environment-name: release
       release-ref-name: release/stable
       default-branch: main
+      enable-backpropagation: false
       backpropagation-approve: false
       backpropagation-auto-merge: false
 
@@ -47,6 +48,8 @@ jobs:
     permissions:
       contents: read
       packages: read
+    # Required for repository/environment credentials to reach the reusable workflow.
+    secrets: inherit
     with:
       build-script: ${{ github.ref_name == 'release/stable' && 'build' || 'build:staging' }}
       environment-name: ${{ github.ref_name == 'release/stable' && 'deploy-cf-production' || 'deploy-cf-staging' }}
@@ -85,11 +88,19 @@ jobs:
         env:
           API_URL: ${{ vars.API_URL }}
           AUTOMATION_DEPLOY: ${{ secrets.AUTOMATION_DEPLOY }}
+          AUTOMATION_DEPLOY_PROD: ${{ secrets.AUTOMATION_DEPLOY_PROD }}
+          AUTOMATION_DEPLOY_DEV: ${{ secrets.AUTOMATION_DEPLOY_DEV }}
+          IS_PRODUCTION: ${{ github.ref_name == 'release/stable' }}
           VERSION: ${{ needs.deploy.outputs.version }}
         run: |
           node --input-type=module <<'NODE'
           async function notify() {
-            if (!process.env.AUTOMATION_DEPLOY) {
+            const credential = process.env.AUTOMATION_DEPLOY || (
+              process.env.IS_PRODUCTION === 'true'
+                ? process.env.AUTOMATION_DEPLOY_PROD
+                : process.env.AUTOMATION_DEPLOY_DEV
+            );
+            if (!credential) {
               console.log('::warning::API notification skipped: AUTOMATION_DEPLOY is not configured');
               return;
             }
@@ -97,7 +108,7 @@ jobs:
             const url = new URL('/automation/deploy', process.env.API_URL);
             if (url.protocol !== 'https:') throw new Error('Notification API must use HTTPS');
             url.search = new URLSearchParams({
-              secret: process.env.AUTOMATION_DEPLOY,
+              secret: credential,
               client: '1',
               version: process.env.VERSION,
             }).toString();
