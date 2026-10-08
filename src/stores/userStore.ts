@@ -1,10 +1,23 @@
-import type { ApiToken, BlockedStatus, ClientHistory, PaginatedResponse, Person } from "@medrunner/api-client";
+import type {
+    ApiToken,
+    BlockedStatus,
+    ClientHistory,
+    Emergency,
+    MissionStatus,
+    PaginatedResponse,
+    Person,
+    PromotionalCode,
+    TokenScope,
+} from "@medrunner/api-client";
+import type { SyncedSettings } from "@/@types/types.ts";
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
 
-import { LocalStorageItems, MessageNotification, type SyncedSettings } from "@/types.ts";
+import { computed, ref } from "vue";
+import { DateFormatingSetting, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 import { api } from "@/utils/medrunnerClient";
+
+const rsiUsernameRegex = /.*\/citizens\/([^/]+).*/;
 
 export const useUserStore = defineStore("user", () => {
     const user = ref<Person>({} as Person);
@@ -19,12 +32,16 @@ export const useUserStore = defineStore("user", () => {
         globalAnalytics: true,
         selectedLanguage: "",
         lastConfirmedWarningId: "",
+        dateFormatingPreference: DateFormatingSetting.AUTO,
+        shortDateFormatPreference: false,
     });
+    const redeemedCodes = ref<PromotionalCode[]>([]);
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
             return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0);
-        } else {
+        }
+        else {
             return 0;
         }
     });
@@ -33,10 +50,11 @@ export const useUserStore = defineStore("user", () => {
         try {
             await api.auth.signOut();
             // We do not want to wait for the socket to stop
-            stopWebsocket();
+            void stopWebsocket();
             localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);
             localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
-        } finally {
+        }
+        finally {
             isAuthenticated.value = false;
         }
     }
@@ -44,14 +62,15 @@ export const useUserStore = defineStore("user", () => {
     async function linkUser(username: string): Promise<Person> {
         let linkUsername = username;
         if (username.includes("https://robertsspaceindustries.com/citizens/")) {
-            linkUsername = username.replace(/.*\/citizens\/([^/]+)\/?.*/, "$1");
+            linkUsername = username.replace(rsiUsernameRegex, "$1");
         }
 
         const response = await api.client.linkClient(linkUsername);
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
             throw response;
         }
     }
@@ -61,7 +80,8 @@ export const useUserStore = defineStore("user", () => {
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
             throw response;
         }
     }
@@ -71,7 +91,8 @@ export const useUserStore = defineStore("user", () => {
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
             throw response;
         }
     }
@@ -81,7 +102,19 @@ export const useUserStore = defineStore("user", () => {
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
+            throw response;
+        }
+    }
+
+    async function fetchUserClientEmergencyHistory(limit: number = 20, paginationToken?: string, ascending?: boolean, status?: MissionStatus[], startDate?: string, endDate?: string): Promise<PaginatedResponse<Emergency>> {
+        const response = await api.emergency.getClientEmergencies(status, startDate, endDate, ascending, limit, paginationToken);
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+        else {
             throw response;
         }
     }
@@ -91,17 +124,19 @@ export const useUserStore = defineStore("user", () => {
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
             throw response;
         }
     }
 
-    async function createApiToken(name: string, expirationDate?: Date): Promise<string> {
-        const response = await api.auth.createApiToken({ name, expirationDate });
+    async function createApiToken(name: string, scopes: TokenScope[], expirationDate?: Date): Promise<string> {
+        const response = await api.auth.createApiToken({ name, scopes, expirationDate });
 
         if (response.success && response.data) {
             return response.data;
-        } else {
+        }
+        else {
             throw response;
         }
     }
@@ -146,22 +181,36 @@ export const useUserStore = defineStore("user", () => {
         }
     }
 
+    async function fetchUserRedeemedCodes(limit: number, paginationToken?: string): Promise<PaginatedResponse<PromotionalCode>> {
+        const response = await api.code.getRedeemedCodes(limit, paginationToken);
+
+        if (response.success && response.data) {
+            return response.data;
+        }
+        else {
+            throw response;
+        }
+    }
+
     return {
         user,
         isAuthenticated,
         isBlocked,
         syncedSettings,
         totalNumberOfEmergencies,
+        redeemedCodes,
         disconnectUser,
         linkUser,
         fetchUser,
         fetchUserBlocklistStatus,
         fetchUserEmergencyHistory,
+        fetchUserClientEmergencyHistory,
         fetchUserApiTokens,
         createApiToken,
         deleteApiToken,
         setSettings,
         deleteAccount,
         redeemCode,
+        fetchUserRedeemedCodes,
     };
 });

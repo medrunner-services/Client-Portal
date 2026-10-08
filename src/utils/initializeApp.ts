@@ -1,10 +1,12 @@
-import type { Deployment, OrgSettings, Person } from "@medrunner/api-client";
-import { HubConnectionState } from "@microsoft/signalr";
+import type { Deployment } from "@medrunner/api-client";
+import { MissionStatus } from "@medrunner/api-client";
 
+import { HubConnectionState } from "@microsoft/signalr";
+import { WSState } from "@/@types/types.ts";
 import { i18n } from "@/i18n";
+import { useEmergencyStore } from "@/stores/emergencyStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { type SyncedSettings, WSState } from "@/types.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
@@ -16,7 +18,6 @@ import {
     initializeSettingLanguage,
     initializeSettingNotifications,
     initializeTabChecker,
-    migrateSyncedSettings,
 } from "@/utils/settingsUtils";
 import { deploymentCreate } from "@/utils/websocket/deploymentCreate.ts";
 import { orgSettingsUpdate } from "@/utils/websocket/orgSettingsUpdate.ts";
@@ -24,6 +25,7 @@ import { personUpdate } from "@/utils/websocket/personUpdate.ts";
 
 export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
+    const emergencyStore = useEmergencyStore();
     const logicStore = useLogicStore();
     const { availableLocales, locale, t } = i18n.global;
 
@@ -38,17 +40,38 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             userStore.isAuthenticated = true;
 
             if (userStore.user.clientPortalPreferencesBlob) {
-                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+                userStore.syncedSettings = {
+                    ...userStore.syncedSettings,
+                    ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
+                };
             }
-        } catch (_e: any) {
+        }
+        catch (_e: any) {
             return;
         }
 
         try {
             const blockCheck = await userStore.fetchUserBlocklistStatus();
-            if (blockCheck.blocked) userStore.isBlocked = true;
-        } catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[blockCheck]" }));
+            if (blockCheck.blocked)
+                userStore.isBlocked = true;
+        }
+        catch (error: any) {
+            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[blockCheck]" }));
+        }
+
+        try {
+            const lastConfirmedEmergencyWarning = userStore.syncedSettings.lastConfirmedWarningId;
+            const warningEmergency = await userStore.fetchUserClientEmergencyHistory(1, undefined, undefined, [MissionStatus.NO_CONTACT]);
+
+            if (
+                warningEmergency.data.length > 0
+                && warningEmergency.data[0].id !== lastConfirmedEmergencyWarning
+            ) {
+                logicStore.warningNoContactId = warningEmergency.data[0].id;
+            }
+        }
+        catch (_e) {
+            return;
         }
     }
 
@@ -56,23 +79,23 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
 
     if (apiConnected) {
         try {
-            await migrateSyncedSettings();
             await initializeMedrunnerSettings();
 
             initializeSettingNotifications();
             initializeAnalytics();
-        } catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error.statusCode, t("error_appInitialization", { error: "[initializeSettings]" }));
+        }
+        catch (error: any) {
+            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[initializeSettings]" }));
         }
     }
 
     if (ws && ws.state === HubConnectionState.Connected) {
-        ws.on("PersonUpdate", async (newUser: Person) => {
-            await personUpdate(newUser);
+        ws.on("PersonUpdate", async () => {
+            await personUpdate();
         });
 
-        ws.on("OrgSettingsUpdate", (updatedOrgSettings: OrgSettings) => {
-            orgSettingsUpdate(updatedOrgSettings);
+        ws.on("OrgSettingsUpdate", async () => {
+            await orgSettingsUpdate();
         });
 
         ws.on("DeploymentCreate", (newDeployment: Deployment) => {
@@ -83,8 +106,21 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             logicStore.currentWSState = WSState.HEALTHY;
 
             userStore.user = await userStore.fetchUser();
-            if (userStore.user.clientPortalPreferencesBlob)
-                userStore.syncedSettings = JSON.parse(userStore.user.clientPortalPreferencesBlob) as SyncedSettings;
+            if (userStore.user.clientPortalPreferencesBlob) {
+                userStore.syncedSettings = {
+                    ...userStore.syncedSettings,
+                    ...JSON.parse(userStore.user.clientPortalPreferencesBlob),
+                };
+            }
+
+            if (userStore.user.activeEmergency) {
+                try {
+                    emergencyStore.trackedEmergency = await emergencyStore.refreshEmergencyForEvent(userStore.user.activeEmergency);
+                }
+                catch (_error) {
+                    // Keep a recovered websocket healthy when its background detail refresh fails.
+                }
+            }
         });
 
         ws.onreconnecting((error) => {
@@ -96,7 +132,8 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
         ws.onclose(() => {
             logicStore.currentWSState = WSState.DISCONNECTED;
         });
-    } else if (ws && ws.state === HubConnectionState.Disconnected) {
+    }
+    else if (ws && ws.state === HubConnectionState.Disconnected) {
         logicStore.currentWSState = WSState.DISCONNECTED;
     }
 }

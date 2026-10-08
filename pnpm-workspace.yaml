@@ -1,0 +1,10 @@
+shamefullyHoist: true
+savePrefix: ""
+confirmModulesPurge: true
+allowBuilds:
+  esbuild: true
+  wrangler: true
+  workerd: true
+  sharp: true
+minimumReleaseAgeExclude:
+  - '@medrunner/api-client@0.7.0-beta.26'

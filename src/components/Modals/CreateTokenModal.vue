@@ -1,15 +1,20 @@
 <script setup lang="ts">
+import { PersonType, TokenScope } from "@medrunner/api-client";
+import Multiselect from "@vueform/multiselect";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+import GlobalCheckbox from "@/components/utils/GlobalCheckbox.vue";
 import GlobalDateInput from "@/components/utils/GlobalDateInput.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { getTokenScopeString } from "@/utils/functions/getStringsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { multiSelectInputDefaultClasses } from "@/utils/globalVars.ts";
 
 const emit = defineEmits(["tokenCreated", "close"]);
 const userStore = useUserStore();
@@ -17,61 +22,120 @@ const { t } = useI18n();
 
 const inputName = ref("");
 const inputDate = ref("");
+const inputScopes = ref<TokenScope[]>([]);
+const inputRulesCheckbox = ref(false);
 
 const createdToken = ref("");
 const errorCreationToken = ref("");
 const submittingNewToken = ref(false);
 const isCopied = ref(false);
 
-function copyToken() {
-    navigator.clipboard.writeText(createdToken.value).then(() => {
-        isCopied.value = true;
-    });
+const scopesOptions = computed(() => {
+    const tokenScopes = [
+        {
+            label: "Client Scopes",
+            options: [
+                { label: getTokenScopeString(TokenScope.CLIENT_READ), value: TokenScope.CLIENT_READ },
+                { label: getTokenScopeString(TokenScope.CLIENT_WRITE), value: TokenScope.CLIENT_WRITE },
+                { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_READ), value: TokenScope.CLIENT_PROFILE_READ },
+                { label: getTokenScopeString(TokenScope.CLIENT_PROFILE_WRITE), value: TokenScope.CLIENT_PROFILE_WRITE },
+                { label: getTokenScopeString(TokenScope.CLIENT_ORGSETTINGS_READ), value: TokenScope.CLIENT_ORGSETTINGS_READ },
+            ],
+        },
+    ];
+
+    if (userStore.user.personType === PersonType.STAFF) {
+        tokenScopes.push({
+            label: "Staff Scopes",
+            options: [
+                { label: getTokenScopeString(TokenScope.STAFF_READ), value: TokenScope.STAFF_READ },
+                { label: getTokenScopeString(TokenScope.STAFF_WRITE), value: TokenScope.STAFF_WRITE },
+                { label: getTokenScopeString(TokenScope.STAFF_PROFILE_READ), value: TokenScope.STAFF_PROFILE_READ },
+                { label: getTokenScopeString(TokenScope.STAFF_PROFILE_WRITE), value: TokenScope.STAFF_PROFILE_WRITE },
+                { label: getTokenScopeString(TokenScope.STAFF_ORGSETTINGS_READ), value: TokenScope.STAFF_ORGSETTINGS_READ },
+            ],
+        });
+    }
+
+    return tokenScopes;
+});
+
+const getModalTitle = computed(() => {
+    if (createdToken.value)
+        return t("developer_tokenCreateFormTitle");
+    else return t("developer_createTokenFormTitle");
+});
+
+const isInvalidTokenName = computed(() => {
+    if (inputName.value) {
+        return inputName.value.length > 64;
+    }
+    else {
+        return false;
+    }
+});
+
+async function copyToken() {
+    await navigator.clipboard.writeText(createdToken.value);
+    isCopied.value = true;
 }
 
-function copyAndClose() {
-    navigator.clipboard.writeText(createdToken.value).then(() => {
-        document.body.style.overflow = "auto";
-        emit("close");
-    });
+async function copyAndClose() {
+    await navigator.clipboard.writeText(createdToken.value);
+
+    emit("close");
 }
 
 async function createToken() {
+    if (!inputName.value || isInvalidTokenName.value || inputScopes.value.length < 1 || !inputRulesCheckbox.value) {
+        return;
+    }
+
     submittingNewToken.value = true;
     errorCreationToken.value = "";
 
     try {
         if (inputDate.value) {
-            createdToken.value = await userStore.createApiToken(inputName.value, new Date(inputDate.value));
-        } else {
-            createdToken.value = await userStore.createApiToken(inputName.value);
+            createdToken.value = await userStore.createApiToken(inputName.value, inputScopes.value, new Date(inputDate.value));
+        }
+        else {
+            createdToken.value = await userStore.createApiToken(inputName.value, inputScopes.value);
         }
         submittingNewToken.value = false;
-        document.body.style.overflow = "auto";
         emit("tokenCreated");
-    } catch (error: any) {
+    }
+    catch (error: any) {
         submittingNewToken.value = false;
-
-        errorCreationToken.value = errorString(error.statusCode);
+        if (error.statusCode === 422)
+            errorCreationToken.value = errorString(error, t("error_maxApiTokens"));
+        if (error.statusCode === 400)
+            errorCreationToken.value = errorString(error, t("error_invalidTokenScope"));
+        else
+            errorCreationToken.value = errorString(error);
     }
 }
-
-const getModalTitle = computed(() => {
-    if (createdToken.value) return t("developer_tokenCreateFormTitle");
-    else return t("developer_createTokenFormTitle");
-});
 </script>
 
 <template>
     <ModalContainer v-slot="modalContainer" :title="getModalTitle" @close="emit('close')">
         <div v-if="createdToken">
-            <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenAlertCopy") }}</p>
+            <p
+                class="
+                    text-gray-500
+                    dark:text-gray-400
+                "
+            >
+                {{ t("developer_createTokenAlertCopy") }}
+            </p>
 
             <div class="mt-8 flex items-center">
-                <GlobalTextAreaInput v-model="createdToken" :rows="3" class="flex-grow" :disabled="true" />
+                <GlobalTextAreaInput v-model="createdToken" :rows="3" class="grow" :disabled="true" />
                 <svg
                     v-if="!isCopied"
-                    class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"
+                    class="
+                        ml-4 size-6 cursor-pointer text-gray-800
+                        dark:text-white
+                    "
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -85,7 +149,10 @@ const getModalTitle = computed(() => {
                 </svg>
                 <svg
                     v-else
-                    class="ml-4 h-6 w-6 text-gray-800 dark:text-white"
+                    class="
+                        ml-4 size-6 text-gray-800
+                        dark:text-white
+                    "
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -95,13 +162,27 @@ const getModalTitle = computed(() => {
                 </svg>
             </div>
 
-            <GlobalButton type="secondary" size="full" class="mt-8 lg:mt-8 lg:w-fit" @click="copyAndClose()">{{
-                t("developer_createTokenCopyAndClose")
-            }}</GlobalButton>
+            <GlobalButton
+                type="secondary" size="full" class="
+                    mt-8
+                    lg:mt-8 lg:w-fit
+                " @click="copyAndClose()"
+            >
+                {{
+                    t("developer_createTokenCopyAndClose")
+                }}
+            </GlobalButton>
         </div>
 
         <div v-else>
-            <p class="text-gray-500 dark:text-gray-400">{{ t("developer_createTokenFormSubtitle") }}</p>
+            <p
+                class="
+                    text-gray-500
+                    dark:text-gray-400
+                "
+            >
+                {{ t("developer_createTokenFormSubtitle") }}
+            </p>
 
             <form @submit.prevent="createToken()">
                 <GlobalTextInput
@@ -110,7 +191,33 @@ const getModalTitle = computed(() => {
                     :label="t('developer_createTokenFormName')"
                     :required="true"
                     :placeholder="t('developer_createTokenFormPlaceholderName')"
+                    :error="isInvalidTokenName"
                 />
+                <GlobalErrorText v-if="isInvalidTokenName" class="mt-1 text-sm" :icon="false" :text="t('error_tokenNameTooLong')" />
+
+                <div class="mt-4">
+                    <label
+                        class="
+                            block text-sm font-medium text-gray-900
+                            dark:text-white
+                        "
+                    >
+                        {{ t("profile_tokenScopes") }}*
+                    </label>
+
+                    <Multiselect
+                        v-model="inputScopes"
+                        mode="tags"
+                        :required="true"
+                        :close-on-select="false"
+                        :groups="true"
+                        :options="scopesOptions"
+                        :placeholder="t('profile_tokenScopeSelectPlaceholder')"
+                        :classes="multiSelectInputDefaultClasses"
+                        class="mt-2"
+                    />
+                </div>
+
                 <GlobalDateInput
                     v-model="inputDate"
                     class="mt-4"
@@ -119,11 +226,43 @@ const getModalTitle = computed(() => {
                     :placeholder="t('developer_createTokenFormPlaceholderExpirationDate')"
                 />
 
-                <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="submittingNewToken" :submit="true" size="full">{{ t("developer_createTokenButton") }}</GlobalButton>
-                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
-                        {{ t("tracking_backCancelButton") }}</GlobalButton
+                <div class="mt-4">
+                    <GlobalCheckbox v-model="inputRulesCheckbox" :center-checkbox="false" :required="true" class="mb-4">
+                        <div>
+                            <p>I agree with the following rules:</p>
+                            <ul class="mt-1 list-disc pl-3 font-normal">
+                                <li class="underline">
+                                    No data creation, deletion or modification for testing purposes;
+                                </li>
+                                <li>You may not use Medrunner branding or trademarks without prior written approval;</li>
+                                <li>You may not perform load testing, stress testing, or any actions that could impact service availability or be considered like abuse of the API without prior approval;</li>
+                                <li>Do not expose your API token in client-side applications or share it with others;</li>
+                                <li>You may not use the API to provide a paid service;</li>
+                                <li>You understand Medrunner may revoke your API access at any time for violations of these terms.</li>
+                            </ul>
+                        </div>
+                    </GlobalCheckbox>
+                </div>
+
+                <div
+                    class="
+                        mt-8 gap-2
+                        lg:flex
+                    "
+                >
+                    <GlobalButton :loading="submittingNewToken" :disabled="isInvalidTokenName" :submit="true" size="full">
+                        {{
+                            t("developer_createTokenButton")
+                        }}
+                    </GlobalButton>
+                    <GlobalButton
+                        type="secondary" size="full" class="
+                            mt-2
+                            lg:mt-0
+                        " @click="modalContainer.close()"
                     >
+                        {{ t("tracking_backCancelButton") }}
+                    </GlobalButton>
                 </div>
                 <GlobalErrorText v-if="errorCreationToken" :text="errorCreationToken" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>

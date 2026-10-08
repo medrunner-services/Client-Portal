@@ -1,33 +1,54 @@
-import pluginVue from "eslint-plugin-vue";
-import vueTsEslintConfig from "@vue/eslint-config-typescript";
-import prettierConfig from "@vue/eslint-config-prettier";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import antfu from "@antfu/eslint-config";
+import betterTW from "eslint-plugin-better-tailwindcss";
 
-export default [
-    ...pluginVue.configs["flat/recommended"],
-    ...vueTsEslintConfig(),
+export default antfu(
     {
-        files: ["*.vue", "**/*.vue", "*.ts", "**/*.ts"],
-        languageOptions: {
-            ecmaVersion: 2022,
-            sourceType: "module",
-            parserOptions: {
-                parser: "@typescript-eslint/parser",
+        ignores: ["**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js", "*.yaml", ".github/*", "src/locales/*", "docs/superpowers/**"],
+        vue: true,
+        typescript: {
+            overrides: {
+                "ts/no-explicit-any": "off",
+                "no-irregular-whitespace": "off",
+                "vue/no-v-html": "off",
+                "vue/require-default-prop": "off",
+                "ts/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
+                "ts/only-throw-error": "off",
+                "ts/no-misused-promises": "off",
+                "unused-imports/no-unused-vars": "off",
+                "antfu/no-top-level-await": "off",
+                "no-unmodified-loop-condition": "off",
+                "no-useless-catch": "off",
+                "no-throw-literal": "off",
+                "import/no-mutable-exports": "off",
+                "node/prefer-global/process": "off",
             },
         },
-        plugins: {
-            "simple-import-sort": simpleImportSort,
-        },
-        rules: {
-            "simple-import-sort/imports": "error",
-            "simple-import-sort/exports": "error",
-            "@typescript-eslint/no-explicit-any": "off",
-            "no-irregular-whitespace": "off",
-            "vue/no-v-html": "off",
-            "vue/require-default-prop": "off",
-            "@typescript-eslint/no-unused-vars": ["error", { caughtErrorsIgnorePattern: "^_" }],
+        pnpm: false,
+        stylistic: {
+            quotes: "double",
+            indent: 4,
+            semi: true,
+            commaStyle: "last",
         },
     },
-    prettierConfig,
-    { ignores: [".node_modules/", "**/logs/*", "**/vscode/*", "**/idea/*", ".env*", "**/dist/*", "tailwind.config.js"] },
-];
+    {
+        plugins: {
+            "better-tailwindcss": betterTW,
+        },
+        settings: {
+            "better-tailwindcss": {
+                entryPoint: "src/assets/main.css",
+            },
+        },
+        rules: {
+            ...betterTW.configs.recommended.rules,
+            "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {
+                printWidth: 250,
+                indent: 4,
+            }],
+            "better-tailwindcss/no-unknown-classes": "off",
+            "better-tailwindcss/enforce-consistent-important-position": "error",
+            "better-tailwindcss/no-deprecated-classes": "warn",
+        },
+    },
+);

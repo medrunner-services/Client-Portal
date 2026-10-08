@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { type Emergency, type MissionStatus } from "@medrunner/api-client";
-import { onMounted, ref } from "vue";
+import type { WebSocketMessage } from "@/@types/types.ts";
+import { MissionStatus } from "@medrunner/api-client";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 
+import { useRouter } from "vue-router";
+import { AlertColors } from "@/@types/types.ts";
 import EmergencyChatBox from "@/components/Emergency/EmergencyChatBox.vue";
 import EmergencyCompletion from "@/components/Emergency/EmergencyCompletion.vue";
 import EmergencyDetailsForm from "@/components/Emergency/EmergencyDetailsForm.vue";
@@ -12,49 +14,45 @@ import EmergencyTracking from "@/components/Emergency/EmergencyTracking.vue";
 import ServiceStatus from "@/components/Emergency/ServiceStatus.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/functions/getStringsFunctions.ts";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
+import { subscribeToEmergencyEvents } from "@/utils/websocket/emergencySubscription.ts";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const { t } = useI18n();
 const router = useRouter();
+const alertStore = useAlertStore();
 
-const displayFormDetails = ref(false);
 const loadingEmergency = ref(false);
 const errorLoadingEmergency = ref("");
 const respondingTeamNumber = ref(0);
 const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
+let unsubscribeEmergencyEvents: (() => void) | undefined;
 
-onMounted(async () => {
-    if (userStore.user.activeEmergency) {
-        loadingEmergency.value = true;
+async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
+    try {
+        const newEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
 
-        try {
-            emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-            emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
-            respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
-            if (emergencyStore.trackedEmergency.status === 1) displayFormDetails.value = true;
-        } catch (error: any) {
-            errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
-        }
-
-        loadingEmergency.value = false;
-    }
-
-    ws.on("EmergencyCreate", (newEmergency: Emergency) => {
         if (newEmergency.clientId === userStore.user.id && !newEmergency.isComplete) {
             emergencyStore.trackedEmergency = newEmergency;
             oldEmergencyStatus.value = newEmergency.status;
-            displayFormDetails.value = true;
         }
-    });
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
 
-    ws.on("EmergencyUpdate", async (updatedEmergency: Emergency) => {
+async function handleEmergencyUpdate(message: WebSocketMessage): Promise<void> {
+    try {
+        const updatedEmergency = await emergencyStore.refreshEmergencyForEvent(message.id);
+
         if (emergencyStore.trackedEmergency && updatedEmergency.id === emergencyStore.trackedEmergency.id) {
             emergencyStore.trackedEmergency = updatedEmergency;
 
@@ -64,9 +62,9 @@ onMounted(async () => {
             }
 
             if (
-                updatedEmergency.status !== 1 &&
-                oldEmergencyStatus.value !== updatedEmergency.status &&
-                userStore.syncedSettings.emergencyUpdateNotification
+                updatedEmergency.status !== MissionStatus.RECEIVED
+                && oldEmergencyStatus.value !== updatedEmergency.status
+                && userStore.syncedSettings.emergencyUpdateNotification
             ) {
                 await sendBrowserNotification(
                     getEmergencyStatusTitle(updatedEmergency.status),
@@ -74,33 +72,59 @@ onMounted(async () => {
                     getEmergencyStatusSubtitle(updatedEmergency.status),
                     () => {
                         window.focus();
-                        router.push({ name: "emergency" });
+                        void router.push({ name: "emergency" });
                     },
                 );
             }
 
             oldEmergencyStatus.value = updatedEmergency.status;
         }
+    }
+    catch (_e) {
+        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    }
+}
+
+onMounted(async () => {
+    unsubscribeEmergencyEvents = subscribeToEmergencyEvents(ws, {
+        onCreate: handleEmergencyCreate,
+        onUpdate: handleEmergencyUpdate,
     });
 
-    ws.onreconnected(async () => {
-        if (userStore.user.activeEmergency) {
-            try {
-                emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
-            } catch (error: any) {
-                errorLoadingEmergency.value = errorString(error.statusCode, t("error_loadingTrackedEmergency"));
-            }
+    if (userStore.user.activeEmergency) {
+        loadingEmergency.value = true;
+
+        try {
+            emergencyStore.trackedEmergency = await emergencyStore.fetchEmergency(userStore.user.activeEmergency);
+            emergencyStore.trackedEmergencyTeamDetails = await emergencyStore.fetchEmergencyTeamDetail(userStore.user.activeEmergency);
+            respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
         }
-    });
+        catch (error: any) {
+            errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
+        }
+
+        loadingEmergency.value = false;
+    }
+});
+
+onBeforeUnmount(() => {
+    unsubscribeEmergencyEvents?.();
 });
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 xl:flex-row">
+    <div
+        class="
+            content-container flex flex-col gap-10
+            xl:flex-row
+        "
+    >
         <div class="xl:w-1/2">
             <div v-if="errorLoadingEmergency || userStore.isBlocked">
                 <div class="min-h-11">
-                    <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("home_OngoingEmergency") }}</h2>
+                    <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                        {{ t("home_OngoingEmergency") }}
+                    </h2>
                 </div>
 
                 <GlobalCard class="mt-8">
@@ -110,12 +134,15 @@ onMounted(async () => {
                 </GlobalCard>
             </div>
             <div v-else-if="emergencyStore.trackedEmergency">
+                <EmergencyTracking v-if="!emergencyStore.trackedEmergency.isComplete" />
                 <EmergencyDetailsForm
-                    v-if="displayFormDetails && !emergencyStore.trackedEmergency.isComplete"
-                    @submitted-details="displayFormDetails = false"
+                    v-if="!emergencyStore.trackedEmergency.isComplete"
+                    class="mt-10"
                 />
-                <EmergencyTracking v-else-if="!emergencyStore.trackedEmergency.isComplete" @send-new-details="displayFormDetails = true" />
-                <EmergencyCompletion v-else @rated-emergency="emergencyStore.resetTrackedEmergency()" />
+                <EmergencyCompletion
+                    v-else-if="emergencyStore.trackedEmergency.isComplete"
+                    @rated-emergency="emergencyStore.resetTrackedEmergency()"
+                />
             </div>
 
             <EmergencyReportForm v-else />
@@ -123,11 +150,7 @@ onMounted(async () => {
 
         <div class="xl:w-1/2">
             <div v-if="emergencyStore.trackedEmergency && !userStore.isBlocked">
-                <div class="min-h-11">
-                    <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("tracking_chatTitle") }}</h2>
-                </div>
-
-                <EmergencyChatBox class="mt-8" />
+                <EmergencyChatBox />
             </div>
 
             <div v-else>

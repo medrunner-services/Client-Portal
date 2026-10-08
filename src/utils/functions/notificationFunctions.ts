@@ -22,6 +22,7 @@ export async function sendBrowserNotification(title: string, tag: string, body: 
             await audio.play();
         }
 
-        if (onClick) notification.onclick = onClick;
+        if (onClick)
+            notification.onclick = onClick;
     }
 }

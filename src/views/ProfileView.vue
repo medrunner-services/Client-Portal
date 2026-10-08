@@ -7,7 +7,12 @@ import UserSettings from "@/components/Profile/UserSettings.vue";
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 xl:flex-row">
+    <div
+        class="
+            content-container flex flex-col gap-10
+            xl:flex-row
+        "
+    >
         <div class="xl:w-1/2">
             <UserSettings />
 

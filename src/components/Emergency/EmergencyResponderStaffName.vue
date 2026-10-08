@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Level } from "@medrunner/api-client";
-import { ref } from "vue";
+import type { Level } from "@medrunner/api-client";
 import { useI18n } from "vue-i18n";
+import GlobalTooltip from "@/components/utils/GlobalTooltip.vue";
 
 export interface Props {
     name?: string;
@@ -11,25 +11,27 @@ export interface Props {
 const props = defineProps<Props>();
 const { t } = useI18n();
 
-const showPopover = ref(false);
-
 function splitOnLastZero(str: string): string[] {
-    return str.lastIndexOf("0") !== -1 ? [str.slice(0, str.lastIndexOf("0")), str.slice(str.lastIndexOf("0") + 1)] : [str];
+    return str.includes("0") ? [str.slice(0, str.lastIndexOf("0")), str.slice(str.lastIndexOf("0") + 1)] : [str];
 }
 </script>
 
 <template>
-    <div class="relative">
-        <p class="w-fit cursor-help text-gray-500 dark:text-gray-400" @mouseenter="showPopover = true" @mouseleave="showPopover = false">
-            {{ name }}
-        </p>
-        <div
-            v-if="showPopover"
-            role="tooltip"
-            class="absolute bottom-5 z-30 mb-1 inline-block rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
-        >
+    <GlobalTooltip width="w-auto" :disable-hover="!props.level">
+        <template #trigger>
+            <p
+                class="
+                    w-fit cursor-help text-gray-500
+                    dark:text-gray-400
+                "
+            >
+                {{ name }}
+            </p>
+        </template>
+
+        <template #content>
             <div v-if="props.level" class="flex items-center p-2">
-                <img :src="`/icons/medals/${level}.svg`" alt="Success Medal" class="mr-2 h-5 w-5" />
+                <img :src="`/icons/medals/${level}.svg`" alt="Success Medal" class="mr-2 size-5">
                 <p>
                     {{
                         t("tracking_levelSection", {
@@ -39,8 +41,8 @@ function splitOnLastZero(str: string): string[] {
                     }}
                 </p>
             </div>
-        </div>
-    </div>
+        </template>
+    </GlobalTooltip>
 </template>
 
 <style scoped></style>

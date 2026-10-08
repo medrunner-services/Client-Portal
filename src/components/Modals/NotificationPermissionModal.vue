@@ -21,15 +21,17 @@ async function askBrowserPermission() {
         waitingForPermission.value = true;
         permission.value = await Notification.requestPermission();
         waitingForPermission.value = false;
-    } else {
+    }
+    else {
         permission.value = "unsupported";
     }
     if (permission.value === "granted") {
         try {
             await userStore.setSettings({ globalNotifications: true });
             logicStore.isNotificationGranted = true;
-        } catch (_e) {
-            return;
+        }
+        catch (_e) {
+
         }
     }
 }
@@ -39,13 +41,31 @@ async function disableNotifications() {
         disablingNotifications.value = true;
         await userStore.setSettings({ globalNotifications: false });
         logicStore.isNotificationGranted = false;
-    } catch (_e) {
+    }
+    catch (_e) {
         return;
-    } finally {
+    }
+    finally {
         disablingNotifications.value = false;
-        document.body.style.overflow = "auto";
         emit("close");
     }
+}
+
+function getArrowPositions(): string {
+    const userAgent = navigator.userAgent;
+
+    if (userAgent.includes("Edg/"))
+        return "right: 160px; top: 20px; rotate: -90deg;";
+    if (userAgent.includes("OPR/") || userAgent.includes("Opera/"))
+        return "left: 40px; top: 40px;";
+    if (userAgent.includes("Firefox"))
+        return "left: 180px; top: 40px;";
+    if (userAgent.includes("Safari"))
+        return "left: 40px; top: 40px;";
+    if (userAgent.includes("Chrome"))
+        return "left: 40px; top: 40px;";
+
+    return "left: 40px; top: 40px;";
 }
 </script>
 
@@ -53,7 +73,12 @@ async function disableNotifications() {
     <ModalContainer v-slot="modalContainer" :title="t('notification_modalTitle')" @close="emit('close')">
         <div>
             <div v-if="permission !== 'granted'">
-                <p class="text-gray-500 dark:text-gray-400">
+                <p
+                    class="
+                        text-gray-500
+                        dark:text-gray-400
+                    "
+                >
                     {{ t("notification_usageDescription") }}
                 </p>
                 <p class="mt-4 font-medium">
@@ -66,37 +91,60 @@ async function disableNotifications() {
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
 
-                <p class="mt-4 text-gray-500 dark:text-gray-400">
+                <p
+                    class="
+                        mt-4 text-gray-500
+                        dark:text-gray-400
+                    "
+                >
                     {{ t("notification_activationSuccess") }}
                 </p>
             </div>
 
             <div class="mt-8">
-                <div v-if="permission !== 'granted'" class="gap-2 lg:flex">
+                <div
+                    v-if="permission !== 'granted'" class="
+                        gap-2
+                        lg:flex
+                    "
+                >
                     <GlobalButton v-if="!waitingForPermission" size="full" @click="askBrowserPermission()">
-                        {{ t("notification_buttonEnable") }}</GlobalButton
-                    >
-                    <GlobalButton v-else-if="waitingForPermission" size="full" :disabled="true"> {{ t("notification_waitingBrowser") }}</GlobalButton>
+                        {{ t("notification_buttonEnable") }}
+                    </GlobalButton>
+                    <GlobalButton v-else-if="waitingForPermission" size="full" :disabled="true">
+                        {{ t("notification_waitingBrowser") }}
+                    </GlobalButton>
 
                     <GlobalButton
                         type="secondary"
                         size="full"
-                        class="mt-2 lg:mt-0"
+                        class="
+                            mt-2
+                            lg:mt-0
+                        "
                         :loading="disablingNotifications"
                         @click="disableNotifications()"
-                        >{{ t("notification_buttonDisable") }}</GlobalButton
                     >
+                        {{ t("notification_buttonDisable") }}
+                    </GlobalButton>
                 </div>
 
                 <div v-else>
-                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">{{
-                        t("user_close")
-                    }}</GlobalButton>
+                    <GlobalButton
+                        type="secondary" size="full" class="
+                            mt-2
+                            lg:mt-0
+                        " @click="modalContainer.close()"
+                    >
+                        {{
+                            t("user_close")
+                        }}
+                    </GlobalButton>
                 </div>
             </div>
 
-            <div v-if="waitingForPermission" class="flashing-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-16">
+            <div v-if="waitingForPermission" class="flashing-arrow" :style="getArrowPositions()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="svg-arrow size-16">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>
             </div>
@@ -105,16 +153,18 @@ async function disableNotifications() {
 </template>
 
 <style scoped>
-.flashing-circle {
+.flashing-arrow {
     position: fixed;
     z-index: 50;
-    top: 40px;
-    left: 40px;
     width: 50px;
     height: 50px;
     color: white;
     border-radius: 50%;
     animation: flash 1.5s infinite;
+}
+
+.svg-arrow {
+    filter: drop-shadow(3px 2px 4px rgb(0 0 0 / 0.5));
 }
 
 @keyframes flash {

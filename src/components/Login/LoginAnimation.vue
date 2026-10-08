@@ -13,9 +13,9 @@ const STAR_MIN_Z = 0.2;
 const OVERFLOW_THRESHOLD = 50;
 let canvas: HTMLCanvasElement | null;
 let context: CanvasRenderingContext2D | null;
-let scale = 1,
-    width = 0,
-    height = 0;
+let scale = 1;
+let width = 0;
+let height = 0;
 const stars: Star[] = [];
 const cameraVelocity = {
     x: 0,
@@ -89,15 +89,17 @@ function resize() {
         boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, 0), new Vector2(xMax, yMin)));
         boxes.push(new AxisAlignedBoundingBox(new Vector2(0, yMin), new Vector2(xMin, yMax)));
         boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, yMin), new Vector2(xMax, yMax)));
-    } else if (xGrew) {
+    }
+    else if (xGrew) {
         boxes.push(new AxisAlignedBoundingBox(new Vector2(xMin, 0), new Vector2(xMax, height)));
-    } else if (yGrew) {
+    }
+    else if (yGrew) {
         boxes.push(new AxisAlignedBoundingBox(new Vector2(0, yMin), new Vector2(width, yMax)));
     }
 
     const newStarCount = newStars - existingStars;
 
-    const totalArea = boxes.map((b) => b.Area).reduce((a, b) => a + b, 0);
+    const totalArea = boxes.map(b => b.Area).reduce((a, b) => a + b, 0);
 
     for (const box of boxes) {
         const starRatio = box.Area / totalArea;
@@ -108,7 +110,8 @@ function resize() {
             const r = Math.random();
             if (r < starsInBox) {
                 starsInBox = 1;
-            } else {
+            }
+            else {
                 starsInBox = 0;
             }
         }
@@ -122,7 +125,8 @@ function resize() {
 }
 
 function step() {
-    if (context) context.clearRect(0, 0, width, height);
+    if (context)
+        context.clearRect(0, 0, width, height);
     update();
     if (logicStore.isLoginAnimationAllowed) {
         requestAnimationFrame(step);
@@ -146,19 +150,21 @@ function update() {
 
         // recycle when out of bounds
         if (
-            star.X < -OVERFLOW_THRESHOLD ||
-            star.X > width + OVERFLOW_THRESHOLD ||
-            star.Y < -OVERFLOW_THRESHOLD ||
-            star.Y > height + OVERFLOW_THRESHOLD
+            star.X < -OVERFLOW_THRESHOLD
+            || star.X > width + OVERFLOW_THRESHOLD
+            || star.Y < -OVERFLOW_THRESHOLD
+            || star.Y > height + OVERFLOW_THRESHOLD
         ) {
             if (starsToRemove-- >= 1) {
                 removeIndices.push(i);
-            } else {
+            }
+            else {
                 const newStar = makeStarInBounds();
                 newStar.Z = STAR_MIN_Z;
                 stars[i] = newStar;
             }
-        } else {
+        }
+        else {
             renderStar(star);
         }
     }
@@ -170,7 +176,8 @@ function update() {
 }
 
 function renderStar(star: Star) {
-    if (!context) return;
+    if (!context)
+        return;
     const renderSize = star.Properties.radius;
 
     const radius = renderSize * logicStore.loginAnimationStarSize * star.Z * scale;
@@ -180,7 +187,8 @@ function renderStar(star: Star) {
     if (glowSize < 2) {
         // ensure a smooth fade-in
         context.globalAlpha = glowSize / 2;
-    } else {
+    }
+    else {
         context.globalAlpha = 1;
     }
     const gradient = context.createRadialGradient(star.X, star.Y, radius / 10, star.X, star.Y, radius);
@@ -192,7 +200,8 @@ function renderStar(star: Star) {
     if (glowSize > 2) {
         context.shadowBlur = glowSize;
         context.shadowColor = star.Properties.edgeColor;
-    } else {
+    }
+    else {
         // if it's too small, don't glow at all (save resources)
         context.shadowBlur = 0;
     }
@@ -204,7 +213,7 @@ function renderStar(star: Star) {
 </script>
 
 <template>
-    <canvas></canvas>
+    <canvas />
 </template>
 
 <style scoped>

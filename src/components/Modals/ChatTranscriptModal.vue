@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ChatMessage, TeamMember } from "@medrunner/api-client";
+import type { ChatMessage, Responder } from "@medrunner/api-client";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -10,19 +10,19 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
+import { normalizePaginationToken } from "@/utils/functions/apiResponseFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
+const props = defineProps<Props>();
+const emit = defineEmits(["close"]);
 const { t } = useI18n();
 const userStore = useUserStore();
 const emergencyStore = useEmergencyStore();
 
 export interface Props {
     emergencyId: string;
-    respondingTeam: TeamMember[];
+    respondingTeam: Responder[];
 }
-
-const props = defineProps<Props>();
-const emit = defineEmits(["close"]);
 
 const chatMessages = ref<ChatMessage[]>([]);
 const loadingChatMessages = ref(false);
@@ -35,10 +35,12 @@ onMounted(async () => {
         loadingChatMessages.value = true;
         const response = await emergencyStore.fetchChatHistory(props.emergencyId);
         chatMessages.value = response.data;
-        paginationToken.value = response.paginationToken;
-    } catch (error: any) {
-        errorLoadingMessages.value = errorString(error.statusCode);
-    } finally {
+        paginationToken.value = normalizePaginationToken(response.paginationToken);
+    }
+    catch (error: any) {
+        errorLoadingMessages.value = errorString(error);
+    }
+    finally {
         loadingChatMessages.value = false;
     }
 });
@@ -48,12 +50,15 @@ async function loadAdditionalMessages(): Promise<void> {
         try {
             const response = await emergencyStore.fetchChatHistory(props.emergencyId, paginationToken.value);
             chatMessages.value = chatMessages.value.concat(response.data);
-            if (paginationToken.value !== response.paginationToken) paginationToken.value = response.paginationToken;
+            const nextPaginationToken = normalizePaginationToken(response.paginationToken);
+            if (paginationToken.value !== nextPaginationToken)
+                paginationToken.value = nextPaginationToken;
             else paginationToken.value = undefined;
-        } catch (error: any) {
-            errorLoadingAdditionalMessages.value = errorString(error.statusCode);
         }
-    } else return;
+        catch (error: any) {
+            errorLoadingAdditionalMessages.value = errorString(error);
+        }
+    }
 }
 </script>
 
@@ -76,7 +81,14 @@ async function loadAdditionalMessages(): Promise<void> {
             class="mt-4"
             @load-new-messages="loadAdditionalMessages()"
         />
-        <GlobalButton type="secondary" size="full" class="mt-4 w-full lg:w-fit" @click="modalContainer.close()">{{ t("button_close") }}</GlobalButton>
+        <GlobalButton
+            type="secondary" size="full" class="
+                mt-4 w-full
+                lg:w-fit
+            " @click="modalContainer.close()"
+        >
+            {{ t("button_close") }}
+        </GlobalButton>
     </ModalContainer>
 </template>
 

@@ -11,11 +11,15 @@ const route = useRoute();
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_welcomeRegister") }}</h1>
-        <p class="mt-2 font-medium text-gray-500">{{ t("login_welcomeRegisterHelperText") }}</p>
+        <h1 class="mt-8 font-Mohave text-3xl font-bold">
+            {{ t("login_welcomeRegister") }}
+        </h1>
+        <p class="mt-2 font-medium text-gray-500">
+            {{ t("login_welcomeRegisterHelperText") }}
+        </p>
 
-        <GlobalButton class="mt-6 w-full" size="full" @click="redirectToDiscordRegister(encodeURIComponent(route.query.redirect as string) ?? '')"
-            >{{ t("login_welcomeRegisterButton") }}
+        <GlobalButton class="mt-6 w-full" size="full" @click="redirectToDiscordRegister(encodeURIComponent(route.query.redirect as string) ?? '')">
+            {{ t("login_welcomeRegisterButton") }}
         </GlobalButton>
 
         <div class="mt-10 flex gap-2 text-sm text-gray-500">
@@ -24,8 +28,7 @@ const route = useRoute();
                 }}<span
                     class="ml-1 cursor-pointer underline"
                     @click="redirectToDiscordLogin(encodeURIComponent(route.query.redirect as string) ?? '')"
-                    >{{ t("login_welcomeRegisterLoginReminderLink") }}</span
-                >
+                >{{ t("login_welcomeRegisterLoginReminderLink") }}</span>
             </p>
         </div>
     </div>

@@ -1,46 +1,86 @@
-import type { Person, TeamMember } from "@medrunner/api-client";
+import type { ApiResponse, Person, Responder } from "@medrunner/api-client";
 import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
 
 import { i18n } from "@/i18n.ts";
-import { useUserStore } from "@/stores/userStore.ts";
-import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions.ts";
+import { useLogicStore } from "@/stores/logicStore.ts";
+import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
-export function replaceAtMentions(message: string, senderId: string, html: boolean, members: TeamMember[], user: Person): string {
+const discordTagRegex = /@\d+/g;
+const wrappedDiscordTagRegex = /<@(\d+)>/g;
+const httpProtocolRegex = /^https?/;
+const newLineCharacterRegex = /\\n/g;
+const hammerTimeRegex = /<t:(\d+):([A-Za-z])>/g;
+const regularExpressionSyntaxRegex = /[.*+?^${}()|[\]\\]/g;
+const htmlMetacharacterRegex = /[&<>"']/g;
+const htmlEntities = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "\"": "&quot;",
+    "'": "&#39;",
+} as const;
+
+/** Escapes user-controlled text before interpolating it into a regular-expression pattern. */
+function escapeRegularExpression(value: string): string {
+    return value.replace(regularExpressionSyntaxRegex, match => `\\${match}`);
+}
+
+/** Escapes a display value before appending it to HTML rendered with `v-html`. */
+function escapeHtml(value: string): string {
+    return value.replace(htmlMetacharacterRegex, match => htmlEntities[match as keyof typeof htmlEntities]);
+}
+
+export function replaceAtMentions(message: string, senderId: string, html: boolean, members: Responder[], user: Person): string {
     const memberIdToNameMap: any = {};
     members.forEach((member) => {
         memberIdToNameMap[member.discordId] = member.rsiHandle;
     });
 
     if (html) {
-        return message
-            .replace(
-                new RegExp(`@${user.rsiHandle}`, "g"),
-                `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
-                    user.rsiHandle
-                }</span>`,
-            )
-            .replace(
+        let replacedMessage = message;
+
+        if (user.rsiHandle) {
+            const highlightedMention = `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${escapeHtml(user.rsiHandle)}</span>`;
+
+            replacedMessage = replacedMessage.replace(
+                new RegExp(`@${escapeRegularExpression(user.rsiHandle)}`, "g"),
+                () => highlightedMention,
+            ).replace(
                 new RegExp(`@${user.discordId}`, "g"),
-                `<span class=" p-1 font-medium ${senderId === user.id ? "bg-white/30" : "bg-gray-500/20 dark:bg-gray-400/20"} rounded-lg">@${
-                    user.rsiHandle
-                }</span>`,
-            )
-            .replace(/@\d+/g, (match) => {
-                const memberId = match.substring(1);
-                return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
-            });
-    } else {
-        return message.replace(new RegExp(`<@${user.discordId}>`, "g"), `@${user.rsiHandle}`).replace(/<@(\d+)>/g, (match, memberId) => {
+                () => highlightedMention,
+            );
+        }
+
+        return replacedMessage.replace(discordTagRegex, (match) => {
+            const memberId = match.substring(1);
+            return memberIdToNameMap[memberId] ? `@${escapeHtml(memberIdToNameMap[memberId])}` : match;
+        });
+    }
+    else {
+        const replacedMessage = user.rsiHandle
+            ? message.replace(new RegExp(`<@${user.discordId}>`, "g"), () => `@${user.rsiHandle}`)
+            : message;
+
+        return replacedMessage.replace(wrappedDiscordTagRegex, (match, memberId) => {
             return memberIdToNameMap[memberId] ? `@${memberIdToNameMap[memberId]}` : match;
         });
     }
 }
 
-export function errorString(errorCode: number, customMessage?: string): string {
+/** Formats an API failure for display while preserving explicit local messages. */
+export function errorString(error: ApiResponse | number | undefined, customMessage?: string): string {
     const { t } = i18n.global;
+    const response = typeof error === "object" ? error : undefined;
+    const errorCode = typeof error === "number" ? error : response?.statusCode;
+    const problemTitle = response?.problemDetails?.title?.trim();
 
-    if (customMessage) return `${customMessage} (${errorCode ?? "internal"})`;
+    if (customMessage) {
+        return `${customMessage} (${errorCode ?? "internal"})`;
+    }
+    else if (problemTitle) {
+        return `${problemTitle} (${errorCode ?? "internal"})`;
+    }
     else {
         let defaultMessage = t("error_generic");
 
@@ -61,8 +101,7 @@ export function errorString(errorCode: number, customMessage?: string): string {
 }
 
 export function parseMarkdown(text: string) {
-    const { locale } = i18n.global;
-    const userStore = useUserStore();
+    const logicStore = useLogicStore();
 
     const mdIt = MarkdownIt({
         html: true,
@@ -73,15 +112,25 @@ export function parseMarkdown(text: string) {
 
     mdIt.disable("code");
 
-    const defaultRender =
-        mdIt.renderer.rules.link_open ||
-        mdIt.renderer.rules.em_open ||
-        mdIt.renderer.rules.em_close ||
-        function (tokens, idx, options, env, self) {
-            return self.renderToken(tokens, idx, options);
-        };
+    const defaultRender
+        = mdIt.renderer.rules.link_open
+            || mdIt.renderer.rules.em_open
+            || mdIt.renderer.rules.em_close
+            || function (tokens, idx, options, env, self) {
+                return self.renderToken(tokens, idx, options);
+            };
 
     mdIt.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+        const hrefIndex = tokens[idx].attrIndex("href");
+
+        if (hrefIndex >= 0) {
+            const href = tokens[idx].attrs![hrefIndex][1];
+
+            if (!logicStore.isDiscordOpenWeb && (href.startsWith("https://discord.com") || href.startsWith("http://discord.com"))) {
+                tokens[idx].attrs![hrefIndex][1] = href.replace(httpProtocolRegex, "discord");
+            }
+        }
+
         tokens[idx].attrSet("target", "_blank");
 
         return defaultRender(tokens, idx, options, env, self);
@@ -105,73 +154,70 @@ export function parseMarkdown(text: string) {
         return defaultRender(tokens, idx, options, env, self);
     };
 
-    const manipulatedText = text.replace(/\\n/g, "<br>").replace(/<t:(\d+):([A-Za-z])>/g, (match, timestamp, format) => {
-        if (typeof timestamp !== "string" || typeof format !== "string") return timestamp;
-        const date = new Date(parseInt(timestamp) * 1000);
+    const manipulatedText = text.replace(newLineCharacterRegex, "<br>").replace(hammerTimeRegex, (match, timestamp, format) => {
+        if (typeof timestamp !== "string" || typeof format !== "string")
+            return timestamp;
+        const date = new Date(Number.parseInt(timestamp) * 1000);
         let dateString;
 
         switch (format) {
             case "d":
-                dateString = date.toLocaleDateString(locale.value, {
+
+                dateString = toUserDateString(date, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                 });
                 break;
             case "D":
-                dateString = date.toLocaleDateString(locale.value, {
+                dateString = toUserDateString(date, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                 });
                 break;
             case "t":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
-                });
+                }, false, true);
                 break;
             case "T":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
                     second: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
-                });
+                }, false, true);
                 break;
             case "f":
-                dateString = date.toLocaleString(locale.value, {
+                dateString = toUserDateString(date, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
-                });
+                }, false, true);
                 break;
             case "F":
-                dateString = date.toLocaleString(locale.value, {
+                dateString = toUserDateString(date, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
                     year: "numeric",
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
-                });
+                }, false, true);
                 break;
-            // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
-            // This is so the discord bot shows the reactive time and the portal the static time format we want
+                // This is not the correct format, as it would require reactivity to update the time every second/minute/hour
+                // This is so the discord bot shows the reactive time and the portal the static time format we want
             case "R":
-                dateString = date.toLocaleTimeString(locale.value, {
+                dateString = toUserDateString(date, {
                     hour: "numeric",
                     minute: "2-digit",
-                    hour12: userStore.syncedSettings.hour12FormatingPreference,
-                });
+                }, false, true);
                 break;
             default:
-                dateString = date.toLocaleDateString(locale.value, {
+                dateString = toUserDateString(date, {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
@@ -179,7 +225,7 @@ export function parseMarkdown(text: string) {
                 break;
         }
 
-        return `<span class="cursor-help underline decoration-dotted" title="${timestampToFullDateTimeZone(parseInt(timestamp) * 1000)}">${dateString}</span>`;
+        return `<span class="cursor-help underline decoration-dotted" title="${timestampToFullDateTimeZone(Number.parseInt(timestamp) * 1000)}">${dateString}</span>`;
     });
 
     const sanitizedText = DOMPurify.sanitize(manipulatedText);

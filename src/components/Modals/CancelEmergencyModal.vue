@@ -47,14 +47,15 @@ async function cancelEmergency() {
     try {
         if (inputCancelReason.value) {
             await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
-        } else {
-            new Error();
+        }
+        else {
+            throw new Error("missing cancel reason");
         }
 
-        document.body.style.overflow = "auto";
         emit("emergencyCanceled");
-    } catch (error: any) {
-        errorCancelingEmergency.value = errorString(error.statusCode);
+    }
+    catch (error: any) {
+        errorCancelingEmergency.value = errorString(error);
     }
     cancelingEmergency.value = false;
 }
@@ -63,7 +64,14 @@ async function cancelEmergency() {
 <template>
     <ModalContainer v-slot="modalContainer" :title="t('tracking_cancelEmergencyModalTitle')" @close="emit('close')">
         <div>
-            <p class="text-gray-500 dark:text-gray-400">{{ t("tracking_cancelEmergencyModalSubTitle") }}</p>
+            <p
+                class="
+                    text-gray-500
+                    dark:text-gray-400
+                "
+            >
+                {{ t("tracking_cancelEmergencyModalSubTitle") }}
+            </p>
 
             <form @submit.prevent="cancelEmergency()">
                 <GlobalSelectInput
@@ -74,13 +82,25 @@ async function cancelEmergency() {
                     :required="true"
                 />
 
-                <div class="mt-8 gap-2 lg:flex">
-                    <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" icon="cancel">{{
-                        t("tracking_cancelButton")
-                    }}</GlobalButton>
-                    <GlobalButton type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
-                        {{ t("tracking_backCancelButton") }}</GlobalButton
+                <div
+                    class="
+                        mt-8 gap-2
+                        lg:flex
+                    "
+                >
+                    <GlobalButton :loading="cancelingEmergency" :submit="true" size="full" icon="cancel">
+                        {{
+                            t("tracking_cancelButton")
+                        }}
+                    </GlobalButton>
+                    <GlobalButton
+                        type="secondary" size="full" class="
+                            mt-2
+                            lg:mt-0
+                        " @click="modalContainer.close()"
                     >
+                        {{ t("tracking_backCancelButton") }}
+                    </GlobalButton>
                 </div>
                 <GlobalErrorText v-if="errorCancelingEmergency" :text="errorCancelingEmergency" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>

@@ -2,9 +2,9 @@
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { LocalStorageItems } from "@/@types/types.ts";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems } from "@/types.ts";
 import { initializeApp } from "@/utils/initializeApp";
 import { initializeApi, initializeWebsocket } from "@/utils/medrunnerClient";
 
@@ -15,9 +15,10 @@ const userStore = useUserStore();
 onMounted(async () => {
     if (!route.query.code) {
         if (route.query.error) {
-            await router.push({ name: "login", query: { error: `discord_${route.query.error}` } });
+            await router.push({ name: "login", query: { error: `discord_${route.query.error as string}` } });
             return;
-        } else {
+        }
+        else {
             await router.push("/login");
             return;
         }
@@ -26,7 +27,7 @@ onMounted(async () => {
     if (route.path === "/auth" && !userStore.isAuthenticated) {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
+                `${import.meta.env.VITE_API_URL}/auth/signin?code=${route.query.code as string}&redirectUri=${import.meta.env.VITE_CALLBACK_URL}/auth`,
                 {
                     credentials: "include",
                 },
@@ -39,18 +40,20 @@ onMounted(async () => {
                 let apiInitialized = false;
 
                 try {
-                    await initializeApi();
+                    initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
-                } catch (_e) {
+                }
+                catch (_e) {
                     await router.push("/login?error=generic");
                     return;
                 }
 
                 try {
                     await initializeApp(apiInitialized);
-                } catch (_e) {
+                }
+                catch (_e) {
                     await router.push("/login?error=generic");
                     return;
                 }
@@ -62,28 +65,28 @@ onMounted(async () => {
 
                 if (route.query.state && route.query.state !== "undefined") {
                     await router.push(decodeURIComponent(route.query.state as string));
-                    return;
-                } else {
-                    await router.push("/");
-                    return;
                 }
-            } else {
-                if (response.status === 401) {
-                    await router.push("/login?error=accountUnknown");
-                    return;
-                } else {
-                    await router.push("/login?error=generic");
-                    return;
+                else {
+                    await router.push("/");
                 }
             }
-        } catch (_e) {
-            await router.push("/login?error=generic");
-            return;
+            else {
+                if (response.status === 401) {
+                    await router.push("/login?error=accountUnknown");
+                }
+                else {
+                    await router.push("/login?error=generic");
+                }
+            }
         }
-    } else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
+        catch (_e) {
+            await router.push("/login?error=generic");
+        }
+    }
+    else if (route.path === "/auth/register" && !userStore.isAuthenticated) {
         try {
             const response = await fetch(
-                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code}&redirectUri=${
+                `${import.meta.env.VITE_API_URL}/auth/register?code=${route.query.code as string}&redirectUri=${
                     import.meta.env.VITE_CALLBACK_URL
                 }/auth/register`,
                 {
@@ -99,18 +102,20 @@ onMounted(async () => {
                 let apiInitialized = false;
 
                 try {
-                    await initializeApi();
+                    initializeApi();
                     await initializeWebsocket();
 
                     apiInitialized = true;
-                } catch (_e) {
+                }
+                catch (_e) {
                     await router.push("/login?error=generic");
                     return;
                 }
 
                 try {
                     await initializeApp(apiInitialized);
-                } catch (_e) {
+                }
+                catch (_e) {
                     await router.push("/login?error=generic");
                     return;
                 }
@@ -122,30 +127,29 @@ onMounted(async () => {
 
                 if (route.query.state && route.query.state !== "undefined") {
                     await router.push(decodeURIComponent(route.query.state as string));
-                    return;
-                } else {
-                    await router.push("/emergency");
-                    return;
                 }
-            } else {
-                if (response.status === 409) {
-                    await router.push("/login?error=accountKnown");
-                    return;
-                } else if (response.status === 503) {
-                    await router.push("/login?error=registrationDisabled");
-                    return;
-                } else {
-                    await router.push("/login?error=generic");
-                    return;
+                else {
+                    await router.push("/emergency");
                 }
             }
-        } catch (_e) {
-            await router.push("/login?error=generic");
-            return;
+            else {
+                if (response.status === 409) {
+                    await router.push("/login?error=accountKnown");
+                }
+                else if (response.status === 503) {
+                    await router.push("/login?error=registrationDisabled");
+                }
+                else {
+                    await router.push("/login?error=generic");
+                }
+            }
         }
-    } else {
+        catch (_e) {
+            await router.push("/login?error=generic");
+        }
+    }
+    else {
         await router.push("/login");
-        return;
     }
 });
 </script>

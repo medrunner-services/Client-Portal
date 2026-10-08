@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import type { ChatMessage, Person, TeamMember } from "@medrunner/api-client";
+import type { Person, Responder } from "@medrunner/api-client";
+import type { TrackedChatMessageItem } from "@/@types/types.ts";
+import { Class } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
 
+import { useI18n } from "vue-i18n";
 import ChatMessageToolbar from "@/components/Emergency/ChatMessageToolbar.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
@@ -11,17 +13,19 @@ import { timestampToFullDateTimeZone } from "@/utils/functions/dateTimeFunctions
 import { parseMarkdown, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
-    messages: ChatMessage[];
-    emergencyMembers: TeamMember[];
+    messages: TrackedChatMessageItem[];
+    emergencyMembers: Responder[];
     errorLoadingAdditionalMessages?: string;
     keepScrollPosition?: boolean;
     user: Person;
+    isPopupWindow?: boolean;
     editingMessageId?: string;
     isTranscript?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     keepScrollPosition: false,
+    isPopupWindow: false,
     isTranscript: false,
 });
 const emit = defineEmits<{
@@ -39,15 +43,15 @@ const showFullMessage = ref<Record<string, boolean>>({});
 const readMoreClicked = ref(false);
 const hoveredMessageId = ref<string | undefined>();
 
-onMounted(async () => {
+onMounted(() => {
     if (chatBox.value) {
         chatBox.value.scrollTop = chatBox.value.scrollHeight;
 
         const observer = new MutationObserver((event) => {
             const hasToolbarMutation = event.some((mutation) => {
-                const addedHasToolbar = Array.from(mutation.addedNodes).some((node) => node instanceof Element && node.id === "chatMessageToolbar");
+                const addedHasToolbar = Array.from(mutation.addedNodes).some(node => node instanceof Element && node.id === "chatMessageToolbar");
                 const removedHasToolbar = Array.from(mutation.removedNodes).some(
-                    (node) => node instanceof Element && node.id === "chatMessageToolbar",
+                    node => node instanceof Element && node.id === "chatMessageToolbar",
                 );
                 return addedHasToolbar || removedHasToolbar;
             });
@@ -56,10 +60,12 @@ onMounted(async () => {
                 if (!readMoreClicked.value) {
                     if (props.keepScrollPosition) {
                         chatBox.value.scrollTop = chatBox.value.scrollHeight - distanceFromBottom.value;
-                    } else {
+                    }
+                    else {
                         chatBox.value.scrollTop = chatBox.value.scrollHeight;
                     }
-                } else {
+                }
+                else {
                     readMoreClicked.value = false;
                 }
             }
@@ -67,7 +73,7 @@ onMounted(async () => {
 
         observer.observe(chatBox.value, { childList: true, subtree: true });
 
-        chatBox.value.addEventListener("scroll", function () {
+        chatBox.value.addEventListener("scroll", () => {
             if (chatBox.value?.scrollTop === 0) {
                 distanceFromBottom.value = chatBox.value.scrollHeight - chatBox.value.scrollTop;
                 emit("loadNewMessages");
@@ -76,25 +82,27 @@ onMounted(async () => {
     }
 });
 
-const sortedMessages = computed<ChatMessage[]>(() => {
-    return [...props.messages].filter((obj) => obj.contents !== undefined).sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
+const sortedMessages = computed<TrackedChatMessageItem[]>(() => {
+    return [...props.messages].filter(obj => obj.contents !== undefined).sort((a, b) => Date.parse(a.created) - Date.parse(b.created));
 });
 
-function parseChatMessageString(message: ChatMessage): string {
+function parseChatMessageString(message: TrackedChatMessageItem): string {
     const htmlMessage = parseMarkdown(message.contents);
 
     return replaceAtMentions(htmlMessage, message.senderId, true, props.emergencyMembers, props.user);
 }
 
-function getMessageAuthor(message: ChatMessage): string {
+function getMessageAuthor(message: TrackedChatMessageItem): string {
     let author;
-    const teamMember = props.emergencyMembers.find((staff) => staff.id === message.senderId);
+    const teamMember = props.emergencyMembers.find(staff => staff.id === message.senderId);
 
     if (message.senderId === props.user.id) {
-        author = props.user.rsiHandle;
-    } else if (teamMember) {
+        author = props.user.rsiHandle ?? t("tracking_chatDefaultStaffName");
+    }
+    else if (teamMember) {
         author = teamMember.rsiHandle;
-    } else {
+    }
+    else {
         author = t("tracking_chatDefaultStaffName");
     }
 
@@ -105,17 +113,26 @@ function isMessageAuthor(id: string): boolean {
     return id === props.user.id;
 }
 
+function isOfficialMessage(message: TrackedChatMessageItem): boolean {
+    return message.senderId !== props.user.id
+        || message.senderClass !== Class.NONE;
+}
+
 function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
-    if (sortedMessages.value.length <= 1) return false;
+    if (sortedMessages.value.length <= 1) {
+        return false;
+    }
     else {
         const prevMessage = sortedMessages.value[index - 1];
         const nextMessage = sortedMessages.value[index + 1];
         const currentMessage = sortedMessages.value[index];
 
         if (index === 0) {
-            if (nextMessage && currentMessage.senderId === nextMessage.senderId) return "top";
+            if (nextMessage && currentMessage.senderId === nextMessage.senderId)
+                return "top";
             else return false;
-        } else {
+        }
+        else {
             if (prevMessage && nextMessage && currentMessage.senderId !== prevMessage.senderId && currentMessage.senderId === nextMessage.senderId)
                 return "top";
 
@@ -129,38 +146,69 @@ function isMessageChain(index: number): "top" | "middle" | "bottom" | false {
     }
 }
 
-function truncatedMessage(message: ChatMessage): string {
+function truncatedMessage(message: TrackedChatMessageItem): string {
     const parsedMessage = parseChatMessageString(message);
     return message.contents.length > 500 ? `${parsedMessage.substring(0, 500)}...` : parsedMessage;
 }
 
-function messageClasses(message: ChatMessage, messageIndex: number): string {
+function messageClasses(message: TrackedChatMessageItem, messageIndex: number): string {
     const classes: string[] = [];
 
-    if (isMessageAuthor(message.senderId)) {
+    if (!isOfficialMessage(message)) {
         classes.push("self-end lg:mr-6");
-        if (message.deleted) classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
-        else classes.push("bg-primary-600 text-white");
+        if ("local" in message && message.local) {
+            if (message.error)
+                classes.push("bg-red-900/50 text-white");
+            else
+                classes.push("bg-gray-600/25 text-white");
+        }
 
-        if (messageIndex === 0) classes.push("mt-6");
+        else if (message.deleted) {
+            classes.push("border border-gray-200 text-gray-900 dark:text-white dark:border-gray-700");
+        }
+        else {
+            classes.push("bg-gray-600 text-white");
+        }
+
+        if (messageIndex === 0)
+            classes.push("mt-6");
         if (isMessageChain(messageIndex) === "top") {
-            if (messageIndex !== 0) classes.push("mt-4");
+            if (messageIndex !== 0)
+                classes.push("mt-4");
 
             classes.push("pt-1 rounded-br");
-        } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-0 pt-1 rounded-r");
-        else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-0 pt-1 rounded-tr");
-        else classes.push("mt-4 pt-2");
+        }
+        else if (isMessageChain(messageIndex) === "middle") {
+            classes.push("mt-0 pt-1 rounded-r");
+        }
+        else if (isMessageChain(messageIndex) === "bottom") {
+            classes.push("mt-0 pt-1 rounded-tr");
+        }
+        else {
+            classes.push("mt-4 pt-2");
+        }
 
-        if (message.deleted && !logicStore.darkMode) classes.push("mt-0.5 mb-0.5");
-    } else {
+        if (message.deleted && !logicStore.darkMode)
+            classes.push("mt-0.5 mb-0.5");
+    }
+    else {
+        classes.push("self-start bg-primary-600");
         if (isMessageChain(messageIndex) === "top") {
-            if (messageIndex === 0) classes.push("mt-0");
+            if (messageIndex === 0)
+                classes.push("mt-0");
             else classes.push("mt-4");
 
             classes.push("pt-2 rounded-bl");
-        } else if (isMessageChain(messageIndex) === "middle") classes.push("mt-1 pt-1 rounded-l");
-        else if (isMessageChain(messageIndex) === "bottom") classes.push("mt-1 pt-1 rounded-tl");
-        else classes.push("mt-4 pt-2");
+        }
+        else if (isMessageChain(messageIndex) === "middle") {
+            classes.push("mt-1 pt-1 rounded-l");
+        }
+        else if (isMessageChain(messageIndex) === "bottom") {
+            classes.push("mt-1 pt-1 rounded-tl");
+        }
+        else {
+            classes.push("mt-4 pt-2");
+        }
     }
 
     return classes.join(" ");
@@ -168,37 +216,52 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
 </script>
 
 <template>
-    <div id="chatBox" ref="chatBox" class="flex h-[45vh] flex-col overflow-y-scroll">
+    <div id="chatBox" ref="chatBox" :class="props.isPopupWindow ? 'h-full' : 'h-[45vh]'" class="flex flex-col overflow-y-scroll">
         <GlobalErrorText v-if="props.errorLoadingAdditionalMessages" class="flex justify-center py-4" :text="props.errorLoadingAdditionalMessages" />
         <div v-if="messages.length === 0" class="relative top-1/2">
-            <p class="text-center">{{ t("history_chatTranscriptEmpty") }}</p>
+            <p class="text-center">
+                {{ t("history_chatTranscriptEmpty") }}
+            </p>
         </div>
         <div
             v-for="(message, index) in sortedMessages"
             v-else
             :key="message.id"
-            class="relative flex max-w-[80%] flex-col self-start rounded-lg border border-gray-200 px-2 pb-1 dark:border-gray-700 lg:px-4"
+            class="
+                relative flex max-w-[80%] flex-col rounded-lg border border-gray-200 px-2 pb-1
+                lg:px-4
+                dark:border-gray-700
+            "
             :class="messageClasses(message, index)"
-            @mouseenter="hoveredMessageId = message.id"
-            @mouseleave="hoveredMessageId = undefined"
+            @mouseenter="'local' in message ? null : hoveredMessageId = message.id"
+            @mouseleave="'local' in message ? null : hoveredMessageId = undefined"
         >
             <p
                 v-if="!isMessageAuthor(message.senderId) && (!isMessageChain(index) || isMessageChain(index) === 'top')"
-                class="text-sm font-bold text-gray-900 dark:text-gray-50"
+                class="
+                    text-sm font-bold text-gray-900
+                    dark:text-gray-50
+                "
             >
                 {{ getMessageAuthor(message) }}
             </p>
             <p
-                class="prose mt-1 break-words dark:prose-invert dark:text-white"
-                :class="[{ 'markdown-extras prose-invert': isMessageAuthor(message.senderId) }, { 'italic text-gray-900': message.deleted }]"
+                class="
+                    prose mt-1 wrap-break-word
+                    dark:prose-invert dark:text-white
+                "
+                :class="[
+                    { 'markdown-extras prose-invert': isMessageAuthor(message.senderId) },
+                    { 'text-gray-900 italic': message.deleted },
+                ]"
                 v-html="
                     message.deleted
                         ? t('tracking_chatMessageDeleted')
                         : showFullMessage[message.id]
-                          ? parseChatMessageString(message)
-                          : truncatedMessage(message)
+                            ? parseChatMessageString(message)
+                            : truncatedMessage(message)
                 "
-            ></p>
+            />
             <div class="flex items-center justify-between">
                 <p
                     v-if="message.contents.length > 500 && !showFullMessage[message.id]"
@@ -210,9 +273,18 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
                 >
                     {{ t("tracking_readMore") }}
                 </p>
-                <div class="ml-auto mt-1 flex gap-2 text-xs">
-                    <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">({{ t("tracking_edited") }})</p>
-                    <GlobalLocalizedDate :date="message.messageSentTimestamp" format="toHours" />
+                <div class="mt-1 ml-auto flex items-center gap-2 text-xs">
+                    <p v-if="message.edited" :title="timestampToFullDateTimeZone(message.updated)" class="italic">
+                        ({{ t("tracking_edited") }})
+                    </p>
+
+                    <GlobalLocalizedDate :date="message.created" format="toHours" />
+
+                    <div v-if="'error' in message && message.error" :title="t('error_sendingMessage')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 text-white">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                    </div>
                 </div>
             </div>
 
@@ -223,7 +295,7 @@ function messageClasses(message: ChatMessage, messageIndex: number): string {
             />
         </div>
 
-        <div id="anchor"></div>
+        <div id="anchor" />
     </div>
 </template>
 

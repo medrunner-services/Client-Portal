@@ -34,7 +34,7 @@ function getAddToBioText(): string {
     });
 }
 
-const submittingLinkForm = async (): Promise<void> => {
+async function submittingLinkForm(): Promise<void> {
     waitingForApi.value = true;
     formErrorMessage.value = "";
     formErrorHelper.value = "";
@@ -43,41 +43,58 @@ const submittingLinkForm = async (): Promise<void> => {
         userStore.user = await userStore.linkUser(formUsername.value);
 
         await router.push("/");
-    } catch (error: any) {
+    }
+    catch (error: any) {
         if (error.statusCode === 403) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_noIdRsiBio"));
+            formErrorMessage.value = errorString(error, t("error_noIdRsiBio"));
             formErrorHelper.value = t("error_noIdRsiBioHelper");
-        } else if (error.statusCode === 404) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_unknownRsiAccount"));
+        }
+        else if (error.statusCode === 404) {
+            formErrorMessage.value = errorString(error, t("error_unknownRsiAccount"));
             formErrorHelper.value = t("error_unknownRsiAccountHelper");
-        } else if (error.statusCode === 409) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_rsiNewAccountLinked"));
+        }
+        else if (error.statusCode === 409) {
+            formErrorMessage.value = errorString(error, t("error_rsiNewAccountLinked"));
             formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
-        } else if (error.statusCode === 503) {
-            formErrorMessage.value = errorString(error.statusCode, t("error_externalAuthServiceDown"));
-        } else formErrorMessage.value = errorString(error.statusCode);
-    } finally {
+        }
+        else if (error.statusCode === 503) {
+            formErrorMessage.value = errorString(error, t("error_externalAuthServiceDown"));
+        }
+        else {
+            formErrorMessage.value = errorString(error);
+        }
+    }
+    finally {
         waitingForApi.value = false;
     }
-};
+}
 
 async function disconnectUser(): Promise<void> {
     isLoggingOut.value = true;
     await userStore.disconnectUser();
     await router.push("/login");
-    return;
 }
 </script>
 
 <template>
     <div>
-        <h1 class="mt-8 font-Mohave text-3xl font-bold">{{ t("login_verifyRSIAccount") }}</h1>
-        <p class="mt-2 font-medium text-gray-500 dark:text-gray-400" v-html="getAddToBioText()" />
+        <h1 class="mt-8 font-Mohave text-3xl font-bold">
+            {{ t("login_verifyRSIAccount") }}
+        </h1>
+        <p
+            class="
+                mt-2 font-medium text-gray-500
+                dark:text-gray-400
+            " v-html="getAddToBioText()"
+        />
         <div class="mt-5 flex items-center">
-            <GlobalTextInput v-model="userId" class="flex-grow" :disabled="true" />
+            <GlobalTextInput v-model="userId" class="grow" :disabled="true" />
             <svg
                 v-if="!isIdCopied"
-                class="ml-4 h-6 w-6 cursor-pointer text-gray-800 dark:text-white"
+                class="
+                    ml-4 size-6 cursor-pointer text-gray-800
+                    dark:text-white
+                "
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -91,7 +108,10 @@ async function disconnectUser(): Promise<void> {
             </svg>
             <svg
                 v-else
-                class="ml-4 h-6 w-6 text-gray-800 dark:text-white"
+                class="
+                    ml-4 size-6 text-gray-800
+                    dark:text-white
+                "
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -103,7 +123,9 @@ async function disconnectUser(): Promise<void> {
 
         <GlobalTextBox v-if="formErrorHelper" class="mt-4" color="yellow">
             <p>{{ t("login_linkHelperTitle") }}</p>
-            <p class="mt-2 font-normal">{{ formErrorHelper }}</p>
+            <p class="mt-2 font-normal">
+                {{ formErrorHelper }}
+            </p>
         </GlobalTextBox>
 
         <form class="mt-10" autocomplete="off" @submit.prevent="submittingLinkForm()">
@@ -114,20 +136,31 @@ async function disconnectUser(): Promise<void> {
                 :disabled="waitingForApi"
                 :required="true"
             />
-            <p class="mt-4 rounded-lg bg-gray-100 p-4 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-400">
+            <p
+                class="
+                    mt-4 rounded-lg bg-gray-100 p-4 text-sm text-gray-500
+                    dark:bg-gray-700 dark:text-gray-400
+                "
+            >
                 {{ t("login_termsOfService").split("~")[0] }}
                 <a
-                    class="text-gray-900 underline underline-offset-2 dark:text-gray-100"
+                    class="
+                        text-gray-900 underline underline-offset-2
+                        dark:text-gray-100
+                    "
                     href="https://www.medrunner.space/terms-of-service"
                     target="_blank"
-                    >{{ t("login_termsOfService").split("~")[1] }}.</a
-                >
+                >{{ t("login_termsOfService").split("~")[1] }}.</a>
             </p>
-            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full"> {{ t("login_verify") }}</GlobalButton>
+            <GlobalButton class="mt-4 w-full" :submit="true" :loading="waitingForApi" size="full">
+                {{ t("login_verify") }}
+            </GlobalButton>
 
-            <GlobalButton size="full" class="mt-4" icon="logout" type="secondary" :loading="isLoggingOut" @click="disconnectUser()">{{
-                t("navbar_disconnect")
-            }}</GlobalButton>
+            <GlobalButton size="full" class="mt-4" icon="logout" type="secondary" :loading="isLoggingOut" @click="disconnectUser()">
+                {{
+                    t("navbar_disconnect")
+                }}
+            </GlobalButton>
             <GlobalErrorText v-if="formErrorMessage" :text="formErrorMessage" :icon="false" class="mt-2 text-sm font-semibold" />
         </form>
     </div>

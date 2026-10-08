@@ -16,7 +16,7 @@ If you want to directly contribute to the project by adding or fixing some code,
 
 - Checkout a topic branch from `develop` with a name like `feature/adding-teams` or `bug/images-error`.
 
-- Make sure to run `npm run lint:fix` and `npm run prettier:fix` before committing your changes. You can even enable GitHub actions in your forked repository to run these checks automatically.
+- Make sure to run `pnpm lint` before committing your changes. You can even enable GitHub actions in your forked repository to run these checks automatically.
 
 - Create a pull request with your changes from your feature branch against the `develop` branch.
 
@@ -42,7 +42,7 @@ After cloning the repo, run:
 
 ```sh
 # install the dependencies of the project
-$ npm install
+$ pnpm install
 ```
 
 Create a .env file in the root of the project with the following content:
@@ -60,7 +60,7 @@ Run the development server to see your local changes at [localhost:5173](http://
 
 ```sh
 # launch the dev server
-$ npm run dev
+$ pnpm dev
 ```
 
 ### Preview and test locally
@@ -69,9 +69,9 @@ To preview your changes in a more realistic environment, you can build the proje
 
 ```sh
 # build the project
-$ npm run build
+$ pnpm build
 # launch the web server
-$ npm run preview
+$ pnpm preview
 ```
 
 ### Test on different devices
@@ -80,7 +80,7 @@ You can expose your local development server to your local network to test the a
 
 ```sh
 # launch the dev server exposed to your network
-$ npm run dev-network
+$ pnpm dev-network
 ```
 
 ### Using different environments

@@ -8,11 +8,10 @@ import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 
+const emit = defineEmits(["confirmed", "close"]);
 const { t } = useI18n();
 const userStore = useUserStore();
 const logicStore = useLogicStore();
-
-const emit = defineEmits(["confirmed", "close"]);
 
 const checkboxValue = ref(false);
 const isConfirming = ref(false);
@@ -22,13 +21,13 @@ async function confirmRules() {
         try {
             isConfirming.value = true;
             await userStore.setSettings({ hideEmergencyRulesModal: true });
-        } catch (_e) {
+        }
+        catch (_e) {
             return;
         }
     }
 
     isConfirming.value = false;
-    document.body.style.overflow = "auto";
     emit("confirmed");
 }
 </script>
@@ -36,7 +35,12 @@ async function confirmRules() {
 <template>
     <ModalContainer :title="t('tracking_emergencyRulesModalTitle')" @close="emit('close')">
         <div>
-            <p class="text-gray-500 dark:text-gray-400">
+            <p
+                class="
+                    text-gray-500
+                    dark:text-gray-400
+                "
+            >
                 {{
                     logicStore.isNotificationGranted
                         ? t("tracking_emergencyRulesModalDescriptionSimplified")
@@ -44,10 +48,19 @@ async function confirmRules() {
                 }}
             </p>
 
-            <GlobalCheckbox v-model="checkboxValue" class="mt-8">{{ t("tracking_emergencyRulesModalHideLater") }}</GlobalCheckbox>
+            <div
+                class="
+                    mt-8 place-content-between items-center
+                    lg:flex
+                "
+            >
+                <GlobalButton size="full" @click="confirmRules()">
+                    {{ t("form_confirm") }}
+                </GlobalButton>
 
-            <div class="mt-2 gap-2 lg:flex">
-                <GlobalButton size="full" @click="confirmRules()">{{ t("form_confirm") }}</GlobalButton>
+                <GlobalCheckbox v-model="checkboxValue" class="mt-2 mr-4">
+                    {{ t("tracking_emergencyRulesModalHideLater") }}
+                </GlobalCheckbox>
             </div>
         </div>
     </ModalContainer>

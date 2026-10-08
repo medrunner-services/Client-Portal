@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import { AlertColors } from "@/@types/types.ts";
 import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
 import LoginRegister from "@/components/Login/LoginRegister.vue";
@@ -10,7 +11,6 @@ import LoginSettings from "@/components/Login/LoginSettings.vue";
 import LoginWelcome from "@/components/Login/LoginWelcome.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore";
-import { AlertColors } from "@/types";
 import { clearURLParams } from "@/utils/functions/urlFunctions.ts";
 
 const route = useRoute();
@@ -22,11 +22,12 @@ const showSettings = ref(false);
 const routeQueryError = ref(route.query.error);
 const showLoginRegister = ref(false);
 
-onMounted(async () => {
+onMounted(() => {
     if (routeQueryError.value) {
         if (routeQueryError.value === "accountUnknown") {
             showLoginRegister.value = true;
-        } else {
+        }
+        else {
             alertStore.newAlert(AlertColors.RED, getErrorText());
         }
         clearURLParams();
@@ -52,22 +53,41 @@ function getErrorText(): string {
 <template>
     <div id="animation-bg" class="flex h-screen justify-center">
         <LoginAnimation
-            class="hidden md:block"
+            class="
+                hidden
+                md:block
+            "
             :animation-status="logicStore.isLoginAnimationAllowed"
             :speed="logicStore.isLoginAnimationAllowed ? logicStore.loginAnimationSpeed : 0"
             :glow-size="logicStore.loginAnimationGlowSize"
             :star-size="logicStore.loginAnimationStarSize"
         />
 
-        <div class="content-container flex h-full w-full items-center">
-            <div class="z-10 w-full rounded-lg bg-white dark:bg-gray-800 dark:text-white md:p-10 lg:mx-14 lg:w-1/2 2xl:w-1/3">
+        <div class="content-container flex size-full items-center">
+            <div
+                class="
+                    z-10 w-full rounded-lg bg-white
+                    md:p-10
+                    lg:mx-14 lg:w-1/2
+                    2xl:w-1/3
+                    dark:bg-gray-800 dark:text-white
+                "
+            >
                 <div>
                     <div class="flex items-center justify-between">
-                        <img class="w-52 lg:w-72" :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo" />
+                        <img
+                            class="
+                                w-52
+                                lg:w-72
+                            " :src="logicStore.medrunnerLogoUrl" alt="Medrunner Logo"
+                        >
                         <div v-if="route.name === 'login'">
                             <svg
                                 v-if="showSettings"
-                                class="h-5 w-5 cursor-pointer text-gray-800 dark:text-white"
+                                class="
+                                    size-5 cursor-pointer text-gray-800
+                                    dark:text-white
+                                "
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -84,7 +104,10 @@ function getErrorText(): string {
                             </svg>
                             <svg
                                 v-else
-                                class="h-5 w-5 cursor-pointer text-gray-800 dark:text-white"
+                                class="
+                                    size-5 cursor-pointer text-gray-800
+                                    dark:text-white
+                                "
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"

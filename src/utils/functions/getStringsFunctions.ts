@@ -1,4 +1,11 @@
-import { CancellationReason, CodeType, MissionStatus, ResponseRating, ThreatLevel } from "@medrunner/api-client";
+import {
+    CancellationReason,
+    CodeType,
+    MissionStatus,
+    ResponseRating,
+    ThreatLevel,
+    TokenScope,
+} from "@medrunner/api-client";
 
 import { i18n } from "@/i18n.ts";
 
@@ -114,7 +121,7 @@ export function getStatusString(id: MissionStatus): string {
 export function getCodeTypeString(type: CodeType): string {
     const { t } = i18n.global;
     switch (type) {
-        case CodeType.CitizenCon2954:
+        case CodeType.CITIZEN_CON_2954:
             return "CitizenCon 2954";
 
         default:
@@ -171,5 +178,57 @@ export function getEmergencyStatusSubtitle(status: number): string {
             return t("tracking_statusTextServerError");
         default:
             return "Unknown";
+    }
+}
+
+export function getTokenScopeString(scope: TokenScope): string {
+    const { t } = i18n.global;
+    switch (scope) {
+        case TokenScope.CLIENT_READ:
+            return "Client Read";
+        case TokenScope.CLIENT_WRITE:
+            return "Client Write";
+        case TokenScope.CLIENT_PROFILE_READ:
+            return "Client Profile Read";
+        case TokenScope.CLIENT_PROFILE_WRITE:
+            return "Client Profile Write";
+        case TokenScope.CLIENT_ORGSETTINGS_READ:
+            return "Public Organization Settings Read";
+        case TokenScope.STAFF_READ:
+            return "Staff Read";
+        case TokenScope.STAFF_WRITE:
+            return "Staff Write";
+        case TokenScope.STAFF_PROFILE_READ:
+            return "Staff Profile Read";
+        case TokenScope.STAFF_PROFILE_WRITE:
+            return "Staff Profile Write";
+        case TokenScope.STAFF_ORGSETTINGS_READ:
+            return "Staff Organization Settings And Statistics Read";
+
+        default:
+            return t("history_unknown");
+    }
+}
+
+export function getStatusColor(id: MissionStatus): string {
+    switch (id) {
+        case MissionStatus.SUCCESS:
+            return "bg-emerald-100 text-emerald-800";
+        case MissionStatus.FAILED:
+            return "bg-red-100 text-red-800";
+        case MissionStatus.NO_CONTACT:
+            return "bg-blue-100 text-blue-800";
+        case MissionStatus.CANCELED:
+            return "bg-orange-100 text-orange-800";
+        case MissionStatus.REFUSED:
+            return "bg-violet-100 text-violet-800";
+        case MissionStatus.ABORTED:
+            return "bg-teal-100 text-teal-800";
+        case MissionStatus.SERVER_ERROR:
+            return "bg-pink-100 text-pink-800";
+        case MissionStatus.CREATED || MissionStatus.RECEIVED || MissionStatus.IN_PROGRESS:
+            return "bg-slate-100 text-slate-800";
+        default:
+            return "bg-gray-100 text-gray-800";
     }
 }

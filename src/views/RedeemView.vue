@@ -9,7 +9,10 @@ const logicStore = useLogicStore();
 <template>
     <div id="animation-bg" class="flex h-screen justify-center">
         <LoginAnimation
-            class="hidden md:block"
+            class="
+                hidden
+                md:block
+            "
             :animation-status="logicStore.isLoginAnimationAllowed"
             :speed="logicStore.isLoginAnimationAllowed ? logicStore.loginAnimationSpeed : 0"
             :glow-size="logicStore.loginAnimationGlowSize"

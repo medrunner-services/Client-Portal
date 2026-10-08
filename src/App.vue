@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { RouterView, useRoute, useRouter } from "vue-router";
 
+import { RouterView, useRoute, useRouter } from "vue-router";
+import { WSState } from "@/@types/types.ts";
 import GlobalFooter from "@/components/GlobalFooter.vue";
 import NotificationPermissionModal from "@/components/Modals/NotificationPermissionModal.vue";
+import WarningNoContactModal from "@/components/Modals/WarningNoContactModal.vue";
 import AlertBanner from "@/components/Navbar/AlertBanner.vue";
 import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalAlert from "@/components/utils/GlobalAlert.vue";
@@ -12,7 +14,6 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
-import { WSState } from "@/types.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
 
 const route = useRoute();
@@ -29,9 +30,11 @@ onMounted(async () => {
 
     try {
         await router.isReady();
-    } catch (_e) {
+    }
+    catch (_e) {
         errorLoadingPage.value = true;
-    } finally {
+    }
+    finally {
         isLoadingPage.value = false;
     }
 });
@@ -42,10 +45,10 @@ const showMOTDAlertBanner = computed(() => {
     const dateRange = messageOfTheDay?.dateRange;
 
     return (
-        logicStore.isMOTDBannerVisible &&
-        messageOfTheDay &&
-        messageOfTheDay.message &&
-        (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)))
+        logicStore.isMOTDBannerVisible
+        && messageOfTheDay
+        && messageOfTheDay.message
+        && (!dateRange || (now >= new Date(dateRange.startDate) && now <= new Date(dateRange.endDate)))
     );
 });
 
@@ -60,7 +63,7 @@ const getWSAlertBannerMessage = computed(() => {
 });
 
 function reloadPage() {
-    stopWebsocket();
+    void stopWebsocket();
     window.location.reload();
 }
 </script>
@@ -70,7 +73,7 @@ function reloadPage() {
         <GlobalAlert v-if="alertStore.showAlert" />
 
         <AlertBanner
-            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showWSAlertBanner"
+            v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout' && showWSAlertBanner"
             icon="warning"
             :message="getWSAlertBannerMessage"
             :show-button="logicStore.currentWSState !== WSState.RECONNECTING"
@@ -85,22 +88,27 @@ function reloadPage() {
             icon="info"
             :message="t('home_reloadPage')"
             :show-button="true"
-            :color="'yellow'"
+            color="yellow"
             font-weight="medium"
             :button-text="t('home_reload')"
             :button-function="() => reloadPage()"
         />
 
-        <div class="flex min-h-screen flex-col dark:bg-gray-800 dark:text-white">
+        <div
+            class="
+                flex min-h-screen flex-col
+                dark:bg-gray-800 dark:text-white
+            "
+        >
             <NavbarContainer
                 v-if="
-                    route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404'
+                    route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== '404' && route.name !== 'chat-popout'
                 "
                 :class="isLoadingPage ? 'invisible' : ''"
             />
 
             <AlertBanner
-                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && showMOTDAlertBanner"
+                v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout' && showMOTDAlertBanner"
                 :message="logicStore!.medrunnerSettings!.messageOfTheDay!.message"
                 :show-button="true"
                 :button-function="
@@ -110,29 +118,35 @@ function reloadPage() {
                 "
             />
 
-            <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full flex-grow items-center justify-center">
+            <div v-if="isLoadingPage || logicStore.isRouterLoading" class="flex w-full grow items-center justify-center">
                 <GlobalLoader width="w-16" height="h-16" text-size="text-lg" spacing="mb-6" />
             </div>
 
-            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full flex-grow items-center justify-center">
+            <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full grow items-center justify-center">
                 <GlobalErrorText :text="logicStore.errorInitializingApp ?? t('error_globalLoading')" />
             </div>
 
             <RouterView
                 v-else
-                class="w-full flex-grow"
+                class="w-full grow"
                 :class="
-                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem'
+                    route.name === 'login' || route.name === 'loginLink' || route.name === 'auth' || route.name === 'redeem' || route.name === 'chat-popout'
                         ? 'my-0'
                         : showMOTDAlertBanner
-                          ? 'mb-14 mt-6'
-                          : 'my-14'
+                            ? 'mt-6 mb-14'
+                            : 'my-14'
                 "
             />
-            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem'" />
+            <GlobalFooter v-if="route.name !== 'login' && route.name !== 'loginLink' && route.name !== 'auth' && route.name !== 'redeem' && route.name !== 'chat-popout'" />
         </div>
 
         <NotificationPermissionModal v-if="logicStore.showNotificationPermissionModal" @close="logicStore.showNotificationPermissionModal = false" />
+
+        <WarningNoContactModal
+            v-if="logicStore.warningNoContactId"
+            :emergency-id="logicStore.warningNoContactId"
+            @close="logicStore.warningNoContactId = undefined"
+        />
     </div>
 </template>
 

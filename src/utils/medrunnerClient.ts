@@ -1,20 +1,18 @@
+import type { HubConnection } from "@microsoft/signalr";
 import { MedrunnerApiClient } from "@medrunner/api-client";
-import { HubConnection } from "@microsoft/signalr";
 
 import { debugLogger } from "@/utils/debugLogger";
 
 export let api: MedrunnerApiClient;
 export let ws: HubConnection;
 
-export async function initializeApi() {
+export function initializeApi() {
     api = MedrunnerApiClient.buildClient(
         {
             baseUrl: import.meta.env.VITE_API_URL,
             cookieAuth: true,
         },
-        async () => {
-            debugLogger("Token refreshed and stored!");
-        },
+        async () => {},
         {
             trace(message?: any) {
                 debugLogger(message, "trace");
@@ -36,6 +34,8 @@ export async function initializeApi() {
 }
 
 export async function initializeWebsocket() {
+    // eslint-disable-next-line ts/ban-ts-comment -- ts-expect-error causes issues with the CI/CD pipeline
+    // @ts-ignore -- Correct type, bug in signalr package 8.0.17
     ws = await api.websocket.initialize();
     await ws.start();
 }

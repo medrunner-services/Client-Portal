@@ -3,17 +3,17 @@ import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
 
+import { AlertColors } from "@/@types/types.ts";
 import BlockedUserCTA from "@/components/Dashboard/BlockedUserCTA.vue";
 import ChartEmergencyBreakdown from "@/components/Dashboard/Charts/ChartEmergencyBreakdown.vue";
-import ChartEmergencyNumberPerWeek from "@/components/Dashboard/Charts/ChartEmergencyNumberPerWeek.vue";
 import ChartEmergencySuccessRate from "@/components/Dashboard/Charts/ChartEmergencySuccessRate.vue";
+import ChartEmergencyTimeline from "@/components/Dashboard/Charts/ChartEmergencyTimeline.vue";
 import CTAEmergency from "@/components/Dashboard/CTAEmergency.vue";
 import HistoryTable from "@/components/Dashboard/History/HistoryTable.vue";
 import UnlinkedUserCTA from "@/components/Dashboard/UnlinkedUserCTA.vue";
 import RateEmergencyModal from "@/components/Modals/RateEmergencyModal.vue";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { AlertColors } from "@/types.ts";
 import { clearURLParams } from "@/utils/functions/urlFunctions.ts";
 
 const userStore = useUserStore();
@@ -38,7 +38,12 @@ function handleRatedEmergency() {
 </script>
 
 <template>
-    <div class="content-container flex flex-col gap-10 xl:flex-row">
+    <div
+        class="
+            content-container flex flex-col gap-10
+            xl:flex-row
+        "
+    >
         <div class="xl:w-1/2">
             <BlockedUserCTA v-if="userStore.isBlocked" />
             <UnlinkedUserCTA v-else-if="!userStore.user.rsiHandle" />
@@ -49,7 +54,7 @@ function handleRatedEmergency() {
         <div class="xl:w-1/2">
             <ChartEmergencyBreakdown />
             <ChartEmergencySuccessRate class="mt-4" />
-            <ChartEmergencyNumberPerWeek class="mt-4" />
+            <ChartEmergencyTimeline class="mt-4" />
         </div>
 
         <RateEmergencyModal

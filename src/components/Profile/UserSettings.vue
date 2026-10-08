@@ -1,27 +1,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
 
+import { useRoute } from "vue-router";
+import { AlertColors, DateFormatingSetting, LocalStorageItems, MessageNotification } from "@/@types/types.ts";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalToggle from "@/components/utils/GlobalToggle.vue";
+import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
-import { LocalStorageItems, MessageNotification } from "@/types";
-import { usePostHog } from "@/usePostHog";
+import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
 const userStore = useUserStore();
+const alertStore = useAlertStore();
 const route = useRoute();
-const { posthog } = usePostHog();
 
 const updateNotificationError = ref("");
-const updateHourFormatingError = ref("");
+const updateDateTimeFormatingError = ref("");
 const resetSettingsError = ref("");
 const isResettingSettings = ref(false);
 
@@ -32,19 +33,22 @@ async function updateGlobalNotificationPerms(): Promise<void> {
     if (!logicStore.isNotificationGranted) {
         if ("Notification" in window && Notification.permission === "granted") {
             newNotificationState = true;
-        } else if ("Notification" in window) {
+        }
+        else if ("Notification" in window) {
             try {
                 const permission = await Notification.requestPermission();
 
                 if (permission === "granted") {
                     newNotificationState = true;
-                } else {
+                }
+                else {
                     logicStore.isNotificationGranted = false;
                     updateNotificationError.value = t("error_notificationPermissions");
                 }
-            } catch (error: any) {
+            }
+            catch (error: any) {
                 logicStore.isNotificationGranted = false;
-                updateNotificationError.value = errorString(error.statusCode);
+                updateNotificationError.value = errorString(error);
             }
         }
     }
@@ -52,9 +56,10 @@ async function updateGlobalNotificationPerms(): Promise<void> {
     if (!updateNotificationError.value) {
         try {
             await userStore.setSettings({ globalNotifications: newNotificationState });
-        } catch (error: any) {
+        }
+        catch (error: any) {
             logicStore.isNotificationGranted = !newNotificationState;
-            updateNotificationError.value = errorString(error.statusCode);
+            updateNotificationError.value = errorString(error);
         }
     }
 }
@@ -62,46 +67,69 @@ async function updateGlobalNotificationPerms(): Promise<void> {
 async function updateCustomSoundNotification() {
     try {
         await userStore.setSettings({ customSoundNotification: !userStore.syncedSettings.customSoundNotification });
-    } catch (error: any) {
+    }
+    catch (error: any) {
         userStore.syncedSettings.customSoundNotification = !userStore.syncedSettings.customSoundNotification;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 }
 
 async function updateEmergencyUpdateNotification() {
     try {
         await userStore.setSettings({ emergencyUpdateNotification: !userStore.syncedSettings.emergencyUpdateNotification });
-    } catch (error: any) {
+    }
+    catch (error: any) {
         userStore.syncedSettings.emergencyUpdateNotification = !userStore.syncedSettings.emergencyUpdateNotification;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 }
 
 async function updateMessageNotification() {
     try {
         await userStore.setSettings({ chatMessageNotification: userStore.syncedSettings.chatMessageNotification });
-    } catch (error: any) {
-        updateNotificationError.value = errorString(error.statusCode);
+    }
+    catch (error: any) {
+        updateNotificationError.value = errorString(error);
     }
 }
 
 async function updateHourFormatingPreference() {
     try {
-        updateHourFormatingError.value = "";
-        await userStore.setSettings({ hourFormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
-    } catch (error: any) {
-        updateHourFormatingError.value = errorString(error.statusCode);
+        updateDateTimeFormatingError.value = "";
+        await userStore.setSettings({ hour12FormatingPreference: userStore.syncedSettings.hour12FormatingPreference });
+    }
+    catch (error: any) {
+        updateDateTimeFormatingError.value = errorString(error);
+    }
+}
+
+async function updateDateFormatingPreference() {
+    try {
+        updateDateTimeFormatingError.value = "";
+        await userStore.setSettings({ dateFormatingPreference: userStore.syncedSettings.dateFormatingPreference });
+    }
+    catch (error: any) {
+        updateDateTimeFormatingError.value = errorString(error);
+    }
+}
+
+async function updateShortDateFormatPreference() {
+    try {
+        await userStore.setSettings({ shortDateFormatPreference: !userStore.syncedSettings.shortDateFormatPreference });
+    }
+    catch (error: any) {
+        userStore.syncedSettings.shortDateFormatPreference = !userStore.syncedSettings.shortDateFormatPreference;
+        updateDateTimeFormatingError.value = errorString(error);
     }
 }
 
 function updateDarkMode(): void {
     if (logicStore.darkMode) {
-        document.documentElement.classList.remove("dark");
-        logicStore.darkMode = false;
+        handleDarkModeUpdate(false);
         localStorage.setItem(LocalStorageItems.DARK_MODE, "false");
-    } else {
-        document.documentElement.classList.add("dark");
-        logicStore.darkMode = true;
+    }
+    else {
+        handleDarkModeUpdate(true);
         localStorage.setItem(LocalStorageItems.DARK_MODE, "true");
     }
 }
@@ -110,7 +138,8 @@ function updateDiscordOpen(): void {
     if (logicStore.isDiscordOpenWeb) {
         logicStore.isDiscordOpenWeb = false;
         localStorage.setItem(LocalStorageItems.IS_DISCORD_OPEN_WEB, "false");
-    } else {
+    }
+    else {
         logicStore.isDiscordOpenWeb = true;
         localStorage.setItem(LocalStorageItems.IS_DISCORD_OPEN_WEB, "true");
     }
@@ -119,27 +148,26 @@ function updateDiscordOpen(): void {
 async function updateAnalytics(): Promise<void> {
     let newAnalyticsState = true;
 
-    if (userStore.syncedSettings.globalAnalytics) newAnalyticsState = false;
+    if (userStore.syncedSettings.globalAnalytics)
+        newAnalyticsState = false;
 
     try {
         await userStore.setSettings({ globalAnalytics: newAnalyticsState });
-    } catch (error: any) {
+    }
+    catch (error: any) {
         userStore.syncedSettings.globalAnalytics = !newAnalyticsState;
-        updateNotificationError.value = errorString(error.statusCode);
+        updateNotificationError.value = errorString(error);
     }
 
-    if (userStore.syncedSettings.globalAnalytics) {
-        posthog.opt_in_capturing();
-    } else {
-        posthog.opt_out_capturing();
-    }
+    alertStore.newAlert(AlertColors.BLUE, t("user_analyticsUpdatedNotification"));
 }
 
 function updateDebugLogger(): void {
     if (logicStore.isDebugLoggerEnabled) {
         logicStore.isDebugLoggerEnabled = false;
         localStorage.setItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED, "false");
-    } else {
+    }
+    else {
         logicStore.isDebugLoggerEnabled = true;
         localStorage.setItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED, "true");
     }
@@ -156,27 +184,36 @@ async function resetSettings() {
                 emergencyUpdateNotification: null,
                 chatMessageNotification: null,
                 globalAnalytics: null,
-                hourFormatingPreference: null,
+                hour12FormatingPreference: null,
+                dateFormatingPreference: null,
+                shortDateFormatPreference: null,
             });
         }
-    } catch (error: any) {
-        resetSettingsError.value = errorString(error.statusCode);
-    } finally {
+    }
+    catch (error: any) {
+        resetSettingsError.value = errorString(error);
+    }
+    finally {
         logicStore.isNotificationGranted = "Notification" in window && Notification.permission === "granted";
         userStore.syncedSettings.customSoundNotification = true;
         userStore.syncedSettings.emergencyUpdateNotification = true;
         userStore.syncedSettings.chatMessageNotification = MessageNotification.ALL;
         userStore.syncedSettings.globalAnalytics = true;
         userStore.syncedSettings.hour12FormatingPreference = undefined;
+        userStore.syncedSettings.dateFormatingPreference = DateFormatingSetting.AUTO;
+        userStore.syncedSettings.shortDateFormatPreference = false;
         logicStore.darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
         logicStore.isDiscordOpenWeb = false;
+        logicStore.isDebugLoggerEnabled = false;
 
         localStorage.removeItem(LocalStorageItems.DARK_MODE);
+        localStorage.removeItem(LocalStorageItems.IS_DISCORD_OPEN_WEB);
         localStorage.removeItem(LocalStorageItems.IS_DEBUG_LOGGER_ENABLED);
 
         if (logicStore.darkMode) {
             document.documentElement.classList.add("dark");
-        } else {
+        }
+        else {
             document.documentElement.classList.remove("dark");
         }
 
@@ -188,7 +225,9 @@ async function resetSettings() {
 <template>
     <div>
         <div class="min-h-11">
-            <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("user_settings") }}</h2>
+            <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                {{ t("user_settings") }}
+            </h2>
         </div>
 
         <GlobalCard class="mt-4 flex flex-col items-center justify-center">
@@ -199,7 +238,8 @@ async function resetSettings() {
                         :helper="t('user_helperNotificationSetting')"
                         side="right"
                         @input-click="updateGlobalNotificationPerms()"
-                        >{{ t("user_notificationSetting") }}
+                    >
+                        {{ t("user_notificationSetting") }}
                     </GlobalToggle>
                     <GlobalErrorText
                         v-if="updateNotificationError"
@@ -208,14 +248,21 @@ async function resetSettings() {
                         class="mt-2 text-sm font-semibold"
                     />
 
-                    <div class="ml-4 md:ml-8">
+                    <div
+                        class="
+                            ml-4
+                            md:ml-8
+                        "
+                    >
                         <GlobalToggle
                             v-model="userStore.syncedSettings.emergencyUpdateNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
                             :helper="t('user_helperNotificationEmergencyUpdateSetting')"
+                            class="mt-1"
                             @input-click="updateEmergencyUpdateNotification()"
-                            >{{ t("user_notificationEmergencyUpdateSetting") }}
+                        >
+                            {{ t("user_notificationEmergencyUpdateSetting") }}
                         </GlobalToggle>
                         <GlobalSelectInput
                             v-model="userStore.syncedSettings.chatMessageNotification"
@@ -224,9 +271,10 @@ async function resetSettings() {
                             :helper="t('user_helperNotificationChatMessageSetting')"
                             helper-type="text"
                             input-position="row"
+                            class="mt-1"
                             label-size="small"
                             input-size="small"
-                            size="fit"
+                            label-classes="mb-0!"
                             :options="[
                                 { value: MessageNotification.ALL, label: t('user_notificationChatMessageSettingAll') },
                                 { value: MessageNotification.PING, label: t('user_notificationChatMessageSettingPing') },
@@ -238,35 +286,93 @@ async function resetSettings() {
                             v-model="userStore.syncedSettings.customSoundNotification"
                             :disabled="!logicStore.isNotificationGranted"
                             size="small"
+                            class="mt-1"
                             :helper="t('user_helperNotificationCustomSoundSetting')"
                             @input-click="updateCustomSoundNotification()"
-                            >{{ t("user_notificationCustomSoundSetting") }}
+                        >
+                            {{ t("user_notificationCustomSoundSetting") }}
                         </GlobalToggle>
                     </div>
 
                     <div class="mt-4">
-                        <GlobalSelectInput
-                            v-model="userStore.syncedSettings.hour12FormatingPreference"
-                            :label="t('user_timeFormatSetting')"
-                            :helper="t('user_timeFormatSettingHelper')"
-                            helper-type="text"
-                            input-position="row"
-                            input-size="small"
-                            size="fit"
-                            :options="[
-                                { value: undefined, label: t('user_timeFormatSettingAutomatic') },
-                                { value: false, label: t('user_timeFormatSetting24h') },
-                                { value: true, label: t('user_timeFormatSetting12h') },
-                            ]"
-                            @change="updateHourFormatingPreference()"
-                        />
+                        <div>
+                            <p
+                                class="
+                                    font-medium text-gray-900
+                                    dark:text-white
+                                "
+                            >
+                                {{ t("profile_dateTimeFormats") }}
+                            </p>
+                            <p
+                                class="
+                                    text-xs text-gray-500
+                                    dark:text-gray-400
+                                "
+                            >
+                                {{ t("profile_dateTimeFormatsHelper") }}
+                            </p>
+                        </div>
+
                         <GlobalErrorText
-                            v-if="updateHourFormatingError"
+                            v-if="updateDateTimeFormatingError"
                             :icon="false"
                             class="text-sm"
                             weight="font-medium"
-                            :text="updateHourFormatingError"
+                            :text="updateDateTimeFormatingError"
                         />
+                        <div
+                            class="
+                                ml-4
+                                md:ml-8
+                            "
+                        >
+                            <GlobalSelectInput
+                                v-model="userStore.syncedSettings.hour12FormatingPreference"
+                                :label="t('user_timeFormatSetting')"
+                                :helper="t('user_timeFormatSettingHelper')"
+                                helper-type="text"
+                                input-position="row"
+                                input-size="small"
+                                label-size="small"
+                                label-classes="mb-0!"
+                                :options="[
+                                    { value: undefined, label: t('user_timeFormatSettingAutomatic') },
+                                    { value: false, label: t('user_timeFormatSetting24h') },
+                                    { value: true, label: t('user_timeFormatSetting12h') },
+                                ]"
+                                class="mt-1"
+                                @change="updateHourFormatingPreference()"
+                            />
+                            <GlobalSelectInput
+                                v-model="userStore.syncedSettings.dateFormatingPreference"
+                                :label="t('user_dateFormatSetting')"
+                                :helper="t('user_dateFormatSettingHelper')"
+                                class="mt-1"
+                                helper-type="text"
+                                input-position="row"
+                                input-size="small"
+                                label-size="small"
+                                label-classes="mb-0!"
+                                :options="[
+                                    { value: DateFormatingSetting.AUTO, label: t('user_timeFormatSettingAutomatic') },
+                                    { value: DateFormatingSetting.DMY, label: t('user_dateFormatSettingDMY') },
+                                    { value: DateFormatingSetting.YMD, label: t('user_dateFormatSettingYMD') },
+                                    { value: DateFormatingSetting.MDY, label: t('user_dateFormatSettingMDY') },
+                                ]"
+                                @change="updateDateFormatingPreference()"
+                            />
+
+                            <GlobalToggle
+                                v-model="userStore.syncedSettings.shortDateFormatPreference"
+                                size="small"
+                                :helper="t('profile_shortDateSettingHelper')"
+                                class="mt-1"
+                                @input-click="updateShortDateFormatPreference()"
+                            >
+                                {{ t("profile_shortDateSettingTitle") }}
+                            </GlobalToggle>
+                        </div>
                     </div>
                 </div>
 
@@ -274,40 +380,53 @@ async function resetSettings() {
                     v-model="logicStore.darkMode"
                     :helper="t('user_helperDarkModeSetting')"
                     side="right"
-                    class="mt-2"
+                    class="mt-4"
                     @input-click="updateDarkMode()"
-                    >{{ t("user_darkModeSetting") }}</GlobalToggle
                 >
+                    {{ t("user_darkModeSetting") }}
+                </GlobalToggle>
                 <GlobalToggle
                     v-model="userStore.syncedSettings.globalAnalytics"
                     :helper="t('user_analyticsDisclaimer')"
                     side="right"
                     class="mt-4"
                     @input-click="updateAnalytics()"
-                    >{{ t("user_analyticsSetting") }}</GlobalToggle
                 >
+                    {{ t("user_analyticsSetting") }}
+                </GlobalToggle>
                 <GlobalToggle
                     v-model="logicStore.isDiscordOpenWeb"
                     :helper="t('user_helperDiscordLinkSetting')"
                     side="right"
                     class="mt-4"
                     @input-click="updateDiscordOpen()"
-                    >{{ t("user_discordLinkSetting") }}</GlobalToggle
                 >
+                    {{ t("user_discordLinkSetting") }}
+                </GlobalToggle>
                 <GlobalToggle
                     v-model="logicStore.isDebugLoggerEnabled"
                     :helper="t('user_helperDebugModeSetting')"
                     side="right"
                     class="mt-4"
                     @input-click="updateDebugLogger()"
-                    >{{ t("user_debugModeSetting") }}</GlobalToggle
                 >
+                    {{ t("user_debugModeSetting") }}
+                </GlobalToggle>
             </div>
 
             <div class="mt-8 flex w-full">
-                <GlobalButton type="outline" class="ml-auto w-full lg:w-fit" :disabled="isResettingSettings" size="full" @click="resetSettings()">{{
-                    t("user_resetSettings")
-                }}</GlobalButton>
+                <GlobalButton
+                    type="outline-solid"
+                    class="
+                        ml-auto w-full
+                        lg:w-fit
+                    "
+                    :disabled="isResettingSettings"
+                    size="full"
+                    @click="resetSettings()"
+                >
+                    {{ t("user_resetSettings") }}
+                </GlobalButton>
                 <GlobalErrorText v-if="resetSettingsError" :text="resetSettingsError" :icon="false" class="mt-2 text-sm font-semibold" />
             </div>
         </GlobalCard>

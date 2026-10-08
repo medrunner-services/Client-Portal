@@ -26,10 +26,31 @@ export default {
                 Mohave: ["Mohave", "sans-serif"],
                 Inter: ["Inter", "sans-serif"],
             },
+            backgroundImage: {
+                "light-arrow-pattern": "url('/icons/chevron-down-light.svg')",
+                "dark-arrow-pattern": "url('/icons/chevron-down-dark.svg')",
+                "cross-pattern": "url('/icons/icon-cross-light.svg')",
+            },
             typography: (theme) => ({
                 DEFAULT: {
                     css: {
                         maxWidth: "none",
+                        "li::marker": {
+                            color: theme("colors.black"),
+                        },
+                        "li:has(> h3)::marker": {
+                            fontWeight: theme("fontWeight.bold"),
+                        },
+                        "li:has(> h2)::marker": {
+                            fontWeight: theme("fontWeight.bold"),
+                        },
+                    },
+                },
+                invert: {
+                    css: {
+                        "li::marker": {
+                            color: theme("colors.white"),
+                        },
                     },
                 },
             }),

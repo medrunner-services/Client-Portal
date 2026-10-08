@@ -31,14 +31,14 @@ export function AdjustShadeRgb(amount: number, inStr: string): string {
     const base = amountIsNegative ? 0 : amount * 255 ** 2;
     const scalar = 1 - Math.abs(amount);
     return (
-        "rgb" +
-        (a ? "a(" : "(") +
-        Math.round((scalar * parseInt(r[3] == "a" ? r.slice(5) : r.slice(4)) ** 2 + base) ** 0.5) +
-        "," +
-        Math.round((scalar * parseInt(g) ** 2 + base) ** 0.5) +
-        "," +
-        Math.round((scalar * parseInt(b) ** 2 + base) ** 0.5) +
-        (a ? "," + a : ")")
+        `rgb${
+            a ? "a(" : "("
+        }${Math.round((scalar * Number.parseInt(r[3] === "a" ? r.slice(5) : r.slice(4)) ** 2 + base) ** 0.5)
+        },${
+            Math.round((scalar * Number.parseInt(g) ** 2 + base) ** 0.5)
+        },${
+            Math.round((scalar * Number.parseInt(b) ** 2 + base) ** 0.5)
+        }${a ? `,${a}` : ")"}`
     );
 }
 

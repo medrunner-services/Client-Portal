@@ -1,18 +1,31 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from "vue";
+import { useLogicStore } from "@/stores/logicStore.ts";
+
+const props = withDefaults(defineProps<Props>(), {
+    userCloseModal: true,
+});
 const emit = defineEmits(["close"]);
 export interface Props {
     title: string;
     userCloseModal?: boolean;
 }
+const logicStore = useLogicStore();
 
-const props = withDefaults(defineProps<Props>(), {
-    userCloseModal: true,
+onMounted(() => {
+    document.body.style.overflow = "hidden";
+    logicStore.openedModalCounter++;
 });
 
-document.body.style.overflow = "hidden";
+onUnmounted(() => {
+    logicStore.openedModalCounter--;
+
+    if (logicStore.openedModalCounter <= 0) {
+        document.body.style.overflow = "auto";
+    }
+});
 
 function closeModal() {
-    document.body.style.overflow = "auto";
     emit("close");
 }
 </script>
@@ -20,17 +33,27 @@ function closeModal() {
 <template>
     <teleport to="#modals">
         <div
-            class="fixed left-0 right-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/75 py-24"
-            @mousedown.self="props.userCloseModal ? closeModal() : null"
+            class="fixed inset-x-0 top-0 z-40 flex h-screen w-screen items-center justify-center overflow-auto bg-gray-600/60 py-24"
+            @mousedown.self="props.userCloseModal ? closeModal() : undefined"
         >
             <div
-                class="content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg bg-white p-4 shadow dark:bg-gray-800 lg:w-1/2 2xl:w-1/3"
+                class="
+                    content-container relative max-h-full w-11/12 overflow-y-auto rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-md
+                    lg:w-1/2
+                    2xl:w-1/3
+                    dark:border-gray-700 dark:bg-[#1D2735] dark:shadow-gray-800
+                "
             >
                 <div class="flex w-full justify-between">
-                    <p class="text-xl font-semibold">{{ props.title }}</p>
+                    <p class="text-xl font-semibold">
+                        {{ props.title }}
+                    </p>
                     <svg
                         v-if="props.userCloseModal"
-                        class="ml-auto h-3 w-3 cursor-pointer text-gray-800 dark:text-white"
+                        class="
+                            ml-auto size-3 cursor-pointer text-gray-800
+                            dark:text-white
+                        "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"

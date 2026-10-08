@@ -9,11 +9,13 @@ import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
 import { errorString } from "@/utils/functions/stringFunctions.ts";
 
+const props = withDefaults(defineProps<Props>(), {
+    canCloseModal: true,
+});
+const emit = defineEmits(["close"]);
 const { t } = useI18n();
 const userStore = useUserStore();
 const router = useRouter();
-
-const emit = defineEmits(["close"]);
 
 const submittingNewCode = ref(false);
 const errorRedeemingCode = ref("");
@@ -33,16 +35,13 @@ export interface Props {
     canCloseModal?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-    canCloseModal: true,
-});
-
 const completeInputCode = computed(() => {
-    return codeValuePart1.value + "-" + codeValuePart2.value + "-" + codeValuePart3.value + "-" + codeValuePart4.value;
+    return `${codeValuePart1.value}-${codeValuePart2.value}-${codeValuePart3.value}-${codeValuePart4.value}`;
 });
 
 const isCompleteCodeValid = computed(() => {
-    if (completeInputCode.value.length < 19) return true;
+    if (completeInputCode.value.length < 19)
+        return true;
     const checkCharacter = calculateCheckCharacter(completeInputCode.value.toUpperCase());
     return completeInputCode.value[18].toUpperCase() === checkCharacter;
 });
@@ -70,12 +69,15 @@ async function redeemCode() {
 
         submittingNewCode.value = false;
         isCodeRedeemed.value = true;
-    } catch (error: any) {
+    }
+    catch (error: any) {
         submittingNewCode.value = false;
 
-        if (error.statusCode === 404) errorRedeemingCode.value = errorString(error.statusCode, t("error_codeNotFound"));
-        else if (error.statusCode === 409) errorRedeemingCode.value = errorString(error.statusCode, t("error_codeRedeemed"));
-        else errorRedeemingCode.value = errorString(error.statusCode);
+        if (error.statusCode === 404)
+            errorRedeemingCode.value = errorString(error, t("error_codeNotFound"));
+        else if (error.statusCode === 409)
+            errorRedeemingCode.value = errorString(error, t("error_codeRedeemed"));
+        else errorRedeemingCode.value = errorString(error);
     }
 }
 
@@ -94,21 +96,23 @@ function focusNextInput(event: KeyboardEvent) {
     if (currentInput.value.length === 0) {
         if ((event.key === "ArrowLeft" || event.key === "Backspace") && previousInput) {
             previousInput.focus();
-        } else {
-            return;
         }
-    } else if (currentInput.value.length === 4) {
-        if (nextInput) nextInput.focus();
+    }
+    else if (currentInput.value.length === 4) {
+        if (nextInput)
+            nextInput.focus();
         if (event.key === "ArrowRight" && nextInput) {
             nextInput.focus();
         }
-    } else return;
+    }
 }
+
+const pasteDataRegex = /[-\s]/g;
 
 function handlePaste(event: ClipboardEvent) {
     event.preventDefault();
     let pasteData = event.clipboardData?.getData("text") || "";
-    pasteData = pasteData.replace(/[-\s]/g, "");
+    pasteData = pasteData.replace(pasteDataRegex, "");
 
     const inputs = [codeValuePart1, codeValuePart2, codeValuePart3, codeValuePart4];
     const inputsField = [inputCodePart1.value, inputCodePart2.value, inputCodePart3.value, inputCodePart4.value];
@@ -130,18 +134,17 @@ function handlePaste(event: ClipboardEvent) {
 
 async function goToLinkPage() {
     await router.push("/login/link");
-    return;
 }
 </script>
 
 <template>
     <ModalContainer v-slot="modalContainer" :user-close-modal="props.canCloseModal" :title="t('profile_redeemACode')" @close="emit('close')">
         <div v-if="isCodeRedeemed">
-            <div class="mb-8 mt-12 flex flex-col items-center">
+            <div class="mt-12 mb-8 flex flex-col items-center">
                 <div>
-                    <div class="h-24 w-24 rounded-full bg-green-300 p-8 shadow-md">
+                    <div class="size-24 rounded-full bg-green-300 p-8 shadow-md">
                         <svg
-                            class="h-full w-full text-green-600"
+                            class="size-full text-green-600"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -158,24 +161,47 @@ async function goToLinkPage() {
                     </div>
                 </div>
 
-                <p class="mt-4 text-gray-500 dark:text-gray-400">{{ t("profile_codeRedeemed") }}</p>
+                <p
+                    class="
+                        mt-4 text-gray-500
+                        dark:text-gray-400
+                    "
+                >
+                    {{ t("profile_codeRedeemed") }}
+                </p>
             </div>
 
             <GlobalButton v-if="!userStore.user.rsiHandle" type="secondary" size="full" @click="modalContainer.close()">
-                {{ t("login_continueAccountSetup") }}</GlobalButton
-            >
+                {{ t("login_continueAccountSetup") }}
+            </GlobalButton>
         </div>
 
         <div v-else>
-            <p class="text-gray-500 dark:text-gray-400">{{ t("profile_redeemCodeModalDescription") }}</p>
+            <p
+                class="
+                    text-gray-500
+                    dark:text-gray-400
+                "
+            >
+                {{ t("profile_redeemCodeModalDescription") }}
+            </p>
 
             <form @submit.prevent="redeemCode()">
                 <div class="mt-8 flex items-center justify-between gap-2">
                     <input
                         ref="inputCodePart1"
                         v-model="codeValuePart1"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
-                        :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
+                        class="
+                            block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
+                            focus:border-gray-500 focus:ring-gray-500
+                            md:p-2.5
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
+                        "
+                        :class="isCompleteCodeValid ? `
+                            border-gray-300
+                            dark:border-gray-600
+                        ` : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
                         minlength="4"
@@ -187,13 +213,24 @@ async function goToLinkPage() {
                         data-bwignore
                         @keyup="focusNextInput"
                         @paste="handlePaste"
-                    />
-                    <p class="text-xl font-bold">-</p>
+                    >
+                    <p class="text-xl font-bold">
+                        -
+                    </p>
                     <input
                         ref="inputCodePart2"
                         v-model="codeValuePart2"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
-                        :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
+                        class="
+                            block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
+                            focus:border-gray-500 focus:ring-gray-500
+                            md:p-2.5
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
+                        "
+                        :class="isCompleteCodeValid ? `
+                            border-gray-300
+                            dark:border-gray-600
+                        ` : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
                         minlength="4"
@@ -205,13 +242,24 @@ async function goToLinkPage() {
                         data-bwignore
                         @keyup="focusNextInput"
                         @paste="handlePaste"
-                    />
-                    <p class="text-xl font-bold">-</p>
+                    >
+                    <p class="text-xl font-bold">
+                        -
+                    </p>
                     <input
                         ref="inputCodePart3"
                         v-model="codeValuePart3"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
-                        :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
+                        class="
+                            block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
+                            focus:border-gray-500 focus:ring-gray-500
+                            md:p-2.5
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
+                        "
+                        :class="isCompleteCodeValid ? `
+                            border-gray-300
+                            dark:border-gray-600
+                        ` : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
                         minlength="4"
@@ -223,13 +271,24 @@ async function goToLinkPage() {
                         data-bwignore
                         @keyup="focusNextInput"
                         @paste="handlePaste"
-                    />
-                    <p class="text-xl font-bold">-</p>
+                    >
+                    <p class="text-xl font-bold">
+                        -
+                    </p>
                     <input
                         ref="inputCodePart4"
                         v-model="codeValuePart4"
-                        class="block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold uppercase text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400 md:p-2.5"
-                        :class="isCompleteCodeValid ? 'border-gray-300 dark:border-gray-600' : 'border-2 border-red-500'"
+                        class="
+                            block w-1/5 rounded-lg border bg-gray-50 p-2 text-center font-semibold text-gray-900 uppercase placeholder-gray-400
+                            focus:border-gray-500 focus:ring-gray-500
+                            md:p-2.5
+                            dark:bg-gray-700 dark:text-white dark:placeholder-gray-400
+                            dark:focus:border-gray-400 dark:focus:ring-gray-400
+                        "
+                        :class="isCompleteCodeValid ? `
+                            border-gray-300
+                            dark:border-gray-600
+                        ` : 'border-2 border-red-500'"
                         type="text"
                         maxlength="4"
                         minlength="4"
@@ -241,25 +300,43 @@ async function goToLinkPage() {
                         data-bwignore
                         @keyup="focusNextInput"
                         @paste="handlePaste"
-                    />
+                    >
                 </div>
 
-                <p v-if="!isCompleteCodeValid" class="mt-2 text-sm font-semibold text-red-600">{{ t("error_codeInvalid") }}</p>
+                <p v-if="!isCompleteCodeValid" class="mt-2 text-sm font-semibold text-red-600">
+                    {{ t("error_codeInvalid") }}
+                </p>
 
-                <div class="mt-8 gap-2 lg:flex">
+                <div
+                    class="
+                        mt-8 gap-2
+                        lg:flex
+                    "
+                >
                     <GlobalButton
                         :loading="submittingNewCode"
                         :submit="true"
                         size="full"
                         :disabled="completeInputCode.length < 19 || !isCompleteCodeValid"
-                        >{{ t("profile_redeemCode") }}</GlobalButton
                     >
-                    <GlobalButton v-if="props.canCloseModal" type="secondary" size="full" class="mt-2 lg:mt-0" @click="modalContainer.close()">
-                        {{ t("tracking_backCancelButton") }}</GlobalButton
+                        {{ t("profile_redeemCode") }}
+                    </GlobalButton>
+                    <GlobalButton
+                        v-if="props.canCloseModal" type="secondary" size="full" class="
+                            mt-2
+                            lg:mt-0
+                        " @click="modalContainer.close()"
                     >
-                    <GlobalButton v-else-if="!userStore.user.rsiHandle" type="secondary" size="full" class="mt-2 lg:mt-0" @click="goToLinkPage()">
-                        {{ t("code_skip") }}</GlobalButton
+                        {{ t("tracking_backCancelButton") }}
+                    </GlobalButton>
+                    <GlobalButton
+                        v-else-if="!userStore.user.rsiHandle" type="secondary" size="full" class="
+                            mt-2
+                            lg:mt-0
+                        " @click="goToLinkPage()"
                     >
+                        {{ t("code_skip") }}
+                    </GlobalButton>
                 </div>
                 <GlobalErrorText v-if="errorRedeemingCode" :text="errorRedeemingCode" :icon="false" class="mt-2 text-sm font-semibold" />
             </form>

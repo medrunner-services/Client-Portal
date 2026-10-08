@@ -14,7 +14,7 @@ const logicStore = useLogicStore();
         <div class="flex gap-4">
             <div>
                 <svg
-                    class="mt-0.5 h-5 w-5 text-red-600"
+                    class="mt-0.5 size-5 text-red-600"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -32,13 +32,30 @@ const logicStore = useLogicStore();
                         {{ t("home_blockedText") }}
                     </p>
 
-                    <div class="mt-8 flex flex-col gap-4 md:flex-row">
-                        <a class="w-full lg:w-fit" :href="`${logicStore.discordBaseUrl}discord.com/invite/medrunner`" target="_blank">
+                    <div
+                        class="
+                            mt-8 flex flex-col gap-4
+                            md:flex-row
+                        "
+                    >
+                        <a
+                            class="
+                                w-full
+                                lg:w-fit
+                            " :href="`${logicStore.discordBaseUrl}discord.com/invite/medrunner`" target="_blank"
+                        >
                             <GlobalButton icon="link" size="full">{{ t("home_medrunnerDiscord") }}</GlobalButton>
                         </a>
 
-                        <a class="w-full lg:w-fit" href="https://discord.gg/dcyXDFZpYP" target="_blank">
-                            <GlobalButton icon="link" size="full" type="outline" class="text-gray-900">{{ t("home_banAppealDiscord") }}</GlobalButton>
+                        <a
+                            class="
+                                w-full
+                                lg:w-fit
+                            " href="https://discord.gg/dcyXDFZpYP" target="_blank"
+                        >
+                            <GlobalButton icon="link" size="full" type="outline-solid" class="text-gray-900">{{
+                                t("home_banAppealDiscord")
+                            }}</GlobalButton>
                         </a>
                     </div>
                 </div>

@@ -10,17 +10,23 @@ const { t } = useI18n();
 const userStore = useUserStore();
 
 const displayCreateTokenModal = ref(false);
+const disableTokenCreation = ref(false);
 </script>
 
 <template>
     <div class="mt-10">
         <div class="flex min-h-11 items-center justify-between">
             <div class="flex gap-2">
-                <h2 class="font-Mohave text-2xl font-semibold uppercase">{{ t("developer_apiTokensTitle") }}</h2>
+                <h2 class="font-Mohave text-2xl font-semibold uppercase">
+                    {{ t("developer_apiTokensTitle") }}
+                </h2>
 
                 <a href="https://medrunner.dev" target="_blank" :title="t('developer_APIDocumentation')">
                     <svg
-                        class="h-4 w-4 cursor-pointer text-gray-900 dark:text-white"
+                        class="
+                            size-4 cursor-pointer text-gray-900
+                            dark:text-white
+                        "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -39,13 +45,15 @@ const displayCreateTokenModal = ref(false);
                 </a>
             </div>
 
-            <GlobalButton :disabled="userStore.isBlocked" icon="plus" @click="displayCreateTokenModal = true">{{
-                t("developer_createTokenButton")
-            }}</GlobalButton>
+            <GlobalButton :disabled="userStore.isBlocked || disableTokenCreation" icon="plus" @click="displayCreateTokenModal = true">
+                {{
+                    t("developer_createTokenButton")
+                }}
+            </GlobalButton>
         </div>
 
         <div class="mt-4">
-            <TokenTable :display-create-token-modal="displayCreateTokenModal" @close-create-token-modal="displayCreateTokenModal = false" />
+            <TokenTable :display-create-token-modal="displayCreateTokenModal" @close-create-token-modal="displayCreateTokenModal = false" @disable-token-creation="disableTokenCreation = true" />
         </div>
     </div>
 </template>

@@ -1,4 +1,4 @@
-import { LocalStorageItems } from "@/types.ts";
+import { LocalStorageItems } from "@/@types/types.ts";
 
 export function redirectToDiscordLogin(redirect: string): void {
     localStorage.removeItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION);

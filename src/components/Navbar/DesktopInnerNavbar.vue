@@ -21,22 +21,35 @@ const showCodeRedeemModal = ref(false);
 <template>
     <div class="content-container flex flex-wrap items-center justify-between py-4">
         <RouterLink to="/" class="flex items-center">
-            <img :src="logicStore.medrunnerLogoUrl" class="h-10" alt="Medrunner Logo" />
+            <img :src="logicStore.medrunnerLogoUrl" class="h-10" alt="Medrunner Logo">
         </RouterLink>
 
         <ul class="flex gap-5">
             <li>
-                <RouterLink to="/">{{ t("navbar_home") }}</RouterLink>
+                <RouterLink to="/">
+                    {{ t("navbar_home") }}
+                </RouterLink>
             </li>
             <li>
-                <RouterLink to="/emergency">{{ t("navbar_emergency") }}</RouterLink>
+                <RouterLink to="/emergency">
+                    {{ t("navbar_emergency") }}
+                </RouterLink>
             </li>
         </ul>
 
         <div class="flex items-center">
-            <p class="cursor-pointer" @click="showCodeRedeemModal = true">{{ t("profile_redeemCode") }}</p>
+            <p class="cursor-pointer" @click="showCodeRedeemModal = true">
+                {{ t("profile_redeemCode") }}
+            </p>
             <div class="mx-5 h-4 border border-gray-300" />
-            <p class="cursor-pointer text-primary-600 dark:text-red-700" @click="showBugReportModal = true">{{ t("navbar_reportBug") }}</p>
+            <p
+                class="
+                    cursor-pointer text-primary-600
+                    dark:text-red-700
+                " @click="showBugReportModal = true"
+            >
+                {{ t("navbar_reportBug") }}
+            </p>
             <div v-if="userStore.user.personType === PersonType.STAFF" class="mx-5 h-4 border border-gray-300" />
             <a
                 v-if="userStore.user.personType === PersonType.STAFF"
@@ -47,7 +60,10 @@ const showCodeRedeemModal = ref(false);
             >
                 <p class="cursor-pointer">{{ t("navbar_staffPortal") }}</p>
                 <svg
-                    class="h-4 w-4 cursor-pointer text-gray-900 dark:text-white"
+                    class="
+                        size-4 cursor-pointer text-gray-900
+                        dark:text-white
+                    "
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -69,7 +85,10 @@ const showCodeRedeemModal = ref(false);
             <div class="mx-5 h-4 border border-gray-300" />
             <RouterLink to="/profile">
                 <svg
-                    class="h-5 w-5 text-gray-800 dark:text-gray-50"
+                    class="
+                        size-5 text-gray-800
+                        dark:text-gray-50
+                    "
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"

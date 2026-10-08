@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onBeforeUnmount, ref, useTemplateRef } from "vue";
+import GlobalTooltip from "@/components/utils/GlobalTooltip.vue";
 
 export interface Props {
     disabled?: boolean;
@@ -12,15 +13,23 @@ export interface Props {
     radius?: "rounded-t-lg" | "rounded-r-lg" | "bottom-left" | "rounded-b-lg" | "rounded-l-lg" | "rounded-lg" | "none";
     min?: string;
     max?: string;
+    timeSensitivity?: "days" | "minutes";
+    size?: "small" | "large";
 }
 
 const props = withDefaults(defineProps<Props>(), {
     disabled: false,
     required: false,
     radius: "rounded-lg",
+    timeSensitivity: "days",
+    size: "large",
 });
 
 const emit = defineEmits(["update:modelValue"]);
+const dateInputRef = useTemplateRef("dateInput");
+const isValid = ref(true);
+const isFocused = ref(false);
+let intervalId: number | null = null;
 
 const value = computed({
     get() {
@@ -31,55 +40,78 @@ const value = computed({
     },
 });
 
-const showHelper = ref(false);
+function checkValidity() {
+    if (dateInputRef.value) {
+        isValid.value = dateInputRef.value.validity.valid;
+    }
+}
+
+function handleFocus() {
+    isFocused.value = true;
+    if (!intervalId) {
+        intervalId = window.setInterval(checkValidity, 200);
+    }
+}
+
+function handleBlur() {
+    isFocused.value = false;
+    if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = null;
+    }
+    checkValidity();
+}
+
+onBeforeUnmount(() => {
+    if (intervalId) {
+        window.clearInterval(intervalId);
+    }
+});
+
+defineExpose({
+    isValid,
+});
 </script>
 
 <template>
     <div>
-        <div v-if="props.label" class="mb-2 flex items-center">
-            <label class="block text-sm font-medium text-gray-900 dark:text-white">{{ props.label }}<span v-if="props.required">*</span></label>
+        <div v-if="props.label" class="flex items-center" :class="props.size === 'large' ? 'mb-2' : ''">
+            <label
+                class="
+                    block font-medium text-gray-900
+                    dark:text-white
+                "
+                :class="props.size === 'large' ? 'text-sm' : 'text-xs'"
+            >{{ props.label }}<span v-if="props.required">*</span></label>
 
-            <div class="relative">
-                <svg
-                    v-if="helper"
-                    class="ml-2 h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-500"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    @mouseenter="showHelper = true"
-                    @mouseleave="showHelper = false"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
-                        clip-rule="evenodd"
-                    ></path>
-                </svg>
-
-                <div
-                    v-if="showHelper"
-                    role="tooltip"
-                    class="absolute bottom-5 z-30 inline-block w-64 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-500 shadow-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400"
-                >
-                    <div class="px-3 py-2">
-                        <p>{{ props.helper }}</p>
-                    </div>
-                </div>
-            </div>
+            <GlobalTooltip v-if="props.helper" :content="props.helper" />
         </div>
 
         <div class="relative">
             <input
+                ref="dateInput"
                 v-model="value"
-                type="date"
+                :type="props.timeSensitivity === 'minutes' ? 'datetime-local' : 'date'"
                 :min="props.min"
                 :max="props.max"
-                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-500 focus:ring-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-gray-400 dark:focus:ring-gray-400"
+                class="
+                    w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50
+                    invalid:border-red-600 invalid:text-red-600
+                    focus:border-gray-500 focus:ring-gray-500
+                    dark:border-gray-600 dark:bg-gray-700
+                    dark:invalid:border-red-500 dark:invalid:text-red-500
+                    dark:focus:border-gray-400 dark:focus:ring-gray-400
+                "
+                :class="[props.size === 'large' ? 'p-2.5 text-sm' : 'p-2 text-xs', value ? `
+                    text-gray-900
+                    dark:text-white
+                ` : `text-gray-400`]"
                 :placeholder="props.placeholder"
                 :disabled="props.disabled"
                 :required="props.required"
-            />
+                @focus="handleFocus"
+                @blur="handleBlur"
+            >
         </div>
     </div>
 </template>

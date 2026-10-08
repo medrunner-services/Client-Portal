@@ -1,0 +1,132 @@
+name: Portal CI and delivery
+
+on:
+  push:
+    branches: [main, release/stable]
+  pull_request:
+    branches: [main, release/stable]
+
+permissions: {}
+
+concurrency:
+  group: portal-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  validate:
+    if: ${{ github.event_name == 'pull_request' }}
+    uses: medrunner-services/ci/.github/workflows/wf-test-node.yml@v1
+    permissions:
+      contents: read
+      packages: read
+    with:
+      package-manager: pnpm
+      private-packages: false
+      lint-script: check
+      build-script: ${{ github.base_ref == 'release/stable' && 'build' || 'build:staging' }}
+      run-prettier: false
+
+  release:
+    if: ${{ github.event_name == 'push' }}
+    uses: medrunner-services/ci/.github/workflows/wf-release-semantic.yml@v1
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    with:
+      environment-name: release
+      release-ref-name: release/stable
+      default-branch: main
+      enable-backpropagation: false
+      backpropagation-approve: false
+      backpropagation-auto-merge: false
+
+  deploy:
+    needs: release
+    if: ${{ github.event_name == 'push' }}
+    uses: medrunner-services/ci/.github/workflows/wf-deploy-cloudflare-pages.yml@v1
+    permissions:
+      contents: read
+      packages: read
+    # Required for repository/environment credentials to reach the reusable workflow.
+    secrets: inherit
+    with:
+      build-script: ${{ github.ref_name == 'release/stable' && 'build' || 'build:staging' }}
+      environment-name: ${{ github.ref_name == 'release/stable' && 'deploy-cf-production' || 'deploy-cf-staging' }}
+      branch: ${{ github.ref_name }}
+      production-branch: release/stable
+      source-ref: ${{ needs.release.outputs.new-tag || github.sha }}
+      version: ${{ needs.release.outputs.new-version }}
+      package-manager: pnpm
+      private-packages: false
+      public-env-map: >-
+        {
+          "VITE_API_URL": "API_URL",
+          "VITE_CALLBACK_URL": "CALLBACK_URL",
+          "VITE_DISCORD_CLIENT_ID": "DISCORD_CLIENT_ID",
+          "VITE_DISCORD_SERVER_ID": "DISCORD_SERVER_ID",
+          "VITE_ENABLE_APM": "ENABLE_APM",
+          "VITE_APM_SERVER_URL": "APM_SERVER_URL",
+          "VITE_POSTHOG_TOKEN": "POSTHOG_TOKEN"
+        }
+      required-public-env: '["VITE_API_URL","VITE_CALLBACK_URL","VITE_DISCORD_CLIENT_ID","VITE_DISCORD_SERVER_ID"]'
+
+  notify:
+    needs: deploy
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'release/stable' && 'deploy-cf-production' || 'deploy-cf-staging' }}
+    permissions: {}
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          package-manager-cache: false
+      - name: Notify Medrunner API
+        continue-on-error: true
+        shell: bash
+        env:
+          API_URL: ${{ vars.API_URL }}
+          AUTOMATION_DEPLOY: ${{ secrets.AUTOMATION_DEPLOY }}
+          AUTOMATION_DEPLOY_PROD: ${{ secrets.AUTOMATION_DEPLOY_PROD }}
+          AUTOMATION_DEPLOY_DEV: ${{ secrets.AUTOMATION_DEPLOY_DEV }}
+          IS_PRODUCTION: ${{ github.ref_name == 'release/stable' }}
+          VERSION: ${{ needs.deploy.outputs.version }}
+        run: |
+          node --input-type=module <<'NODE'
+          async function notify() {
+            const credential = process.env.AUTOMATION_DEPLOY || (
+              process.env.IS_PRODUCTION === 'true'
+                ? process.env.AUTOMATION_DEPLOY_PROD
+                : process.env.AUTOMATION_DEPLOY_DEV
+            );
+            if (!credential) {
+              console.log('::warning::API notification skipped: AUTOMATION_DEPLOY is not configured');
+              return;
+            }
+
+            const url = new URL('/automation/deploy', process.env.API_URL);
+            if (url.protocol !== 'https:') throw new Error('Notification API must use HTTPS');
+            url.search = new URLSearchParams({
+              secret: credential,
+              client: '1',
+              version: process.env.VERSION,
+            }).toString();
+
+            // The API currently authenticates by query string. Never log the URL, body, or transport exception.
+            let response;
+            try {
+              response = await fetch(url, {
+                method: 'POST',
+                redirect: 'manual',
+                signal: AbortSignal.timeout(10000),
+              });
+            } catch {
+              throw new Error('API notification request failed');
+            }
+
+            if (!response.ok) throw new Error('API notification failed (HTTP ' + response.status + ')');
+          }
+
+          await notify();
+          NODE

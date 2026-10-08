@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watchEffect } from "vue";
 
+import { AlertColors } from "@/@types/types.ts";
 import { useAlertStore } from "@/stores/alertStore";
-import { AlertColors } from "@/types";
 
 const alertStore = useAlertStore();
 
@@ -19,7 +19,11 @@ watchEffect(() => {
 
 <template>
     <div
-        class="fixed left-1/2 top-6 z-50 w-full -translate-x-1/2 transform rounded-lg dark:bg-gray-900 md:w-fit"
+        class="
+            fixed top-6 left-1/2 z-50 w-full -translate-x-1/2 transform rounded-lg
+            md:w-fit
+            dark:bg-gray-900
+        "
         :class="{
             'bg-red-50 text-red-800 dark:text-red-400': alertStore.color === AlertColors.RED,
             'bg-green-50 text-green-800 dark:text-green-400': alertStore.color === AlertColors.GREEN,
@@ -30,7 +34,7 @@ watchEffect(() => {
         <div class="flex items-center p-4">
             <svg
                 v-if="alertStore.icon === 'info'"
-                class="h-4 w-4 flex-shrink-0"
+                class="size-4 shrink-0"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -44,7 +48,12 @@ watchEffect(() => {
             <button
                 v-if="alertStore.isCloseable"
                 type="button"
-                class="-mx-1.5 -my-1.5 ml-auto inline-flex h-8 w-8 items-center justify-center rounded-lg p-1.5 focus:ring-2 dark:bg-gray-900 dark:hover:bg-gray-700"
+                class="
+                    -m-1.5 ml-auto inline-flex size-8 items-center justify-center rounded-lg p-1.5
+                    focus:ring-2
+                    dark:bg-gray-900
+                    dark:hover:bg-gray-700
+                "
                 :class="{
                     'bg-red-50 text-red-500 hover:bg-red-200 focus:ring-red-400 dark:text-red-400': alertStore.color === AlertColors.RED,
                     'bg-green-50 text-green-500 hover:bg-green-200 focus:ring-green-400 dark:text-green-400': alertStore.color === AlertColors.GREEN,
@@ -54,7 +63,7 @@ watchEffect(() => {
                 }"
                 @click="alertStore.closeAlert()"
             >
-                <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <svg class="size-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                     <path
                         stroke="currentColor"
                         stroke-linecap="round"
@@ -76,7 +85,7 @@ watchEffect(() => {
                 'bg-yellow-900': alertStore.color === AlertColors.YELLOW,
             }"
             :style="{ animationDuration: `${alertStore.speed / 1000}s` }"
-        ></div>
+        />
     </div>
 </template>
 

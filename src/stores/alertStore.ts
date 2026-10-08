@@ -1,7 +1,8 @@
+import type { AlertIcons } from "@/@types/types.ts";
 import { defineStore } from "pinia";
-import { ref } from "vue";
 
-import { AlertColors, type AlertIcons } from "@/types";
+import { ref } from "vue";
+import { AlertColors } from "@/@types/types.ts";
 
 export const useAlertStore = defineStore("alert", () => {
     const showAlert = ref(false);
@@ -18,7 +19,8 @@ export const useAlertStore = defineStore("alert", () => {
         isCloseable.value = closeable;
         speed.value = duration;
 
-        if (alertIcon) icon.value = alertIcon;
+        if (alertIcon)
+            icon.value = alertIcon;
         else icon.value = "";
 
         showAlert.value = true;

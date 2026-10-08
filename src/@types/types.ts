@@ -1,3 +1,5 @@
+import type { ChatMessage, MissionStatus } from "@medrunner/api-client";
+
 export enum MessageNotification {
     ALL,
     PING,
@@ -21,6 +23,8 @@ export interface SyncedSettings {
     selectedLanguage: string;
     lastConfirmedWarningId: string;
     hour12FormatingPreference?: boolean;
+    dateFormatingPreference: DateFormatingSetting;
+    shortDateFormatPreference: boolean;
 }
 
 export enum WSState {
@@ -43,3 +47,45 @@ export enum LocalStorageItems {
 }
 
 export type AlertIcons = "info" | "warning";
+
+export interface WebSocketMessage {
+    id: string;
+}
+
+export interface EchartLoadingOptions {
+    text?: string;
+    textColor?: string;
+    fontSize?: number | string;
+    fontWeight?: number | string;
+    fontStyle?: string;
+    fontFamily?: string;
+    maskColor?: string;
+    showSpinner?: boolean;
+    color?: string;
+    spinnerRadius?: number;
+    lineWidth?: number;
+    zlevel?: number;
+}
+
+export interface GlobalSelectOption {
+    value: string | number | boolean | undefined;
+    label?: string;
+    hidden?: boolean;
+    disabled?: boolean;
+}
+
+export enum DateFormatingSetting {
+    AUTO,
+    DMY,
+    YMD,
+    MDY,
+}
+
+export interface LocalChatMessage extends ChatMessage {
+    local: boolean;
+    error: boolean;
+}
+
+export type TrackedChatMessageItem = LocalChatMessage | ChatMessage;
+
+export type HistoryFilterStatus = MissionStatus.SUCCESS | MissionStatus.FAILED | MissionStatus.SERVER_ERROR | MissionStatus.ABORTED | MissionStatus.REFUSED | MissionStatus.NO_CONTACT | MissionStatus.CANCELED;

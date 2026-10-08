@@ -1,17 +1,20 @@
 import type { PaginatedResponse } from "@medrunner/api-client";
+import { normalizePaginationToken, normalizeTotalCount } from "@/utils/functions/apiResponseFunctions.ts";
 
-export async function fetchAllPaginatedResponse<T>(
-    fetchFunction: (limit?: number, token?: string) => Promise<PaginatedResponse<T>>,
-    limit?: number,
-): Promise<T[]> {
+export async function fetchAllPaginatedResponse<T, Args extends unknown[]>(
+    fetchFunction: (limit: number, token?: string, ...args: Args) => Promise<PaginatedResponse<T>>,
+    ...args: Args
+): Promise<{ data: T[]; totalCount: number }> {
     const results: T[] = [];
     let paginationToken: string | undefined;
-    do {
-        const response = await fetchFunction(20, paginationToken);
-        results.push(...response.data);
-        if (response.paginationToken) paginationToken = response.paginationToken;
-        else paginationToken = undefined;
-    } while (paginationToken && (!limit || results.length < limit));
+    let totalCount = 0;
 
-    return results;
+    do {
+        const response = await fetchFunction(100, paginationToken, ...args);
+        results.push(...response.data);
+        totalCount = normalizeTotalCount(response.totalCount);
+        paginationToken = normalizePaginationToken(response.paginationToken);
+    } while (paginationToken);
+
+    return { data: results, totalCount };
 }
