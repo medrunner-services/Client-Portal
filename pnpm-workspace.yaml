@@ -7,4 +7,4 @@ allowBuilds:
   workerd: true
   sharp: true
 minimumReleaseAgeExclude:
-  - '@medrunner/api-client@0.7.0-beta.26'
+  - '@medrunner/api-client@0.7.0-beta.26 || 0.7.0-beta.30'
