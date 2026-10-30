@@ -4,7 +4,7 @@ export default {
         { name: "release/stable", channel: "stable" },
         { name: "main", channel: "dev", prerelease: "dev" },
     ],
-    tagFormat: "v${version}",
+    tagFormat: "v${version}", // eslint-disable-line no-template-curly-in-string -- semantic-release substitutes this placeholder.
     plugins: [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
