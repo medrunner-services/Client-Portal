@@ -181,7 +181,7 @@ export function getEmergencyStatusSubtitle(status: number): string {
     }
 }
 
-export function getTokenScopeString(scope: TokenScope): string {
+export function getTokenScopeString(scope: string): string {
     const { t } = i18n.global;
     switch (scope) {
         case TokenScope.CLIENT_READ:

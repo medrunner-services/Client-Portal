@@ -1,4 +1,5 @@
 import type { CreateEmergencyRequest, SpaceLocation } from "@medrunner/api-client";
+import { ThreatLevel } from "@medrunner/api-client";
 
 import { getSelectableAlertLocations } from "@/utils/functions/locationFunctions.ts";
 
@@ -27,9 +28,15 @@ export async function submitEmergencyRequest<T>(
         return undefined;
     }
 
+    const threatLevel = Number(input.threatLevel);
+    if (threatLevel !== ThreatLevel.UNKNOWN && threatLevel !== ThreatLevel.LOW
+        && threatLevel !== ThreatLevel.MEDIUM && threatLevel !== ThreatLevel.HIGH) {
+        return undefined;
+    }
+
     const payload: CreateEmergencyRequest = {
         locationId: input.locationId,
-        threatLevel: Number.parseInt(input.threatLevel),
+        threatLevel,
         rsiHandle: input.rsiHandle || null,
     };
 
