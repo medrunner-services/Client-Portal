@@ -2,9 +2,9 @@ name: Portal CI and delivery
 
 on:
   push:
-    branches: [main, release/stable]
+    branches: [main, release/stable, release/rc, 'release/*.x', ci]
   pull_request:
-    branches: [main, release/stable]
+    branches: [main, release/stable, release/rc, 'release/*.x', ci]
 
 permissions: {}
 
@@ -35,6 +35,7 @@ jobs:
       pull-requests: write
     with:
       environment-name: release
+      standard-branches: true
       release-ref-name: release/stable
       default-branch: main
       enable-backpropagation: false
@@ -43,7 +44,7 @@ jobs:
 
   deploy:
     needs: release
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'release/stable') }}
     uses: medrunner-services/ci/.github/workflows/wf-deploy-cloudflare-pages.yml@v1
     permissions:
       contents: read
