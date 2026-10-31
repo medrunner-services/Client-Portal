@@ -29,6 +29,8 @@ jobs:
   release:
     if: ${{ github.event_name == 'push' }}
     uses: medrunner-services/ci/.github/workflows/wf-release-semantic.yml@v1
+    secrets:
+      PR_CREATION_PAT: ${{ secrets.PR_CREATION_PAT }}
     permissions:
       contents: write
       issues: write
@@ -37,9 +39,10 @@ jobs:
       environment-name: release
       release-ref-name: release/stable
       default-branch: main
-      enable-backpropagation: false
-      backpropagation-approve: false
-      backpropagation-auto-merge: false
+      enable-backpropagation: true
+      backpropagation-approve: true
+      backpropagation-approve-with-github-token: true
+      backpropagation-auto-merge: true
 
   deploy:
     needs: release
