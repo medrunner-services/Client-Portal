@@ -35,7 +35,6 @@ jobs:
       pull-requests: write
     with:
       environment-name: release
-      standard-branches: true
       release-ref-name: release/stable
       default-branch: main
       enable-backpropagation: false
