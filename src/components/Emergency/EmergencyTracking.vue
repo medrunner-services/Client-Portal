@@ -198,7 +198,7 @@ const trackedEmergencyLocation = computed(() => {
                             |
                         </p>
                         <p v-if="showSuccessRate" class="font-medium">
-                            {{ Math.round(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate * 100) }}%
+                            {{ Math.round(Number(emergencyStore.trackedEmergencyTeamDetails.aggregatedSuccessRate) * 100) }}%
                             {{ t("tracking_responderSuccessRate") }}
                         </p>
                     </div>

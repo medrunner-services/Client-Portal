@@ -10,13 +10,13 @@ const { t } = useI18n();
 
 const successRate = computed(() => {
     const total
-        = userStore.user.clientStats.missions.success
-            + userStore.user.clientStats.missions.failed
-            + userStore.user.clientStats.missions.aborted
-            + userStore.user.clientStats.missions.canceled
-            + userStore.user.clientStats.missions.serverError
-            + userStore.user.clientStats.missions.refused;
-    const success = userStore.user.clientStats.missions.success;
+        = Number(userStore.user.clientStats.missions.success)
+            + Number(userStore.user.clientStats.missions.failed)
+            + Number(userStore.user.clientStats.missions.aborted)
+            + Number(userStore.user.clientStats.missions.canceled)
+            + Number(userStore.user.clientStats.missions.serverError)
+            + Number(userStore.user.clientStats.missions.refused);
+    const success = Number(userStore.user.clientStats.missions.success);
 
     if (total === 0)
         return 0;

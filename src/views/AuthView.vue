@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { parseTokenGrant } from "@medrunner/api-client";
 import { onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -33,9 +34,12 @@ onMounted(async () => {
                 },
             );
             if (response.ok) {
-                const responseData = await response.json();
+                const responseData = parseTokenGrant(await response.json());
                 localStorage.setItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION, responseData.accessTokenExpiration);
-                localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
+                if (responseData.refreshTokenExpiration === null)
+                    localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
+                else
+                    localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
 
                 let apiInitialized = false;
 
@@ -95,9 +99,12 @@ onMounted(async () => {
             );
 
             if (response.ok) {
-                const responseData = await response.json();
+                const responseData = parseTokenGrant(await response.json());
                 localStorage.setItem(LocalStorageItems.ACCESS_TOKEN_EXPIRATION, responseData.accessTokenExpiration);
-                localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
+                if (responseData.refreshTokenExpiration === null)
+                    localStorage.removeItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION);
+                else
+                    localStorage.setItem(LocalStorageItems.REFRESH_TOKEN_EXPIRATION, responseData.refreshTokenExpiration);
 
                 let apiInitialized = false;
 

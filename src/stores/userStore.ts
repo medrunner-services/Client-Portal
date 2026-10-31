@@ -39,7 +39,7 @@ export const useUserStore = defineStore("user", () => {
 
     const totalNumberOfEmergencies = computed(() => {
         if (isAuthenticated.value === true) {
-            return Object.values(user.value.clientStats.missions).reduce((acc, value) => acc + value, 0);
+            return Object.values(user.value.clientStats.missions).reduce<number>((acc, value) => acc + Number(value), 0);
         }
         else {
             return 0;

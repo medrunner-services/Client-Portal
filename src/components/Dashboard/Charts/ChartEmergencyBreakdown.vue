@@ -25,7 +25,7 @@ type ChartOptions = ComposeOption<PieSeriesOption | TooltipComponentOption | Tit
 const chartRef = ref<InstanceType<typeof VChart> | null>(null);
 
 const totalMissions = computed(() => {
-    return Object.values(userStore.user.clientStats.missions).reduce((sum, val) => sum + val, 0);
+    return Object.values(userStore.user.clientStats.missions).reduce<number>((sum, val) => sum + Number(val), 0);
 });
 
 const initOptions: EChartsInitOpts = {
@@ -100,9 +100,9 @@ function generateSeriesData() {
     const data: { value: number; name: string; itemStyle: { color: string } }[] = [];
 
     for (const [missionType, value] of Object.entries(userStore.user.clientStats.missions)) {
-        if (value > 0) {
+        if (Number(value) > 0) {
             data.push({
-                value,
+                value: Number(value),
                 name: getLabel(missionType),
                 itemStyle: { color: getLabelColor(missionType) },
             });
