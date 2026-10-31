@@ -1,12 +1,13 @@
-/** @type {import('semantic-release').GlobalConfig} */
-import { execFileSync } from 'node:child_process';
+/** @type {import("semantic-release").GlobalConfig} */
+import { execFileSync } from "node:child_process";
 
 // Repository policy for release/+([0-9])?(.{+([0-9]),x}).x.
 // Prefixed maintenance names need explicit SemVer ranges.
-const maintenance = execFileSync('git', ['for-each-ref', '--format=%(refname:strip=3)', 'refs/remotes/origin/'], { encoding: 'utf8' })
-    .trim().split('\n')
-    .filter(name => /^release\/(0|[1-9]\d*)(\.(0|[1-9]\d*))?\.x$/.test(name))
-    .map(name => ({ name, range: name.slice('release/'.length), channel: `maintenance-${name.slice('release/'.length)}` }));
+const maintenance = execFileSync("git", ["for-each-ref", "--format=%(refname:strip=3)", "refs/remotes/origin/"], { encoding: "utf8" })
+    .trim()
+    .split("\n")
+    .filter(name => /^release\/(?:0|[1-9]\d*)(?:\.(?:0|[1-9]\d*))?\.x$/.test(name))
+    .map(name => ({ name, range: name.slice("release/".length), channel: `maintenance-${name.slice("release/".length)}` }));
 
 export default {
     branches: [
