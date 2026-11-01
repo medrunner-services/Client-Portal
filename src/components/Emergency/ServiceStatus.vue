@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ServiceStatus } from "@medrunner/api-client";
+import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
 import GlobalCard from "@/components/utils/GlobalCard.vue";
@@ -7,6 +8,13 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 
 const { t } = useI18n();
 const logicStore = useLogicStore();
+
+const effectiveStatus = computed(() => {
+    if (logicStore.medrunnerSettings?.emergenciesEnabled === false)
+        return ServiceStatus.OFFLINE;
+
+    return logicStore.medrunnerSettings?.status;
+});
 </script>
 
 <template>
@@ -20,7 +28,7 @@ const logicStore = useLogicStore();
         <div v-if="logicStore.medrunnerSettings">
             <GlobalCard
                 v-if="
-                    logicStore.medrunnerSettings.status === ServiceStatus.OPERATIONAL || logicStore.medrunnerSettings.status === ServiceStatus.UNKNOWN
+                    effectiveStatus === ServiceStatus.OPERATIONAL || effectiveStatus === ServiceStatus.UNKNOWN
                 "
                 class="mt-4 flex flex-col items-center justify-center gap-8"
             >
@@ -31,7 +39,7 @@ const logicStore = useLogicStore();
             </GlobalCard>
 
             <GlobalCard
-                v-else-if="logicStore.medrunnerSettings.status === ServiceStatus.SLIGHTLY_DEGRADED"
+                v-else-if="effectiveStatus === ServiceStatus.SLIGHTLY_DEGRADED"
                 class="mt-4 flex flex-col items-center justify-center gap-8"
             >
                 <img src="/images/StatusShield_yellow.svg" class="h-28" alt="Status shield">
@@ -41,7 +49,7 @@ const logicStore = useLogicStore();
             </GlobalCard>
 
             <GlobalCard
-                v-else-if="logicStore.medrunnerSettings.status === ServiceStatus.HEAVILY_DEGRADED"
+                v-else-if="effectiveStatus === ServiceStatus.HEAVILY_DEGRADED"
                 class="mt-4 flex flex-col items-center justify-center gap-8"
             >
                 <img src="/images/StatusShield_orange.svg" class="h-28" alt="Status shield">
@@ -51,7 +59,7 @@ const logicStore = useLogicStore();
             </GlobalCard>
 
             <GlobalCard
-                v-else-if="logicStore.medrunnerSettings.status === ServiceStatus.OFFLINE"
+                v-else-if="effectiveStatus === ServiceStatus.OFFLINE"
                 class="mt-4 flex flex-col items-center justify-center gap-8"
             >
                 <img src="/images/StatusShield_red.svg" class="h-28" alt="Status shield">
