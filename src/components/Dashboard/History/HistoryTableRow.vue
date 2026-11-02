@@ -7,7 +7,7 @@ import { useI18n } from "vue-i18n";
 import ChatTranscriptModal from "@/components/Modals/ChatTranscriptModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
-import { useLogicStore } from "@/stores/logicStore.ts";
+import LocationDisplay from "@/components/utils/LocationDisplay.vue";
 import { getTimeDifferenceString } from "@/utils/functions/dateTimeFunctions.ts";
 import {
     getCancelReasonString,
@@ -16,7 +16,6 @@ import {
     getStatusString,
     getThreatString,
 } from "@/utils/functions/getStringsFunctions.ts";
-import { findLocationPath } from "@/utils/functions/locationFunctions.ts";
 
 const props = defineProps<{
     parentDiv: HTMLDivElement | null;
@@ -24,7 +23,6 @@ const props = defineProps<{
 }>();
 
 const { t } = useI18n();
-const logicStore = useLogicStore();
 
 const showDetails = ref(false);
 const detailsDiv = ref<HTMLDivElement | null>(null);
@@ -73,14 +71,6 @@ const teamLeader = computed(() => {
     else {
         return "";
     }
-});
-
-const emergencyLocation = computed(() => {
-    const locationPath = props.emergency.locationId
-        ? findLocationPath(logicStore.medrunnerSettings?.locationSettings.locations ?? [], props.emergency.locationId)
-        : undefined;
-
-    return locationPath?.map(location => location.name).join(" › ") ?? props.emergency.system;
 });
 
 async function addTextToClipboard(text: string) {
@@ -154,12 +144,12 @@ async function addTextToClipboard(text: string) {
             </div>
             <div
                 class="
-                    col-span-6 col-start-2 block font-medium text-gray-900
+                    col-span-6 col-start-2 block min-w-0 font-medium text-gray-900
                     md:hidden
                     dark:text-white
                 "
             >
-                {{ emergencyLocation }}
+                <LocationDisplay :emergency="props.emergency" />
             </div>
             <GlobalLocalizedDate
                 class="
@@ -170,12 +160,12 @@ async function addTextToClipboard(text: string) {
             />
             <div
                 class="
-                    col-span-2 -my-2.5 hidden font-medium text-gray-900
+                    col-span-2 -my-2.5 hidden min-w-0 font-medium text-gray-900
                     md:col-span-6 md:block
                     dark:text-white
                 "
             >
-                {{ emergencyLocation }}
+                <LocationDisplay :emergency="props.emergency" />
             </div>
             <div
                 class="
@@ -367,11 +357,11 @@ async function addTextToClipboard(text: string) {
                         </p>
                         <p
                             class="
-                                text text-base text-gray-500
+                                text w-full min-w-0 text-base text-gray-500
                                 dark:text-gray-400
                             "
                         >
-                            {{ emergencyLocation }}
+                            <LocationDisplay :emergency="props.emergency" />
                         </p>
                     </div>
                 </div>
