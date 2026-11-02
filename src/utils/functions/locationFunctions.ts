@@ -6,6 +6,41 @@ export interface LocationOption {
     label: string;
 }
 
+/** Location data shared by API responses, live events, and older emergencies. */
+export interface EmergencyLocation {
+    locationId?: string | null;
+    locationTreeNames?: string[] | null;
+    system?: { name: string } | string | null;
+}
+
+/** Prefer the recorded cascade so historical locations survive settings changes. */
+export function getEmergencyLocationNames(
+    emergency: EmergencyLocation,
+    locations: SpaceLocation[],
+): string[] {
+    const recordedNames = emergency.locationTreeNames
+        ?.filter(name => typeof name === "string" && name.trim())
+        .map(name => name.trim());
+
+    if (recordedNames?.length) {
+        return recordedNames;
+    }
+
+    const configuredPath = emergency.locationId
+        ? findLocationPath(locations, emergency.locationId)
+        : undefined;
+
+    if (configuredPath?.length) {
+        return configuredPath.map(location => location.name);
+    }
+
+    const systemName = typeof emergency.system === "string"
+        ? emergency.system
+        : emergency.system?.name;
+
+    return systemName?.trim() ? [systemName.trim()] : [];
+}
+
 /**
  * Derives locations that the API can accept for a new alert.
  *

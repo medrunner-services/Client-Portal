@@ -10,10 +10,10 @@ import CancelEmergencyModal from "@/components/Modals/CancelEmergencyModal.vue";
 import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
+import LocationDisplay from "@/components/utils/LocationDisplay.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle, getThreatString } from "@/utils/functions/getStringsFunctions.ts";
-import { findLocationPath } from "@/utils/functions/locationFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const logicStore = useLogicStore();
@@ -101,20 +101,6 @@ const getAssignedTeamsString = computed(() => {
 const showSuccessRate = computed(() => {
     return emergencyStore.trackedEmergency && emergencyStore.trackedEmergency.respondingTeam.staff.length >= 3;
 });
-
-const trackedEmergencyLocation = computed(() => {
-    const emergency = emergencyStore.trackedEmergency;
-
-    if (!emergency) {
-        return "";
-    }
-
-    const locationPath = emergency.locationId
-        ? findLocationPath(logicStore.medrunnerSettings?.locationSettings.locations ?? [], emergency.locationId)
-        : undefined;
-
-    return locationPath?.map(location => location.name).join(" › ") ?? emergency.system;
-});
 </script>
 
 <template>
@@ -152,7 +138,7 @@ const trackedEmergencyLocation = computed(() => {
             >
                 <div
                     class="
-                        rounded-lg bg-gray-100 p-2 shadow-sm
+                        min-w-0 rounded-lg bg-gray-100 p-2 shadow-sm
                         dark:bg-gray-700
                     "
                 >
@@ -160,7 +146,7 @@ const trackedEmergencyLocation = computed(() => {
                         {{ t("history_location") }}
                     </p>
                     <p class="text-lg">
-                        {{ trackedEmergencyLocation }}
+                        <LocationDisplay :emergency="emergencyStore.trackedEmergency" />
                     </p>
                 </div>
 
