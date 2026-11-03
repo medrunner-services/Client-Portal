@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+
 import GlobalCheckbox from "@/components/utils/GlobalCheckbox.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const emit = defineEmits(["confirmed", "close"]);
 const { t } = useI18n();
@@ -23,6 +24,8 @@ async function confirmRules() {
             await userStore.setSettings({ hideEmergencyRulesModal: true });
         }
         catch (_e) {
+            showRuntimeFailure(_e);
+            isConfirming.value = false;
             return;
         }
     }

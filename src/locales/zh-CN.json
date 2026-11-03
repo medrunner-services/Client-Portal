@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "用一个数显示日月和两个数显示年份的最短日期格式（日/月/年年）。",
     "404_somethingMissing": "有什么东西不见了。",
     "404_helperText": "很抱歉，我们找不到该页面，您可以在我们的主页探索更多选项。",
-    "404_backToHomepage": "返回主页"
+    "404_backToHomepage": "返回主页",
+    "diagnostics_requestId": "请求 ID",
+    "diagnostics_frontendId": "前端诊断 ID",
+    "diagnostics_copy": "复制 ID",
+    "diagnostics_copied": "已复制",
+    "diagnostics_copyFailed": "无法复制。请选择并复制 ID。",
+    "diagnostics_dismiss": "关闭错误"
 }

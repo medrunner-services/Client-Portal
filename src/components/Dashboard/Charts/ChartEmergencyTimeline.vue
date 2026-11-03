@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Emergency } from "@medrunner/api-client";
+
 import type { LineSeriesOption } from "echarts/charts";
 import type { GridComponentOption, TooltipComponentOption } from "echarts/components";
 import type { ComposeOption, EChartsInitOpts } from "echarts/core";
 import type { EchartLoadingOptions } from "@/@types/types.ts";
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import {
     addDays,
     addMonths,
@@ -33,7 +35,7 @@ import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 import { fetchAllPaginatedResponse } from "@/utils/functions/fetchFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
 const logicStore = useLogicStore();
@@ -45,7 +47,7 @@ type GroupingMode = "daily" | "weekly" | "monthly";
 
 const loading = ref(false);
 const isAnimationEnabled = ref(true);
-const errorLoading = ref("");
+const errorLoading = ref<ErrorPresentation>("");
 const showDateSelector = ref(false);
 const daySelector = ref(7);
 const startDateSelector = ref<string | undefined>();
@@ -286,7 +288,7 @@ async function fetchMissions() {
         emergenciesPerPeriod.value = generateChartData(response.data);
     }
     catch (error: any) {
-        errorLoading.value = errorString(error, t("error_loadingData"));
+        errorLoading.value = errorPresentation(error, t("error_loadingData"));
     }
     finally {
         loading.value = false;

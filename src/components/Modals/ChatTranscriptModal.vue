@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ChatMessage, Responder } from "@medrunner/api-client";
+
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -11,7 +13,7 @@ import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { normalizePaginationToken } from "@/utils/functions/apiResponseFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const props = defineProps<Props>();
 const emit = defineEmits(["close"]);
@@ -27,10 +29,11 @@ export interface Props {
 const chatMessages = ref<ChatMessage[]>([]);
 const loadingChatMessages = ref(false);
 const errorLoadingMessages = ref();
-const errorLoadingAdditionalMessages = ref("");
+const errorLoadingAdditionalMessages = ref<ErrorPresentation>("");
 const paginationToken = ref<string | undefined>();
 
 onMounted(async () => {
+    errorLoadingMessages.value = "";
     try {
         loadingChatMessages.value = true;
         const response = await emergencyStore.fetchChatHistory(props.emergencyId);
@@ -38,7 +41,7 @@ onMounted(async () => {
         paginationToken.value = normalizePaginationToken(response.paginationToken);
     }
     catch (error: any) {
-        errorLoadingMessages.value = errorString(error);
+        errorLoadingMessages.value = errorPresentation(error);
     }
     finally {
         loadingChatMessages.value = false;
@@ -46,6 +49,7 @@ onMounted(async () => {
 });
 
 async function loadAdditionalMessages(): Promise<void> {
+    errorLoadingAdditionalMessages.value = "";
     if (paginationToken.value) {
         try {
             const response = await emergencyStore.fetchChatHistory(props.emergencyId, paginationToken.value);
@@ -56,7 +60,7 @@ async function loadAdditionalMessages(): Promise<void> {
             else paginationToken.value = undefined;
         }
         catch (error: any) {
-            errorLoadingAdditionalMessages.value = errorString(error);
+            errorLoadingAdditionalMessages.value = errorPresentation(error);
         }
     }
 }

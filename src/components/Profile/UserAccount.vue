@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { CodeType, PersonType } from "@medrunner/api-client";
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -12,7 +14,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLocalizedDate from "@/components/utils/GlobalLocalizedDate.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { rsiHandleRegex } from "@/utils/globalVars.ts";
 
 const userStore = useUserStore();
@@ -23,7 +25,7 @@ const inputUsername = ref(userStore.user.rsiHandle ?? "");
 const isEditingUsername = ref(false);
 const isUpdatingUsername = ref(false);
 const isLoggingOut = ref(false);
-const errorUpdatingUsername = ref("");
+const errorUpdatingUsername = ref<ErrorPresentation>("");
 const displayDeleteAccountModal = ref(false);
 const userBadges = ref<{ name: string; icon: string }[]>([]);
 
@@ -37,6 +39,7 @@ onMounted(() => {
 });
 
 async function updateUsername() {
+    errorUpdatingUsername.value = "";
     if (isEditingUsername.value) {
         isUpdatingUsername.value = true;
         errorUpdatingUsername.value = "";
@@ -51,14 +54,14 @@ async function updateUsername() {
         }
         catch (error: any) {
             if (error.statusCode === 451)
-                errorUpdatingUsername.value = errorString(error, t("error_blockedUser"));
+                errorUpdatingUsername.value = errorPresentation(error, t("error_blockedUser"));
             else if (error.statusCode === 403)
-                errorUpdatingUsername.value = errorString(error, t("error_noIdRsiBio"));
+                errorUpdatingUsername.value = errorPresentation(error, t("error_noIdRsiBio"));
             else if (error.statusCode === 404)
-                errorUpdatingUsername.value = errorString(error, t("error_unknownRsiAccount"));
+                errorUpdatingUsername.value = errorPresentation(error, t("error_unknownRsiAccount"));
             else if (error.statusCode === 409)
-                errorUpdatingUsername.value = errorString(error, t("error_rsiAccountLinked"));
-            else errorUpdatingUsername.value = errorString(error);
+                errorUpdatingUsername.value = errorPresentation(error, t("error_rsiAccountLinked"));
+            else errorUpdatingUsername.value = errorPresentation(error);
         }
 
         isUpdatingUsername.value = false;
@@ -149,14 +152,14 @@ const isInvalidRSIHandle = computed(() => {
                 </div>
                 <GlobalErrorText v-if="isInvalidRSIHandle" class="mt-1 text-sm" :icon="false" :text="t('error_invalidRsiHandle')" />
 
-                <p
+                <div
                     v-if="errorUpdatingUsername" class="
                         mt-2 text-xs font-medium text-red-600
                         dark:text-red-400
                     "
                 >
-                    {{ errorUpdatingUsername }}
-                </p>
+                    <GlobalErrorText v-if="errorUpdatingUsername" :text="errorUpdatingUsername" :icon="false" />
+                </div>
             </div>
 
             <div

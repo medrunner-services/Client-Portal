@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { WebSocketMessage } from "@/@types/types.ts";
+
 import type GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { computed, nextTick, onMounted, ref } from "vue";
 
 import { useI18n } from "vue-i18n";
@@ -17,7 +19,7 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { createOptimisticClientMessage } from "@/utils/functions/chatMessageFunctions.ts";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
-import { errorString, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation, replaceAtMentions } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,8 +33,8 @@ const alertStore = useAlertStore();
 const logicStore = useLogicStore();
 
 const inputMessage = ref("");
-const errorSendingMessage = ref("");
-const errorLoadingMessages = ref("");
+const errorSendingMessage = ref<ErrorPresentation>("");
+const errorLoadingMessages = ref<ErrorPresentation>("");
 const editingMessageId = ref<string | undefined>();
 const originalEditedMessage = ref<string>();
 const messageInputRef = ref<InstanceType<typeof GlobalTextInput>>();
@@ -43,11 +45,12 @@ export interface Props {
 }
 
 onMounted(async () => {
+    errorLoadingMessages.value = "";
     try {
         emergencyStore.trackedEmergencyMessages = (await emergencyStore.fetchChatHistory(emergencyStore.trackedEmergency!.id)).data;
     }
     catch (error: any) {
-        errorLoadingMessages.value = errorString(error);
+        errorLoadingMessages.value = errorPresentation(error);
     }
 
     ws.on("ChatMessageCreate", async (message: WebSocketMessage) => {
@@ -92,7 +95,7 @@ onMounted(async () => {
             }
         }
         catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            alertStore.newAlert(AlertColors.RED, errorPresentation(_e, t("error_globalLoading")), false, "warning", 5000);
         }
     });
 
@@ -109,7 +112,7 @@ onMounted(async () => {
             }
         }
         catch (_e) {
-            alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+            alertStore.newAlert(AlertColors.RED, errorPresentation(_e, t("error_globalLoading")), false, "warning", 5000);
         }
     });
 
@@ -129,6 +132,7 @@ const isInvalidChatInput = computed(() => {
 });
 
 async function sendMessage() {
+    errorSendingMessage.value = "";
     if (!inputMessage.value || isInvalidChatInput.value)
         return;
     errorSendingMessage.value = "";
@@ -176,11 +180,11 @@ async function sendMessage() {
             }
         }
         else {
-            alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
+            alertStore.newAlert(AlertColors.RED, errorPresentation({ failureKind: "frontend" }, t("error_failedMessage")));
         }
     }
     catch (error: any) {
-        errorSendingMessage.value = errorString(error);
+        errorSendingMessage.value = errorPresentation(error);
 
         if (tempMessageIndex !== -1) {
             const tempMessage = emergencyStore.trackedEmergencyMessages[tempMessageIndex];
@@ -200,7 +204,7 @@ async function handleDeleteMessage(id: string) {
         await emergencyStore.deleteEmergencyMessage(id);
     }
     catch (error: any) {
-        alertStore.newAlert(AlertColors.YELLOW, errorString(error, t("error_deletingChatMessage")));
+        alertStore.newAlert(AlertColors.YELLOW, errorPresentation(error, t("error_deletingChatMessage")));
     }
 }
 

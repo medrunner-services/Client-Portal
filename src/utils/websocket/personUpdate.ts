@@ -3,6 +3,7 @@ import { i18n } from "@/i18n.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { restartWebsocket } from "@/utils/functions/handleWebsocket.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions";
 
 export async function personUpdate() {
     const userStore = useUserStore();
@@ -26,6 +27,6 @@ export async function personUpdate() {
         }
     }
     catch (_e) {
-        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+        alertStore.newAlert(AlertColors.RED, errorPresentation(_e, t("error_globalLoading")), false, "warning", 5000);
     }
 }

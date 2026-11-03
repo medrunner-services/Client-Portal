@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Bruk det korteste datoformatet med ett siffer for dager og måneder, oh to siffer for år (D/M/YY).",
     "404_somethingMissing": "Noe mangler.",
     "404_helperText": "Beklager, vi kan ikke finne denne siden. Du vil finne mye å utforske på hjemmesiden vår.",
-    "404_backToHomepage": "Tilbake til hjemmesiden"
+    "404_backToHomepage": "Tilbake til hjemmesiden",
+    "diagnostics_requestId": "Forespørsels-ID",
+    "diagnostics_frontendId": "Diagnose-ID for frontend",
+    "diagnostics_copy": "Kopier ID",
+    "diagnostics_copied": "Kopiert",
+    "diagnostics_copyFailed": "Kunne ikke kopiere. Velg og kopier ID-en.",
+    "diagnostics_dismiss": "Lukk feilmelding"
 }

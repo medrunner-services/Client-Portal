@@ -1,20 +1,23 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 import EmergencyChatBox from "@/components/Emergency/EmergencyChatBox.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
 const { t } = useI18n();
 
 const isLoadingEmergency = ref(false);
-const errorLoadingEmergency = ref("");
+const errorLoadingEmergency = ref<ErrorPresentation>("");
 
 onMounted(async () => {
+    errorLoadingEmergency.value = "";
     try {
         isLoadingEmergency.value = true;
         errorLoadingEmergency.value = "";
@@ -25,7 +28,7 @@ onMounted(async () => {
         }
     }
     catch (error: any) {
-        errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
+        errorLoadingEmergency.value = errorPresentation(error, t("error_loadingTrackedEmergency"));
     }
     finally {
         isLoadingEmergency.value = false;

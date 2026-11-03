@@ -1,13 +1,15 @@
 import type { Deployment } from "@medrunner/api-client";
 import { MissionStatus } from "@medrunner/api-client";
-
 import { HubConnectionState } from "@microsoft/signalr";
 import { WSState } from "@/@types/types.ts";
+
 import { i18n } from "@/i18n";
 import { useEmergencyStore } from "@/stores/emergencyStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { presentFailure, runtimeFailure } from "@/utils/errorDiagnostics";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import {
     initializeAnalytics,
@@ -27,6 +29,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
     const userStore = useUserStore();
     const emergencyStore = useEmergencyStore();
     const logicStore = useLogicStore();
+    logicStore.errorInitializingApp = "";
     const { availableLocales, locale, t } = i18n.global;
 
     initializeTabChecker();
@@ -46,7 +49,10 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                 };
             }
         }
-        catch (_e: any) {
+        catch (error) {
+            const failure = presentFailure(error, t("error_appInitialization", { error: "[fetchUser]" }));
+            if (failure && typeof failure !== "string")
+                runtimeFailure.value = failure;
             return;
         }
 
@@ -56,7 +62,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
                 userStore.isBlocked = true;
         }
         catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[blockCheck]" }));
+            logicStore.errorInitializingApp = errorPresentation(error, t("error_appInitialization", { error: "[blockCheck]" }));
         }
 
         try {
@@ -71,6 +77,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             }
         }
         catch (_e) {
+            showRuntimeFailure(_e);
             return;
         }
     }
@@ -85,7 +92,7 @@ export async function initializeApp(apiConnected: boolean): Promise<void> {
             initializeAnalytics();
         }
         catch (error: any) {
-            logicStore.errorInitializingApp = errorString(error, t("error_appInitialization", { error: "[initializeSettings]" }));
+            logicStore.errorInitializingApp = errorPresentation(error, t("error_appInitialization", { error: "[initializeSettings]" }));
         }
     }
 

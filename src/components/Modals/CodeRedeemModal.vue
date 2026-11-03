@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -7,7 +9,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const props = withDefaults(defineProps<Props>(), {
     canCloseModal: true,
@@ -18,7 +20,7 @@ const userStore = useUserStore();
 const router = useRouter();
 
 const submittingNewCode = ref(false);
-const errorRedeemingCode = ref("");
+const errorRedeemingCode = ref<ErrorPresentation>("");
 const isCodeRedeemed = ref(false);
 
 const inputCodePart1 = ref<HTMLInputElement | undefined>(undefined);
@@ -60,6 +62,7 @@ function calculateCheckCharacter(code: string) {
 }
 
 async function redeemCode() {
+    errorRedeemingCode.value = "";
     submittingNewCode.value = true;
     errorRedeemingCode.value = "";
     isCodeRedeemed.value = false;
@@ -74,10 +77,10 @@ async function redeemCode() {
         submittingNewCode.value = false;
 
         if (error.statusCode === 404)
-            errorRedeemingCode.value = errorString(error, t("error_codeNotFound"));
+            errorRedeemingCode.value = errorPresentation(error, t("error_codeNotFound"));
         else if (error.statusCode === 409)
-            errorRedeemingCode.value = errorString(error, t("error_codeRedeemed"));
-        else errorRedeemingCode.value = errorString(error);
+            errorRedeemingCode.value = errorPresentation(error, t("error_codeRedeemed"));
+        else errorRedeemingCode.value = errorPresentation(error);
     }
 }
 

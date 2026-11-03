@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Emergency } from "@medrunner/api-client";
+
 import type { HistoryFilterStatus, WebSocketMessage } from "@/@types/types.ts";
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { AlertColors, LocalStorageItems } from "@/@types/types.ts";
@@ -18,7 +20,7 @@ import { useAlertStore } from "@/stores/alertStore.ts";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { normalizePaginationToken, normalizeTotalCount } from "@/utils/functions/apiResponseFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import { subscribeToEmergencyEvents } from "@/utils/websocket/emergencySubscription.ts";
 
@@ -37,7 +39,7 @@ const totalFetchedEmergencies = ref(0);
 const paginationToken = ref<string | undefined>();
 
 const loadedHistory = ref<Emergency[]>([]);
-const errorLoadingHistory = ref("");
+const errorLoadingHistory = ref<ErrorPresentation>("");
 const loaded = ref(false);
 
 const ascendingOrder = ref(false);
@@ -66,7 +68,7 @@ async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
         }
     }
     catch (_e) {
-        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+        alertStore.newAlert(AlertColors.RED, errorPresentation(_e, t("error_globalLoading")), false, "warning", 5000);
     }
 }
 
@@ -86,7 +88,7 @@ async function handleEmergencyUpdate(message: WebSocketMessage): Promise<void> {
         }
     }
     catch (_e) {
-        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+        alertStore.newAlert(AlertColors.RED, errorPresentation(_e, t("error_globalLoading")), false, "warning", 5000);
     }
 }
 
@@ -155,7 +157,7 @@ async function loadHistory() {
         setActivePageFromCache(0);
     }
     catch (error: any) {
-        errorLoadingHistory.value = errorString(error, t("error_loadingData"));
+        errorLoadingHistory.value = errorPresentation(error, t("error_loadingData"));
         loaded.value = true;
     }
 }

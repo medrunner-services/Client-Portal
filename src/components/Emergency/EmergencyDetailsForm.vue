@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import type { EmergencyDetailsStep } from "@/utils/functions/emergencyDetailsFunctions.ts";
 import { computed, onMounted, ref } from "vue";
 
@@ -22,7 +24,7 @@ import {
     createSkippedEmergencyDetailsMessage,
     loadEmergencyDetailsProgress,
 } from "@/utils/functions/emergencyDetailsFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { lineReturnRegex } from "@/utils/globalVars.ts";
 
 const { t } = useI18n();
@@ -37,7 +39,7 @@ const completedSteps = ref<EmergencyDetailsStep[]>([]);
 const skippedDetails = ref(false);
 const restartingDetails = ref(false);
 const loadingDetailsProgress = ref(true);
-const errorLoadingDetailsProgress = ref("");
+const errorLoadingDetailsProgress = ref<ErrorPresentation>("");
 
 const inputSituation = ref("");
 const inputExactLocation = ref("");
@@ -58,7 +60,7 @@ const inputEnemiesDetails = ref("");
 const inputParty = ref<boolean | undefined>(undefined);
 const inputPartyDetails = ref([""]);
 const inputRemarks = ref("");
-const formErrorMessage = ref("");
+const formErrorMessage = ref<ErrorPresentation>("");
 const submittingDetails = ref(false);
 
 const emergencyDetailsSteps = [1, 2, 3, 4] as EmergencyDetailsStep[];
@@ -99,6 +101,7 @@ function getInputLocationString(): string {
 
 /** Restores progress from the client-authored key messages in the emergency chat. */
 async function restoreDetailsProgress(): Promise<void> {
+    errorLoadingDetailsProgress.value = "";
     loadingDetailsProgress.value = true;
     errorLoadingDetailsProgress.value = "";
 
@@ -121,7 +124,7 @@ async function restoreDetailsProgress(): Promise<void> {
             currentFormPart.value = nextStep;
     }
     catch (error: any) {
-        errorLoadingDetailsProgress.value = errorString(error, t("error_loadingTrackedEmergency"));
+        errorLoadingDetailsProgress.value = errorPresentation(error, t("error_loadingTrackedEmergency"));
     }
     finally {
         loadingDetailsProgress.value = false;
@@ -173,9 +176,10 @@ function getCurrentStepContents(): string {
 
 /** Sends the visible step and advances only after the chat API confirms it. */
 async function submitCurrentStep(): Promise<void> {
+    formErrorMessage.value = "";
     try {
         if (!emergencyStore.trackedEmergency) {
-            alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
+            alertStore.newAlert(AlertColors.RED, errorPresentation({ failureKind: "frontend" }, t("error_failedMessage")));
             return;
         }
         submittingDetails.value = true;
@@ -201,7 +205,7 @@ async function submitCurrentStep(): Promise<void> {
         resetInputs();
     }
     catch (error: any) {
-        formErrorMessage.value = errorString(error);
+        formErrorMessage.value = errorPresentation(error);
     }
     finally {
         submittingDetails.value = false;
@@ -210,9 +214,10 @@ async function submitCurrentStep(): Promise<void> {
 
 /** Records an explicit decline and shows the persisted skipped state. */
 async function ignoreDetails(): Promise<void> {
+    formErrorMessage.value = "";
     try {
         if (!emergencyStore.trackedEmergency) {
-            alertStore.newAlert(AlertColors.RED, t("error_failedMessage"));
+            alertStore.newAlert(AlertColors.RED, errorPresentation({ failureKind: "frontend" }, t("error_failedMessage")));
             return;
         }
 
@@ -244,7 +249,7 @@ async function ignoreDetails(): Promise<void> {
         restartingDetails.value = false;
     }
     catch (error: any) {
-        formErrorMessage.value = errorString(error);
+        formErrorMessage.value = errorPresentation(error);
         displayIgnoreModal.value = false;
     }
     finally {

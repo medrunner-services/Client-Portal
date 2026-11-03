@@ -1,11 +1,12 @@
 import type { RouteLocationNormalized } from "vue-router";
 import { createRouter, createWebHistory } from "vue-router";
-
 import { AlertColors, WSState } from "@/@types/types.ts";
+
 import { i18n } from "@/i18n.ts";
 import { useAlertStore } from "@/stores/alertStore.ts";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
+import { errorPresentation } from "@/utils/functions/stringFunctions";
 
 import DashboardView from "./views/DashboardView.vue";
 
@@ -26,7 +27,7 @@ function isUserComplete(to: RouteLocationNormalized, requiresWS: boolean = false
     }
 
     if (requiresWS && logicStore.currentWSState !== WSState.HEALTHY) {
-        alertStore.newAlert(AlertColors.RED, t("error_wsDisconnectedPageAccessError"), false, "warning", 5000);
+        alertStore.newAlert(AlertColors.RED, errorPresentation({ failureKind: "transport" }, t("error_wsDisconnectedPageAccessError")), false, "warning", 5000);
         return false;
     }
 
@@ -56,7 +57,7 @@ function isUserAuthenticated(to: RouteLocationNormalized, requiresWS: boolean = 
     }
 
     if (requiresWS && logicStore.currentWSState !== WSState.HEALTHY) {
-        alertStore.newAlert(AlertColors.RED, t("error_wsDisconnectedPageAccessError"), false, "warning", 5000);
+        alertStore.newAlert(AlertColors.RED, errorPresentation({ failureKind: "transport" }, t("error_wsDisconnectedPageAccessError")), false, "warning", 5000);
         return false;
     }
 

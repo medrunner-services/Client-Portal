@@ -1,4 +1,5 @@
 import type { PublicOrgSettings } from "@medrunner/api-client";
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -19,7 +20,7 @@ export const useLogicStore = defineStore("logic", () => {
     const isChatHidden = ref(false);
     const sentNotificationTags = ref<Set<string>>(new Set());
     const showNewUpdateBanner = ref(false);
-    const errorInitializingApp = ref("");
+    const errorInitializingApp = ref<ErrorPresentation>("");
     const warningNoContactId = ref();
     const openedModalCounter = ref(0);
 

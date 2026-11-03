@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ApiToken } from "@medrunner/api-client";
+
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -8,7 +10,7 @@ import TokenTableRow from "@/components/Profile/Token/TokenTableRow.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const props = defineProps<Props>();
 const emit = defineEmits(["closeCreateTokenModal", "disableTokenCreation"]);
@@ -19,7 +21,7 @@ export interface Props {
     displayCreateTokenModal: boolean;
 }
 const loadingTokens = ref(false);
-const loadingTokensError = ref("");
+const loadingTokensError = ref<ErrorPresentation>("");
 const userTokens = ref<ApiToken[]>([]);
 const parentRowsDiv = ref<HTMLDivElement | null>(null);
 
@@ -28,13 +30,14 @@ onMounted(async () => {
 });
 
 async function getTokens(): Promise<void> {
+    loadingTokensError.value = "";
     loadingTokens.value = true;
     try {
         const apiTokens = await userStore.fetchUserApiTokens();
         userTokens.value = apiTokens.sort((a, b) => (a.created > b.created ? -1 : 1));
     }
     catch (error: any) {
-        loadingTokensError.value = errorString(error);
+        loadingTokensError.value = errorPresentation(error);
     }
     finally {
         loadingTokens.value = false;

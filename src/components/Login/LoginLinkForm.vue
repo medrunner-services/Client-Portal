@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -8,7 +10,7 @@ import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalTextBox from "@/components/utils/GlobalTextBox.vue";
 import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -17,8 +19,8 @@ const isIdCopied = ref(false);
 const waitingForApi = ref(false);
 const isLoggingOut = ref(false);
 const formUsername = ref("");
-const formErrorMessage = ref("");
-const formErrorHelper = ref("");
+const formErrorMessage = ref<ErrorPresentation>("");
+const formErrorHelper = ref<ErrorPresentation>("");
 const userId = userStore.user.id;
 
 async function copyId(): Promise<void> {
@@ -35,6 +37,7 @@ function getAddToBioText(): string {
 }
 
 async function submittingLinkForm(): Promise<void> {
+    formErrorMessage.value = "";
     waitingForApi.value = true;
     formErrorMessage.value = "";
     formErrorHelper.value = "";
@@ -46,22 +49,22 @@ async function submittingLinkForm(): Promise<void> {
     }
     catch (error: any) {
         if (error.statusCode === 403) {
-            formErrorMessage.value = errorString(error, t("error_noIdRsiBio"));
+            formErrorMessage.value = errorPresentation(error, t("error_noIdRsiBio"));
             formErrorHelper.value = t("error_noIdRsiBioHelper");
         }
         else if (error.statusCode === 404) {
-            formErrorMessage.value = errorString(error, t("error_unknownRsiAccount"));
+            formErrorMessage.value = errorPresentation(error, t("error_unknownRsiAccount"));
             formErrorHelper.value = t("error_unknownRsiAccountHelper");
         }
         else if (error.statusCode === 409) {
-            formErrorMessage.value = errorString(error, t("error_rsiNewAccountLinked"));
+            formErrorMessage.value = errorPresentation(error, t("error_rsiNewAccountLinked"));
             formErrorHelper.value = t("error_rsiNewAccountLinkedHelper");
         }
         else if (error.statusCode === 503) {
-            formErrorMessage.value = errorString(error, t("error_externalAuthServiceDown"));
+            formErrorMessage.value = errorPresentation(error, t("error_externalAuthServiceDown"));
         }
         else {
-            formErrorMessage.value = errorString(error);
+            formErrorMessage.value = errorPresentation(error);
         }
     }
     finally {
@@ -123,9 +126,9 @@ async function disconnectUser(): Promise<void> {
 
         <GlobalTextBox v-if="formErrorHelper" class="mt-4" color="yellow">
             <p>{{ t("login_linkHelperTitle") }}</p>
-            <p class="mt-2 font-normal">
-                {{ formErrorHelper }}
-            </p>
+            <div class="mt-2 font-normal">
+                <GlobalErrorText v-if="formErrorHelper" :text="formErrorHelper" :icon="false" />
+            </div>
         </GlobalTextBox>
 
         <form class="mt-10" autocomplete="off" @submit.prevent="submittingLinkForm()">

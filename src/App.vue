@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { computed, onMounted, ref } from "vue";
-import { useI18n } from "vue-i18n";
 
+import { useI18n } from "vue-i18n";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import { WSState } from "@/@types/types.ts";
 import GlobalFooter from "@/components/GlobalFooter.vue";
@@ -12,9 +13,11 @@ import NavbarContainer from "@/components/Navbar/NavbarContainer.vue";
 import GlobalAlert from "@/components/utils/GlobalAlert.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import GlobalLoader from "@/components/utils/GlobalLoader.vue";
+import GlobalRuntimeError from "@/components/utils/GlobalRuntimeError.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { stopWebsocket } from "@/utils/functions/handleWebsocket.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions";
 
 const route = useRoute();
 const router = useRouter();
@@ -23,16 +26,17 @@ const alertStore = useAlertStore();
 const logicStore = useLogicStore();
 
 const isLoadingPage = ref(true);
-const errorLoadingPage = ref(false);
+const errorLoadingPage = ref<ErrorPresentation>("");
 
 onMounted(async () => {
+    errorLoadingPage.value = "";
     isLoadingPage.value = true;
 
     try {
         await router.isReady();
     }
-    catch (_e) {
-        errorLoadingPage.value = true;
+    catch (error) {
+        errorLoadingPage.value = errorPresentation(error, t("error_globalLoading"));
     }
     finally {
         isLoadingPage.value = false;
@@ -69,6 +73,7 @@ function reloadPage() {
 </script>
 
 <template>
+    <GlobalRuntimeError />
     <div>
         <GlobalAlert v-if="alertStore.showAlert" />
 
@@ -123,7 +128,7 @@ function reloadPage() {
             </div>
 
             <div v-else-if="errorLoadingPage || logicStore.errorInitializingApp" class="flex w-full grow items-center justify-center">
-                <GlobalErrorText :text="logicStore.errorInitializingApp ?? t('error_globalLoading')" />
+                <GlobalErrorText :text="logicStore.errorInitializingApp || errorLoadingPage || t('error_globalLoading')" />
             </div>
 
             <RouterView

@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+import DiagnosticReferenceButton from "@/components/utils/DiagnosticReferenceButton.vue";
+
 export interface Props {
-    text: string;
+    text: ErrorPresentation;
     icon?: boolean;
     weight?: string;
 }
@@ -23,7 +26,8 @@ const props = withDefaults(defineProps<Props>(), {
                 d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"
             />
         </svg>
-        <p>{{ props.text }}</p>
+        <p>{{ typeof props.text === 'string' ? props.text : props.text.message }}</p>
+        <DiagnosticReferenceButton v-if="typeof props.text !== 'string' && props.text.diagnostic" :diagnostic="props.text.diagnostic" />
     </div>
 </template>
 

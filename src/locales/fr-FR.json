@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Utilisez le format de date le plus court avec un chiffre pour les jours et les mois et deux chiffres pour les années (J/M/AA).",
     "404_somethingMissing": "Il manque quelque chose.",
     "404_helperText": "Désolé, nous ne trouvons pas cette page. Vous trouverez beaucoup de choses à explorer sur la page d'accueil.",
-    "404_backToHomepage": "Retour à la page d'accueil"
+    "404_backToHomepage": "Retour à la page d'accueil",
+    "diagnostics_requestId": "ID de requête",
+    "diagnostics_frontendId": "ID de diagnostic du frontend",
+    "diagnostics_copy": "Copier l’ID",
+    "diagnostics_copied": "Copié",
+    "diagnostics_copyFailed": "Copie impossible. Sélectionnez et copiez l’ID.",
+    "diagnostics_dismiss": "Fermer l’erreur"
 }

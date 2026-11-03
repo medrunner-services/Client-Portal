@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { ApiToken } from "@medrunner/api-client";
+
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -7,7 +9,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 export interface Props {
     token: ApiToken;
@@ -18,7 +20,7 @@ const userStore = useUserStore();
 const { t } = useI18n();
 
 const deletingToken = ref(false);
-const errorDeletingToken = ref("");
+const errorDeletingToken = ref<ErrorPresentation>("");
 
 async function deleteToken(): Promise<void> {
     errorDeletingToken.value = "";
@@ -29,7 +31,7 @@ async function deleteToken(): Promise<void> {
         emit("tokenDeleted", props.token.id);
     }
     catch (error: any) {
-        errorDeletingToken.value = errorString(error);
+        errorDeletingToken.value = errorPresentation(error);
     }
 
     deletingToken.value = false;
