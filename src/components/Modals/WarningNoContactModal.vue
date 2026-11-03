@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const props = defineProps<Props>();
 const emit = defineEmits(["close"]);
@@ -23,6 +24,8 @@ async function confirmWarning() {
         await userStore.setSettings({ lastConfirmedWarningId: props.emergencyId });
     }
     catch (_e) {
+        showRuntimeFailure(_e);
+        isConfirming.value = false;
         return;
     }
 

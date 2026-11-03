@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Použijte nejkratší formát data s jednou číslicí pro dny a měsíce dvěma číslicemi pro roky (D/M/RR).",
     "404_somethingMissing": "Něco tu chybí.",
     "404_helperText": "Omlouváme se, ale požadovanou stránku jsme nenašli. Na hlavní stránce najdete spoustu k objevování.",
-    "404_backToHomepage": "Zpět na hlavní stránku"
+    "404_backToHomepage": "Zpět na hlavní stránku",
+    "diagnostics_requestId": "ID požadavku",
+    "diagnostics_frontendId": "ID diagnostiky frontendu",
+    "diagnostics_copy": "Kopírovat ID",
+    "diagnostics_copied": "Zkopírováno",
+    "diagnostics_copyFailed": "Kopírování se nezdařilo. Vyberte a zkopírujte ID.",
+    "diagnostics_dismiss": "Zavřít chybu"
 }

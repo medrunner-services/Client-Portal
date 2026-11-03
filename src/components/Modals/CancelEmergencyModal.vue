@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { CancellationReason } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -9,7 +11,7 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { getCancelReasonString } from "@/utils/functions/getStringsFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const emit = defineEmits(["emergencyCanceled", "close"]);
 const emergencyStore = useEmergencyStore();
@@ -17,7 +19,7 @@ const { t } = useI18n();
 
 const inputCancelReason = ref<CancellationReason | "">("");
 const cancelingEmergency = ref(false);
-const errorCancelingEmergency = ref("");
+const errorCancelingEmergency = ref<ErrorPresentation>("");
 
 const selectOptions = [
     { value: "", label: t("tracking_selectAReason"), hidden: true },
@@ -41,21 +43,21 @@ const selectOptions = [
 ];
 
 async function cancelEmergency() {
+    errorCancelingEmergency.value = "";
+    if (!inputCancelReason.value) {
+        errorCancelingEmergency.value = t("tracking_selectAReason");
+        return;
+    }
     cancelingEmergency.value = true;
     errorCancelingEmergency.value = "";
 
     try {
-        if (inputCancelReason.value) {
-            await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
-        }
-        else {
-            throw new Error("missing cancel reason");
-        }
+        await emergencyStore.cancelEmergency(emergencyStore.trackedEmergency!.id, inputCancelReason.value);
 
         emit("emergencyCanceled");
     }
     catch (error: any) {
-        errorCancelingEmergency.value = errorString(error);
+        errorCancelingEmergency.value = errorPresentation(error);
     }
     cancelingEmergency.value = false;
 }

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { ResponseRating } from "@medrunner/api-client";
 import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -9,7 +11,7 @@ import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const props = defineProps<{
     emergencyId: string;
@@ -22,7 +24,7 @@ const emergencyStore = useEmergencyStore();
 const { t } = useI18n();
 
 const loadingRatingRequest = ref(false);
-const errorRatingEmergency = ref("");
+const errorRatingEmergency = ref<ErrorPresentation>("");
 const inputRating = ref<ResponseRating>();
 const inputRemarks = ref("");
 
@@ -36,6 +38,7 @@ const isInvalidReason = computed(() => {
 });
 
 async function rateEmergency() {
+    errorRatingEmergency.value = "";
     if (!inputRating.value || isInvalidReason.value)
         return;
 
@@ -48,7 +51,7 @@ async function rateEmergency() {
         emit("ratedEmergency");
     }
     catch (error: any) {
-        errorRatingEmergency.value = errorString(error);
+        errorRatingEmergency.value = errorPresentation(error);
     }
     finally {
         loadingRatingRequest.value = false;

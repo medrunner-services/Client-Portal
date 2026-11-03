@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Use the shortest date format with one digit for days and months and two digits for years (D/M/YY).",
     "404_somethingMissing": "Er ontbreekt iets.",
     "404_helperText": "Sorry, we kunnen die pagina niet vinden. Op de startpagina vind je veel om te ontdekken.",
-    "404_backToHomepage": "Terug naar Startpagina"
+    "404_backToHomepage": "Terug naar Startpagina",
+    "diagnostics_requestId": "Aanvraag-ID",
+    "diagnostics_frontendId": "Frontend-diagnose-ID",
+    "diagnostics_copy": "ID kopiëren",
+    "diagnostics_copied": "Gekopieerd",
+    "diagnostics_copyFailed": "Kopiëren mislukt. Selecteer en kopieer de ID.",
+    "diagnostics_dismiss": "Foutmelding sluiten"
 }

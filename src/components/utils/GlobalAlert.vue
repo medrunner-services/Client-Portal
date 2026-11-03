@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import DOMPurify from "dompurify";
 import { ref, watchEffect } from "vue";
-
 import { AlertColors } from "@/@types/types.ts";
+
+import DiagnosticReferenceButton from "@/components/utils/DiagnosticReferenceButton.vue";
 import { useAlertStore } from "@/stores/alertStore";
 
 const alertStore = useAlertStore();
@@ -44,7 +46,11 @@ watchEffect(() => {
                     d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
                 />
             </svg>
-            <p class="mx-3 font-medium" v-html="alertStore.message" />
+            <p v-if="typeof alertStore.message === 'string'" class="mx-3 font-medium" v-html="alertStore.message" />
+            <span v-else class="mx-3 inline-flex items-center font-medium">
+                <span v-html="DOMPurify.sanitize(alertStore.message.message)" />
+                <DiagnosticReferenceButton v-if="alertStore.message.diagnostic" :diagnostic="alertStore.message.diagnostic" />
+            </span>
             <button
                 v-if="alertStore.isCloseable"
                 type="button"

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { WebSocketMessage } from "@/@types/types.ts";
+
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { MissionStatus } from "@medrunner/api-client";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
@@ -19,7 +21,7 @@ import { useEmergencyStore } from "@/stores/emergencyStore";
 import { useUserStore } from "@/stores/userStore";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/functions/getStringsFunctions.ts";
 import { sendBrowserNotification } from "@/utils/functions/notificationFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { ws } from "@/utils/medrunnerClient";
 import { subscribeToEmergencyEvents } from "@/utils/websocket/emergencySubscription.ts";
 
@@ -30,7 +32,7 @@ const router = useRouter();
 const alertStore = useAlertStore();
 
 const loadingEmergency = ref(false);
-const errorLoadingEmergency = ref("");
+const errorLoadingEmergency = ref<ErrorPresentation>("");
 const respondingTeamNumber = ref(0);
 const oldEmergencyStatus = ref<MissionStatus | undefined>(undefined);
 let unsubscribeEmergencyEvents: (() => void) | undefined;
@@ -44,8 +46,8 @@ async function handleEmergencyCreate(message: WebSocketMessage): Promise<void> {
             oldEmergencyStatus.value = newEmergency.status;
         }
     }
-    catch (_e) {
-        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    catch (error) {
+        alertStore.newAlert(AlertColors.RED, errorPresentation(error, t("error_globalLoading")), false, "warning", 5000);
     }
 }
 
@@ -80,12 +82,13 @@ async function handleEmergencyUpdate(message: WebSocketMessage): Promise<void> {
             oldEmergencyStatus.value = updatedEmergency.status;
         }
     }
-    catch (_e) {
-        alertStore.newAlert(AlertColors.RED, t("error_globalLoading"), false, "warning", 5000);
+    catch (error) {
+        alertStore.newAlert(AlertColors.RED, errorPresentation(error, t("error_globalLoading")), false, "warning", 5000);
     }
 }
 
 onMounted(async () => {
+    errorLoadingEmergency.value = "";
     unsubscribeEmergencyEvents = subscribeToEmergencyEvents(ws, {
         onCreate: handleEmergencyCreate,
         onUpdate: handleEmergencyUpdate,
@@ -100,7 +103,7 @@ onMounted(async () => {
             respondingTeamNumber.value = emergencyStore.trackedEmergency.respondingTeam.staff.length;
         }
         catch (error: any) {
-            errorLoadingEmergency.value = errorString(error, t("error_loadingTrackedEmergency"));
+            errorLoadingEmergency.value = errorPresentation(error, t("error_loadingTrackedEmergency"));
         }
 
         loadingEmergency.value = false;

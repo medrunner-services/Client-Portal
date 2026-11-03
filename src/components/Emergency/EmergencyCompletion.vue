@@ -2,13 +2,14 @@
 import { MissionStatus, ResponseRating } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+
 import GlobalCard from "@/components/utils/GlobalCard.vue";
 import GlobalSelectInput from "@/components/utils/GlobalSelectInput.vue";
 import GlobalTextAreaInput from "@/components/utils/GlobalTextAreaInput.vue";
 import { useEmergencyStore } from "@/stores/emergencyStore";
 import { getEmergencyStatusSubtitle, getEmergencyStatusTitle } from "@/utils/functions/getStringsFunctions.ts";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const emit = defineEmits(["ratedEmergency"]);
 const emergencyStore = useEmergencyStore();
@@ -28,6 +29,7 @@ async function rateEmergency(): Promise<void> {
         emit("ratedEmergency");
     }
     catch (_e) {
+        showRuntimeFailure(_e);
         emit("ratedEmergency");
     }
 

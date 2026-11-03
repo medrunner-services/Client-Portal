@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Nutzen Sie das kürzeste Datumsformat mit einer Zahl für Tage und Monate und zwei Zahlen für Jahre (T.M.JJ).",
     "404_somethingMissing": "Irgendetwas fehlt.",
     "404_helperText": "Wir können diese Seite leider nicht finden. Auf der Startseite gibt es jedoch viel zu entdecken.",
-    "404_backToHomepage": "Zurück zur Startseite"
+    "404_backToHomepage": "Zurück zur Startseite",
+    "diagnostics_requestId": "Anfrage-ID",
+    "diagnostics_frontendId": "Frontend-Diagnose-ID",
+    "diagnostics_copy": "ID kopieren",
+    "diagnostics_copied": "Kopiert",
+    "diagnostics_copyFailed": "Kopieren fehlgeschlagen. ID auswählen und kopieren.",
+    "diagnostics_dismiss": "Fehlermeldung schließen"
 }

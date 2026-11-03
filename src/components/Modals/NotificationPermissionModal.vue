@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-
 import GlobalButton from "@/components/utils/GlobalButton.vue";
+
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore.ts";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const emit = defineEmits(["close"]);
 const { t } = useI18n();
@@ -31,7 +32,7 @@ async function askBrowserPermission() {
             logicStore.isNotificationGranted = true;
         }
         catch (_e) {
-
+            showRuntimeFailure(_e);
         }
     }
 }
@@ -43,6 +44,7 @@ async function disableNotifications() {
         logicStore.isNotificationGranted = false;
     }
     catch (_e) {
+        showRuntimeFailure(_e);
         return;
     }
     finally {

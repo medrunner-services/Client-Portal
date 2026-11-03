@@ -2,8 +2,8 @@
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute } from "vue-router";
-
 import { AlertColors } from "@/@types/types.ts";
+
 import LoginAnimation from "@/components/Login/LoginAnimation.vue";
 import LoginLinkForm from "@/components/Login/LoginLinkForm.vue";
 import LoginRegister from "@/components/Login/LoginRegister.vue";
@@ -11,6 +11,7 @@ import LoginSettings from "@/components/Login/LoginSettings.vue";
 import LoginWelcome from "@/components/Login/LoginWelcome.vue";
 import { useAlertStore } from "@/stores/alertStore";
 import { useLogicStore } from "@/stores/logicStore";
+import { errorPresentation } from "@/utils/functions/stringFunctions";
 import { clearURLParams } from "@/utils/functions/urlFunctions.ts";
 
 const route = useRoute();
@@ -27,9 +28,9 @@ onMounted(() => {
         if (routeQueryError.value === "accountUnknown") {
             showLoginRegister.value = true;
         }
-        else {
-            alertStore.newAlert(AlertColors.RED, getErrorText());
-        }
+        const diagnostic = window.history.state?.loginDiagnostic;
+        alertStore.newAlert(AlertColors.RED, errorPresentation({ message: "", diagnostic }, getErrorText()));
+        window.history.replaceState({ ...window.history.state, loginDiagnostic: undefined }, "");
         clearURLParams();
     }
 });

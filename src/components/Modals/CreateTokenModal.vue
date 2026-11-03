@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { PersonType, TokenScope } from "@medrunner/api-client";
 import Multiselect from "@vueform/multiselect";
 import { computed, ref } from "vue";
@@ -13,7 +15,7 @@ import GlobalTextInput from "@/components/utils/GlobalTextInput.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
 import { getTokenScopeString } from "@/utils/functions/getStringsFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 import { multiSelectInputDefaultClasses } from "@/utils/globalVars.ts";
 
 const emit = defineEmits(["tokenCreated", "close"]);
@@ -26,7 +28,7 @@ const inputScopes = ref<TokenScope[]>([]);
 const inputRulesCheckbox = ref(false);
 
 const createdToken = ref("");
-const errorCreationToken = ref("");
+const errorCreationToken = ref<ErrorPresentation>("");
 const submittingNewToken = ref(false);
 const isCopied = ref(false);
 
@@ -87,6 +89,7 @@ async function copyAndClose() {
 }
 
 async function createToken() {
+    errorCreationToken.value = "";
     if (!inputName.value || isInvalidTokenName.value || inputScopes.value.length < 1 || !inputRulesCheckbox.value) {
         return;
     }
@@ -107,11 +110,11 @@ async function createToken() {
     catch (error: any) {
         submittingNewToken.value = false;
         if (error.statusCode === 422)
-            errorCreationToken.value = errorString(error, t("error_maxApiTokens"));
-        if (error.statusCode === 400)
-            errorCreationToken.value = errorString(error, t("error_invalidTokenScope"));
+            errorCreationToken.value = errorPresentation(error, t("error_maxApiTokens"));
+        else if (error.statusCode === 400)
+            errorCreationToken.value = errorPresentation(error, t("error_invalidTokenScope"));
         else
-            errorCreationToken.value = errorString(error);
+            errorCreationToken.value = errorPresentation(error);
     }
 }
 </script>

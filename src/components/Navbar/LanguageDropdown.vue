@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-
 import { useUserStore } from "@/stores/userStore";
+
 import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const { locale, availableLocales } = useI18n({ useScope: "global" });
 const userStore = useUserStore();
@@ -39,7 +40,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         await userStore.setSettings({ selectedLanguage: newLocal });
     }
     catch (_e) {
-
+        showRuntimeFailure(_e);
     }
 }
 </script>

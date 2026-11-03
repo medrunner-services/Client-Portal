@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { ThreatLevel } from "@medrunner/api-client";
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
@@ -13,7 +15,7 @@ import { useLogicStore } from "@/stores/logicStore.ts";
 import { useUserStore } from "@/stores/userStore";
 import { submitEmergencyRequest } from "@/utils/functions/emergencyRequestFunctions.ts";
 import { getSelectableAlertLocations } from "@/utils/functions/locationFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const emergencyStore = useEmergencyStore();
 const userStore = useUserStore();
@@ -21,7 +23,7 @@ const logicStore = useLogicStore();
 const { t } = useI18n();
 
 const formSubmittingEmergency = ref(false);
-const formErrorMessage = ref("");
+const formErrorMessage = ref<ErrorPresentation>("");
 const inputLocationId = ref("");
 const inputThreatLevel = ref("");
 const inputRSIHandle = ref("");
@@ -64,6 +66,7 @@ watch(selectableLocations, (options) => {
 });
 
 async function submitEmergency() {
+    formErrorMessage.value = "";
     if (!inputLocationId.value || !inputThreatLevel.value) {
         formErrorMessage.value = t("error_missingFields");
         return;
@@ -97,7 +100,7 @@ async function submitEmergency() {
     }
     catch (error: any) {
         formSubmittingEmergency.value = false;
-        formErrorMessage.value = errorString(error);
+        formErrorMessage.value = errorPresentation(error);
     }
 }
 </script>

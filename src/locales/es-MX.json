@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Use the shortest date format with one digit for days and months and two digits for years (D/M/YY).",
     "404_somethingMissing": "Algo falta.",
     "404_helperText": "Lo sentimos, no podemos encontrar esa página. Encontrarás mucho para explorar en la página de inicio.",
-    "404_backToHomepage": "Volver a la página de inicio"
+    "404_backToHomepage": "Volver a la página de inicio",
+    "diagnostics_requestId": "ID de solicitud",
+    "diagnostics_frontendId": "ID de diagnóstico del frontend",
+    "diagnostics_copy": "Copiar ID",
+    "diagnostics_copied": "Copiado",
+    "diagnostics_copyFailed": "No se pudo copiar. Selecciona y copia el ID.",
+    "diagnostics_dismiss": "Cerrar error"
 }

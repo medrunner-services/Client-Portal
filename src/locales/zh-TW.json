@@ -420,5 +420,11 @@
     "profile_shortDateSettingHelper": "Use the shortest date format with one digit for days and months and two digits for years (D/M/YY).",
     "404_somethingMissing": "有東西遺失了",
     "404_helperText": "不好意思，查無此網頁。您可以在首頁搜尋更多資訊",
-    "404_backToHomepage": "回到首頁"
+    "404_backToHomepage": "回到首頁",
+    "diagnostics_requestId": "請求 ID",
+    "diagnostics_frontendId": "前端診斷 ID",
+    "diagnostics_copy": "複製 ID",
+    "diagnostics_copied": "已複製",
+    "diagnostics_copyFailed": "無法複製。請選取並複製 ID。",
+    "diagnostics_dismiss": "關閉錯誤"
 }

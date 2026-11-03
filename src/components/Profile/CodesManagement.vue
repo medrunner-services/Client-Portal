@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -7,22 +9,23 @@ import GlobalLoader from "@/components/utils/GlobalLoader.vue";
 import { useUserStore } from "@/stores/userStore";
 import { fetchAllPaginatedResponse } from "@/utils/functions/fetchFunctions.ts";
 import { getCodeTypeString } from "@/utils/functions/getStringsFunctions.ts";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const userStore = useUserStore();
 const { t } = useI18n();
 
 const loadingCodes = ref(false);
-const errorLoadingCodes = ref("");
+const errorLoadingCodes = ref<ErrorPresentation>("");
 
 onMounted(async () => {
+    errorLoadingCodes.value = "";
     loadingCodes.value = true;
     try {
         const response = await fetchAllPaginatedResponse(userStore.fetchUserRedeemedCodes);
         userStore.redeemedCodes = response.data;
     }
     catch (error: any) {
-        errorLoadingCodes.value = errorString(error);
+        errorLoadingCodes.value = errorPresentation(error);
     }
     finally {
         loadingCodes.value = false;

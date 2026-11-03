@@ -1,9 +1,11 @@
-import type { ApiResponse, Person, Responder } from "@medrunner/api-client";
+import type { Person, Responder } from "@medrunner/api-client";
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import DOMPurify from "dompurify";
 import MarkdownIt from "markdown-it";
-
 import { i18n } from "@/i18n.ts";
+
 import { useLogicStore } from "@/stores/logicStore.ts";
+import { presentFailure, runtimeFailure } from "@/utils/errorDiagnostics";
 import { timestampToFullDateTimeZone, toUserDateString } from "@/utils/functions/dateTimeFunctions.ts";
 
 const discordTagRegex = /@\d+/g;
@@ -69,11 +71,12 @@ export function replaceAtMentions(message: string, senderId: string, html: boole
 }
 
 /** Formats an API failure for display while preserving explicit local messages. */
-export function errorString(error: ApiResponse | number | undefined, customMessage?: string): string {
+export function errorString(error: unknown, customMessage?: string): string {
     const { t } = i18n.global;
-    const response = typeof error === "object" ? error : undefined;
-    const errorCode = typeof error === "number" ? error : response?.statusCode;
-    const problemTitle = response?.problemDetails?.title?.trim();
+    const response = typeof error === "object" && error !== null ? error as Record<string, unknown> : undefined;
+    const errorCode = typeof error === "number" ? error : typeof response?.statusCode === "number" ? response.statusCode : undefined;
+    const problem = typeof response?.problemDetails === "object" && response.problemDetails !== null ? response.problemDetails as Record<string, unknown> : undefined;
+    const problemTitle = typeof problem?.title === "string" ? problem.title.trim() : undefined;
 
     if (customMessage) {
         return `${customMessage} (${errorCode ?? "internal"})`;
@@ -98,6 +101,18 @@ export function errorString(error: ApiResponse | number | undefined, customMessa
 
         return `${defaultMessage} (${errorCode ?? "internal"})`;
     }
+}
+
+/** Keeps the diagnostic reference separate from the selected translated message. */
+export function errorPresentation(error: unknown, customMessage?: string): ErrorPresentation {
+    return presentFailure(error, errorString(error, customMessage));
+}
+
+/** Displays failures from background preferences, notifications, and other operations without an inline surface. */
+export function showRuntimeFailure(error: unknown, customMessage?: string): void {
+    const presentation = errorPresentation(error, customMessage);
+    if (presentation && typeof presentation !== "string")
+        runtimeFailure.value = presentation;
 }
 
 export function parseMarkdown(text: string) {

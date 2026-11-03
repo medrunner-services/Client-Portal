@@ -1,11 +1,12 @@
 import { apm } from "@elastic/apm-rum";
-
 import { LocalStorageItems } from "@/@types/types.ts";
+
 import { i18n } from "@/i18n";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { requireResponseData } from "@/utils/functions/apiResponseFunctions.ts";
 import { handleDarkModeUpdate } from "@/utils/functions/settingsFunctions.ts";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 import { api } from "@/utils/medrunnerClient";
 
 export function initializeSettingDarkMode() {
@@ -110,7 +111,7 @@ export async function initializeMedrunnerSettings() {
             logicStore.medrunnerSettings = requireResponseData(response);
         }
         catch (_e) {
-
+            showRuntimeFailure(_e);
         }
     }
 }

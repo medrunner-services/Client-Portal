@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
+
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -7,7 +9,7 @@ import GlobalButton from "@/components/utils/GlobalButton.vue";
 import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
 import ModalContainer from "@/components/utils/ModalContainer.vue";
 import { useUserStore } from "@/stores/userStore";
-import { errorString } from "@/utils/functions/stringFunctions.ts";
+import { errorPresentation } from "@/utils/functions/stringFunctions.ts";
 
 const emit = defineEmits<{
     close: [];
@@ -16,7 +18,7 @@ const userStore = useUserStore();
 const router = useRouter();
 const { t } = useI18n();
 const deletingAccount = ref(false);
-const errorDeletingAccount = ref("");
+const errorDeletingAccount = ref<ErrorPresentation>("");
 
 async function deleteAccount(): Promise<void> {
     errorDeletingAccount.value = "";
@@ -26,7 +28,7 @@ async function deleteAccount(): Promise<void> {
         await userStore.deleteAccount();
     }
     catch (error: any) {
-        errorDeletingAccount.value = errorString(error);
+        errorDeletingAccount.value = errorPresentation(error);
     }
     finally {
         await userStore.disconnectUser();

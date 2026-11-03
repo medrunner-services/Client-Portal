@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import type { ErrorPresentation } from "@/utils/errorDiagnostics";
 import { computed } from "vue";
 
+import GlobalErrorText from "@/components/utils/GlobalErrorText.vue";
+
 export interface Props {
-    errorText?: string;
+    errorText?: ErrorPresentation;
     modelValue?: boolean;
     disabled?: boolean;
     centerCheckbox?: boolean;
@@ -57,14 +60,14 @@ const value = computed({
                 ><slot /></label>
             </div>
         </div>
-        <p
+        <div
             class="
                 mt-2 text-xs font-medium text-red-600
                 dark:text-red-400
             "
         >
-            {{ props.errorText }}
-        </p>
+            <GlobalErrorText v-if="props.errorText" :text="props.errorText" :icon="false" />
+        </div>
     </div>
 </template>
 

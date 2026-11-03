@@ -3,12 +3,13 @@ import { PersonType } from "@medrunner/api-client";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { RouterLink } from "vue-router";
-
 import BugReportModal from "@/components/Modals/BugReportModal.vue";
+
 import CodeRedeemModal from "@/components/Modals/CodeRedeemModal.vue";
 import { useLogicStore } from "@/stores/logicStore";
 import { useUserStore } from "@/stores/userStore";
 import { getLanguageString } from "@/utils/functions/getStringsFunctions.ts";
+import { showRuntimeFailure } from "@/utils/functions/stringFunctions";
 
 const logicStore = useLogicStore();
 const userStore = useUserStore();
@@ -50,7 +51,7 @@ async function changeLanguage(newLocal: string): Promise<void> {
         await userStore.setSettings({ selectedLanguage: newLocal });
     }
     catch (_e) {
-
+        showRuntimeFailure(_e);
     }
 }
 </script>
