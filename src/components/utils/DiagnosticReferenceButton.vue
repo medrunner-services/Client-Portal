@@ -17,7 +17,7 @@ const tooltip = ref<HTMLElement>();
 const position = ref({ left: "16px", top: "16px" });
 const label = computed(() => t(props.diagnostic.kind === "request" ? "diagnostics_requestId" : "diagnostics_frontendId"));
 
-watch(visible, async (open, _previous, cleanup) => {
+watch([visible, () => props.diagnostic.id], async ([open], _previous, cleanup) => {
     if (!open)
         return;
     const hide = () => {
@@ -44,7 +44,7 @@ watch(visible, async (open, _previous, cleanup) => {
 watch(() => props.diagnostic.id, () => {
     feedback.value = "";
     manualCopy.value = false;
-    visible.value = false;
+    visible.value = focused.value || hovered.value;
 });
 
 async function copy() {
