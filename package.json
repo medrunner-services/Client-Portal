@@ -32,7 +32,7 @@
         "dompurify": "3.4.7",
         "echarts": "6.1.0",
         "flowbite": "4.0.2",
-        "markdown-it": "14.2.0",
+        "markdown-it": "14.3.3",
         "pinia": "3.0.4",
         "vue": "3.5.35",
         "vue-echarts": "8.0.1",
