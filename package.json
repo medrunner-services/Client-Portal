@@ -57,7 +57,7 @@
         "tailwindcss": "4.3.0",
         "typescript": "6.0.3",
         "vite": "8.0.14",
-        "vitest": "5.0.0",
+        "vitest": "5.1.0",
         "vue-tsc": "3.3.3",
         "yauzl": "3.3.2"
     }
