@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "@elastic/apm-rum-vue": "2.1.14",
-        "@intlify/unplugin-vue-i18n": "11.2.3",
+        "@intlify/unplugin-vue-i18n": "11.2.8",
         "@medrunner/api-client": "0.7.0-dev.3",
         "@tailwindcss/vite": "4.3.0",
         "@vueform/multiselect": "2.6.11",
