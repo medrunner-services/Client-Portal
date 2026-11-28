@@ -22,7 +22,7 @@
         "update-packages": "pnpm ncu"
     },
     "dependencies": {
-        "@elastic/apm-rum-vue": "2.1.14",
+        "@elastic/apm-rum-vue": "2.1.15",
         "@intlify/unplugin-vue-i18n": "11.2.3",
         "@medrunner/api-client": "0.7.0-dev.3",
         "@tailwindcss/vite": "4.3.0",
